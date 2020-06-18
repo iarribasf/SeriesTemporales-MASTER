@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Iván Arribas (Depto. Análisis Económico. Universitat de València)" />
+
+
+<title>Series Temporales: Introducción</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Series Temporales</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="01-Guia-curso.html">
+    <span class="fa fa-graduation-cap"></span>
+     
+    Guía del curso
+  </a>
+</li>
+<li>
+  <a href="02-Logistica.html">
+    <span class="fa fa-laptop"></span>
+     
+    Logistica
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-book"></span>
+     
+    Diapos
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Teoría</li>
+    <li>
+      <a href="03-01-Tema1.html">Tema 1: Introducción</a>
+    </li>
+    <li>
+      <a href="03-02-Tema2.html">Tema 2: Alisado</a>
+    </li>
+    <li>
+      <a href="03-03-Tema3.html">Tema 3: Procesos estocásticos</a>
+    </li>
+    <li>
+      <a href="03-04-Tema4.html">Tema 4: ARIMA</a>
+    </li>
+    <li>
+      <a href="03-05-Tema5.html">Tema 5: SARIMA</a>
+    </li>
+    <li class="dropdown-header">Ejemplo de aplicación</li>
+    <li>
+      <a href="03-06-Ejemplo1.html">Ejemplo Tema 1</a>
+    </li>
+    <li>
+      <a href="03-07-Ejemplo2.html">Ejemplo Tema 2</a>
+    </li>
+    <li>
+      <a href="03-08-Ejemplo3.html">Ejemplo Tema 3</a>
+    </li>
+    <li>
+      <a href="03-09-Ejemplo4.html">Ejemplo Tema 4</a>
+    </li>
+    <li>
+      <a href="03-10-Ejemplo5.html">Ejemplo Tema 5</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="04-Recursos-R.html">
+    <span class="fa fa-code"></span>
+     
+    Recursos de R
+  </a>
+</li>
+<li>
+  <a href="05-Practica.html">
+    <span class="fa fa-edit"></span>
+     
+    Practica
+  </a>
+</li>
+<li>
+  <a href="06-Calendario.html">
+    <span class="fa fa-calendar-alt"></span>
+     
+    Calendario
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-download"></span>
+     
+    Más
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">R</li>
+    <li>
+      <a href="https://cran.r-project.org">Dónde está R</a>
+    </li>
+    <li>
+      <a href="https://rstudio.com">Donde está RStudio</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Markdown</li>
+    <li>
+      <a href="https://bookdown.org/yihui/rmarkdown/">Markdown</a>
+    </li>
+    <li>
+      <a href="https://rmarkdown.rstudio.com/lesson-1.html">R Markdown</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Otros</li>
+    <li>
+      <a href="https://www.r-bloggers.com">Blog sobre R</a>
+    </li>
+    <li>
+      <a href="https://bookdown.org">Libros online que debes conocer</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Series Temporales: Introducción</h1>
+<h4 class="author">Iván Arribas (Depto. Análisis Económico. Universitat de València)</h4>
+<h4 class="date">Curso 2020-21</h4>
+
+</div>
+
+
+<p><br />
+<br />
+</p>
+<div id="ejemplo-de-aplicación-defunciones-por-enfermedades-cerebrovasculares" class="section level1">
+<h1><span class="header-section-number">1</span> Ejemplo de aplicación: Defunciones por Enfermedades Cerebrovasculares</h1>
+<p><br />
+</p>
+<div id="introducción" class="section level2">
+<h2><span class="header-section-number">1.1</span> Introducción</h2>
+<p>Consideremos la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares, Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2018, un total de 39 años y 468 observaciones.</p>
+<p>La serie y su fechado están en el fichero “Enfermedades cerebrovasculares.csv”.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">DefEnfCer &lt;-<span class="st"> </span><span class="kw">read.csv2</span>(<span class="st">&quot;./series/Enfermedades cerebrovasculares.csv&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">DefEnfCer &lt;-<span class="st"> </span><span class="kw">ts</span>(DefEnfCer[,<span class="dv">2</span>], <span class="dt">start =</span> <span class="dv">1980</span>, <span class="dt">freq =</span> <span class="dv">12</span>)</a></code></pre></div>
+<p><br />
+</p>
+</div>
+<div id="análisis-preliminar-gráfico" class="section level2">
+<h2><span class="header-section-number">1.2</span> Análisis preliminar gráfico</h2>
+<p>La gráfica de la serie temporal (figura 1) muestra una <strong>tendencia</strong> decreciente en el número de muertes causadas por enfermedades cerebrovasculares en España.</p>
+<p>Las líneas verticales de la figura 1 marcan los meses de enero de cada año y permiten identificar mejor la posible <strong>componente estacional</strong>. Aparentemente las muertes causadas por enfermedades cerebrovasculares tiene una mayor incidencia en invierno. Más adelante se hará un análisis detallado de la estacionalidad.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">autoplot</span>(DefEnfCer,</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">         <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">         <span class="dt">ylab =</span> <span class="st">&quot;Casos&quot;</span>,</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">         <span class="dt">main =</span> <span class="st">&quot;Figura 1. Defunciones causadas por enfermedades cerebrovasculares&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks=</span> <span class="kw">seq</span>(<span class="dv">1980</span>, <span class="dv">2018</span>, <span class="dv">2</span>)) </a></code></pre></div>
+<p><img src="03-06-Ejemplo1_files/figure-html/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Conforme disminuye el número de muertes año tras año, también disminuye la amplitud estacional. En los 80 la diferencia entre los meses de más y menos incidencia de la enfermedad era muy acusada (aproximadamente 2500 casos), mientras que en los últimos años esta diferencia es más reducida (unos 1000 casos). Parece, por tanto, que estamos ante un <strong>esquema multiplicativo</strong>. Para confirmar este aspecto se ha realizado un gráfico de puntos entre el numero anual de casos de muertes causadas por enfermedades cerebrovasculares y la desviación típica intra-anual (figura 2).</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">CasosAnual =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">aggregate</span>(DefEnfCer, <span class="dt">FUN =</span> sum))</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">DesviacionAnual =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">aggregate</span>(DefEnfCer, <span class="dt">FUN =</span> sd))</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="kw">ggplot</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> CasosAnual, <span class="dt">y =</span> DesviacionAnual), <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Total de casos&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Desviación típica&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Figura 2: Análisis del tipo de esquema&quot;</span>) </a></code></pre></div>
+<p><img src="03-06-Ejemplo1_files/figure-html/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Efectivamente, los años con mayor número de casos de defunciones se corresponden con una mayor variabilidad intra-anual, por lo que confirmamos el esquema multiplicativo de la serie.</p>
+<p><br />
+</p>
+</div>
+<div id="tendencia-y-estacionalidad" class="section level2">
+<h2><span class="header-section-number">1.3</span> Tendencia y Estacionalidad</h2>
+<div id="tendencia" class="section level3">
+<h3><span class="header-section-number">1.3.1</span> Tendencia</h3>
+<p>Hemos obtenido la serie anual de casos de defunciones causadas por enfermedades cerebrovasculares, que presentamos en la figura 3. Se confirma la tendencia decreciente, puntualmente interrumpida algunos años. En los años 80 el número de defunciones prácticamente alcanzaba las 50,000, mientras que actualmente apenas superan las 25,000. Es decir, una caída media anual de 1.5% en el número de defunciones.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">autoplot</span>(<span class="kw">aggregate</span>(DefEnfCer, <span class="dt">FUN =</span> sum),</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">         <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">         <span class="dt">ylab =</span> <span class="st">&quot;Casos&quot;</span>,</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">         <span class="dt">main =</span> <span class="st">&quot;Figura 3. Defunciones causadas por enfermedades cerebrovasculares&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks=</span> <span class="kw">seq</span>(<span class="dv">1980</span>, <span class="dv">2018</span>, <span class="dv">2</span>)) </a></code></pre></div>
+<p><img src="03-06-Ejemplo1_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="estacionalidad" class="section level3">
+<h3><span class="header-section-number">1.3.2</span> Estacionalidad</h3>
+<p>Veamos ahora como varía la incidencia de las muertes causadas por enfermedades cerebrovasculares según el mes del año.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">ggmonthplot</span>(DefEnfCer, </a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">             <span class="dt">polar=</span><span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">             <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">             <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">             <span class="dt">main =</span> <span class="st">&quot;Figura 4. Gráfico estacional: defunciones por enfermedades cerebrovasculares&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="st">  </span><span class="kw">guides</span>(<span class="dt">colour=</span><span class="ot">FALSE</span>)</a></code></pre></div>
+<p><img src="03-06-Ejemplo1_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Cada subserie en la figura 4 vuelve a mostrar la reducción en las defunciones causadas por enfermedades cerebrovasculares durante el periodo de análisis. Respecto de la estacionalidad, se aprecia que el principal determinante es la temperatura puesto que la incidencia de la enfermedad es mayor en los meses de invierno y menor en los de verano. También cabría esperar un efecto <em>tamaño del mes</em> y observar más incidencia en los meses de 31 días que en los de 30, pero el efecto de la temperatura es tan dominante que anula cualquier otro efecto.</p>
+</div>
+</div>
+<div id="descomposición" class="section level2">
+<h2><span class="header-section-number">1.4</span> Descomposición</h2>
+<p>Vamos a obtener cada una de las componentes de la serie usando el método de medias móviles <code>decompose</code>. Se ha optado por este método dado que la serie muestra un esquema multiplicativo. La otra opción hubiera sido usar el método de regresiones locales ponderadas, pero entonces trabajaríamos con el logaritmo de la serie perdiendo interpretabilidad.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">DefEnfCerDesMul &lt;-<span class="st"> </span><span class="kw">decompose</span>(DefEnfCer, <span class="dt">type =</span> <span class="st">&quot;mult&quot;</span>)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw">autoplot</span>(DefEnfCerDesMul,</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">         <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">         <span class="dt">main =</span> <span class="st">&quot;Figura 5. Descomposición aditiva por medias móviles&quot;)</span></a></code></pre></div>
+<p><img src="03-06-Ejemplo1_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>La <strong>tendencia</strong> obtenida tras la descomposición no hace sino confirmar lo ya observado, una tendencia decreciente en los casos de defunciones por enfermedad cerebrovascular.</p>
+<p>También se aprecian muy claramente varios valores atípicos en el <strong>residuo</strong> al inicio del periodo de análisis, a finales del pasado siglo y al inicio de la pasada década.</p>
+<p>Respecto de la <strong>componente estacional</strong>, se confirma el análisis preliminar: alta incidencia en invierno, especialmente en diciembre y enero, y muy baja en verano, destacando septiembre. En concreto, en enero se detectan entre un 25% más de casos de defunciones respecto de la media anual, en diciembre un 14% más y en los meses de febrero y marzo un 9% más. Por contra, en septiembre se observa un descenso del 17%. Cabría preguntarse las causas del repunte en julio, aunque puede deberse a ser un mes de 31 días.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">round</span>(DefEnfCerDesMul<span class="op">$</span>figure, <span class="dv">2</span>)</a></code></pre></div>
+<pre><code> [1] 1.25 1.09 1.09 0.97 0.96 0.90 0.94 0.90 0.83 0.94 0.99 1.14</code></pre>
+<p>A fin de aislar de la componente estacional el efecto <em>tamaño del mes</em> del efecto de la temperatura, se ha aplicado la descomposición a la serie <em>defunciones por día causadas por enfermedad cerebrovascular</em> resultante de dividir la serie original por el número de días del mes (que obtenenos con la función <code>monthdays</code>. En esta nueva serie todo el efecto estacional se deberá a la temperatura.</p>
+<p>La figura 6 muestra que la componente estacional estimada para las defunciones por día es más suave que la componente obtenida a partir la serie original. También se aprecia que el efecto del tamaño del mes es muy acusado en febrero. Para este mes el efecto estacional es el resultado de dos fuerzas opuestas: la baja temperatura incrementa la componente estacional pero el tamaño del mes (28 días) la reduce. Sobre la serie original ambas fuerzas tienen lugar y el resultado es una componente estacional para febrero menor que la de marzo, siendo este último un mes que por se más cálido deberia tener una componente estacional menor que la de febrero. En la serie de defunciones por día el efecto tamaño ha sido eliminado, solo queda el efecto temperatura y por eso la componente de febrero es menor que la de enero, pero mayor que la de marzo. El fenómeno opuesto se observa en los meses de Julio y Agosto respecto del mes de Junio: debido a que Julio y Agosto son meses cálidos (menos defunciones) pero de 31 días (más defunciones), presentan más defunciones que Junio, un mes menos cálido pero de 30 días.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">DefEnfCerDiaDesMul &lt;-<span class="st"> </span><span class="kw">decompose</span>(DefEnfCer<span class="op">/</span><span class="kw">monthdays</span>(DefEnfCer), <span class="dt">type =</span> <span class="st">&quot;mult&quot;</span>)</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="kw">ggplot</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">y =</span> DefEnfCerDesMul<span class="op">$</span>figure, <span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">y =</span> DefEnfCerDiaDesMul<span class="op">$</span>figure, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">1</span>, <span class="dt">colour =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">lty =</span> <span class="dv">2</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Figura 6. Componente estacional de defunciones por enf. cerebrovasculares&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-9" data-line-number="9"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Efecto estacional&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks=</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, </a>
+<a class="sourceLine" id="cb9-11" data-line-number="11">                     <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Ene&quot;</span>, <span class="st">&quot;Feb&quot;</span>, <span class="st">&quot;Mar&quot;</span>, <span class="st">&quot;Abr&quot;</span>, <span class="st">&quot;May&quot;</span>, <span class="st">&quot;Jun&quot;</span>, </a>
+<a class="sourceLine" id="cb9-12" data-line-number="12">                                <span class="st">&quot;Jul&quot;</span>, <span class="st">&quot;Ago&quot;</span>, <span class="st">&quot;Sep&quot;</span>, <span class="st">&quot;Oct&quot;</span>, <span class="st">&quot;Nov&quot;</span>, <span class="st">&quot;Dic&quot;</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-13" data-line-number="13"><span class="st">  </span><span class="kw">scale_color_discrete</span>(<span class="dt">name =</span> <span class="st">&quot;Componente estacional&quot;</span>, </a>
+<a class="sourceLine" id="cb9-14" data-line-number="14">                       <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Defunciones&quot;</span>, <span class="st">&quot;Defunciones por día&quot;</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-15" data-line-number="15"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="kw">c</span>(<span class="fl">0.02</span>,<span class="fl">0.02</span>), <span class="dt">legend.justification=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>))</a></code></pre></div>
+<p><img src="03-06-Ejemplo1_files/figure-html/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="análisis-del-residuo-del-método-de-descomposición" class="section level2">
+<h2><span class="header-section-number">1.5</span> Análisis del residuo del método de descomposición</h2>
+<p>Los métodos de descomposición no requieren de ningún supuesto sobre los residuos. Sin embargo, vamos a realizar una análisis gráfico informal de estos, adelantando conceptos que irán siendo necesarios según avancemos en el curso.</p>
+<p>Como la descomposición es multiplicativa, el error es en tanto por uno y tiene media 1. Para analizar las propiedades del residuo, vamos a calcularlo como error aditivo. Para ello vamos a restar a la serie original la serie estimada, obtenida como el producto de la tendencia por la estacionalidad, es decir, <span class="math inline">\(R_t = y_t - (T_t * S_t)\)</span>.</p>
+<p>La figura 7 muestra el error y los intervalos de confianza (IC) al 95% (líneas en verde) y al 99.7% (líneas en rojo). Se observan siete valores claramente extremos que cruzan el IC(99.7%) por la parte superior de la gráfica. Corresponden a los meses de enero de 1981, enero y febrero de 1983, marzo de 1984, enero de 1985, febrero de 1999 y febrero de 2012, en los que los casos de defunciones por enfermedades cerebrovasculares fueron muy superiores a lo esperado. Además, todos los casos tienen lugar en invierno y podrían estar relacionados con la temperatura media invernal en esos años.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">error &lt;-<span class="st"> </span>DefEnfCer <span class="op">-</span><span class="st"> </span><span class="kw">trendcycle</span>(DefEnfCerDesMul) <span class="op">*</span><span class="st"> </span><span class="kw">seasonal</span>(DefEnfCerDesMul)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">sderror &lt;-<span class="st"> </span><span class="kw">sd</span>(error, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="kw">autoplot</span>(error,</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">         <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb10-7" data-line-number="7">         <span class="dt">ylab =</span> <span class="st">&quot;Error&quot;</span>,</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8">         <span class="dt">main =</span> <span class="st">&quot;Figura 7. Error + Intervención&quot;,</span></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="st">         colour = &quot;</span>black<span class="st">&quot;) +</span></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="st">  geom_hline(yintercept = c(3, 2, -2, -3)*sderror, </span></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="st">             colour = c(&quot;</span>red<span class="st">&quot;, &quot;</span>green<span class="st">&quot;, &quot;</span>green<span class="st">&quot;, &quot;</span>red<span class="st">&quot;),</span></a>
+<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="st">             lty = 2) + </span></a>
+<a class="sourceLine" id="cb10-13" data-line-number="13"><span class="st">  scale_x_continuous(breaks= seq(1980, 2018, 4)) </span></a></code></pre></div>
+<p><img src="03-06-Ejemplo1_files/figure-html/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Por otro lado, el residuo parece incorrelado pero heterocedástico. Para analizar la incorrelación con más detalle hemos obtenido la gráfica del error de un periodo <span class="math inline">\(e_t\)</span> respecto del error del periodo previo <span class="math inline">\(e_{t-1}\)</span> (véase figura 8). Si el error es incorrelado deberemos ver una nube de puntos sin ningún patrón, como así ocurre, salvo para los valores atípicos. (Existe la función <code>lag.plot</code> en <code>stats</code>.)</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">gglagplot</span>(error, </a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">          <span class="dt">lags =</span> <span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">          <span class="dt">do.lines =</span> <span class="ot">FALSE</span>, </a>
+<a class="sourceLine" id="cb11-4" data-line-number="4">          <span class="dt">colour =</span> <span class="ot">FALSE</span>, </a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">          <span class="dt">main =</span> <span class="st">&quot;Figura 8. Error de un periodo frente al error del periodo previo&quot;</span>)</a></code></pre></div>
+<p><img src="03-06-Ejemplo1_files/figure-html/unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Para analizar mejor la homocedasticidad hemos obtenido la variabilidad del error dentro de cada año (figura 9). La presencia de valores extremos afecta el cálculo de la desviación estándar y puede generar la impresión de heterocedasticidad en procesos claramente homocedásticos. Si hay sospechas de que este pueda ser el caso, una solución es calcular la mediana de las desviaciones medianas (median absolute deviation) como medida de dispersión usando la función <code>mad</code>. Si la variabilidad intra-anual se mantiene constante, podemos asumir la hipótesis de homocedasticidad. La figura 9 indica que no parece que este sea el caso, dado que conforme pasan los años la desviación típica del residuo se va reduciendo.</p>
+<p>En todo caso este es sólo un análisis gráfico sin ninguna validez estadística.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">DesviacionAnual =<span class="st"> </span><span class="kw">aggregate</span>(error, <span class="dt">FUN =</span> mad)</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw">ggplot</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">time</span>(DesviacionAnual), <span class="dt">y =</span> DesviacionAnual), <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Figura 9: Análisis de homocedasticidad&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Desviación absoluta mediana&quot;</span>) </a></code></pre></div>
+<p><img src="03-06-Ejemplo1_files/figure-html/unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+<br />
+<br />
+<br />
+</p>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiU2VyaWVzIFRlbXBvcmFsZXM6IEludHJvZHVjY2nDs24iCmF1dGhvcjogIkl2w6FuIEFycmliYXMgKERlcHRvLiBBbsOhbGlzaXMgRWNvbsOzbWljby4gVW5pdmVyc2l0YXQgZGUgVmFsw6huY2lhKSIKZGF0ZTogIkN1cnNvIDIwMjAtMjEiCm91dHB1dDogCiAgaHRtbF9kb2N1bWVudDoKICAgIHRoZW1lOiBjZXJ1bGVhbgogICAgaGlnaGxpZ2h0OiBweWdtZW50cyAKICAgIGZpZ19jYXB0aW9uOiBmYWxzZQogICAgZGZfcHJpbnQ6IGthYmxlCiAgICB0b2M6IHRydWUKICAgIHRvY19kZXB0aDogMgogICAgdG9jX2Zsb2F0OiAKICAgICAgY29sbGFwc2VkOiB0cnVlCiAgICBudW1iZXJfc2VjdGlvbnM6IHRydWUKICAgIHNlbGZfY29udGFpbmVkOiB0cnVlCiAgICBjb2RlX2Rvd25sb2FkOiB0cnVlCi0tLQoKYGBge3IgY2h1bmtfc2V0dXAsIGVjaG8gPSBGQUxTRX0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KHdhcm5pbmcgPSBGQUxTRSwgCiAgICAgICAgICAgICAgICAgICAgICBtZXNzYWdlID0gRkFMU0UsIAogICAgICAgICAgICAgICAgICAgICAgY29tbWVudCA9ICIiLAogICAgICAgICAgICAgICAgICAgICAgZmlnLmFsaWduID0gImNlbnRlciIsIAogICAgICAgICAgICAgICAgICAgICAgZmlnLnNob3cgPSAiaG9sZCIsCiAgICAgICAgICAgICAgICAgICAgICBmaWcuaGVpZ2h0ID0gNCwKICAgICAgICAgICAgICAgICAgICAgIGZpZy53aWR0aCA9IDgsCiAgICAgICAgICAgICAgICAgICAgICBvdXQud2lkdGggPSAiODAlIikgCmBgYAoKYGBge3Igb3B0aW9uc19zZXR1cCwgZWNobyA9IEZBTFNFfQpvcHRpb25zKHNjaXBlbiA9IDk5OSkgIy0gcGFyYSBxdWl0YXIgbGEgbm90YWNpb24gY2llbnRpZmljYQpgYGAKCmBgYHtyIGxpYnJlcmlhcywgZWNobyA9IEZBTFNFfQpsaWJyYXJ5KCJSQ29sb3JCcmV3ZXIiKQpsaWJyYXJ5KGZvcmVjYXN0KQpsaWJyYXJ5KGdncGxvdDIpOyB0aGVtZV9zZXQodGhlbWVfYncoKSkKbGlicmFyeShncmlkRXh0cmEpCmxpYnJhcnkoZ3JpZCkKYGBgCgpcClwKCiMgRWplbXBsbyBkZSBhcGxpY2FjacOzbjogRGVmdW5jaW9uZXMgcG9yIEVuZmVybWVkYWRlcyBDZXJlYnJvdmFzY3VsYXJlcwoKXAoKIyMgSW50cm9kdWNjacOzbgoKQ29uc2lkZXJlbW9zIGxhIHNlcmllIHRlbXBvcmFsIGNvcnJlc3BvbmRpZW50ZSBhbCBuw7ptZXJvIGRlIGRlZnVuY2lvbmVzIGNhdXNhZGFzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMsIEVzdGEgc2VyaWUgZXN0w6EgZGlzcG9uaWJsZSBlbiBlbCBJbnN0aXR1dG8gTmFjaW9uYWwgZGUgRXN0YWTDrXN0aWNhIGRlc2RlIGVuZXJvIGRlIDE5ODAgaGFzdGEgZGljaWVtYnJlIGRlIDIwMTgsIHVuIHRvdGFsIGRlIDM5IGHDsW9zIHkgNDY4IG9ic2VydmFjaW9uZXMuCgpMYSBzZXJpZSB5IHN1IGZlY2hhZG8gZXN0w6FuIGVuIGVsIGZpY2hlcm8gIkVuZmVybWVkYWRlcyBjZXJlYnJvdmFzY3VsYXJlcy5jc3YiLgoKCmBgYHtyfQpEZWZFbmZDZXIgPC0gcmVhZC5jc3YyKCIuL3Nlcmllcy9FbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMuY3N2IiwgaGVhZGVyID0gVFJVRSkKRGVmRW5mQ2VyIDwtIHRzKERlZkVuZkNlclssMl0sIHN0YXJ0ID0gMTk4MCwgZnJlcSA9IDEyKQpgYGAKClwKCiMjIEFuw6FsaXNpcyBwcmVsaW1pbmFyIGdyw6FmaWNvCgpMYSBncsOhZmljYSBkZSBsYSBzZXJpZSB0ZW1wb3JhbCAoZmlndXJhIDEpIG11ZXN0cmEgdW5hIF9fdGVuZGVuY2lhX18gZGVjcmVjaWVudGUgZW4gZWwgbsO6bWVybyBkZSBtdWVydGVzIGNhdXNhZGFzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMgZW4gRXNwYcOxYS4gCgpMYXMgbMOtbmVhcyB2ZXJ0aWNhbGVzIGRlIGxhIGZpZ3VyYSAxIG1hcmNhbiBsb3MgbWVzZXMgZGUgZW5lcm8gZGUgY2FkYSBhw7FvIHkgcGVybWl0ZW4gaWRlbnRpZmljYXIgbWVqb3IgbGEgcG9zaWJsZSBfX2NvbXBvbmVudGUgZXN0YWNpb25hbF9fLiBBcGFyZW50ZW1lbnRlIGxhcyBtdWVydGVzIGNhdXNhZGFzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMgdGllbmUgdW5hIG1heW9yIGluY2lkZW5jaWEgZW4gaW52aWVybm8uIE3DoXMgYWRlbGFudGUgc2UgaGFyw6EgdW4gYW7DoWxpc2lzIGRldGFsbGFkbyBkZSBsYSBlc3RhY2lvbmFsaWRhZC4KCmBgYHtyfQphdXRvcGxvdChEZWZFbmZDZXIsCiAgICAgICAgIHhsYWIgPSAiIiwKICAgICAgICAgeWxhYiA9ICJDYXNvcyIsCiAgICAgICAgIG1haW4gPSAiRmlndXJhIDEuIERlZnVuY2lvbmVzIGNhdXNhZGFzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMiKSArCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz0gc2VxKDE5ODAsIDIwMTgsIDIpKSAKYGBgCgpDb25mb3JtZSBkaXNtaW51eWUgZWwgbsO6bWVybyBkZSBtdWVydGVzIGHDsW8gdHJhcyBhw7FvLCB0YW1iacOpbiBkaXNtaW51eWUgbGEgYW1wbGl0dWQgZXN0YWNpb25hbC4gRW4gbG9zIDgwIGxhIGRpZmVyZW5jaWEgZW50cmUgbG9zIG1lc2VzIGRlIG3DoXMgeSBtZW5vcyBpbmNpZGVuY2lhIGRlIGxhIGVuZmVybWVkYWQgZXJhIG11eSBhY3VzYWRhIChhcHJveGltYWRhbWVudGUgMjUwMCBjYXNvcyksIG1pZW50cmFzIHF1ZSBlbiBsb3Mgw7psdGltb3MgYcOxb3MgZXN0YSBkaWZlcmVuY2lhIGVzIG3DoXMgcmVkdWNpZGEgKHVub3MgMTAwMCBjYXNvcykuIFBhcmVjZSwgcG9yIHRhbnRvLCBxdWUgZXN0YW1vcyBhbnRlIHVuIF9fZXNxdWVtYSBtdWx0aXBsaWNhdGl2b19fLiBQYXJhIGNvbmZpcm1hciBlc3RlIGFzcGVjdG8gc2UgaGEgcmVhbGl6YWRvIHVuIGdyw6FmaWNvIGRlIHB1bnRvcyBlbnRyZSBlbCBudW1lcm8gYW51YWwgZGUgY2Fzb3MgZGUgbXVlcnRlcyBjYXVzYWRhcyBwb3IgZW5mZXJtZWRhZGVzIGNlcmVicm92YXNjdWxhcmVzIHkgbGEgZGVzdmlhY2nDs24gdMOtcGljYSBpbnRyYS1hbnVhbCAoZmlndXJhIDIpLgoKYGBge3J9CkNhc29zQW51YWwgPSBhcy5udW1lcmljKGFnZ3JlZ2F0ZShEZWZFbmZDZXIsIEZVTiA9IHN1bSkpCkRlc3ZpYWNpb25BbnVhbCA9IGFzLm51bWVyaWMoYWdncmVnYXRlKERlZkVuZkNlciwgRlVOID0gc2QpKQoKZ2dwbG90KCkgKwogIGdlb21fcG9pbnQoYWVzKHggPSBDYXNvc0FudWFsLCB5ID0gRGVzdmlhY2lvbkFudWFsKSwgc2l6ZSA9IDIpICsKICB4bGFiKCJUb3RhbCBkZSBjYXNvcyIpICsgCiAgeWxhYigiRGVzdmlhY2nDs24gdMOtcGljYSIpICsgCiAgZ2d0aXRsZSgiRmlndXJhIDI6IEFuw6FsaXNpcyBkZWwgdGlwbyBkZSBlc3F1ZW1hIikgCmBgYAoKRWZlY3RpdmFtZW50ZSwgbG9zIGHDsW9zIGNvbiBtYXlvciBuw7ptZXJvIGRlIGNhc29zIGRlIGRlZnVuY2lvbmVzIHNlIGNvcnJlc3BvbmRlbiBjb24gdW5hIG1heW9yIHZhcmlhYmlsaWRhZCBpbnRyYS1hbnVhbCwgcG9yIGxvIHF1ZSBjb25maXJtYW1vcyBlbCBlc3F1ZW1hIG11bHRpcGxpY2F0aXZvIGRlIGxhIHNlcmllLgoKXAoKIyMgVGVuZGVuY2lhIHkgRXN0YWNpb25hbGlkYWQKCiMjIyBUZW5kZW5jaWEKCkhlbW9zIG9idGVuaWRvIGxhIHNlcmllIGFudWFsIGRlIGNhc29zIGRlIGRlZnVuY2lvbmVzIGNhdXNhZGFzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMsIHF1ZSBwcmVzZW50YW1vcyBlbiBsYSBmaWd1cmEgMy4gU2UgY29uZmlybWEgbGEgdGVuZGVuY2lhIGRlY3JlY2llbnRlLCBwdW50dWFsbWVudGUgaW50ZXJydW1waWRhIGFsZ3Vub3MgYcOxb3MuIEVuIGxvcyBhw7FvcyA4MCBlbCBuw7ptZXJvIGRlIGRlZnVuY2lvbmVzIHByw6FjdGljYW1lbnRlIGFsY2FuemFiYSBsYXMgNTAsMDAwLCBtaWVudHJhcyBxdWUgYWN0dWFsbWVudGUgYXBlbmFzIHN1cGVyYW4gbGFzIDI1LDAwMC4gRXMgZGVjaXIsIHVuYSBjYcOtZGEgbWVkaWEgYW51YWwgZGUgMS41JSBlbiBlbCBuw7ptZXJvIGRlIGRlZnVuY2lvbmVzLgoKYGBge3J9CmF1dG9wbG90KGFnZ3JlZ2F0ZShEZWZFbmZDZXIsIEZVTiA9IHN1bSksCiAgICAgICAgIHhsYWIgPSAiIiwKICAgICAgICAgeWxhYiA9ICJDYXNvcyIsCiAgICAgICAgIG1haW4gPSAiRmlndXJhIDMuIERlZnVuY2lvbmVzIGNhdXNhZGFzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMiKSArCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz0gc2VxKDE5ODAsIDIwMTgsIDIpKSAKYGBgCgojIyMgRXN0YWNpb25hbGlkYWQKClZlYW1vcyBhaG9yYSBjb21vIHZhcsOtYSBsYSBpbmNpZGVuY2lhIGRlIGxhcyBtdWVydGVzIGNhdXNhZGFzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMgc2Vnw7puIGVsIG1lcyBkZWwgYcOxby4gCgpgYGB7cn0KZ2dtb250aHBsb3QoRGVmRW5mQ2VyLCAKICAgICAgICAgICAgIHBvbGFyPVRSVUUsCiAgICAgICAgICAgICB4bGFiID0gIiIsCiAgICAgICAgICAgICB5bGFiID0gIiIsCiAgICAgICAgICAgICBtYWluID0gIkZpZ3VyYSA0LiBHcsOhZmljbyBlc3RhY2lvbmFsOiBkZWZ1bmNpb25lcyBwb3IgZW5mZXJtZWRhZGVzIGNlcmVicm92YXNjdWxhcmVzIikgKwogIGd1aWRlcyhjb2xvdXI9RkFMU0UpCmBgYAoKQ2FkYSBzdWJzZXJpZSBlbiBsYSBmaWd1cmEgNCB2dWVsdmUgYSBtb3N0cmFyIGxhIHJlZHVjY2nDs24gZW4gbGFzIGRlZnVuY2lvbmVzIGNhdXNhZGFzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMgZHVyYW50ZSBlbCBwZXJpb2RvIGRlIGFuw6FsaXNpcy4gUmVzcGVjdG8gZGUgbGEgZXN0YWNpb25hbGlkYWQsIHNlIGFwcmVjaWEgcXVlIGVsIHByaW5jaXBhbCBkZXRlcm1pbmFudGUgZXMgbGEgdGVtcGVyYXR1cmEgcHVlc3RvIHF1ZSBsYSBpbmNpZGVuY2lhIGRlIGxhIGVuZmVybWVkYWQgZXMgbWF5b3IgZW4gbG9zIG1lc2VzIGRlIGludmllcm5vIHkgbWVub3IgZW4gbG9zIGRlIHZlcmFuby4gVGFtYmnDqW4gY2FicsOtYSBlc3BlcmFyIHVuIGVmZWN0byBfdGFtYcOxbyBkZWwgbWVzXyB5IG9ic2VydmFyIG3DoXMgaW5jaWRlbmNpYSBlbiBsb3MgbWVzZXMgZGUgMzEgZMOtYXMgcXVlIGVuIGxvcyBkZSAzMCwgcGVybyBlbCBlZmVjdG8gZGUgbGEgdGVtcGVyYXR1cmEgZXMgdGFuIGRvbWluYW50ZSBxdWUgYW51bGEgY3VhbHF1aWVyIG90cm8gZWZlY3RvLgoKIyMgRGVzY29tcG9zaWNpw7NuCgpWYW1vcyBhIG9idGVuZXIgY2FkYSB1bmEgZGUgbGFzIGNvbXBvbmVudGVzIGRlIGxhIHNlcmllIHVzYW5kbyBlbCBtw6l0b2RvIGRlIG1lZGlhcyBtw7N2aWxlcyBgZGVjb21wb3NlYC4gU2UgaGEgb3B0YWRvIHBvciBlc3RlIG3DqXRvZG8gZGFkbyBxdWUgbGEgc2VyaWUgbXVlc3RyYSB1biBlc3F1ZW1hIG11bHRpcGxpY2F0aXZvLiBMYSBvdHJhIG9wY2nDs24gaHViaWVyYSBzaWRvIHVzYXIgZWwgbcOpdG9kbyBkZSByZWdyZXNpb25lcyBsb2NhbGVzIHBvbmRlcmFkYXMsIHBlcm8gZW50b25jZXMgdHJhYmFqYXLDrWFtb3MgY29uIGVsIGxvZ2FyaXRtbyBkZSBsYSBzZXJpZSBwZXJkaWVuZG8gaW50ZXJwcmV0YWJpbGlkYWQuCgpgYGB7ciwgZmlnLmhlaWdodD03fQpEZWZFbmZDZXJEZXNNdWwgPC0gZGVjb21wb3NlKERlZkVuZkNlciwgdHlwZSA9ICJtdWx0IikKYXV0b3Bsb3QoRGVmRW5mQ2VyRGVzTXVsLAogICAgICAgICB4bGFiID0gIiIsCiAgICAgICAgIG1haW4gPSAiRmlndXJhIDUuIERlc2NvbXBvc2ljacOzbiBhZGl0aXZhIHBvciBtZWRpYXMgbcOzdmlsZXMiKQpgYGAKCkxhIF9fdGVuZGVuY2lhX18gb2J0ZW5pZGEgdHJhcyBsYSBkZXNjb21wb3NpY2nDs24gbm8gaGFjZSBzaW5vIGNvbmZpcm1hciBsbyB5YSBvYnNlcnZhZG8sIHVuYSB0ZW5kZW5jaWEgZGVjcmVjaWVudGUgZW4gbG9zIGNhc29zIGRlIGRlZnVuY2lvbmVzIHBvciBlbmZlcm1lZGFkIGNlcmVicm92YXNjdWxhci4gCgpUYW1iacOpbiBzZSBhcHJlY2lhbiBtdXkgY2xhcmFtZW50ZSB2YXJpb3MgdmFsb3JlcyBhdMOtcGljb3MgZW4gZWwgX19yZXNpZHVvX18gYWwgaW5pY2lvIGRlbCBwZXJpb2RvIGRlIGFuw6FsaXNpcywgYSBmaW5hbGVzIGRlbCBwYXNhZG8gc2lnbG8geSBhbCBpbmljaW8gZGUgbGEgcGFzYWRhIGTDqWNhZGEuCgpSZXNwZWN0byBkZSBsYSBfX2NvbXBvbmVudGUgZXN0YWNpb25hbF9fLCBzZSBjb25maXJtYSBlbCBhbsOhbGlzaXMgcHJlbGltaW5hcjogYWx0YSBpbmNpZGVuY2lhIGVuIGludmllcm5vLCBlc3BlY2lhbG1lbnRlIGVuIGRpY2llbWJyZSB5IGVuZXJvLCB5IG11eSBiYWphIGVuIHZlcmFubywgZGVzdGFjYW5kbyBzZXB0aWVtYnJlLiBFbiBjb25jcmV0bywgZW4gZW5lcm8gc2UgZGV0ZWN0YW4gZW50cmUgdW4gMjUlIG3DoXMgZGUgY2Fzb3MgZGUgZGVmdW5jaW9uZXMgcmVzcGVjdG8gZGUgbGEgbWVkaWEgYW51YWwsIGVuIGRpY2llbWJyZSB1biAxNCUgbcOhcyB5IGVuIGxvcyBtZXNlcyBkZSBmZWJyZXJvIHkgbWFyem8gdW4gOSUgbcOhcy4gUG9yIGNvbnRyYSwgZW4gc2VwdGllbWJyZSBzZSBvYnNlcnZhIHVuIGRlc2NlbnNvIGRlbCAxNyUuIENhYnLDrWEgcHJlZ3VudGFyc2UgbGFzIGNhdXNhcyBkZWwgcmVwdW50ZSBlbiBqdWxpbywgYXVucXVlIHB1ZWRlIGRlYmVyc2UgYSBzZXIgdW4gbWVzIGRlIDMxIGTDrWFzLgoKYGBge3J9CnJvdW5kKERlZkVuZkNlckRlc011bCRmaWd1cmUsIDIpCmBgYAoKQSBmaW4gZGUgYWlzbGFyIGRlIGxhIGNvbXBvbmVudGUgZXN0YWNpb25hbCBlbCBlZmVjdG8gX3RhbWHDsW8gZGVsIG1lc18gZGVsIGVmZWN0byBkZSBsYSB0ZW1wZXJhdHVyYSwgc2UgaGEgYXBsaWNhZG8gbGEgZGVzY29tcG9zaWNpw7NuIGEgbGEgc2VyaWUgX2RlZnVuY2lvbmVzIHBvciBkw61hIGNhdXNhZGFzIHBvciBlbmZlcm1lZGFkIGNlcmVicm92YXNjdWxhcl8gcmVzdWx0YW50ZSBkZSBkaXZpZGlyIGxhIHNlcmllIG9yaWdpbmFsIHBvciBlbCBuw7ptZXJvIGRlIGTDrWFzIGRlbCBtZXMgKHF1ZSBvYnRlbmVub3MgY29uIGxhIGZ1bmNpw7NuIGBtb250aGRheXNgLiBFbiBlc3RhIG51ZXZhIHNlcmllIHRvZG8gZWwgZWZlY3RvIGVzdGFjaW9uYWwgc2UgZGViZXLDoSBhIGxhIHRlbXBlcmF0dXJhLgoKTGEgZmlndXJhIDYgbXVlc3RyYSBxdWUgbGEgY29tcG9uZW50ZSBlc3RhY2lvbmFsIGVzdGltYWRhIHBhcmEgbGFzIGRlZnVuY2lvbmVzIHBvciBkw61hIGVzIG3DoXMgc3VhdmUgcXVlIGxhIGNvbXBvbmVudGUgb2J0ZW5pZGEgYSBwYXJ0aXIgbGEgc2VyaWUgb3JpZ2luYWwuIFRhbWJpw6luIHNlIGFwcmVjaWEgcXVlIGVsIGVmZWN0byBkZWwgdGFtYcOxbyBkZWwgbWVzIGVzIG11eSBhY3VzYWRvIGVuIGZlYnJlcm8uIFBhcmEgZXN0ZSBtZXMgZWwgZWZlY3RvIGVzdGFjaW9uYWwgZXMgZWwgcmVzdWx0YWRvIGRlIGRvcyBmdWVyemFzIG9wdWVzdGFzOiBsYSBiYWphIHRlbXBlcmF0dXJhIGluY3JlbWVudGEgbGEgY29tcG9uZW50ZSBlc3RhY2lvbmFsIHBlcm8gZWwgdGFtYcOxbyBkZWwgbWVzICgyOCBkw61hcykgbGEgcmVkdWNlLiBTb2JyZSBsYSBzZXJpZSBvcmlnaW5hbCBhbWJhcyBmdWVyemFzIHRpZW5lbiBsdWdhciB5IGVsIHJlc3VsdGFkbyBlcyB1bmEgY29tcG9uZW50ZSBlc3RhY2lvbmFsIHBhcmEgZmVicmVybyBtZW5vciBxdWUgbGEgZGUgbWFyem8sIHNpZW5kbyBlc3RlIMO6bHRpbW8gdW4gbWVzIHF1ZSBwb3Igc2UgbcOhcyBjw6FsaWRvIGRlYmVyaWEgdGVuZXIgdW5hIGNvbXBvbmVudGUgZXN0YWNpb25hbCBtZW5vciBxdWUgbGEgZGUgZmVicmVyby4gRW4gbGEgc2VyaWUgZGUgZGVmdW5jaW9uZXMgcG9yIGTDrWEgZWwgZWZlY3RvIHRhbWHDsW8gaGEgc2lkbyBlbGltaW5hZG8sIHNvbG8gcXVlZGEgZWwgZWZlY3RvIHRlbXBlcmF0dXJhIHkgcG9yIGVzbyBsYSBjb21wb25lbnRlIGRlIGZlYnJlcm8gZXMgbWVub3IgcXVlIGxhIGRlIGVuZXJvLCBwZXJvIG1heW9yIHF1ZSBsYSBkZSBtYXJ6by4gRWwgZmVuw7NtZW5vIG9wdWVzdG8gc2Ugb2JzZXJ2YSBlbiBsb3MgbWVzZXMgZGUgSnVsaW8geSBBZ29zdG8gcmVzcGVjdG8gZGVsIG1lcyBkZSBKdW5pbzogZGViaWRvIGEgcXVlIEp1bGlvIHkgQWdvc3RvIHNvbiBtZXNlcyBjw6FsaWRvcyAobWVub3MgZGVmdW5jaW9uZXMpIHBlcm8gZGUgMzEgZMOtYXMgKG3DoXMgZGVmdW5jaW9uZXMpLCBwcmVzZW50YW4gbcOhcyBkZWZ1bmNpb25lcyBxdWUgSnVuaW8sIHVuIG1lcyBtZW5vcyBjw6FsaWRvIHBlcm8gZGUgMzAgZMOtYXMuCgoKYGBge3J9CkRlZkVuZkNlckRpYURlc011bCA8LSBkZWNvbXBvc2UoRGVmRW5mQ2VyL21vbnRoZGF5cyhEZWZFbmZDZXIpLCB0eXBlID0gIm11bHQiKQoKZ2dwbG90KCkgKwogIGdlb21fbGluZShhZXMoeCA9IDE6MTIsIHkgPSBEZWZFbmZDZXJEZXNNdWwkZmlndXJlLCBjb2xvdXIgPSAiYmxhY2siKSkgKyAKICBnZW9tX2xpbmUoYWVzKHggPSAxOjEyLCB5ID0gRGVmRW5mQ2VyRGlhRGVzTXVsJGZpZ3VyZSwgY29sb3VyID0gInJlZCIpKSArIAogIGdlb21faGxpbmUoeWludGVyY2VwdCA9IDEsIGNvbG91ciA9ICJibHVlIiwgbHR5ID0gMikgKwogIGdndGl0bGUoIkZpZ3VyYSA2LiBDb21wb25lbnRlIGVzdGFjaW9uYWwgZGUgZGVmdW5jaW9uZXMgcG9yIGVuZi4gY2VyZWJyb3Zhc2N1bGFyZXMiKSArCiAgeGxhYigiIikgKwogIHlsYWIoIkVmZWN0byBlc3RhY2lvbmFsIikgKwogIHNjYWxlX3hfY29udGludW91cyhicmVha3M9IDE6MTIsIAogICAgICAgICAgICAgICAgICAgICBsYWJlbHMgPSBjKCJFbmUiLCAiRmViIiwgIk1hciIsICJBYnIiLCAiTWF5IiwgIkp1biIsIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJKdWwiLCAiQWdvIiwgIlNlcCIsICJPY3QiLCAiTm92IiwgIkRpYyIpKSArCiAgc2NhbGVfY29sb3JfZGlzY3JldGUobmFtZSA9ICJDb21wb25lbnRlIGVzdGFjaW9uYWwiLCAKICAgICAgICAgICAgICAgICAgICAgICBsYWJlbHMgPSBjKCJEZWZ1bmNpb25lcyIsICJEZWZ1bmNpb25lcyBwb3IgZMOtYSIpKSArCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uPWMoMC4wMiwwLjAyKSwgbGVnZW5kLmp1c3RpZmljYXRpb249YygwLDApKQpgYGAKCgojIyBBbsOhbGlzaXMgZGVsIHJlc2lkdW8gZGVsIG3DqXRvZG8gZGUgZGVzY29tcG9zaWNpw7NuCgpMb3MgbcOpdG9kb3MgZGUgZGVzY29tcG9zaWNpw7NuIG5vIHJlcXVpZXJlbiBkZSBuaW5nw7puIHN1cHVlc3RvIHNvYnJlIGxvcyByZXNpZHVvcy4gU2luIGVtYmFyZ28sIHZhbW9zIGEgcmVhbGl6YXIgdW5hIGFuw6FsaXNpcyBncsOhZmljbyBpbmZvcm1hbCBkZSBlc3RvcywgYWRlbGFudGFuZG8gY29uY2VwdG9zIHF1ZSBpcsOhbiBzaWVuZG8gbmVjZXNhcmlvcyBzZWfDum4gYXZhbmNlbW9zIGVuIGVsIGN1cnNvLgoKQ29tbyBsYSBkZXNjb21wb3NpY2nDs24gZXMgbXVsdGlwbGljYXRpdmEsIGVsIGVycm9yIGVzIGVuIHRhbnRvIHBvciB1bm8geSB0aWVuZSBtZWRpYSAxLiBQYXJhIGFuYWxpemFyIGxhcyBwcm9waWVkYWRlcyBkZWwgcmVzaWR1bywgdmFtb3MgYSBjYWxjdWxhcmxvIGNvbW8gZXJyb3IgYWRpdGl2by4gUGFyYSBlbGxvIHZhbW9zIGEgcmVzdGFyIGEgbGEgc2VyaWUgb3JpZ2luYWwgbGEgc2VyaWUgZXN0aW1hZGEsIG9idGVuaWRhIGNvbW8gZWwgcHJvZHVjdG8gZGUgbGEgdGVuZGVuY2lhIHBvciBsYSBlc3RhY2lvbmFsaWRhZCwgZXMgZGVjaXIsICRSX3QgPSB5X3QgLSAoVF90ICogU190KSQuCgpMYSBmaWd1cmEgNyBtdWVzdHJhIGVsIGVycm9yIHkgbG9zIGludGVydmFsb3MgZGUgY29uZmlhbnphIChJQykgYWwgOTUlIChsw61uZWFzIGVuIHZlcmRlKSB5IGFsIDk5LjclIChsw61uZWFzIGVuIHJvam8pLiBTZSBvYnNlcnZhbiBzaWV0ZSB2YWxvcmVzIGNsYXJhbWVudGUgZXh0cmVtb3MgcXVlIGNydXphbiBlbCBJQyg5OS43JSkgcG9yIGxhIHBhcnRlIHN1cGVyaW9yIGRlIGxhIGdyw6FmaWNhLiBDb3JyZXNwb25kZW4gYSBsb3MgbWVzZXMgZGUgZW5lcm8gZGUgMTk4MSwgZW5lcm8geSBmZWJyZXJvIGRlIDE5ODMsIG1hcnpvIGRlIDE5ODQsIGVuZXJvIGRlIDE5ODUsIGZlYnJlcm8gZGUgMTk5OSB5IGZlYnJlcm8gZGUgMjAxMiwgZW4gbG9zIHF1ZSBsb3MgY2Fzb3MgZGUgZGVmdW5jaW9uZXMgcG9yIGVuZmVybWVkYWRlcyBjZXJlYnJvdmFzY3VsYXJlcyBmdWVyb24gbXV5IHN1cGVyaW9yZXMgYSBsbyBlc3BlcmFkby4gQWRlbcOhcywgdG9kb3MgbG9zIGNhc29zIHRpZW5lbiBsdWdhciBlbiBpbnZpZXJubyB5IHBvZHLDrWFuIGVzdGFyIHJlbGFjaW9uYWRvcyBjb24gbGEgdGVtcGVyYXR1cmEgbWVkaWEgaW52ZXJuYWwgZW4gZXNvcyBhw7Fvcy4KCmBgYHtyfQplcnJvciA8LSBEZWZFbmZDZXIgLSB0cmVuZGN5Y2xlKERlZkVuZkNlckRlc011bCkgKiBzZWFzb25hbChEZWZFbmZDZXJEZXNNdWwpCgpzZGVycm9yIDwtIHNkKGVycm9yLCBuYS5ybSA9IFRSVUUpCgphdXRvcGxvdChlcnJvciwKICAgICAgICAgeGxhYiA9ICIiLAogICAgICAgICB5bGFiID0gIkVycm9yIiwKICAgICAgICAgbWFpbiA9ICJGaWd1cmEgNy4gRXJyb3IgKyBJbnRlcnZlbmNpw7NuIiwKICAgICAgICAgY29sb3VyID0gImJsYWNrIikgKwogIGdlb21faGxpbmUoeWludGVyY2VwdCA9IGMoMywgMiwgLTIsIC0zKSpzZGVycm9yLCAKICAgICAgICAgICAgIGNvbG91ciA9IGMoInJlZCIsICJncmVlbiIsICJncmVlbiIsICJyZWQiKSwKICAgICAgICAgICAgIGx0eSA9IDIpICsgCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz0gc2VxKDE5ODAsIDIwMTgsIDQpKSAKYGBgCgpQb3Igb3RybyBsYWRvLCBlbCByZXNpZHVvIHBhcmVjZSBpbmNvcnJlbGFkbyBwZXJvIGhldGVyb2NlZMOhc3RpY28uIFBhcmEgYW5hbGl6YXIgbGEgaW5jb3JyZWxhY2nDs24gY29uIG3DoXMgZGV0YWxsZSBoZW1vcyBvYnRlbmlkbyBsYSBncsOhZmljYSBkZWwgZXJyb3IgZGUgdW4gcGVyaW9kbyAkZV90JCByZXNwZWN0byBkZWwgZXJyb3IgZGVsIHBlcmlvZG8gcHJldmlvICRlX3t0LTF9JCAodsOpYXNlIGZpZ3VyYSA4KS4gIFNpIGVsIGVycm9yIGVzIGluY29ycmVsYWRvIGRlYmVyZW1vcyB2ZXIgdW5hIG51YmUgZGUgcHVudG9zIHNpbiBuaW5nw7puIHBhdHLDs24sIGNvbW8gYXPDrSBvY3VycmUsIHNhbHZvIHBhcmEgbG9zIHZhbG9yZXMgYXTDrXBpY29zLiAoRXhpc3RlIGxhIGZ1bmNpw7NuIGBsYWcucGxvdGAgZW4gYHN0YXRzYC4pCgpgYGB7cn0KZ2dsYWdwbG90KGVycm9yLCAKICAgICAgICAgIGxhZ3MgPSAxLCAKICAgICAgICAgIGRvLmxpbmVzID0gRkFMU0UsIAogICAgICAgICAgY29sb3VyID0gRkFMU0UsIAogICAgICAgICAgbWFpbiA9ICJGaWd1cmEgOC4gRXJyb3IgZGUgdW4gcGVyaW9kbyBmcmVudGUgYWwgZXJyb3IgZGVsIHBlcmlvZG8gcHJldmlvIikKYGBgCgpQYXJhIGFuYWxpemFyIG1lam9yIGxhIGhvbW9jZWRhc3RpY2lkYWQgaGVtb3Mgb2J0ZW5pZG8gbGEgdmFyaWFiaWxpZGFkIGRlbCBlcnJvciBkZW50cm8gZGUgY2FkYSBhw7FvIChmaWd1cmEgOSkuIExhIHByZXNlbmNpYSBkZSB2YWxvcmVzIGV4dHJlbW9zIGFmZWN0YSBlbCBjw6FsY3VsbyBkZSBsYSBkZXN2aWFjacOzbiBlc3TDoW5kYXIgeSBwdWVkZSBnZW5lcmFyIGxhIGltcHJlc2nDs24gZGUgaGV0ZXJvY2VkYXN0aWNpZGFkIGVuIHByb2Nlc29zIGNsYXJhbWVudGUgaG9tb2NlZMOhc3RpY29zLiBTaSBoYXkgc29zcGVjaGFzIGRlIHF1ZSBlc3RlIHB1ZWRhIHNlciBlbCBjYXNvLCB1bmEgc29sdWNpw7NuIGVzIGNhbGN1bGFyIGxhIG1lZGlhbmEgZGUgbGFzIGRlc3ZpYWNpb25lcyBtZWRpYW5hcyAobWVkaWFuIGFic29sdXRlIGRldmlhdGlvbikgY29tbyBtZWRpZGEgZGUgZGlzcGVyc2nDs24gdXNhbmRvIGxhIGZ1bmNpw7NuIGBtYWRgLiBTaSBsYSB2YXJpYWJpbGlkYWQgaW50cmEtYW51YWwgc2UgbWFudGllbmUgY29uc3RhbnRlLCBwb2RlbW9zIGFzdW1pciBsYSBoaXDDs3Rlc2lzIGRlIGhvbW9jZWRhc3RpY2lkYWQuIExhIGZpZ3VyYSA5IGluZGljYSBxdWUgbm8gcGFyZWNlIHF1ZSBlc3RlIHNlYSBlbCBjYXNvLCBkYWRvIHF1ZSBjb25mb3JtZSBwYXNhbiBsb3MgYcOxb3MgbGEgZGVzdmlhY2nDs24gdMOtcGljYSBkZWwgcmVzaWR1byBzZSB2YSByZWR1Y2llbmRvLgoKRW4gdG9kbyBjYXNvIGVzdGUgZXMgc8OzbG8gdW4gYW7DoWxpc2lzIGdyw6FmaWNvIHNpbiBuaW5ndW5hIHZhbGlkZXogZXN0YWTDrXN0aWNhLgoKYGBge3J9CkRlc3ZpYWNpb25BbnVhbCA9IGFnZ3JlZ2F0ZShlcnJvciwgRlVOID0gbWFkKQpnZ3Bsb3QoKSArCiAgZ2VvbV9wb2ludChhZXMoeCA9IHRpbWUoRGVzdmlhY2lvbkFudWFsKSwgeSA9IERlc3ZpYWNpb25BbnVhbCksIHNpemUgPSAyKSArCiAgZ2d0aXRsZSgiRmlndXJhIDk6IEFuw6FsaXNpcyBkZSBob21vY2VkYXN0aWNpZGFkIikgKwogIHhsYWIoIiIpICsKICB5bGFiKCJEZXN2aWFjacOzbiBhYnNvbHV0YSBtZWRpYW5hIikgCmBgYAoKClwKXApcClwKCg==</div>
+<footer class="footer">
+  
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
+<br>
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.  <div class="text-muted">Website created by Iv&aacute;n Arribas. &copy;  2020. If you find any bugs please report them to <a href="mailto:ivan.arribas@uv.es"> ivan.arribas@uv.es</a>.</div>
+  
+</footer>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("03-06-Ejemplo1.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

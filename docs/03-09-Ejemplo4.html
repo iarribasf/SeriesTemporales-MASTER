@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Iván Arribas (Depto. Análisis Económico. Universitat de València)" />
+
+
+<title>Series Temporales: Procesos ARIMA</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Series Temporales</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="01-Guia-curso.html">
+    <span class="fa fa-graduation-cap"></span>
+     
+    Guía del curso
+  </a>
+</li>
+<li>
+  <a href="02-Logistica.html">
+    <span class="fa fa-laptop"></span>
+     
+    Logistica
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-book"></span>
+     
+    Diapos
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Teoría</li>
+    <li>
+      <a href="03-01-Tema1.html">Tema 1: Introducción</a>
+    </li>
+    <li>
+      <a href="03-02-Tema2.html">Tema 2: Alisado</a>
+    </li>
+    <li>
+      <a href="03-03-Tema3.html">Tema 3: Procesos estocásticos</a>
+    </li>
+    <li>
+      <a href="03-04-Tema4.html">Tema 4: ARIMA</a>
+    </li>
+    <li>
+      <a href="03-05-Tema5.html">Tema 5: SARIMA</a>
+    </li>
+    <li class="dropdown-header">Ejemplo de aplicación</li>
+    <li>
+      <a href="03-06-Ejemplo1.html">Ejemplo Tema 1</a>
+    </li>
+    <li>
+      <a href="03-07-Ejemplo2.html">Ejemplo Tema 2</a>
+    </li>
+    <li>
+      <a href="03-08-Ejemplo3.html">Ejemplo Tema 3</a>
+    </li>
+    <li>
+      <a href="03-09-Ejemplo4.html">Ejemplo Tema 4</a>
+    </li>
+    <li>
+      <a href="03-10-Ejemplo5.html">Ejemplo Tema 5</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="04-Recursos-R.html">
+    <span class="fa fa-code"></span>
+     
+    Recursos de R
+  </a>
+</li>
+<li>
+  <a href="05-Practica.html">
+    <span class="fa fa-edit"></span>
+     
+    Practica
+  </a>
+</li>
+<li>
+  <a href="06-Calendario.html">
+    <span class="fa fa-calendar-alt"></span>
+     
+    Calendario
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-download"></span>
+     
+    Más
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">R</li>
+    <li>
+      <a href="https://cran.r-project.org">Dónde está R</a>
+    </li>
+    <li>
+      <a href="https://rstudio.com">Donde está RStudio</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Markdown</li>
+    <li>
+      <a href="https://bookdown.org/yihui/rmarkdown/">Markdown</a>
+    </li>
+    <li>
+      <a href="https://rmarkdown.rstudio.com/lesson-1.html">R Markdown</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Otros</li>
+    <li>
+      <a href="https://www.r-bloggers.com">Blog sobre R</a>
+    </li>
+    <li>
+      <a href="https://bookdown.org">Libros online que debes conocer</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Series Temporales: Procesos ARIMA</h1>
+<h4 class="author">Iván Arribas (Depto. Análisis Económico. Universitat de València)</h4>
+<h4 class="date">Curso 2020-21</h4>
+
+</div>
+
+
+<p><br />
+<br />
+</p>
+<div id="ejemplo-de-aplicación-defunciones-por-enfermedades-cerebrovasculares-continuación." class="section level1">
+<h1><span class="header-section-number">1</span> Ejemplo de aplicación: Defunciones por Enfermedades Cerebrovasculares (continuación).</h1>
+<p><br />
+</p>
+<div id="introducción" class="section level2">
+<h2><span class="header-section-number">1.1</span> Introducción</h2>
+<p>Consideremos de nuevo la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares, Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2018, un total de 39 años o 468 meses</p>
+<p>En la descriptiva del tema 1 vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para su análisis por modelos ARIMA vamos a recortar la serie, que empezará el enero de 1988 y a anualizarla (31 años).</p>
+<p><br />
+</p>
+</div>
+<div id="transformación-de-la-serie" class="section level2">
+<h2><span class="header-section-number">1.2</span> Transformación de la serie</h2>
+<p>La figura 1 muestra que la serie no es estacionaria, pero si su primera diferencia. Por tanto se opta por considerar <span class="math inline">\(d=1\)</span> o <span class="math inline">\(DefEnfCer \sim I(1)\)</span>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">DefEnfCer &lt;-<span class="st"> </span><span class="kw">read.csv2</span>(<span class="st">&quot;./series/Enfermedades cerebrovasculares.csv&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">DefEnfCer &lt;-<span class="st"> </span><span class="kw">ts</span>(DefEnfCer[,<span class="dv">2</span>],<span class="dt">start =</span> <span class="dv">1980</span>, <span class="dt">freq =</span> <span class="dv">12</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">DefEnfCer &lt;-<span class="st"> </span><span class="kw">window</span>(DefEnfCer, <span class="dt">start =</span> <span class="dv">1988</span>)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">DefEnfCer &lt;-<span class="st"> </span><span class="kw">aggregate</span>(DefEnfCer, <span class="dt">FUN =</span> sum)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="kw">autoplot</span>(DefEnfCer, <span class="dt">xlab =</span> <span class="st">&quot;Serie original&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw">autoplot</span>(<span class="kw">diff</span>(DefEnfCer), <span class="dt">xlab =</span> <span class="st">&quot;Serie diferenciada&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="kw">ggAcf</span>(DefEnfCer, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;FAC&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="kw">ggAcf</span>(<span class="kw">diff</span>(DefEnfCer), <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;FAC&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a></code></pre></div>
+<p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Por otro lado, el parámetro <span class="math inline">\(\lambda\)</span> óptimo en la transformación de Box-Cox es -0.81, así que no se realizará ninguna transformación logarítmica.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">BoxCox.lambda</span>(DefEnfCer)</a></code></pre></div>
+<pre><code>[1] -0.8126561</code></pre>
+<p><br />
+</p>
+</div>
+<div id="identificación" class="section level2">
+<h2><span class="header-section-number">1.3</span> Identificación</h2>
+<p>Veamos ahora a identificar los valores de <span class="math inline">\(p\)</span> y <span class="math inline">\(q\)</span> a partir de la FAC y la FACP. Difícil decidirse por un AR(1), un MA(1) o incluso un ARMA(1, 1).</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">ggtsdisplay</span>(<span class="kw">diff</span>(DefEnfCer), <span class="dt">main =</span> <span class="st">&quot;Figura 2. Def. por enf. cerebrovasculares (dif.)&quot;</span>)</a></code></pre></div>
+<p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>¿Qué recomienda <code>auto.arima</code>? Un AR(1) con deriva.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">auto.arima</span>(DefEnfCer, <span class="dt">d =</span> <span class="dv">1</span>)</a></code></pre></div>
+<pre><code>Series: DefEnfCer 
+ARIMA(1,1,0) with drift 
+
+Coefficients:
+          ar1      drift
+      -0.5696  -606.8375
+s.e.   0.1435    93.5852
+
+sigma^2 estimated as 676809:  log likelihood=-243.1
+AIC=492.21   AICc=493.13   BIC=496.41</code></pre>
+<p>La estimación de este modelo muestra que los dos coeficientes estimados son aparentemente significativos y que nos hay valores extremos (figura 3).</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">arima110 &lt;-<span class="st"> </span><span class="kw">Arima</span>(DefEnfCer, </a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">                  <span class="dt">order =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">                  <span class="dt">include.drift =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">error &lt;-<span class="st"> </span><span class="kw">residuals</span>(arima110)</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">sderror &lt;-<span class="st"> </span><span class="kw">sd</span>(error)</a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="kw">autoplot</span>(error, <span class="dt">series=</span><span class="st">&quot;Error&quot;</span>,</a>
+<a class="sourceLine" id="cb7-9" data-line-number="9">         <span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>,</a>
+<a class="sourceLine" id="cb7-10" data-line-number="10">         <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb7-11" data-line-number="11">         <span class="dt">ylab =</span> <span class="st">&quot;Error&quot;</span>,</a>
+<a class="sourceLine" id="cb7-12" data-line-number="12">         <span class="dt">main =</span> <span class="st">&quot;Figura 3. Error + Intervención&quot;) +</span></a>
+<a class="sourceLine" id="cb7-13" data-line-number="13"><span class="st">  geom_hline(yintercept = c(-3, -2, 2, 3)*sderror, </span></a>
+<a class="sourceLine" id="cb7-14" data-line-number="14"><span class="st">             colour = c(&quot;</span>red<span class="st">&quot;, &quot;</span>green<span class="st">&quot;, &quot;</span>green<span class="st">&quot;, &quot;</span>red<span class="st">&quot;), </span></a>
+<a class="sourceLine" id="cb7-15" data-line-number="15"><span class="st">             lty = 2) + </span></a>
+<a class="sourceLine" id="cb7-16" data-line-number="16"><span class="st">  geom_point() +</span></a>
+<a class="sourceLine" id="cb7-17" data-line-number="17"><span class="st">  scale_x_continuous(breaks= seq(1988, 2018, 4)) </span></a></code></pre></div>
+<p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="validación" class="section level2">
+<h2><span class="header-section-number">1.4</span> Validación</h2>
+<p><strong>Variables son significativas</strong></p>
+<p>Los dos coeficientes estimados (<span class="math inline">\(\phi_1\)</span> y <span class="math inline">\(\mu\)</span>) son significativos.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># H0: phi1 = 0</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw">wald.test</span>(<span class="dt">b =</span> <span class="kw">coef</span>(arima110), <span class="dt">Sigma =</span> <span class="kw">vcov</span>(arima110), <span class="dt">Terms =</span> <span class="dv">1</span>)</a></code></pre></div>
+<pre><code>Wald test:
+----------
+
+Chi-squared test:
+X2 = 15.7, df = 1, P(&gt; X2) = 0.000072</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># H0: deriva</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw">wald.test</span>(<span class="dt">b =</span> <span class="kw">coef</span>(arima110), <span class="dt">Sigma =</span> <span class="kw">vcov</span>(arima110), <span class="dt">Terms =</span> <span class="dv">2</span>)</a></code></pre></div>
+<pre><code>Wald test:
+----------
+
+Chi-squared test:
+X2 = 42.0, df = 1, P(&gt; X2) = 0.000000000089</code></pre>
+<p><br />
+</p>
+<p><strong>Medidas de error</strong></p>
+<p>El error medio es 782 defunciones (RMSE) y el error porcentual medio es 1.7% (MAPE).</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">accuracy</span>(arima110)</a></code></pre></div>
+<pre><code>                ME   RMSE    MAE   MPE MAPE MASE  ACF1
+Training set -0.71 781.86 591.48 -0.01  1.7 0.62 -0.12</code></pre>
+<p><br />
+</p>
+<p><strong>Incorrelación, Homocedasticidad y Normalidad</strong></p>
+<p>Veamos ahora si el residuo es ruido blanco:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">Box.test</span>(error, <span class="dt">lag =</span> <span class="dv">2</span>, <span class="dt">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>)</a></code></pre></div>
+<pre><code>
+    Box-Ljung test
+
+data:  error
+X-squared = 2.0985, df = 2, p-value = 0.3502</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">Box.test</span>(error<span class="op">^</span><span class="dv">2</span>, <span class="dt">lag =</span> <span class="dv">2</span>, <span class="dt">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>) </a></code></pre></div>
+<pre><code>
+    Box-Ljung test
+
+data:  error^2
+X-squared = 2.6067, df = 2, p-value = 0.2716</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">shapiro.test</span>(error)</a></code></pre></div>
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  error
+W = 0.90145, p-value = 0.007838</code></pre>
+<p>Las hipótesis de incorrelación y homocedasticidad se aceptan. También se aceptarían para otros valores de <span class="math inline">\(k\)</span> razonables. Si embargo, no se acepta la hipótesis de normalidad.</p>
+<p><br />
+</p>
+</div>
+<div id="interpretación-del-modelo" class="section level2">
+<h2><span class="header-section-number">1.5</span> Interpretación del modelo</h2>
+<p>El <strong>modelo teórico</strong> es <span class="math inline">\(DefEnfCer \sim ARIMA(1,1,0)\)</span> + constante: <span class="math display">\[(1 - \phi_1 L)(1 - L) DefEnfCer_t =  c + \varepsilon_t.\]</span></p>
+<p>Desarrollando queda: <span class="math display">\[DefEnfCer_t = c + DefEnfCer_{t-1} + \phi_1(DefEnfCer_{t-1}-DefEnfCer_{t-2}) + \varepsilon_t\]</span></p>
+<p>Finalmente. el <strong>modelo estimado</strong> es (recuerda que <span class="math inline">\(c = (1 - \phi_1)\mu\)</span>): <span class="math display">\[\widehat{DefEnfCer}_t = -952.49 + DefEnfCer_{t-1} - 0.57(DefEnfCer_{t-1}-DefEnfCer_{t-2}) \]</span> Cada año el número de defunciones por enfermedades cerebrovasculares es el mismo que el año previo, menos 952.5 casos, menos un 57% de la ultima variación observada.</p>
+<p><br />
+</p>
+</div>
+<div id="predicción" class="section level2">
+<h2><span class="header-section-number">1.6</span> Predicción</h2>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">parima110 &lt;-<span class="st"> </span><span class="kw">forecast</span>(arima110, </a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">                      <span class="dt">h =</span> <span class="dv">5</span>, </a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">                      <span class="dt">level =</span> <span class="dv">95</span>)</a>
+<a class="sourceLine" id="cb20-4" data-line-number="4">parima110</a></code></pre></div>
+<pre><code>     Point Forecast    Lo 95    Hi 95
+2019       25761.99 24149.56 27374.42
+2020       25184.30 23428.85 26939.75
+2021       24560.86 22424.74 26696.98
+2022       23963.48 21637.99 26288.97
+2023       23351.26 20783.46 25919.06</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">autoplot</span>(parima110, </a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">     <span class="dt">ylab =</span> <span class="st">&quot;Defunciones&quot;</span>,</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3">     <span class="dt">main =</span> <span class="st">&quot;Figura 4. Defunciones por enfermedades cerebrovasculares&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks=</span> <span class="kw">seq</span>(<span class="dv">1988</span>, <span class="dv">2023</span>, <span class="dv">4</span>)) </a></code></pre></div>
+<p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="calidad-de-las-previsiones-extra-muestrales-según-horizonte-temporal" class="section level2">
+<h2><span class="header-section-number">1.7</span> Calidad de las previsiones extra-muestrales según horizonte temporal</h2>
+<p>Vamos a aplicar la metodología de origen de predicción móvil a la serie de Defunciones por enfermedades cerebrovasculares. Asumimos que se precisan veinte años para hacer una buena estimación, <span class="math inline">\(k=20\)</span>, y que el horizonte temporal es cinco años, <span class="math inline">\(h = 5\)</span>.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">k &lt;-<span class="st"> </span><span class="dv">20</span>                   <span class="co">#Minimo numero de datos para estimar</span></a>
+<a class="sourceLine" id="cb23-2" data-line-number="2">h &lt;-<span class="st"> </span><span class="dv">5</span>                    <span class="co">#Horizonte de las predicicones</span></a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">TT &lt;-<span class="st"> </span><span class="kw">length</span>(DefEnfCer)   <span class="co">#Longitud serie</span></a>
+<a class="sourceLine" id="cb23-4" data-line-number="4">s &lt;-<span class="st"> </span>TT<span class="op">-</span>k<span class="op">-</span>h               <span class="co">#Total de estimaciones</span></a>
+<a class="sourceLine" id="cb23-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb23-6" data-line-number="6">mapeArima &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, s, h)</a>
+<a class="sourceLine" id="cb23-7" data-line-number="7"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">0</span><span class="op">:</span>s) {</a>
+<a class="sourceLine" id="cb23-8" data-line-number="8">  train.set &lt;-<span class="st"> </span><span class="kw">subset</span>(DefEnfCer, <span class="dt">start =</span> i <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">end =</span> i <span class="op">+</span><span class="st"> </span>k)</a>
+<a class="sourceLine" id="cb23-9" data-line-number="9">  test.set &lt;-<span class="st">  </span><span class="kw">subset</span>(DefEnfCer, <span class="dt">start =</span> i <span class="op">+</span><span class="st"> </span>k <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">end =</span> i <span class="op">+</span><span class="st"> </span>k <span class="op">+</span><span class="st"> </span>h)</a>
+<a class="sourceLine" id="cb23-10" data-line-number="10">  </a>
+<a class="sourceLine" id="cb23-11" data-line-number="11">  fit &lt;-<span class="st"> </span><span class="kw">Arima</span>(train.set, <span class="dt">order =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),<span class="dt">include.drift =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb23-12" data-line-number="12">  fcast&lt;-<span class="kw">forecast</span>(fit, <span class="dt">h =</span> h)</a>
+<a class="sourceLine" id="cb23-13" data-line-number="13">  mapeArima[i,] &lt;-<span class="st"> </span><span class="dv">100</span><span class="op">*</span><span class="kw">abs</span>(test.set <span class="op">-</span><span class="st"> </span>fcast<span class="op">$</span>mean)<span class="op">/</span>test.set</a>
+<a class="sourceLine" id="cb23-14" data-line-number="14">}</a>
+<a class="sourceLine" id="cb23-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb23-16" data-line-number="16">errorArima &lt;-<span class="st"> </span><span class="kw">colMeans</span>(mapeArima)</a>
+<a class="sourceLine" id="cb23-17" data-line-number="17">errorArima</a></code></pre></div>
+<pre><code>[1] 1.676177 2.547804 2.926779 3.059624 4.455033</code></pre>
+<p>Se observa que: i) el error de predicción extra-muestral a un periodo vista es equivalente al intra-muestral (1.7%); ii) conforme aumenta el horizonte temporal de previsión el error aumenta; y iii) en todo caso el error se mantiene bajo.</p>
+<p><br />
+</p>
+</div>
+<div id="comparación-con-un-modelo-de-alisado" class="section level2">
+<h2><span class="header-section-number">1.8</span> Comparación con un modelo de Alisado</h2>
+<p>Si estimamos la serie anual de Defunciones por enfermedades cerebrovasculares aplicando técnicas de alisado exponencial nos encontramos con un modelo con pendiente aditiva ETS(A,A,N). Además, <span class="math inline">\(\alpha = \beta = 0\)</span>. Si aplicamos estos valores a las ecuaciones iterativas de actualización tenemos que <span class="math inline">\(l_t = l_0\)</span> y que <span class="math inline">\(b_t = b_0\)</span>. Por tanto <span class="math inline">\(\widehat{y}_t = l_0 + t b_0\)</span>, un modelo lineal (<span class="math inline">\(b_0 = -655.37\)</span>).</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">summary</span>(alisado &lt;-<span class="st"> </span><span class="kw">ets</span>(DefEnfCer, <span class="dt">model =</span> <span class="st">&quot;ZZZ&quot;</span>))</a></code></pre></div>
+<pre><code>ETS(A,A,N) 
+
+Call:
+ ets(y = DefEnfCer, model = &quot;ZZZ&quot;) 
+
+  Smoothing parameters:
+    alpha = 0.0001 
+    beta  = 0.0001 
+
+  Initial states:
+    l = 45808.7528 
+    b = -655.3721 
+
+  sigma:  799.9925
+
+     AIC     AICc      BIC 
+526.6163 529.0163 533.7862 
+
+Training set error measures:
+                    ME     RMSE      MAE        MPE     MAPE      MASE
+Training set -116.3082 746.5983 616.4059 -0.2799447 1.811351 0.6496918
+                  ACF1
+Training set 0.1025637</code></pre>
+<p>La calidad del ajuste del modelo de alisado es similar a la del modelo ARIMA: MAPE de 1.8% para el primero frente a 1.7% para el segundo; RMSE de 747 para el primero frente a 782 para el segundo. Más aún, si se aplica la metodología de origen de predicción móvil al modelo de alisado, el error a un periodo vista es del 2.1%, pero a cinco periodos vista se mantiene en el 3%.</p>
+<p>Finalmente, las predicciones realizadas con ambos modelos son prácticamente las mismas como se puede observar.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">palisado &lt;-<span class="st"> </span><span class="kw">forecast</span>(alisado, <span class="dt">h =</span> <span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="kw">autoplot</span>(DefEnfCer, <span class="dt">PI =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb27-3" data-line-number="3">         <span class="dt">series =</span> <span class="st">&quot;Defunciones Enf. Cerebrovasculares&quot;</span>,</a>
+<a class="sourceLine" id="cb27-4" data-line-number="4">         <span class="dt">main=</span><span class="st">&quot;Figura 5. Defunciones Enf. Cerebrovasculares y previsión&quot;,</span></a>
+<a class="sourceLine" id="cb27-5" data-line-number="5"><span class="st">         xlab=&quot;&quot;, </span></a>
+<a class="sourceLine" id="cb27-6" data-line-number="6"><span class="st">         ylab=&quot;</span>Defunciones<span class="st">&quot;) +</span></a>
+<a class="sourceLine" id="cb27-7" data-line-number="7"><span class="st">  autolayer(parima110$mean, PI = FALSE, series = &quot;</span>Previsión con Arima<span class="st">&quot;) +</span></a>
+<a class="sourceLine" id="cb27-8" data-line-number="8"><span class="st">  autolayer(palisado$mean, PI = FALSE, series = &quot;</span>Previsión con Alisado<span class="st">&quot;) +</span></a>
+<a class="sourceLine" id="cb27-9" data-line-number="9"><span class="st">  guides(colour = guide_legend(title = &quot;</span>Predicción&quot;)<span class="er">)</span> <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb27-10" data-line-number="10"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="kw">c</span>(<span class="fl">0.98</span>,<span class="fl">0.98</span>), <span class="dt">legend.justification=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</a></code></pre></div>
+<p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>En definitiva, para esta serie, que es corta y aparentemente sencilla, la aproximación por la metodología ARIMA no mejora sustancialmente el modelo de alisado, más fácil de obtener e interpretar.</p>
+<p><br />
+<br />
+<br />
+<br />
+</p>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiU2VyaWVzIFRlbXBvcmFsZXM6IFByb2Nlc29zIEFSSU1BIgphdXRob3I6ICJJdsOhbiBBcnJpYmFzIChEZXB0by4gQW7DoWxpc2lzIEVjb27Ds21pY28uIFVuaXZlcnNpdGF0IGRlIFZhbMOobmNpYSkiCmRhdGU6ICJDdXJzbyAyMDIwLTIxIgpvdXRwdXQ6IAogIGh0bWxfZG9jdW1lbnQ6CiAgICB0aGVtZTogY2VydWxlYW4KICAgIGhpZ2hsaWdodDogcHlnbWVudHMgCiAgICBmaWdfY2FwdGlvbjogZmFsc2UKICAgIGRmX3ByaW50OiBrYWJsZQogICAgdG9jOiB0cnVlCiAgICB0b2NfZGVwdGg6IDIKICAgIHRvY19mbG9hdDogCiAgICAgIGNvbGxhcHNlZDogdHJ1ZQogICAgbnVtYmVyX3NlY3Rpb25zOiB0cnVlCiAgICBzZWxmX2NvbnRhaW5lZDogdHJ1ZQogICAgY29kZV9kb3dubG9hZDogdHJ1ZQotLS0KCmBgYHtyIGNodW5rX3NldHVwLCBlY2hvID0gRkFMU0V9CmtuaXRyOjpvcHRzX2NodW5rJHNldCh3YXJuaW5nID0gRkFMU0UsIAogICAgICAgICAgICAgICAgICAgICAgbWVzc2FnZSA9IEZBTFNFLCAKICAgICAgICAgICAgICAgICAgICAgIGNvbW1lbnQgPSAiIiwKICAgICAgICAgICAgICAgICAgICAgIGZpZy5hbGlnbiA9ICJjZW50ZXIiLCAKICAgICAgICAgICAgICAgICAgICAgIGZpZy5zaG93ID0gImhvbGQiLAogICAgICAgICAgICAgICAgICAgICAgZmlnLmhlaWdodCA9IDQsCiAgICAgICAgICAgICAgICAgICAgICBmaWcud2lkdGggPSA4LAogICAgICAgICAgICAgICAgICAgICAgb3V0LndpZHRoID0gIjgwJSIpIApgYGAKCmBgYHtyIG9wdGlvbnNfc2V0dXAsIGVjaG8gPSBGQUxTRX0Kb3B0aW9ucyhzY2lwZW4gPSA5OTkpICMtIHBhcmEgcXVpdGFyIGxhIG5vdGFjaW9uIGNpZW50aWZpY2EKYGBgCgpgYGB7ciBsaWJyZXJpYXMsIGVjaG8gPSBGQUxTRX0KbGlicmFyeSgiUkNvbG9yQnJld2VyIikKbGlicmFyeShmb3JlY2FzdCkKbGlicmFyeShnZ3Bsb3QyKTsgdGhlbWVfc2V0KHRoZW1lX2J3KCkpCmxpYnJhcnkoZ3JpZEV4dHJhKQpsaWJyYXJ5KGdyaWQpCiNsaWJyYXJ5KHNoYXBlKQpsaWJyYXJ5KHRzZXJpZXMpCmxpYnJhcnkoYW9kKQpgYGAKClwKXAoKIyBFamVtcGxvIGRlIGFwbGljYWNpw7NuOiBEZWZ1bmNpb25lcyBwb3IgRW5mZXJtZWRhZGVzIENlcmVicm92YXNjdWxhcmVzIChjb250aW51YWNpw7NuKS4KClwKCiMjIEludHJvZHVjY2nDs24KCkNvbnNpZGVyZW1vcyBkZSBudWV2byBsYSBzZXJpZSB0ZW1wb3JhbCBjb3JyZXNwb25kaWVudGUgYWwgbsO6bWVybyBkZSBkZWZ1bmNpb25lcyBjYXVzYWRhcyBwb3IgZW5mZXJtZWRhZGVzIGNlcmVicm92YXNjdWxhcmVzLCBFc3RhIHNlcmllIGVzdMOhIGRpc3BvbmlibGUgZW4gZWwgSW5zdGl0dXRvIE5hY2lvbmFsIGRlIEVzdGFkw61zdGljYSBkZXNkZSBlbmVybyBkZSAxOTgwIGhhc3RhIGRpY2llbWJyZSBkZSAyMDE4LCB1biB0b3RhbCBkZSAzOSBhw7FvcyBvIDQ2OCBtZXNlcwoKRW4gbGEgZGVzY3JpcHRpdmEgZGVsIHRlbWEgMSB2aW1vcyBxdWUgbGEgZGVzY29tcG9zaWNpw7NuIHJldmVsYWJhIGxhIHByZXNlbmNpYSBkZSB2YXJpb3MgdmFsb3JlcyBhdMOtcGljb3MgY29uY2VudHJhZG9zIGFsIGluaWNpbyBkZSBsYSBzZXJpZS4gUG9yIGVzdGUgbW90aXZvLCBwYXJhIHN1IGFuw6FsaXNpcyBwb3IgbW9kZWxvcyBBUklNQSB2YW1vcyBhIHJlY29ydGFyIGxhIHNlcmllLCBxdWUgZW1wZXphcsOhIGVsIGVuZXJvIGRlIDE5ODggeSBhIGFudWFsaXphcmxhICgzMSBhw7FvcykuCgpcCgojIyBUcmFuc2Zvcm1hY2nDs24gZGUgbGEgc2VyaWUKCkxhIGZpZ3VyYSAxIG11ZXN0cmEgcXVlIGxhIHNlcmllIG5vIGVzIGVzdGFjaW9uYXJpYSwgcGVybyBzaSBzdSBwcmltZXJhIGRpZmVyZW5jaWEuIFBvciB0YW50byBzZSBvcHRhIHBvciBjb25zaWRlcmFyICRkPTEkIG8gJERlZkVuZkNlciBcc2ltIEkoMSkkLgoKCmBgYHtyLCBldmFsID0gRkFMU0V9CkRlZkVuZkNlciA8LSByZWFkLmNzdjIoIi4vc2VyaWVzL0VuZmVybWVkYWRlcyBjZXJlYnJvdmFzY3VsYXJlcy5jc3YiLCBoZWFkZXIgPSBUUlVFKQpEZWZFbmZDZXIgPC0gdHMoRGVmRW5mQ2VyWywyXSxzdGFydCA9IDE5ODAsIGZyZXEgPSAxMikKRGVmRW5mQ2VyIDwtIHdpbmRvdyhEZWZFbmZDZXIsIHN0YXJ0ID0gMTk4OCkKRGVmRW5mQ2VyIDwtIGFnZ3JlZ2F0ZShEZWZFbmZDZXIsIEZVTiA9IHN1bSkKCmF1dG9wbG90KERlZkVuZkNlciwgeGxhYiA9ICJTZXJpZSBvcmlnaW5hbCIsIHlsYWIgPSAiIiwgbWFpbiA9ICIiKQphdXRvcGxvdChkaWZmKERlZkVuZkNlciksIHhsYWIgPSAiU2VyaWUgZGlmZXJlbmNpYWRhIiwgeWxhYiA9ICIiLCBtYWluID0gIiIpCmdnQWNmKERlZkVuZkNlciwgeGxhYiA9ICIiLCB5bGFiID0gIkZBQyIsIG1haW4gPSAiIikKZ2dBY2YoZGlmZihEZWZFbmZDZXIpLCB4bGFiID0gIiIsIHlsYWIgPSAiRkFDIiwgbWFpbiA9ICIiKQpgYGAKCmBgYHtyLCBlY2hvID0gRkFMU0V9CkRlZkVuZkNlciA8LSByZWFkLmNzdjIoIi4vc2VyaWVzL0VuZmVybWVkYWRlcyBjZXJlYnJvdmFzY3VsYXJlcy5jc3YiLCBoZWFkZXIgPSBUUlVFKQpEZWZFbmZDZXIgPC0gdHMoRGVmRW5mQ2VyWywyXSxzdGFydD0xOTgwLGZyZXE9MTIpCkRlZkVuZkNlciA8LSB3aW5kb3coRGVmRW5mQ2VyLCBzdGFydCA9IDE5ODgpCkRlZkVuZkNlciA8LSBhZ2dyZWdhdGUoRGVmRW5mQ2VyLCBGVU4gPSBzdW0pCgpncmlkLmFycmFuZ2UoCiAgYXV0b3Bsb3QoRGVmRW5mQ2VyLCB4bGFiID0gIlNlcmllIG9yaWdpbmFsIiwgeWxhYiA9ICIiLCBtYWluID0gIkZpZ3VyYSAxLiBEZWYuIGVuZi4gY2VyZWJyb3Zhcy4iKSwKICBhdXRvcGxvdChkaWZmKERlZkVuZkNlciksIHhsYWIgPSAiU2VyaWUgZGlmZXJlbmNpYWRhIiwgeWxhYiA9ICIiLCBtYWluID0gIiIpLAogIGdnQWNmKERlZkVuZkNlciwgeGxhYiA9ICIiLCB5bGFiID0gIkZBQyIsIG1haW4gPSAiIiksCiAgZ2dBY2YoZGlmZihEZWZFbmZDZXIpLCB4bGFiID0gIiIsIHlsYWIgPSAiRkFDIiwgbWFpbiA9ICIiKSwKICBucm93ID0gMgopCmBgYAoKUG9yIG90cm8gbGFkbywgZWwgcGFyw6FtZXRybyAkXGxhbWJkYSQgw7NwdGltbyBlbiBsYSB0cmFuc2Zvcm1hY2nDs24gZGUgQm94LUNveCBlcyAtMC44MSwgYXPDrSBxdWUgbm8gc2UgcmVhbGl6YXLDoSBuaW5ndW5hIHRyYW5zZm9ybWFjacOzbiBsb2dhcsOtdG1pY2EuCgpgYGB7cn0KQm94Q294LmxhbWJkYShEZWZFbmZDZXIpCmBgYAoKXAoKIyMgSWRlbnRpZmljYWNpw7NuCgpWZWFtb3MgYWhvcmEgYSBpZGVudGlmaWNhciBsb3MgdmFsb3JlcyBkZSAkcCQgeSAkcSQgYSBwYXJ0aXIgZGUgbGEgRkFDIHkgbGEgRkFDUC4gRGlmw61jaWwgZGVjaWRpcnNlIHBvciB1biBBUigxKSwgdW4gTUEoMSkgbyBpbmNsdXNvIHVuIEFSTUEoMSwgMSkuCgpgYGB7cn0gCmdndHNkaXNwbGF5KGRpZmYoRGVmRW5mQ2VyKSwgbWFpbiA9ICJGaWd1cmEgMi4gRGVmLiBwb3IgZW5mLiBjZXJlYnJvdmFzY3VsYXJlcyAoZGlmLikiKQpgYGAKCsK/UXXDqSByZWNvbWllbmRhIGBhdXRvLmFyaW1hYD8gVW4gQVIoMSkgY29uIGRlcml2YS4KCmBgYHtyfSAKYXV0by5hcmltYShEZWZFbmZDZXIsIGQgPSAxKQpgYGAKCkxhIGVzdGltYWNpw7NuIGRlIGVzdGUgbW9kZWxvIG11ZXN0cmEgcXVlIGxvcyBkb3MgY29lZmljaWVudGVzIGVzdGltYWRvcyBzb24gYXBhcmVudGVtZW50ZSBzaWduaWZpY2F0aXZvcyB5IHF1ZSBub3MgaGF5IHZhbG9yZXMgZXh0cmVtb3MgKGZpZ3VyYSAzKS4KCmBgYHtyfQphcmltYTExMCA8LSBBcmltYShEZWZFbmZDZXIsIAogICAgICAgICAgICAgICAgICBvcmRlciA9IGMoMSwgMSwgMCksCiAgICAgICAgICAgICAgICAgIGluY2x1ZGUuZHJpZnQgPSBUUlVFKQoKZXJyb3IgPC0gcmVzaWR1YWxzKGFyaW1hMTEwKQpzZGVycm9yIDwtIHNkKGVycm9yKQoKYXV0b3Bsb3QoZXJyb3IsIHNlcmllcz0iRXJyb3IiLAogICAgICAgICBjb2xvdXIgPSAiYmxhY2siLAogICAgICAgICB4bGFiID0gIiIsCiAgICAgICAgIHlsYWIgPSAiRXJyb3IiLAogICAgICAgICBtYWluID0gIkZpZ3VyYSAzLiBFcnJvciArIEludGVydmVuY2nDs24iKSArCiAgZ2VvbV9obGluZSh5aW50ZXJjZXB0ID0gYygtMywgLTIsIDIsIDMpKnNkZXJyb3IsIAogICAgICAgICAgICAgY29sb3VyID0gYygicmVkIiwgImdyZWVuIiwgImdyZWVuIiwgInJlZCIpLCAKICAgICAgICAgICAgIGx0eSA9IDIpICsgCiAgZ2VvbV9wb2ludCgpICsKICBzY2FsZV94X2NvbnRpbnVvdXMoYnJlYWtzPSBzZXEoMTk4OCwgMjAxOCwgNCkpIApgYGAKClwKCiMjIFZhbGlkYWNpw7NuCgpfX1ZhcmlhYmxlcyBzb24gc2lnbmlmaWNhdGl2YXNfXwoKTG9zIGRvcyBjb2VmaWNpZW50ZXMgZXN0aW1hZG9zICgkXHBoaV8xJCB5ICRcbXUkKSBzb24gc2lnbmlmaWNhdGl2b3MuCgpgYGB7cn0KIyBIMDogcGhpMSA9IDAKd2FsZC50ZXN0KGIgPSBjb2VmKGFyaW1hMTEwKSwgU2lnbWEgPSB2Y292KGFyaW1hMTEwKSwgVGVybXMgPSAxKQojIEgwOiBkZXJpdmEKd2FsZC50ZXN0KGIgPSBjb2VmKGFyaW1hMTEwKSwgU2lnbWEgPSB2Y292KGFyaW1hMTEwKSwgVGVybXMgPSAyKQpgYGAKClwKCl9fTWVkaWRhcyBkZSBlcnJvcl9fCgpFbCBlcnJvciBtZWRpbyBlcyBgciByb3VuZChhY2N1cmFjeShhcmltYTExMClbMl0sMClgIGRlZnVuY2lvbmVzIChSTVNFKSB5IGVsIGVycm9yIHBvcmNlbnR1YWwgbWVkaW8gZXMgYHIgcm91bmQoYWNjdXJhY3koYXJpbWExMTApWzVdLDIpYCUgKE1BUEUpLgoKYGBge3IsIGV2YWw9RkFMU0V9CmFjY3VyYWN5KGFyaW1hMTEwKQpgYGAKCmBgYHtyLGVjaG89RkFMU0V9CnJvdW5kKGFjY3VyYWN5KGFyaW1hMTEwKSwyKQpgYGAKClwKCl9fSW5jb3JyZWxhY2nDs24sIEhvbW9jZWRhc3RpY2lkYWQgeSBOb3JtYWxpZGFkX18KClZlYW1vcyBhaG9yYSBzaSBlbCByZXNpZHVvIGVzIHJ1aWRvIGJsYW5jbzoKCmBgYHtyfQpCb3gudGVzdChlcnJvciwgbGFnID0gMiwgdHlwZSA9ICJManVuZy1Cb3giKQpCb3gudGVzdChlcnJvcl4yLCBsYWcgPSAyLCB0eXBlID0gIkxqdW5nLUJveCIpIApzaGFwaXJvLnRlc3QoZXJyb3IpCmBgYAoKCkxhcyBoaXDDs3Rlc2lzIGRlIGluY29ycmVsYWNpw7NuIHkgaG9tb2NlZGFzdGljaWRhZCBzZSBhY2VwdGFuLiBUYW1iacOpbiBzZSBhY2VwdGFyw61hbiBwYXJhIG90cm9zIHZhbG9yZXMgZGUgJGskIHJhem9uYWJsZXMuIFNpIGVtYmFyZ28sIG5vIHNlIGFjZXB0YSBsYSBoaXDDs3Rlc2lzIGRlIG5vcm1hbGlkYWQuIAoKXAoKIyMgSW50ZXJwcmV0YWNpw7NuIGRlbCBtb2RlbG8KCkVsIF9fbW9kZWxvIHRlw7NyaWNvX18gZXMgJERlZkVuZkNlciBcc2ltIEFSSU1BKDEsMSwwKSQgKyBjb25zdGFudGU6CiQkKDEgLSBccGhpXzEgTCkoMSAtIEwpIERlZkVuZkNlcl90ID0gIGMgKyBcdmFyZXBzaWxvbl90LiQkCgpEZXNhcnJvbGxhbmRvIHF1ZWRhOgokJERlZkVuZkNlcl90ID0gYyArIERlZkVuZkNlcl97dC0xfSArIFxwaGlfMShEZWZFbmZDZXJfe3QtMX0tRGVmRW5mQ2VyX3t0LTJ9KSArIFx2YXJlcHNpbG9uX3QkJAoKRmluYWxtZW50ZS4gZWwgX19tb2RlbG8gZXN0aW1hZG9fXyBlcyAocmVjdWVyZGEgcXVlICRjID0gKDEgLSBccGhpXzEpXG11JCk6CiQkXHdpZGVoYXR7RGVmRW5mQ2VyfV90ID0gLTk1Mi40OSArIERlZkVuZkNlcl97dC0xfSAtIDAuNTcoRGVmRW5mQ2VyX3t0LTF9LURlZkVuZkNlcl97dC0yfSkgJCQKQ2FkYSBhw7FvIGVsIG7Dum1lcm8gZGUgZGVmdW5jaW9uZXMgcG9yIGVuZmVybWVkYWRlcyBjZXJlYnJvdmFzY3VsYXJlcyBlcyBlbCBtaXNtbyBxdWUgZWwgYcOxbyBwcmV2aW8sIG1lbm9zIDk1Mi41IGNhc29zLCBtZW5vcyB1biA1NyUgZGUgbGEgdWx0aW1hIHZhcmlhY2nDs24gb2JzZXJ2YWRhLgogICAKXAoKIyMgUHJlZGljY2nDs24KCgpgYGB7cn0KcGFyaW1hMTEwIDwtIGZvcmVjYXN0KGFyaW1hMTEwLCAKICAgICAgICAgICAgICAgICAgICAgIGggPSA1LCAKICAgICAgICAgICAgICAgICAgICAgIGxldmVsID0gOTUpCnBhcmltYTExMApgYGAKCmBgYHtyfQphdXRvcGxvdChwYXJpbWExMTAsIAogICAgIHlsYWIgPSAiRGVmdW5jaW9uZXMiLAogICAgIG1haW4gPSAiRmlndXJhIDQuIERlZnVuY2lvbmVzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMiKSArCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz0gc2VxKDE5ODgsIDIwMjMsIDQpKSAKYGBgCgpcCgojIyBDYWxpZGFkIGRlIGxhcyBwcmV2aXNpb25lcyBleHRyYS1tdWVzdHJhbGVzIHNlZ8O6biBob3Jpem9udGUgdGVtcG9yYWwKClZhbW9zIGEgYXBsaWNhciBsYSBtZXRvZG9sb2fDrWEgZGUgb3JpZ2VuIGRlIHByZWRpY2Npw7NuIG3Ds3ZpbCBhIGxhIHNlcmllIGRlIERlZnVuY2lvbmVzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMuIApBc3VtaW1vcyBxdWUgc2UgcHJlY2lzYW4gdmVpbnRlIGHDsW9zIHBhcmEgaGFjZXIgdW5hIGJ1ZW5hIGVzdGltYWNpw7NuLCAkaz0yMCQsIHkgcXVlIGVsIGhvcml6b250ZSB0ZW1wb3JhbCBlcyBjaW5jbyBhw7FvcywgJGggPSA1JC4KICAKYGBge3J9ICAKayA8LSAyMCAgICAgICAgICAgICAgICAgICAjTWluaW1vIG51bWVybyBkZSBkYXRvcyBwYXJhIGVzdGltYXIKaCA8LSA1ICAgICAgICAgICAgICAgICAgICAjSG9yaXpvbnRlIGRlIGxhcyBwcmVkaWNpY29uZXMKVFQgPC0gbGVuZ3RoKERlZkVuZkNlcikgICAjTG9uZ2l0dWQgc2VyaWUKcyA8LSBUVC1rLWggICAgICAgICAgICAgICAjVG90YWwgZGUgZXN0aW1hY2lvbmVzCgptYXBlQXJpbWEgPC0gbWF0cml4KE5BLCBzLCBoKQpmb3IgKGkgaW4gMDpzKSB7CiAgdHJhaW4uc2V0IDwtIHN1YnNldChEZWZFbmZDZXIsIHN0YXJ0ID0gaSArIDEsIGVuZCA9IGkgKyBrKQogIHRlc3Quc2V0IDwtICBzdWJzZXQoRGVmRW5mQ2VyLCBzdGFydCA9IGkgKyBrICsgMSwgZW5kID0gaSArIGsgKyBoKQogIAogIGZpdCA8LSBBcmltYSh0cmFpbi5zZXQsIG9yZGVyID0gYygxLCAxLCAwKSxpbmNsdWRlLmRyaWZ0ID0gVFJVRSkKICBmY2FzdDwtZm9yZWNhc3QoZml0LCBoID0gaCkKICBtYXBlQXJpbWFbaSxdIDwtIDEwMCphYnModGVzdC5zZXQgLSBmY2FzdCRtZWFuKS90ZXN0LnNldAp9CgplcnJvckFyaW1hIDwtIGNvbE1lYW5zKG1hcGVBcmltYSkKZXJyb3JBcmltYQpgYGAKClNlIG9ic2VydmEgcXVlOiBpKSBlbCBlcnJvciBkZSBwcmVkaWNjacOzbiBleHRyYS1tdWVzdHJhbCBhIHVuIHBlcmlvZG8gdmlzdGEgZXMgZXF1aXZhbGVudGUgYWwgaW50cmEtbXVlc3RyYWwgKDEuNyUpOyBpaSkgY29uZm9ybWUgYXVtZW50YSBlbCBob3Jpem9udGUgdGVtcG9yYWwgZGUgcHJldmlzacOzbiBlbCBlcnJvciBhdW1lbnRhOyB5IGlpaSkgZW4gdG9kbyBjYXNvIGVsIGVycm9yIHNlIG1hbnRpZW5lIGJham8uCgpcCgojIyBDb21wYXJhY2nDs24gY29uIHVuIG1vZGVsbyBkZSBBbGlzYWRvCgpTaSBlc3RpbWFtb3MgbGEgc2VyaWUgYW51YWwgZGUgRGVmdW5jaW9uZXMgcG9yIGVuZmVybWVkYWRlcyBjZXJlYnJvdmFzY3VsYXJlcyBhcGxpY2FuZG8gdMOpY25pY2FzIGRlIGFsaXNhZG8gZXhwb25lbmNpYWwgbm9zIGVuY29udHJhbW9zIGNvbiB1biBtb2RlbG8gY29uIHBlbmRpZW50ZSBhZGl0aXZhIEVUUyhBLEEsTikuIEFkZW3DoXMsICRcYWxwaGEgPSBcYmV0YSA9IDAkLiBTaSBhcGxpY2Ftb3MgZXN0b3MgdmFsb3JlcyBhIGxhcyBlY3VhY2lvbmVzIGl0ZXJhdGl2YXMgZGUgYWN0dWFsaXphY2nDs24gdGVuZW1vcyBxdWUgJGxfdCA9IGxfMCQgeSBxdWUgJGJfdCA9IGJfMCQuIFBvciB0YW50byAkXHdpZGVoYXR7eX1fdCA9IGxfMCArIHQgYl8wJCwgdW4gbW9kZWxvIGxpbmVhbCAoJGJfMCA9IC02NTUuMzckKS4KCmBgYHtyfQpzdW1tYXJ5KGFsaXNhZG8gPC0gZXRzKERlZkVuZkNlciwgbW9kZWwgPSAiWlpaIikpCmBgYAoKTGEgY2FsaWRhZCBkZWwgYWp1c3RlIGRlbCBtb2RlbG8gZGUgYWxpc2FkbyBlcyBzaW1pbGFyIGEgbGEgZGVsIG1vZGVsbyBBUklNQTogTUFQRSBkZSAxLjglIHBhcmEgZWwgcHJpbWVybyBmcmVudGUgYSAxLjclIHBhcmEgZWwgc2VndW5kbzsgUk1TRSBkZSA3NDcgcGFyYSBlbCBwcmltZXJvIGZyZW50ZSBhIDc4MiBwYXJhIGVsIHNlZ3VuZG8uIE3DoXMgYcO6biwgc2kgc2UgYXBsaWNhIGxhIG1ldG9kb2xvZ8OtYSBkZSBvcmlnZW4gZGUgcHJlZGljY2nDs24gbcOzdmlsIGFsIG1vZGVsbyBkZSBhbGlzYWRvLCBlbCBlcnJvciBhIHVuIHBlcmlvZG8gdmlzdGEgZXMgZGVsIDIuMSUsIHBlcm8gYSBjaW5jbyBwZXJpb2RvcyB2aXN0YSBzZSBtYW50aWVuZSBlbiBlbCAzJS4KCkZpbmFsbWVudGUsIGxhcyBwcmVkaWNjaW9uZXMgcmVhbGl6YWRhcyBjb24gYW1ib3MgbW9kZWxvcyBzb24gcHLDoWN0aWNhbWVudGUgbGFzIG1pc21hcyBjb21vIHNlIHB1ZWRlIG9ic2VydmFyLgoKYGBge3J9CnBhbGlzYWRvIDwtIGZvcmVjYXN0KGFsaXNhZG8sIGggPSA1KQphdXRvcGxvdChEZWZFbmZDZXIsIFBJID0gRkFMU0UsCiAgICAgICAgIHNlcmllcyA9ICJEZWZ1bmNpb25lcyBFbmYuIENlcmVicm92YXNjdWxhcmVzIiwKICAgICAgICAgbWFpbj0iRmlndXJhIDUuIERlZnVuY2lvbmVzIEVuZi4gQ2VyZWJyb3Zhc2N1bGFyZXMgeSBwcmV2aXNpw7NuIiwKICAgICAgICAgeGxhYj0iIiwgCiAgICAgICAgIHlsYWI9IkRlZnVuY2lvbmVzIikgKwogIGF1dG9sYXllcihwYXJpbWExMTAkbWVhbiwgUEkgPSBGQUxTRSwgc2VyaWVzID0gIlByZXZpc2nDs24gY29uIEFyaW1hIikgKwogIGF1dG9sYXllcihwYWxpc2FkbyRtZWFuLCBQSSA9IEZBTFNFLCBzZXJpZXMgPSAiUHJldmlzacOzbiBjb24gQWxpc2FkbyIpICsKICBndWlkZXMoY29sb3VyID0gZ3VpZGVfbGVnZW5kKHRpdGxlID0gIlByZWRpY2Npw7NuIikpICsgCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uPWMoMC45OCwwLjk4KSwgbGVnZW5kLmp1c3RpZmljYXRpb249YygxLDEpKQpgYGAKCkVuIGRlZmluaXRpdmEsIHBhcmEgZXN0YSBzZXJpZSwgcXVlIGVzIGNvcnRhIHkgYXBhcmVudGVtZW50ZSBzZW5jaWxsYSwgbGEgYXByb3hpbWFjacOzbiBwb3IgbGEgbWV0b2RvbG9nw61hIEFSSU1BIG5vIG1lam9yYSBzdXN0YW5jaWFsbWVudGUgZWwgbW9kZWxvIGRlIGFsaXNhZG8sIG3DoXMgZsOhY2lsIGRlIG9idGVuZXIgZSBpbnRlcnByZXRhci4KClwKXApcClwK</div>
+<footer class="footer">
+  
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
+<br>
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.  <div class="text-muted">Website created by Iv&aacute;n Arribas. &copy;  2020. If you find any bugs please report them to <a href="mailto:ivan.arribas@uv.es"> ivan.arribas@uv.es</a>.</div>
+  
+</footer>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("03-09-Ejemplo4.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

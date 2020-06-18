@@ -1,0 +1,71 @@
+---
+#title: "Macroenometrics (44343)"
+output:
+  html_document:
+    theme: cerulean
+    highlight: monochrome 
+    number_sections: no
+    toc: true
+    toc_float: true
+---
+
+<br><br>
+
+Durante el curso usaremos diferentes ficheros de datos para los ejemplos y para el código en `R`. Desde esta página puedes decargarte todo el material
+
+<br>
+
+----------------------
+
+<br>
+
+### Ficheros de datos
+
+- <a href="series/libros.csv" download>**Titulos publicados**</a>
+- <a href="series/nacimientos.csv" download>**Nacimientos**</a>
+- <a href="series/sucursal.csv" download>**Extracción de dinero de un cajero**</a>
+- <a href="series/aforo_oropesa.csv" download>**Aforo de vehículos en Oropesa**</a>
+- <a href="series/alimentacionpc.csv" download>**Consumo de alimentos per cápita**</a>
+- <a href="series/Chocolate.csv" download>**Producción de Chocolate en Australia**</a>
+- <a href="series/Enfermedades cerebrovasculares.csv" download>**Defunciones por enfermedades cerebrovasculares** (datos usados en el ejemplo)</a>
+
+\
+
+- <a href="series/todoslosficherosdedatos.zip" download>**Todos los ficheros de datos en un único fichero comprimido**</a>
+
+\
+\
+
+### Código `R`
+
+Tienes el código para los temas de teoría aquí:
+
+- <a href="codigo/Codigo Tema 1.R" download>**Código para el tema 1**</a>
+- <a href="codigo/Codigo Tema 2.R" download>**Código para el tema 2**</a>
+- <a href="codigo/Codigo Tema 3.R" download>**Código para el tema 3**</a>
+- <a href="codigo/Codigo Tema 4.R" download>**Código para el tema 4**</a>
+- <a href="codigo/Codigo Tema 5.R" download>**Código para el tema 5**</a>
+
+\
+
+Para el ejemplo tienes el código aquí:
+
+- <a href="codigo/Codigo Ejemplo 1.R" download>**Código para el ejemplo del tema 1**</a>
+- <a href="codigo/Codigo Ejemplo 2.R" download>**Código para el ejemplo del tema 2**</a>
+- <a href="codigo/Codigo Ejemplo 3.R" download>**Código para el ejemplo del tema 3**</a>
+- <a href="codigo/Codigo Ejemplo 4.R" download>**Código para el ejemplo del tema 4**</a>
+- <a href="codigo/Codigo Ejemplo 5.R" download>**Código para el ejemplo del tema 5**</a>
+
+\
+
+Y si quieres todos los ficheros de código de golpe aqui:
+
+- <a href="codigo/todoslosficherosdecodigo.zip" download>**Todos los ficheros de código en un único fichero comprimido**</a>
+
+\
+\
+\
+\
+
+
+

@@ -1,0 +1,65 @@
+---
+output:
+  html_document:
+    theme: cerulean
+    highlight: monochrome 
+    number_sections: no
+    toc: false
+---
+
+<br><br>
+
+
+El módulo de Series Tmeporales esta distribuido en 10 sesiones teórico/prácticas. En esta página es un **documento vivo** que irá indicando las actividades que se van a realizar en cada sesión.
+
+Si ahora estamos al inicio del curso básicamente se indica qué temas veremos en cada sesión. Pero si estamos con el curso ya avanzado se verá en detalle qué se ha realizado cada una de las sesiones pasadas y los objetivos de la próxima sesión.
+
+______________________
+
+<br><br>
+
+
+### Sesión 1: 02/02/2021
+
+* Introducción del módulo de Series Temporales
+* Tema 1
+ 
+### Sesión 2: 02/02/2021
+
+* Tema 1
+
+### Sesión 3: 02/02/2021
+
+* Tema 2
+
+### Sesión 4: 02/02/2021
+
+* Tema 2
+
+### Sesión 5: 02/02/2021
+
+* Tema 3
+
+### Sesión 6: 02/02/2021
+
+* Tema 4
+
+### Sesión 7: 02/02/2021
+
+* Tema 4
+
+### Sesión 8: 02/02/2021
+
+* Tema 5
+
+### Sesión 9: 02/02/2021
+
+* Tema 5
+
+### Sesión 10: 02/02/2021
+
+* A descansar
+
+
+<br><br>
+<br><br>
