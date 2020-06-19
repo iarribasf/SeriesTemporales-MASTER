@@ -9,7 +9,7 @@ navbar:
     - text: "Guía del curso"
       icon: fa-graduation-cap
       href: 01-Guia-curso.html  
-    - text: "Logistica"
+    - text: "Logística"
       icon: fa-laptop
       href: 02-Logistica.html
     - text: "Diapos"
@@ -26,6 +26,7 @@ navbar:
           href: 03-04-Tema4.html  
         - text: "Tema 5: SARIMA"
           href: 03-05-Tema5.html  
+        - text: "--------------"
         - text: "Ejemplo de aplicación"
         - text: "Ejemplo Tema 1"
           href: 03-06-Ejemplo1.html      

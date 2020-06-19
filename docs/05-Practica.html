@@ -352,7 +352,7 @@ div.tocify {
   <a href="02-Logistica.html">
     <span class="fa fa-laptop"></span>
      
-    Logistica
+    Logística
   </a>
 </li>
 <li class="dropdown">
@@ -380,6 +380,7 @@ div.tocify {
     <li>
       <a href="03-05-Tema5.html">Tema 5: SARIMA</a>
     </li>
+    <li class="divider"></li>
     <li class="dropdown-header">Ejemplo de aplicación</li>
     <li>
       <a href="03-06-Ejemplo1.html">Ejemplo Tema 1</a>
@@ -468,17 +469,23 @@ div.tocify {
 
 <p><br><br></p>
 <p>Durante todo el módulo realizarás una serie de ejercicios que aplicarán las técnicas vistas en cada tema. Lee con atención las siguientes instrucciones generales.</p>
-<p>Tu primera tarea es descargarte tu serie temporal. Descárgate <a href="practica/Descripcion%20de%20las%20series.pdf">aqui</a> el fichero .pdf con la descripcion de las series y localiza en él el nombre de tu serie. El este fichero encontrarás también una descripción detallada de la serie que vas a analizar: nombre, definición, unidades, fuente, fechado…</p>
+<p>Tu primera tarea es descargarte tu serie temporal. Descárgate <a href="practica/Descripcion%20de%20las%20series.pdf">aqui</a> el fichero .pdf con la descripción de las series y localiza en él el nombre de tu serie. El este fichero encontrarás también una descripción detallada de la serie que vas a analizar: nombre, definición, unidades, fuente, fechado…</p>
 <p>Por otro lado, descárgate <a href="practica/Series.zip">aquí</a> fichero comprimido con todas las series, descomprímelo y localiza el fichero txt con tu serie.</p>
 <hr />
 <p><br><br></p>
-<div id="características-generales-de-las-entregas" class="section level2">
-<h2>Características generales de las entregas</h2>
-<p><br> * La <strong>fecha</strong> máxima de entrega de cada trabajo se indicará al finalizar cada tema. Procura no retrasarte. Si el retraso supera la semana, tu nota en la práctica será de cero. * En Aulavortual, en la la Tarea “SERIES: Practica n” debes <strong>subir un fichero .pdf con los resultados</strong> de la práctica n-ésima. Sólo se admite un único fichero en formato .pdf. * Piensa que además de los contenidos también su ordenación, estructura, sintaxis, comentarios, etc. son parte de la evaluación. * <strong>Incluye siempre todo el código en R utilizada en el trabajo</strong>. Si utilizas Markdown (o similar), haz que el código sea visible; en otro caso, añadelo como un apéndice al final del documento.</p>
+<div id="características-generales-de-las-entregas" class="section level3">
+<h3>Características generales de las entregas</h3>
+<p><br></p>
+<ul>
+<li>La <strong>fecha</strong> máxima de entrega de cada trabajo se indicará al finalizar cada tema. Procura no retrasarte. Si el retraso supera la semana, tu nota en la práctica será de cero.</li>
+<li>En Aulavirtual, en la tarea “SERIES: Practica n” debes <strong>subir un fichero .pdf con los resultados</strong> de la práctica n-ésima. Sólo se admite un único fichero en formato .pdf.</li>
+<li>Piensa que además de los contenidos también su ordenación, estructura, sintaxis, comentarios, etc. son parte de la evaluación.</li>
+<li><strong>Incluye siempre todo el código en R utilizada en el trabajo</strong>. Si utilizas Markdown (o similar), haz que el código sea visible; en otro caso, añádelo como un apéndice al final del documento.</li>
+</ul>
 <p><br><br></p>
 </div>
-<div id="práctica-1-introducción-a-las-series-temporales" class="section level2">
-<h2>Práctica 1: Introducción a las series temporales</h2>
+<div id="práctica-1-introducción-a-las-series-temporales" class="section level3">
+<h3>Práctica 1: Introducción a las series temporales</h3>
 <p><br></p>
 <ul>
 <li><strong>Parte 1:</strong> Descripción de la serie temporal
@@ -499,8 +506,8 @@ div.tocify {
 <p>Si el análisis realizado así lo aconseja, indica si vas a recortar tu serie para posteriores análisis.</p>
 <p><br><br></p>
 </div>
-<div id="práctica-2-alisado-exponencial" class="section level2">
-<h2>Práctica 2: Alisado exponencial</h2>
+<div id="práctica-2-alisado-exponencial" class="section level3">
+<h3>Práctica 2: Alisado exponencial</h3>
 <p><br></p>
 <ul>
 <li><strong>Ejercicio 1:</strong> Serie con fechado anual
@@ -525,8 +532,8 @@ div.tocify {
 </ul>
 <p><br><br></p>
 </div>
-<div id="práctica-3-procesos-estocásticos" class="section level2">
-<h2>Práctica 3: Procesos estocásticos</h2>
+<div id="práctica-3-procesos-estocásticos" class="section level3">
+<h3>Práctica 3: Procesos estocásticos</h3>
 <p><br></p>
 <p>Esta práctica tiene como objetivo transformar tu serie para que sea estacionaria en media y varianza, y ergódica.</p>
 <ul>
@@ -546,8 +553,8 @@ div.tocify {
 </ul>
 <p><br><br></p>
 </div>
-<div id="práctica-4-procesos-arima-sin-estacionalidad" class="section level2">
-<h2>Práctica 4: Procesos ARIMA sin estacionalidad</h2>
+<div id="práctica-4-procesos-arima-sin-estacionalidad" class="section level3">
+<h3>Práctica 4: Procesos ARIMA sin estacionalidad</h3>
 <p>A grandes rasgos el ejercicio consistirá en analizar tu serie temporal sin estacionalidad (agregación anual), siguiendo la metodología de Box y Jenkins. Por tanto, para esta práctica debes considerar solo tu serie con fechado anual.</p>
 <ul>
 <li>Las tareas para realizar son:
@@ -577,7 +584,7 @@ div.tocify {
 <li>Valores extremos.</li>
 <li>Cálculo de la calidad del ajuste y de las predicciones</li>
 </ul></li>
-<li><p>Previsión de la serie (almenos tres años)</p></li>
+<li><p>Previsión de la serie (al menos tres años)</p></li>
 <li>Valoración crítica del modelo ARIMA respecto de un modelo de alisado:
 <ul>
 <li>Comparación del modelo estimado para la serie en la práctica 2 y del modelo de esta práctica.</li>
@@ -587,8 +594,8 @@ div.tocify {
 </ul>
 <p><br><br></p>
 </div>
-<div id="práctica-5-procesos-arima-con-estacionalidad" class="section level2">
-<h2>Práctica 5: Procesos ARIMA con estacionalidad</h2>
+<div id="práctica-5-procesos-arima-con-estacionalidad" class="section level3">
+<h3>Práctica 5: Procesos ARIMA con estacionalidad</h3>
 <p>Los objetivos de esta práctica son idénticos a los de la práctica previa, pero considerando tu serie original con estacionalidad.</p>
 <ul>
 <li>Las tareas para realizar son:
@@ -615,7 +622,7 @@ div.tocify {
 <li>Valores extremos.</li>
 <li>Cálculo de la calidad del ajuste y de las predicciones</li>
 </ul></li>
-<li><p>Previsión de la serie (almenos tres años)</p></li>
+<li><p>Previsión de la serie (al menos tres años)</p></li>
 <li>Valoración crítica del modelo ARIMA respecto de un modelo de alisado:
 <ul>
 <li>Comparación del modelo estimado para la serie en la práctica 2 y del modelo de esta práctica.</li>

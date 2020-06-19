@@ -16,7 +16,7 @@ output:
   
 El módulo de Series Temporales pertenece al Máster de Bioestadística y se configura como un módulo impartido en el segundo cuatrimestre con 10 sesiones de cinco horas.
 
-El objetivo general aprender a manejarse don datos de corte temporal, **Series Temporales**. Es decir, ser capaces de aplicar los métodos para describir, analizar, modelizar y predecir series de datos que evolucionan en el tiempo. Además, hay que saber evaluar la calidad de las predicciones en el contexto de la estadística tradicional y con técnicas de _Machine Learning_.
+El objetivo general es aprender a manejarse don datos de corte temporal, **Series Temporales**. Es decir, ser capaces de aplicar los métodos para describir, analizar, modelizar y predecir series de datos que evolucionan en el tiempo. Además, hay que saber evaluar la calidad de las predicciones en el contexto de la estadística tradicional y con técnicas de _Machine Learning_.
 
 Para todo veremos la teoría necesaria y, sobre todo, practicaremos utilizando el programa estadístico **R** y el lenguaje **Markdown** a través de **RStudio**.
 
@@ -39,9 +39,9 @@ El programa de la asignatura contiene 5 temas distribuidos en **10 sesiones de 5
 
 Puedes consultar la <a href="otros/GuiaDocenteSeriesTemporales_20_21.pdf">**Guía Docente**</a> de la asignatura para ver detalladamente el contenido de cada tema.
 
-Pasar de una sesión a la siguiente supone incrementar la complejidad de las técnicas empleadas para el análisis de una serie temporal de forma podréis valorar con datos reales la relación entre complejidad--tiempo--resultados y optar por la metodología más adecuada.
+Pasar de una sesión a la siguiente supone incrementar la complejidad de las técnicas empleadas para el análisis de una serie temporal de forma que podréis valorar con datos reales la relación entre complejidad--tiempo--resultados y optar por la metodología más adecuada.
 
-El esquena detallado de cada sesión lo podréis encontrar en la sección [Calendario](https://iarribasf.github.io/Series-Temporales-web-master/06-Calendario.html) de la página web. Esta es una sección viva, que se irá ampliado y modificando según avance el curso.
+El desarrollo detallado de cada sesión lo podréis encontrar en la sección [Calendario](https://iarribasf.github.io/Series-Temporales-web-master/06-Calendario.html) de la página web. Esta es una sección viva, que se irá ampliado y modificando según avance el curso.
 
 <br>
 
@@ -55,14 +55,14 @@ Dado el carácter eminentemente práctico del módulo, todas las sesiones se imp
 
 1. _Tiempo de teórica_: os plantearé los conceptos nucleares de cada tema, de forma precisa y rigurosa, en lenguaje natural, gráfico y formal. El material teórico lo podéis encontrar en la sección **Diapos**. 
 2. _Tiempo de práctica_: a partir del código y de los ficheros de datos que podéis encontrar en la sección [**Recursos de R**](https://iarribasf.github.io/Series-Temporales-web-master/04-Recursos-R.html) practicaréis los conceptos teóricos y aprenderéis el manejo de R para el análisis de series temporales.
-3. _Tiempos de evaluación_: tras cada tema realizaréis una breve prueba tipo test, con tiempo limitado, para valorar si habéis adquirido los conocimientos teóricos y las habilidades practicas básicas.
+3. _Tiempo de evaluación_: tras cada tema realizaréis una breve prueba tipo test, con tiempo limitado, para valorar si habéis adquirido los conocimientos teóricos y las habilidades practicas básicas.
 4. _Trabajo práctico de evaluación_: también en clase os daré tiempo para realizar parte de los trabajos prácticos que servirán de evaluación del módulo.
 
 <br>
 
 Aunque tenéis a vuestra disposición los ordenadores del aula de informática, lo cierto es que cada vez resulta más aconsejable que os traigáis vuestro ordenador para trabajar.
 
-Todo el material necesario para este curso lo tenéis disponible en esta página web así como en [**Aula Virtual**](https://aulavirtual.uv.es/course/view.php?id=6814). También podéis encontrar los detalles en la sección [Logística](https://iarribasf.github.io/Series-Temporales-web-master/02-Logistics.html) de la web.
+Todo el material necesario para este curso lo tenéis disponible en esta página web así como en [**Aula Virtual**](https://aulavirtual.uv.es). También podéis encontrar los detalles en la sección [Logística](https://iarribasf.github.io/Series-Temporales-web-master/02-Logistics.html) de la web.
 
 <br>
 
@@ -77,7 +77,7 @@ Tanto la parte teórica como la práctica se evaluarán exclusivamente a través
 
 Tras cada una de las cinco unidades temáticas se realizará en horario de clase una **breve prueba tipo test**. La prueba contendrá preguntas de respuesta múltiple, numérica, verdadero/falso, etc. Este conjunto de pruebas supondrá un **20%** de la nota de la asignatura.
 
-Además, tras cada unidad temática, os daré una **práctica de evaluación** que deberéis entregar realiza en el plazo establecido. La valoración de estos ejercicios supondrá el restante **80%** de la nota de la asignatura.
+Además, tras cada unidad temática, os daré una **práctica de evaluación** que deberéis entregar en el plazo establecido. La valoración de estos trabajos supondrá el restante **80%** de la nota de la asignatura.
 
 Las prácticas de evaluación deben realizarse utilizando el **programa estadístico R** y recomiendo que uséis para la escritura del trabajo el lenguaje **Markdown**.
 

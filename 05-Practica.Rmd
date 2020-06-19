@@ -14,7 +14,7 @@ output:
 Durante todo el módulo realizarás una serie de ejercicios que aplicarán las técnicas vistas en cada tema. Lee con atención las siguientes instrucciones generales.
 
 
-Tu primera tarea es descargarte tu serie temporal. Descárgate [aqui](practica/Descripcion de las series.pdf) el fichero .pdf con la descripcion de las series y localiza en él el nombre de tu serie. El este fichero encontrarás también una descripción detallada de la serie que vas a analizar: nombre, definición, unidades, fuente, fechado…
+Tu primera tarea es descargarte tu serie temporal. Descárgate [aqui](practica/Descripcion de las series.pdf) el fichero .pdf con la descripción de las series y localiza en él el nombre de tu serie. El este fichero encontrarás también una descripción detallada de la serie que vas a analizar: nombre, definición, unidades, fuente, fechado…
 
 Por otro lado, descárgate [aquí](practica/Series.zip) fichero comprimido con todas las series, descomprímelo y localiza el fichero txt con tu serie.
 
@@ -22,17 +22,18 @@ ______________________
 
 <br><br>
 
-## Características generales de las entregas
+### Características generales de las entregas
 
 <br>
+
 * La **fecha** máxima de entrega de cada trabajo se indicará al finalizar cada tema. Procura no retrasarte. Si el retraso supera la semana, tu nota en la práctica será de cero.
-* En Aulavortual, en la la Tarea "SERIES: Practica n" debes **subir un fichero .pdf con los resultados** de la práctica n-ésima. Sólo se admite un único fichero en formato .pdf.
+* En Aulavirtual, en la tarea "SERIES: Practica n" debes **subir un fichero .pdf con los resultados** de la práctica n-ésima. Sólo se admite un único fichero en formato .pdf.
 * Piensa que además de los contenidos también su ordenación, estructura, sintaxis, comentarios, etc. son parte de la evaluación.
-* **Incluye siempre todo el código en R utilizada en el trabajo**. Si utilizas Markdown (o similar), haz que el código sea visible; en otro caso, añadelo como un apéndice al final del documento. 
+* **Incluye siempre todo el código en R utilizada en el trabajo**. Si utilizas Markdown (o similar), haz que el código sea visible; en otro caso, añádelo como un apéndice al final del documento. 
  
 <br><br>
 
-## Práctica 1: Introducción a las series temporales
+### Práctica 1: Introducción a las series temporales
 
 <br>
 
@@ -51,7 +52,7 @@ Si el análisis realizado así lo aconseja, indica si vas a recortar tu serie pa
 
 <br><br>
 
-## Práctica 2: Alisado exponencial
+### Práctica 2: Alisado exponencial
 
 <br>
 
@@ -73,7 +74,7 @@ Si el análisis realizado así lo aconseja, indica si vas a recortar tu serie pa
 
 <br><br>
 
-## Práctica 3: Procesos estocásticos
+### Práctica 3: Procesos estocásticos
 
 <br>
 
@@ -91,7 +92,7 @@ Esta práctica tiene como objetivo transformar tu serie para que sea estacionari
 
 <br><br>
 
-## Práctica 4: Procesos ARIMA sin estacionalidad
+### Práctica 4: Procesos ARIMA sin estacionalidad
 
 A grandes rasgos el ejercicio consistirá en analizar tu serie temporal sin estacionalidad (agregación anual), siguiendo la metodología de Box y Jenkins. Por tanto, para esta práctica debes considerar solo tu serie con fechado anual.
 
@@ -117,7 +118,7 @@ A continuación se indican los contenidos mínimos que se deben presentar. Eres 
     - Valores extremos.
     - Cálculo de la calidad del ajuste y de las predicciones
 
-* Previsión de la serie (almenos tres años)
+* Previsión de la serie (al menos tres años)
 
 * Valoración crítica del modelo ARIMA respecto de un modelo de alisado:
     - Comparación del modelo estimado para la serie en la práctica 2 y del modelo de esta práctica.
@@ -126,7 +127,7 @@ A continuación se indican los contenidos mínimos que se deben presentar. Eres 
 
 <br><br>
 
-## Práctica 5: Procesos ARIMA con estacionalidad
+### Práctica 5: Procesos ARIMA con estacionalidad
 
 Los objetivos de esta práctica son idénticos a los de la práctica previa, pero considerando tu serie original con estacionalidad.
 
@@ -151,7 +152,7 @@ Los objetivos de esta práctica son idénticos a los de la práctica previa, per
     - Valores extremos.
     - Cálculo de la calidad del ajuste y de las predicciones
 
-* Previsión de la serie (almenos tres años)
+* Previsión de la serie (al menos tres años)
 
 * Valoración crítica del modelo ARIMA respecto de un modelo de alisado:
     - Comparación del modelo estimado para la serie en la práctica 2 y del modelo de esta práctica.
