@@ -8,7 +8,9 @@ output:
     toc_float: true
 ---
 
-<br><br><br>
+\
+\
+\
 
 -------------------
 
@@ -20,11 +22,11 @@ El objetivo general es aprender a manejarse don datos de corte temporal, **Serie
 
 Para todo veremos la teoría necesaria y, sobre todo, practicaremos utilizando el programa estadístico **R** y el lenguaje **Markdown** a través de **RStudio**.
 
-<br>
+\
 
 ------------------
 
-<br>
+\
 
 ## Contenidos
 
@@ -43,11 +45,11 @@ Pasar de una sesión a la siguiente supone incrementar la complejidad de las té
 
 El desarrollo detallado de cada sesión lo podréis encontrar en la sección [Calendario](https://iarribasf.github.io/SeriesTemporales-MASTER/06-Calendario.html) de la página web. Esta es una sección viva, que se irá ampliado y modificando según avance el curso.
 
-<br>
+\
 
 ------------------
 
-<br>
+\
 
 ## Metodología
 
@@ -58,18 +60,18 @@ Dado el carácter eminentemente práctico del módulo, todas las sesiones se imp
 3. _Tiempo de evaluación_: tras cada tema realizaréis una breve prueba tipo test, con tiempo limitado, para valorar si habéis adquirido los conocimientos teóricos y las habilidades practicas básicas.
 4. _Trabajo práctico de evaluación_: también en clase os daré tiempo para realizar parte de los trabajos prácticos que servirán de evaluación del módulo.
 
-<br>
+\
 
 Aunque tenéis a vuestra disposición los ordenadores del aula de informática, lo cierto es que cada vez resulta más aconsejable que os traigáis vuestro ordenador para trabajar.
 
-Todo el material necesario para este curso lo tenéis disponible en esta página web así como en [**Aula Virtual**](https://aulavirtual.uv.es). También podéis encontrar los detalles en la sección [Logística](https://iarribasf.github.io/SeriesTemporales-MASTER/02-Logistics.html) de la web.
+Todo el material necesario para este curso lo tenéis disponible en esta página web así como en [**Aula Virtual**](https://aulavirtual.uv.es). También podéis encontrar los detalles en la sección [Logística](https://iarribasf.github.io/SeriesTemporales-MASTER/02-Logistica.html) de la web.
 
-<br>
+\
 
 
 ------------------
 
-<br>
+\
 
 ## Evaluación
 
@@ -82,5 +84,9 @@ Además, tras cada unidad temática, os daré una **práctica de evaluación** q
 Las prácticas de evaluación deben realizarse utilizando el **programa estadístico R** y recomiendo que uséis para la escritura del trabajo el lenguaje **Markdown**.
 
 
-<br><br><br><br>
+\
+\
+\
+\
+
 
