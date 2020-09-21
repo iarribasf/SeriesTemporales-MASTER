@@ -11,7 +11,7 @@
 
 
 
-<title>05-Practica.utf8</title>
+<title>Prácticas de evaluación</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -397,6 +397,11 @@ div.tocify {
     <li>
       <a href="03-10-Ejemplo5.html">Ejemplo Tema 5</a>
     </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Otro ejemplo</li>
+    <li>
+      <a href="03-11-Ejemplo-Pasajeros.html">Ejemplo de Pasajeros</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -463,52 +468,65 @@ div.tocify {
 
 
 
+<h1 class="title toc-ignore">Prácticas de evaluación</h1>
 
 </div>
 
 
-<p><br><br></p>
+<p><br />
+<br />
+</p>
 <p>Durante todo el módulo realizarás una serie de ejercicios que aplicarán las técnicas vistas en cada tema. Lee con atención las siguientes instrucciones generales.</p>
 <p>Tu primera tarea es descargarte tu serie temporal. Descárgate <a href="practica/Descripcion%20de%20las%20series.pdf">aqui</a> el fichero .pdf con la descripción de las series y localiza en él el nombre de tu serie. El este fichero encontrarás también una descripción detallada de la serie que vas a analizar: nombre, definición, unidades, fuente, fechado…</p>
 <p>Por otro lado, descárgate <a href="practica/Series.zip">aquí</a> fichero comprimido con todas las series, descomprímelo y localiza el fichero txt con tu serie.</p>
 <hr />
-<p><br><br></p>
+<p><br />
+<br />
+</p>
 <div id="características-generales-de-las-entregas" class="section level3">
 <h3>Características generales de las entregas</h3>
-<p><br></p>
+<p><br />
+</p>
 <ul>
 <li>La <strong>fecha</strong> máxima de entrega de cada trabajo se indicará al finalizar cada tema. Procura no retrasarte. Si el retraso supera la semana, tu nota en la práctica será de cero.</li>
 <li>En Aulavirtual, en la tarea “SERIES: Practica n” debes <strong>subir un fichero .pdf con los resultados</strong> de la práctica n-ésima. Sólo se admite un único fichero en formato .pdf.</li>
 <li>Piensa que además de los contenidos también su ordenación, estructura, sintaxis, comentarios, etc. son parte de la evaluación.</li>
-<li><strong>Incluye siempre todo el código en R utilizada en el trabajo</strong>. Si utilizas Markdown (o similar), haz que el código sea visible; en otro caso, añádelo como un apéndice al final del documento.</li>
+<li><strong>Incluye siempre todo el código en R utilizado en el trabajo</strong>. Si utilizas Markdown (o similar), haz que el código sea visible; en otro caso, añádelo como un apéndice al final del documento.</li>
 </ul>
-<p><br><br></p>
+<p><br />
+<br />
+</p>
 </div>
 <div id="práctica-1-introducción-a-las-series-temporales" class="section level3">
 <h3>Práctica 1: Introducción a las series temporales</h3>
-<p><br></p>
+<p><br />
+</p>
 <ul>
 <li><strong>Parte 1:</strong> Descripción de la serie temporal
 <ul>
 <li>Haz una descripción detallada de tu serie (tendencia, estacionalidad, intervención, tipo de esquema…).</li>
-<li>Ayúdate para ello de todos los elementos numéricos y gráficos que hemos visto: gráfica de tu serie original, de la agregada anual, gráfica localización/dispersión, descomposición…</li>
+<li>Ayúdate para ello de todos los elementos numéricos y gráficos que hemos visto: gráfica de tu serie original, gráfica de su agregación anual, gráfica localización/dispersión, descomposición…</li>
 </ul></li>
 </ul>
-<p><br></p>
+<p><br />
+</p>
 <ul>
 <li><strong>Parte 2:</strong> Análisis del residuo
 <ul>
 <li>Haz un análisis del residuo obtenido tras la descomposición para determinar si es ruido blanco e identificar posibles intervenciones.</li>
-<li>Ten en cuenta que, si has realizado una descomposición multiplicativa de tu serie, el residuo obtenido no es válido para este análisis. Deberás previamente obtener su logaritmo o bien calcular el residuo aditivo.</li>
+<li>Ten en cuenta que si has realizado una descomposición multiplicativa de tu serie, el residuo obtenido no es válido para este análisis. Deberás previamente obtener el residuo aditivo.</li>
 <li>Para este análisis haz uso de las técnicas estadísticas o gráficas que conozcas.</li>
 </ul></li>
 </ul>
 <p>Si el análisis realizado así lo aconseja, indica si vas a recortar tu serie para posteriores análisis.</p>
-<p><br><br></p>
+<p><br />
+<br />
+</p>
 </div>
 <div id="práctica-2-alisado-exponencial" class="section level3">
 <h3>Práctica 2: Alisado exponencial</h3>
-<p><br></p>
+<p><br />
+</p>
 <ul>
 <li><strong>Ejercicio 1:</strong> Serie con fechado anual
 <ul>
@@ -517,24 +535,28 @@ div.tocify {
 <li>Describe el modelo obtenido.</li>
 <li>Interpreta el valor de los parámetros estimados.</li>
 <li>Obtén los indicadores de la calidad del modelo y coméntalos. Al menos calcula los indicadores de calidad para las previsiones intra-muestrales a un periodo vista y para las previsiones extra-muestrales a varios periodos vista (validación cruzada).</li>
-<li>Muestra los últimos valores estimados de nivel y pendiente</li>
-<li>Realiza una predicción a mano y con R para los tres siguientes años. Muestra los resultados de la estimación y la predicción gráficamente.</li>
+<li>Muestra los últimos valores estimados de nivel y pendiente y realiza una predicción a mano y con <code>R</code> para los tres siguientes años.</li>
+<li>Realiza un predicción a tres años vista con <code>R</code> y muestra los resultados de la estimación y la predicción gráficamente.</li>
 <li>Obtén el residuo e identifica la presencia de valores extremos.</li>
 </ul></li>
 </ul>
-<p><br></p>
+<p><br />
+</p>
 <ul>
 <li><strong>Ejercicio 2:</strong> Serie con el fechado original
 <ul>
 <li>Repite el análisis previo, pero usando esta vez su serie original sin anualizar.</li>
-<li>En este caso, has la previsión para un año completo.</li>
+<li>En este caso, haz la previsión <em>a mano</em> para 12 meses y con <code>R</code> para 36 meses.</li>
 </ul></li>
 </ul>
-<p><br><br></p>
+<p><br />
+<br />
+</p>
 </div>
 <div id="práctica-3-procesos-estocásticos" class="section level3">
 <h3>Práctica 3: Procesos estocásticos</h3>
-<p><br></p>
+<p><br />
+</p>
 <p>Esta práctica tiene como objetivo transformar tu serie para que sea estacionaria en media y varianza, y ergódica.</p>
 <ul>
 <li><strong>Ejercicio 1:</strong> Serie con fechado anual
@@ -544,14 +566,17 @@ div.tocify {
 <li>Haz el contraste de raíces unitarias para identificar el orden de integración.</li>
 </ul></li>
 </ul>
-<p><br></p>
+<p><br />
+</p>
 <ul>
 <li><strong>Ejercicio 2:</strong> Serie con el fechado original
 <ul>
 <li>Transforma tu serie original usando sólo las funciones log y diff para obtener otra que sea estacionaria y ergódica.</li>
 </ul></li>
 </ul>
-<p><br><br></p>
+<p><br />
+<br />
+</p>
 </div>
 <div id="práctica-4-procesos-arima-sin-estacionalidad" class="section level3">
 <h3>Práctica 4: Procesos ARIMA sin estacionalidad</h3>
@@ -559,10 +584,10 @@ div.tocify {
 <ul>
 <li>Las tareas para realizar son:
 <ul>
-<li>Transformar la serie para que sea estacionaria y ergódica</li>
+<li>Transformar la serie para que sea estacionaria y ergódica (según determinaste en la práctica 3)</li>
 <li>Identificar la serie, estimarla y validarla</li>
 <li>Realizar predicciones puntuales y por intervalo</li>
-<li>Comparar la calidad del ajuste y de las predicciones del modelo ARIMA con los que obtuviste con el modelo de alisado exponencial de la práctica 2.</li>
+<li>Comparar la calidad del ajuste y de las predicciones del modelo ARIMA con la que obtuviste con el modelo de alisado exponencial de la práctica 2.</li>
 </ul></li>
 </ul>
 <p>A continuación se indican los contenidos mínimos que se deben presentar. Eres libre de elegir el orden de la presentación de los contenidos, así como la información finalmente presentada.</p>
@@ -571,7 +596,7 @@ div.tocify {
 <ul>
 <li>Diferenciación, parte estructural, análisis de intervención y valores atípicos.</li>
 </ul></li>
-<li>Estimación del modelo
+<li>Estimación del modelo definitivo
 <ul>
 <li>Estimación de los coeficientes del modelo.</li>
 <li>Desarrollo de la ecuación estimada.</li>
@@ -592,7 +617,9 @@ div.tocify {
 <li>Comparación de las previsiones.</li>
 </ul></li>
 </ul>
-<p><br><br></p>
+<p><br />
+<br />
+</p>
 </div>
 <div id="práctica-5-procesos-arima-con-estacionalidad" class="section level3">
 <h3>Práctica 5: Procesos ARIMA con estacionalidad</h3>
@@ -600,16 +627,16 @@ div.tocify {
 <ul>
 <li>Las tareas para realizar son:
 <ul>
-<li>Transformar la serie para que sea estacionaria y ergódica</li>
+<li>Transformar la serie para que sea estacionaria y ergódica (según determinaste en la práctica 3)</li>
 <li>Identificar la serie, estimarla y validarla</li>
 <li>Realizar predicciones puntuales y por intervalo</li>
-<li>Comparar la calidad del ajuste y de las predicciones del modelo ARIMA con los que obtuviste con el modelo de alisado exponencial de la práctica 2.</li>
+<li>Comparar la calidad del ajuste y de las predicciones del modelo ARIMA con la que obtuviste con el modelo de alisado exponencial de la práctica 2.</li>
 </ul></li>
 <li>Identificación del modelo ARIMA:
 <ul>
 <li>Diferenciación, parte estructural, análisis de intervención y valores atípicos.</li>
 </ul></li>
-<li>Estimación del modelo
+<li>Estimación del modelo definitivo
 <ul>
 <li>Estimación de los coeficientes del modelo.</li>
 <li>Desarrollo de la ecuación estimada.</li>
@@ -630,7 +657,11 @@ div.tocify {
 <li>Comparación de las previsiones.</li>
 </ul></li>
 </ul>
-<p><br><br><br><br></p>
+<p><br />
+<br />
+<br />
+<br />
+</p>
 </div>
 
 <footer class="footer">

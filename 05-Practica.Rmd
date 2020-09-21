@@ -1,4 +1,5 @@
 ---
+title: "Prácticas de evaluación"
 output:
   html_document:
     theme: cerulean
@@ -8,7 +9,8 @@ output:
     toc_float: true
 ---
 
-<br><br>
+\
+\
 
 
 Durante todo el módulo realizarás una serie de ejercicios que aplicarán las técnicas vistas en cada tema. Lee con atención las siguientes instrucciones generales.
@@ -20,41 +22,47 @@ Por otro lado, descárgate [aquí](practica/Series.zip) fichero comprimido con t
 
 ______________________
 
-<br><br>
+\
+\
+
 
 ### Características generales de las entregas
 
-<br>
+\
 
 * La **fecha** máxima de entrega de cada trabajo se indicará al finalizar cada tema. Procura no retrasarte. Si el retraso supera la semana, tu nota en la práctica será de cero.
 * En Aulavirtual, en la tarea "SERIES: Practica n" debes **subir un fichero .pdf con los resultados** de la práctica n-ésima. Sólo se admite un único fichero en formato .pdf.
 * Piensa que además de los contenidos también su ordenación, estructura, sintaxis, comentarios, etc. son parte de la evaluación.
-* **Incluye siempre todo el código en R utilizada en el trabajo**. Si utilizas Markdown (o similar), haz que el código sea visible; en otro caso, añádelo como un apéndice al final del documento. 
+* **Incluye siempre todo el código en R utilizado en el trabajo**. Si utilizas Markdown (o similar), haz que el código sea visible; en otro caso, añádelo como un apéndice al final del documento. 
  
-<br><br>
+
+\
+\
 
 ### Práctica 1: Introducción a las series temporales
 
-<br>
+\
 
 *	**Parte 1:** Descripción de la serie temporal
     - Haz una descripción detallada de tu serie (tendencia, estacionalidad, intervención, tipo de esquema...).
-    - Ayúdate para ello de todos los elementos numéricos y gráficos que hemos visto: gráfica de tu serie original, de la agregada anual, gráfica localización/dispersión, descomposición...
+    - Ayúdate para ello de todos los elementos numéricos y gráficos que hemos visto: gráfica de tu serie original, gráfica de su agregación anual, gráfica localización/dispersión, descomposición...
 
-<br> 
+\
 
 * **Parte 2:** Análisis del residuo
   - Haz un análisis del residuo obtenido tras la descomposición para determinar si es ruido blanco e identificar posibles intervenciones. 
-  - Ten en cuenta que, si has realizado una descomposición multiplicativa de tu serie, el residuo obtenido no es válido para este análisis. Deberás previamente obtener su logaritmo o bien calcular el residuo aditivo.
+  - Ten en cuenta que si has realizado una descomposición multiplicativa de tu serie, el residuo obtenido no es válido para este análisis. Deberás previamente obtener el residuo aditivo.
   - Para este análisis haz uso de las técnicas estadísticas o gráficas que conozcas.
 
 Si el análisis realizado así lo aconseja, indica si vas a recortar tu serie para posteriores análisis.
 
-<br><br>
+
+\
+\
 
 ### Práctica 2: Alisado exponencial
 
-<br>
+\
 
 * **Ejercicio 1:** Serie con fechado anual
     - Considera la agregación anual de tu serie temporal (que ya usaste en la primera práctica).
@@ -62,21 +70,22 @@ Si el análisis realizado así lo aconseja, indica si vas a recortar tu serie pa
     - Describe el modelo obtenido.
     - Interpreta el valor de los parámetros estimados.
     - Obtén los indicadores de la calidad del modelo y coméntalos. Al menos calcula los indicadores de calidad para las previsiones intra-muestrales a un periodo vista y para las previsiones extra-muestrales a varios periodos vista (validación cruzada).
-    - Muestra los últimos valores estimados de nivel y pendiente
-    - Realiza una predicción a mano y con R para los tres siguientes años. Muestra los resultados de la estimación y la predicción gráficamente.
+    - Muestra los últimos valores estimados de nivel y pendiente y realiza una predicción a mano y con `R` para los tres siguientes años. 
+    - Realiza un predicción a tres años vista con `R` y muestra los resultados de la estimación y la predicción gráficamente.
     - Obtén el residuo e identifica la presencia de valores extremos.
 
-<br>
+\
 
 * **Ejercicio 2:** Serie con el fechado original
     - Repite el análisis previo, pero usando esta vez su serie original sin anualizar.
-    - En este caso, has la previsión para un año completo.
+    - En este caso, haz la previsión _a mano_ para 12 meses y con `R` para 36 meses.
 
-<br><br>
+\
+\
 
 ### Práctica 3: Procesos estocásticos
 
-<br>
+\
 
 Esta práctica tiene como objetivo transformar tu serie para que sea estacionaria en media y varianza, y ergódica.
 
@@ -85,29 +94,30 @@ Esta práctica tiene como objetivo transformar tu serie para que sea estacionari
     - Determina si has de diferenciar la serie y si es conveniente la transformación logarítmica para que verifique las hipótesis de estacionariedad y ergodicidad.
     - Haz el contraste de raíces unitarias para identificar el orden de integración.
 
-<br>
+\
 
 * **Ejercicio 2:** Serie con el fechado original
    - Transforma tu serie original usando sólo las funciones log y diff para obtener otra que sea estacionaria y ergódica.
 
-<br><br>
+\
+\
 
 ### Práctica 4: Procesos ARIMA sin estacionalidad
 
 A grandes rasgos el ejercicio consistirá en analizar tu serie temporal sin estacionalidad (agregación anual), siguiendo la metodología de Box y Jenkins. Por tanto, para esta práctica debes considerar solo tu serie con fechado anual.
 
 * Las tareas para realizar son:
-    - Transformar la serie para que sea estacionaria y ergódica
+    - Transformar la serie para que sea estacionaria y ergódica (según determinaste en la práctica 3)
     - Identificar la serie, estimarla y validarla
     - Realizar predicciones puntuales y por intervalo
-    - Comparar la calidad del ajuste y de las predicciones del modelo ARIMA con los que obtuviste con el modelo de alisado exponencial de la práctica 2.
+    - Comparar la calidad del ajuste y de las predicciones del modelo ARIMA con la que obtuviste con el modelo de alisado exponencial de la práctica 2.
 
 A continuación se indican los contenidos mínimos que se deben presentar. Eres libre de elegir el orden de la presentación de los contenidos, así como la información finalmente presentada.
 
 * Identificación del modelo ARIMA:
     - Diferenciación, parte estructural, análisis de intervención y valores atípicos.
 
-* Estimación del modelo
+* Estimación del modelo definitivo
     - Estimación de los coeficientes del modelo.
     - Desarrollo de la ecuación estimada.
     - Interpretación de los parámetros y de la ecuación estimada.
@@ -125,23 +135,24 @@ A continuación se indican los contenidos mínimos que se deben presentar. Eres 
     - Comparación de la calidad de los modelos.
     - Comparación de las previsiones.
 
-<br><br>
+\
+\
 
 ### Práctica 5: Procesos ARIMA con estacionalidad
 
 Los objetivos de esta práctica son idénticos a los de la práctica previa, pero considerando tu serie original con estacionalidad.
 
 * Las tareas para realizar son:
-    - Transformar la serie para que sea estacionaria y ergódica
+    - Transformar la serie para que sea estacionaria y ergódica (según determinaste en la práctica 3)
     - Identificar la serie, estimarla y validarla
     - Realizar predicciones puntuales y por intervalo
-    - Comparar la calidad del ajuste y de las predicciones del modelo ARIMA con los que obtuviste con el modelo de alisado exponencial de la práctica 2.
+    - Comparar la calidad del ajuste y de las predicciones del modelo ARIMA con la que obtuviste con el modelo de alisado exponencial de la práctica 2.
 
 
 * Identificación del modelo ARIMA:
     - Diferenciación, parte estructural, análisis de intervención y valores atípicos.
 
-* Estimación del modelo
+* Estimación del modelo definitivo
     - Estimación de los coeficientes del modelo.
     - Desarrollo de la ecuación estimada.
     - Interpretación de los parámetros y de la ecuación estimada.
@@ -159,5 +170,8 @@ Los objetivos de esta práctica son idénticos a los de la práctica previa, per
     - Comparación de la calidad de los modelos.
     - Comparación de las previsiones.
 
-<br><br><br><br>
+\
+\
+\
+\
 

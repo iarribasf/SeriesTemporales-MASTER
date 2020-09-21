@@ -72,14 +72,14 @@ k <- 20
 h <- 5                   
 TT <- length(DefEnfCer)  
 s <- TT-k-h              
-mapeArima <- matrix(NA, s, h)
+mapeArima <- matrix(NA, s + 1, h)
 for (i in 0:s) {
   train.set <- subset(DefEnfCer, start = i + 1, end = i + k)
   test.set <-  subset(DefEnfCer, start = i + k + 1, end = i + k + h)
   
   fit <- Arima(train.set, order = c(1, 1, 0),include.drift = TRUE)
   fcast<-forecast(fit, h = h)
-  mapeArima[i,] <- 100*abs(test.set - fcast$mean)/test.set
+  mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
 }
 
 errorArima <- colMeans(mapeArima)

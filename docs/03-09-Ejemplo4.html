@@ -20,9 +20,6 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <script src="site_libs/navigation-1.1/sourceembed.js"></script>
@@ -337,69 +334,6 @@ $(document).ready(function () {
 
 
 
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
 
 </head>
 
@@ -407,16 +341,6 @@ div.tocify {
 
 
 <div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -497,6 +421,11 @@ div.tocify {
     <li>
       <a href="03-10-Ejemplo5.html">Ejemplo Tema 5</a>
     </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Otro ejemplo</li>
+    <li>
+      <a href="03-11-Ejemplo-Pasajeros.html">Ejemplo de Pasajeros</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -576,6 +505,20 @@ div.tocify {
 
 </div>
 
+<div id="TOC">
+<ul>
+<li><a href="#ejemplo-de-aplicación-defunciones-por-enfermedades-cerebrovasculares-continuación."><span class="toc-section-number">1</span> Ejemplo de aplicación: Defunciones por Enfermedades Cerebrovasculares (continuación).</a><ul>
+<li><a href="#introducción"><span class="toc-section-number">1.1</span> Introducción</a></li>
+<li><a href="#transformación-de-la-serie"><span class="toc-section-number">1.2</span> Transformación de la serie</a></li>
+<li><a href="#identificación"><span class="toc-section-number">1.3</span> Identificación</a></li>
+<li><a href="#validación"><span class="toc-section-number">1.4</span> Validación</a></li>
+<li><a href="#interpretación-del-modelo"><span class="toc-section-number">1.5</span> Interpretación del modelo</a></li>
+<li><a href="#predicción"><span class="toc-section-number">1.6</span> Predicción</a></li>
+<li><a href="#calidad-de-las-previsiones-extra-muestrales-según-horizonte-temporal"><span class="toc-section-number">1.7</span> Calidad de las previsiones extra-muestrales según horizonte temporal</a></li>
+<li><a href="#comparación-con-un-modelo-de-alisado"><span class="toc-section-number">1.8</span> Comparación con un modelo de Alisado</a></li>
+</ul></li>
+</ul>
+</div>
 
 <p><br />
 <br />
@@ -587,13 +530,13 @@ div.tocify {
 <div id="introducción" class="section level2">
 <h2><span class="header-section-number">1.1</span> Introducción</h2>
 <p>Consideremos de nuevo la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares, Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2018, un total de 39 años o 468 meses</p>
-<p>En la descriptiva del tema 1 vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para su análisis por modelos ARIMA vamos a recortar la serie, que empezará el enero de 1988 y a anualizarla (31 años).</p>
+<p>En la descriptiva del ejemplo del tema 1 vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para su análisis por modelos ARIMA vamos a recortar la serie, que empezará el enero de 1988 y a anualizarla (31 años).</p>
 <p><br />
 </p>
 </div>
 <div id="transformación-de-la-serie" class="section level2">
 <h2><span class="header-section-number">1.2</span> Transformación de la serie</h2>
-<p>La figura 1 muestra que la serie no es estacionaria, pero si su primera diferencia. Por tanto se opta por considerar <span class="math inline">\(d=1\)</span> o <span class="math inline">\(DefEnfCer \sim I(1)\)</span>.</p>
+<p>La figura 1 muestra que la serie no es estacionaria, pero sí su primera diferencia. Por tanto, se opta por considerar <span class="math inline">\(d=1\)</span> o <span class="math inline">\(DefEnfCer \sim I(1)\)</span>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">DefEnfCer &lt;-<span class="st"> </span><span class="kw">read.csv2</span>(<span class="st">&quot;./series/Enfermedades cerebrovasculares.csv&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2">DefEnfCer &lt;-<span class="st"> </span><span class="kw">ts</span>(DefEnfCer[,<span class="dv">2</span>],<span class="dt">start =</span> <span class="dv">1980</span>, <span class="dt">freq =</span> <span class="dv">12</span>)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3">DefEnfCer &lt;-<span class="st"> </span><span class="kw">window</span>(DefEnfCer, <span class="dt">start =</span> <span class="dv">1988</span>)</a>
@@ -612,7 +555,7 @@ div.tocify {
 </div>
 <div id="identificación" class="section level2">
 <h2><span class="header-section-number">1.3</span> Identificación</h2>
-<p>Veamos ahora a identificar los valores de <span class="math inline">\(p\)</span> y <span class="math inline">\(q\)</span> a partir de la FAC y la FACP. Difícil decidirse por un AR(1), un MA(1) o incluso un ARMA(1, 1).</p>
+<p>Veamos ahora a identificar los valores de <span class="math inline">\(p\)</span> y <span class="math inline">\(q\)</span> a partir de la FAC y la FACP. Difícil decidirse entre un AR(1), un MA(1) o incluso un ARMA(1, 1).</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">ggtsdisplay</span>(<span class="kw">diff</span>(DefEnfCer), <span class="dt">main =</span> <span class="st">&quot;Figura 2. Def. por enf. cerebrovasculares (dif.)&quot;</span>)</a></code></pre></div>
 <p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>¿Qué recomienda <code>auto.arima</code>? Un AR(1) con deriva.</p>
@@ -696,7 +639,7 @@ X-squared = 2.6067, df = 2, p-value = 0.2716</code></pre>
 
 data:  error
 W = 0.90145, p-value = 0.007838</code></pre>
-<p>Las hipótesis de incorrelación y homocedasticidad se aceptan. También se aceptarían para otros valores de <span class="math inline">\(k\)</span> razonables. Si embargo, no se acepta la hipótesis de normalidad.</p>
+<p>Las hipótesis de incorrelación y homocedasticidad se aceptan. También se aceptarían para otros valores de <span class="math inline">\(k\)</span> razonables. Sin embargo, no se acepta la hipótesis de normalidad.</p>
 <p><br />
 </p>
 </div>
@@ -736,26 +679,26 @@ W = 0.90145, p-value = 0.007838</code></pre>
 <a class="sourceLine" id="cb23-3" data-line-number="3">TT &lt;-<span class="st"> </span><span class="kw">length</span>(DefEnfCer)   <span class="co">#Longitud serie</span></a>
 <a class="sourceLine" id="cb23-4" data-line-number="4">s &lt;-<span class="st"> </span>TT<span class="op">-</span>k<span class="op">-</span>h               <span class="co">#Total de estimaciones</span></a>
 <a class="sourceLine" id="cb23-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb23-6" data-line-number="6">mapeArima &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, s, h)</a>
+<a class="sourceLine" id="cb23-6" data-line-number="6">mapeArima &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, s <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, h)</a>
 <a class="sourceLine" id="cb23-7" data-line-number="7"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">0</span><span class="op">:</span>s) {</a>
 <a class="sourceLine" id="cb23-8" data-line-number="8">  train.set &lt;-<span class="st"> </span><span class="kw">subset</span>(DefEnfCer, <span class="dt">start =</span> i <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">end =</span> i <span class="op">+</span><span class="st"> </span>k)</a>
 <a class="sourceLine" id="cb23-9" data-line-number="9">  test.set &lt;-<span class="st">  </span><span class="kw">subset</span>(DefEnfCer, <span class="dt">start =</span> i <span class="op">+</span><span class="st"> </span>k <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">end =</span> i <span class="op">+</span><span class="st"> </span>k <span class="op">+</span><span class="st"> </span>h)</a>
 <a class="sourceLine" id="cb23-10" data-line-number="10">  </a>
 <a class="sourceLine" id="cb23-11" data-line-number="11">  fit &lt;-<span class="st"> </span><span class="kw">Arima</span>(train.set, <span class="dt">order =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),<span class="dt">include.drift =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb23-12" data-line-number="12">  fcast&lt;-<span class="kw">forecast</span>(fit, <span class="dt">h =</span> h)</a>
-<a class="sourceLine" id="cb23-13" data-line-number="13">  mapeArima[i,] &lt;-<span class="st"> </span><span class="dv">100</span><span class="op">*</span><span class="kw">abs</span>(test.set <span class="op">-</span><span class="st"> </span>fcast<span class="op">$</span>mean)<span class="op">/</span>test.set</a>
+<a class="sourceLine" id="cb23-13" data-line-number="13">  mapeArima[i <span class="op">+</span><span class="st"> </span><span class="dv">1</span>,] &lt;-<span class="st"> </span><span class="dv">100</span><span class="op">*</span><span class="kw">abs</span>(test.set <span class="op">-</span><span class="st"> </span>fcast<span class="op">$</span>mean)<span class="op">/</span>test.set</a>
 <a class="sourceLine" id="cb23-14" data-line-number="14">}</a>
 <a class="sourceLine" id="cb23-15" data-line-number="15"></a>
 <a class="sourceLine" id="cb23-16" data-line-number="16">errorArima &lt;-<span class="st"> </span><span class="kw">colMeans</span>(mapeArima)</a>
 <a class="sourceLine" id="cb23-17" data-line-number="17">errorArima</a></code></pre></div>
-<pre><code>[1] 1.676177 2.547804 2.926779 3.059624 4.455033</code></pre>
-<p>Se observa que: i) el error de predicción extra-muestral a un periodo vista es equivalente al intra-muestral (1.7%); ii) conforme aumenta el horizonte temporal de previsión el error aumenta; y iii) en todo caso el error se mantiene bajo.</p>
+<pre><code>[1] 1.494510 2.388923 2.822362 3.334597 3.864334</code></pre>
+<p>Se observa que: i) el error de predicción extra-muestral a un periodo vista (1.5%) es algo inferior al intra-muestral (1.7%); ii) conforme aumenta el horizonte temporal de previsión el error aumenta; y iii) en todo caso el error se mantiene bajo.</p>
 <p><br />
 </p>
 </div>
 <div id="comparación-con-un-modelo-de-alisado" class="section level2">
 <h2><span class="header-section-number">1.8</span> Comparación con un modelo de Alisado</h2>
-<p>Si estimamos la serie anual de Defunciones por enfermedades cerebrovasculares aplicando técnicas de alisado exponencial nos encontramos con un modelo con pendiente aditiva ETS(A,A,N). Además, <span class="math inline">\(\alpha = \beta = 0\)</span>. Si aplicamos estos valores a las ecuaciones iterativas de actualización tenemos que <span class="math inline">\(l_t = l_0\)</span> y que <span class="math inline">\(b_t = b_0\)</span>. Por tanto <span class="math inline">\(\widehat{y}_t = l_0 + t b_0\)</span>, un modelo lineal (<span class="math inline">\(b_0 = -655.37\)</span>).</p>
+<p>Si estimamos la serie anual de Defunciones por enfermedades cerebrovasculares aplicando técnicas de alisado exponencial nos encontramos con un modelo con pendiente aditiva ETS(A,A,N). Además, <span class="math inline">\(\alpha = \beta = 0\)</span>. Si aplicamos estos valores a las ecuaciones iterativas de actualización tenemos que <span class="math inline">\(l_t = l_0\)</span> y que <span class="math inline">\(b_t = b_0\)</span>. Por tanto <span class="math inline">\(\widehat{y}_t = l_0 + t b_0\)</span>, un modelo lineal (<span class="math inline">\(\widehat{y}_t = 45808.75 - 655.37\cdot t\)</span>).</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">summary</span>(alisado &lt;-<span class="st"> </span><span class="kw">ets</span>(DefEnfCer, <span class="dt">model =</span> <span class="st">&quot;ZZZ&quot;</span>))</a></code></pre></div>
 <pre><code>ETS(A,A,N) 
 
@@ -783,13 +726,13 @@ Training set 0.1025637</code></pre>
 <p>La calidad del ajuste del modelo de alisado es similar a la del modelo ARIMA: MAPE de 1.8% para el primero frente a 1.7% para el segundo; RMSE de 747 para el primero frente a 782 para el segundo. Más aún, si se aplica la metodología de origen de predicción móvil al modelo de alisado, el error a un periodo vista es del 2.1%, pero a cinco periodos vista se mantiene en el 3%.</p>
 <p>Finalmente, las predicciones realizadas con ambos modelos son prácticamente las mismas como se puede observar.</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">palisado &lt;-<span class="st"> </span><span class="kw">forecast</span>(alisado, <span class="dt">h =</span> <span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="kw">autoplot</span>(DefEnfCer, <span class="dt">PI =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="kw">autoplot</span>(DefEnfCer,</a>
 <a class="sourceLine" id="cb27-3" data-line-number="3">         <span class="dt">series =</span> <span class="st">&quot;Defunciones Enf. Cerebrovasculares&quot;</span>,</a>
 <a class="sourceLine" id="cb27-4" data-line-number="4">         <span class="dt">main=</span><span class="st">&quot;Figura 5. Defunciones Enf. Cerebrovasculares y previsión&quot;,</span></a>
 <a class="sourceLine" id="cb27-5" data-line-number="5"><span class="st">         xlab=&quot;&quot;, </span></a>
 <a class="sourceLine" id="cb27-6" data-line-number="6"><span class="st">         ylab=&quot;</span>Defunciones<span class="st">&quot;) +</span></a>
-<a class="sourceLine" id="cb27-7" data-line-number="7"><span class="st">  autolayer(parima110$mean, PI = FALSE, series = &quot;</span>Previsión con Arima<span class="st">&quot;) +</span></a>
-<a class="sourceLine" id="cb27-8" data-line-number="8"><span class="st">  autolayer(palisado$mean, PI = FALSE, series = &quot;</span>Previsión con Alisado<span class="st">&quot;) +</span></a>
+<a class="sourceLine" id="cb27-7" data-line-number="7"><span class="st">  autolayer(parima110$mean, series = &quot;</span>Previsión con Arima<span class="st">&quot;) +</span></a>
+<a class="sourceLine" id="cb27-8" data-line-number="8"><span class="st">  autolayer(palisado$mean, series = &quot;</span>Previsión con Alisado<span class="st">&quot;) +</span></a>
 <a class="sourceLine" id="cb27-9" data-line-number="9"><span class="st">  guides(colour = guide_legend(title = &quot;</span>Predicción&quot;)<span class="er">)</span> <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb27-10" data-line-number="10"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="kw">c</span>(<span class="fl">0.98</span>,<span class="fl">0.98</span>), <span class="dt">legend.justification=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</a></code></pre></div>
 <p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /></p>
@@ -802,7 +745,7 @@ Training set 0.1025637</code></pre>
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiU2VyaWVzIFRlbXBvcmFsZXM6IFByb2Nlc29zIEFSSU1BIgphdXRob3I6ICJJdsOhbiBBcnJpYmFzIChEZXB0by4gQW7DoWxpc2lzIEVjb27Ds21pY28uIFVuaXZlcnNpdGF0IGRlIFZhbMOobmNpYSkiCmRhdGU6ICJDdXJzbyAyMDIwLTIxIgpvdXRwdXQ6IAogIGh0bWxfZG9jdW1lbnQ6CiAgICB0aGVtZTogY2VydWxlYW4KICAgIGhpZ2hsaWdodDogcHlnbWVudHMgCiAgICBmaWdfY2FwdGlvbjogZmFsc2UKICAgIGRmX3ByaW50OiBrYWJsZQogICAgdG9jOiB0cnVlCiAgICB0b2NfZGVwdGg6IDIKICAgIHRvY19mbG9hdDogCiAgICAgIGNvbGxhcHNlZDogdHJ1ZQogICAgbnVtYmVyX3NlY3Rpb25zOiB0cnVlCiAgICBzZWxmX2NvbnRhaW5lZDogdHJ1ZQogICAgY29kZV9kb3dubG9hZDogdHJ1ZQotLS0KCmBgYHtyIGNodW5rX3NldHVwLCBlY2hvID0gRkFMU0V9CmtuaXRyOjpvcHRzX2NodW5rJHNldCh3YXJuaW5nID0gRkFMU0UsIAogICAgICAgICAgICAgICAgICAgICAgbWVzc2FnZSA9IEZBTFNFLCAKICAgICAgICAgICAgICAgICAgICAgIGNvbW1lbnQgPSAiIiwKICAgICAgICAgICAgICAgICAgICAgIGZpZy5hbGlnbiA9ICJjZW50ZXIiLCAKICAgICAgICAgICAgICAgICAgICAgIGZpZy5zaG93ID0gImhvbGQiLAogICAgICAgICAgICAgICAgICAgICAgZmlnLmhlaWdodCA9IDQsCiAgICAgICAgICAgICAgICAgICAgICBmaWcud2lkdGggPSA4LAogICAgICAgICAgICAgICAgICAgICAgb3V0LndpZHRoID0gIjgwJSIpIApgYGAKCmBgYHtyIG9wdGlvbnNfc2V0dXAsIGVjaG8gPSBGQUxTRX0Kb3B0aW9ucyhzY2lwZW4gPSA5OTkpICMtIHBhcmEgcXVpdGFyIGxhIG5vdGFjaW9uIGNpZW50aWZpY2EKYGBgCgpgYGB7ciBsaWJyZXJpYXMsIGVjaG8gPSBGQUxTRX0KbGlicmFyeSgiUkNvbG9yQnJld2VyIikKbGlicmFyeShmb3JlY2FzdCkKbGlicmFyeShnZ3Bsb3QyKTsgdGhlbWVfc2V0KHRoZW1lX2J3KCkpCmxpYnJhcnkoZ3JpZEV4dHJhKQpsaWJyYXJ5KGdyaWQpCiNsaWJyYXJ5KHNoYXBlKQpsaWJyYXJ5KHRzZXJpZXMpCmxpYnJhcnkoYW9kKQpgYGAKClwKXAoKIyBFamVtcGxvIGRlIGFwbGljYWNpw7NuOiBEZWZ1bmNpb25lcyBwb3IgRW5mZXJtZWRhZGVzIENlcmVicm92YXNjdWxhcmVzIChjb250aW51YWNpw7NuKS4KClwKCiMjIEludHJvZHVjY2nDs24KCkNvbnNpZGVyZW1vcyBkZSBudWV2byBsYSBzZXJpZSB0ZW1wb3JhbCBjb3JyZXNwb25kaWVudGUgYWwgbsO6bWVybyBkZSBkZWZ1bmNpb25lcyBjYXVzYWRhcyBwb3IgZW5mZXJtZWRhZGVzIGNlcmVicm92YXNjdWxhcmVzLCBFc3RhIHNlcmllIGVzdMOhIGRpc3BvbmlibGUgZW4gZWwgSW5zdGl0dXRvIE5hY2lvbmFsIGRlIEVzdGFkw61zdGljYSBkZXNkZSBlbmVybyBkZSAxOTgwIGhhc3RhIGRpY2llbWJyZSBkZSAyMDE4LCB1biB0b3RhbCBkZSAzOSBhw7FvcyBvIDQ2OCBtZXNlcwoKRW4gbGEgZGVzY3JpcHRpdmEgZGVsIHRlbWEgMSB2aW1vcyBxdWUgbGEgZGVzY29tcG9zaWNpw7NuIHJldmVsYWJhIGxhIHByZXNlbmNpYSBkZSB2YXJpb3MgdmFsb3JlcyBhdMOtcGljb3MgY29uY2VudHJhZG9zIGFsIGluaWNpbyBkZSBsYSBzZXJpZS4gUG9yIGVzdGUgbW90aXZvLCBwYXJhIHN1IGFuw6FsaXNpcyBwb3IgbW9kZWxvcyBBUklNQSB2YW1vcyBhIHJlY29ydGFyIGxhIHNlcmllLCBxdWUgZW1wZXphcsOhIGVsIGVuZXJvIGRlIDE5ODggeSBhIGFudWFsaXphcmxhICgzMSBhw7FvcykuCgpcCgojIyBUcmFuc2Zvcm1hY2nDs24gZGUgbGEgc2VyaWUKCkxhIGZpZ3VyYSAxIG11ZXN0cmEgcXVlIGxhIHNlcmllIG5vIGVzIGVzdGFjaW9uYXJpYSwgcGVybyBzaSBzdSBwcmltZXJhIGRpZmVyZW5jaWEuIFBvciB0YW50byBzZSBvcHRhIHBvciBjb25zaWRlcmFyICRkPTEkIG8gJERlZkVuZkNlciBcc2ltIEkoMSkkLgoKCmBgYHtyLCBldmFsID0gRkFMU0V9CkRlZkVuZkNlciA8LSByZWFkLmNzdjIoIi4vc2VyaWVzL0VuZmVybWVkYWRlcyBjZXJlYnJvdmFzY3VsYXJlcy5jc3YiLCBoZWFkZXIgPSBUUlVFKQpEZWZFbmZDZXIgPC0gdHMoRGVmRW5mQ2VyWywyXSxzdGFydCA9IDE5ODAsIGZyZXEgPSAxMikKRGVmRW5mQ2VyIDwtIHdpbmRvdyhEZWZFbmZDZXIsIHN0YXJ0ID0gMTk4OCkKRGVmRW5mQ2VyIDwtIGFnZ3JlZ2F0ZShEZWZFbmZDZXIsIEZVTiA9IHN1bSkKCmF1dG9wbG90KERlZkVuZkNlciwgeGxhYiA9ICJTZXJpZSBvcmlnaW5hbCIsIHlsYWIgPSAiIiwgbWFpbiA9ICIiKQphdXRvcGxvdChkaWZmKERlZkVuZkNlciksIHhsYWIgPSAiU2VyaWUgZGlmZXJlbmNpYWRhIiwgeWxhYiA9ICIiLCBtYWluID0gIiIpCmdnQWNmKERlZkVuZkNlciwgeGxhYiA9ICIiLCB5bGFiID0gIkZBQyIsIG1haW4gPSAiIikKZ2dBY2YoZGlmZihEZWZFbmZDZXIpLCB4bGFiID0gIiIsIHlsYWIgPSAiRkFDIiwgbWFpbiA9ICIiKQpgYGAKCmBgYHtyLCBlY2hvID0gRkFMU0V9CkRlZkVuZkNlciA8LSByZWFkLmNzdjIoIi4vc2VyaWVzL0VuZmVybWVkYWRlcyBjZXJlYnJvdmFzY3VsYXJlcy5jc3YiLCBoZWFkZXIgPSBUUlVFKQpEZWZFbmZDZXIgPC0gdHMoRGVmRW5mQ2VyWywyXSxzdGFydD0xOTgwLGZyZXE9MTIpCkRlZkVuZkNlciA8LSB3aW5kb3coRGVmRW5mQ2VyLCBzdGFydCA9IDE5ODgpCkRlZkVuZkNlciA8LSBhZ2dyZWdhdGUoRGVmRW5mQ2VyLCBGVU4gPSBzdW0pCgpncmlkLmFycmFuZ2UoCiAgYXV0b3Bsb3QoRGVmRW5mQ2VyLCB4bGFiID0gIlNlcmllIG9yaWdpbmFsIiwgeWxhYiA9ICIiLCBtYWluID0gIkZpZ3VyYSAxLiBEZWYuIGVuZi4gY2VyZWJyb3Zhcy4iKSwKICBhdXRvcGxvdChkaWZmKERlZkVuZkNlciksIHhsYWIgPSAiU2VyaWUgZGlmZXJlbmNpYWRhIiwgeWxhYiA9ICIiLCBtYWluID0gIiIpLAogIGdnQWNmKERlZkVuZkNlciwgeGxhYiA9ICIiLCB5bGFiID0gIkZBQyIsIG1haW4gPSAiIiksCiAgZ2dBY2YoZGlmZihEZWZFbmZDZXIpLCB4bGFiID0gIiIsIHlsYWIgPSAiRkFDIiwgbWFpbiA9ICIiKSwKICBucm93ID0gMgopCmBgYAoKUG9yIG90cm8gbGFkbywgZWwgcGFyw6FtZXRybyAkXGxhbWJkYSQgw7NwdGltbyBlbiBsYSB0cmFuc2Zvcm1hY2nDs24gZGUgQm94LUNveCBlcyAtMC44MSwgYXPDrSBxdWUgbm8gc2UgcmVhbGl6YXLDoSBuaW5ndW5hIHRyYW5zZm9ybWFjacOzbiBsb2dhcsOtdG1pY2EuCgpgYGB7cn0KQm94Q294LmxhbWJkYShEZWZFbmZDZXIpCmBgYAoKXAoKIyMgSWRlbnRpZmljYWNpw7NuCgpWZWFtb3MgYWhvcmEgYSBpZGVudGlmaWNhciBsb3MgdmFsb3JlcyBkZSAkcCQgeSAkcSQgYSBwYXJ0aXIgZGUgbGEgRkFDIHkgbGEgRkFDUC4gRGlmw61jaWwgZGVjaWRpcnNlIHBvciB1biBBUigxKSwgdW4gTUEoMSkgbyBpbmNsdXNvIHVuIEFSTUEoMSwgMSkuCgpgYGB7cn0gCmdndHNkaXNwbGF5KGRpZmYoRGVmRW5mQ2VyKSwgbWFpbiA9ICJGaWd1cmEgMi4gRGVmLiBwb3IgZW5mLiBjZXJlYnJvdmFzY3VsYXJlcyAoZGlmLikiKQpgYGAKCsK/UXXDqSByZWNvbWllbmRhIGBhdXRvLmFyaW1hYD8gVW4gQVIoMSkgY29uIGRlcml2YS4KCmBgYHtyfSAKYXV0by5hcmltYShEZWZFbmZDZXIsIGQgPSAxKQpgYGAKCkxhIGVzdGltYWNpw7NuIGRlIGVzdGUgbW9kZWxvIG11ZXN0cmEgcXVlIGxvcyBkb3MgY29lZmljaWVudGVzIGVzdGltYWRvcyBzb24gYXBhcmVudGVtZW50ZSBzaWduaWZpY2F0aXZvcyB5IHF1ZSBub3MgaGF5IHZhbG9yZXMgZXh0cmVtb3MgKGZpZ3VyYSAzKS4KCmBgYHtyfQphcmltYTExMCA8LSBBcmltYShEZWZFbmZDZXIsIAogICAgICAgICAgICAgICAgICBvcmRlciA9IGMoMSwgMSwgMCksCiAgICAgICAgICAgICAgICAgIGluY2x1ZGUuZHJpZnQgPSBUUlVFKQoKZXJyb3IgPC0gcmVzaWR1YWxzKGFyaW1hMTEwKQpzZGVycm9yIDwtIHNkKGVycm9yKQoKYXV0b3Bsb3QoZXJyb3IsIHNlcmllcz0iRXJyb3IiLAogICAgICAgICBjb2xvdXIgPSAiYmxhY2siLAogICAgICAgICB4bGFiID0gIiIsCiAgICAgICAgIHlsYWIgPSAiRXJyb3IiLAogICAgICAgICBtYWluID0gIkZpZ3VyYSAzLiBFcnJvciArIEludGVydmVuY2nDs24iKSArCiAgZ2VvbV9obGluZSh5aW50ZXJjZXB0ID0gYygtMywgLTIsIDIsIDMpKnNkZXJyb3IsIAogICAgICAgICAgICAgY29sb3VyID0gYygicmVkIiwgImdyZWVuIiwgImdyZWVuIiwgInJlZCIpLCAKICAgICAgICAgICAgIGx0eSA9IDIpICsgCiAgZ2VvbV9wb2ludCgpICsKICBzY2FsZV94X2NvbnRpbnVvdXMoYnJlYWtzPSBzZXEoMTk4OCwgMjAxOCwgNCkpIApgYGAKClwKCiMjIFZhbGlkYWNpw7NuCgpfX1ZhcmlhYmxlcyBzb24gc2lnbmlmaWNhdGl2YXNfXwoKTG9zIGRvcyBjb2VmaWNpZW50ZXMgZXN0aW1hZG9zICgkXHBoaV8xJCB5ICRcbXUkKSBzb24gc2lnbmlmaWNhdGl2b3MuCgpgYGB7cn0KIyBIMDogcGhpMSA9IDAKd2FsZC50ZXN0KGIgPSBjb2VmKGFyaW1hMTEwKSwgU2lnbWEgPSB2Y292KGFyaW1hMTEwKSwgVGVybXMgPSAxKQojIEgwOiBkZXJpdmEKd2FsZC50ZXN0KGIgPSBjb2VmKGFyaW1hMTEwKSwgU2lnbWEgPSB2Y292KGFyaW1hMTEwKSwgVGVybXMgPSAyKQpgYGAKClwKCl9fTWVkaWRhcyBkZSBlcnJvcl9fCgpFbCBlcnJvciBtZWRpbyBlcyBgciByb3VuZChhY2N1cmFjeShhcmltYTExMClbMl0sMClgIGRlZnVuY2lvbmVzIChSTVNFKSB5IGVsIGVycm9yIHBvcmNlbnR1YWwgbWVkaW8gZXMgYHIgcm91bmQoYWNjdXJhY3koYXJpbWExMTApWzVdLDIpYCUgKE1BUEUpLgoKYGBge3IsIGV2YWw9RkFMU0V9CmFjY3VyYWN5KGFyaW1hMTEwKQpgYGAKCmBgYHtyLGVjaG89RkFMU0V9CnJvdW5kKGFjY3VyYWN5KGFyaW1hMTEwKSwyKQpgYGAKClwKCl9fSW5jb3JyZWxhY2nDs24sIEhvbW9jZWRhc3RpY2lkYWQgeSBOb3JtYWxpZGFkX18KClZlYW1vcyBhaG9yYSBzaSBlbCByZXNpZHVvIGVzIHJ1aWRvIGJsYW5jbzoKCmBgYHtyfQpCb3gudGVzdChlcnJvciwgbGFnID0gMiwgdHlwZSA9ICJManVuZy1Cb3giKQpCb3gudGVzdChlcnJvcl4yLCBsYWcgPSAyLCB0eXBlID0gIkxqdW5nLUJveCIpIApzaGFwaXJvLnRlc3QoZXJyb3IpCmBgYAoKCkxhcyBoaXDDs3Rlc2lzIGRlIGluY29ycmVsYWNpw7NuIHkgaG9tb2NlZGFzdGljaWRhZCBzZSBhY2VwdGFuLiBUYW1iacOpbiBzZSBhY2VwdGFyw61hbiBwYXJhIG90cm9zIHZhbG9yZXMgZGUgJGskIHJhem9uYWJsZXMuIFNpIGVtYmFyZ28sIG5vIHNlIGFjZXB0YSBsYSBoaXDDs3Rlc2lzIGRlIG5vcm1hbGlkYWQuIAoKXAoKIyMgSW50ZXJwcmV0YWNpw7NuIGRlbCBtb2RlbG8KCkVsIF9fbW9kZWxvIHRlw7NyaWNvX18gZXMgJERlZkVuZkNlciBcc2ltIEFSSU1BKDEsMSwwKSQgKyBjb25zdGFudGU6CiQkKDEgLSBccGhpXzEgTCkoMSAtIEwpIERlZkVuZkNlcl90ID0gIGMgKyBcdmFyZXBzaWxvbl90LiQkCgpEZXNhcnJvbGxhbmRvIHF1ZWRhOgokJERlZkVuZkNlcl90ID0gYyArIERlZkVuZkNlcl97dC0xfSArIFxwaGlfMShEZWZFbmZDZXJfe3QtMX0tRGVmRW5mQ2VyX3t0LTJ9KSArIFx2YXJlcHNpbG9uX3QkJAoKRmluYWxtZW50ZS4gZWwgX19tb2RlbG8gZXN0aW1hZG9fXyBlcyAocmVjdWVyZGEgcXVlICRjID0gKDEgLSBccGhpXzEpXG11JCk6CiQkXHdpZGVoYXR7RGVmRW5mQ2VyfV90ID0gLTk1Mi40OSArIERlZkVuZkNlcl97dC0xfSAtIDAuNTcoRGVmRW5mQ2VyX3t0LTF9LURlZkVuZkNlcl97dC0yfSkgJCQKQ2FkYSBhw7FvIGVsIG7Dum1lcm8gZGUgZGVmdW5jaW9uZXMgcG9yIGVuZmVybWVkYWRlcyBjZXJlYnJvdmFzY3VsYXJlcyBlcyBlbCBtaXNtbyBxdWUgZWwgYcOxbyBwcmV2aW8sIG1lbm9zIDk1Mi41IGNhc29zLCBtZW5vcyB1biA1NyUgZGUgbGEgdWx0aW1hIHZhcmlhY2nDs24gb2JzZXJ2YWRhLgogICAKXAoKIyMgUHJlZGljY2nDs24KCgpgYGB7cn0KcGFyaW1hMTEwIDwtIGZvcmVjYXN0KGFyaW1hMTEwLCAKICAgICAgICAgICAgICAgICAgICAgIGggPSA1LCAKICAgICAgICAgICAgICAgICAgICAgIGxldmVsID0gOTUpCnBhcmltYTExMApgYGAKCmBgYHtyfQphdXRvcGxvdChwYXJpbWExMTAsIAogICAgIHlsYWIgPSAiRGVmdW5jaW9uZXMiLAogICAgIG1haW4gPSAiRmlndXJhIDQuIERlZnVuY2lvbmVzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMiKSArCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz0gc2VxKDE5ODgsIDIwMjMsIDQpKSAKYGBgCgpcCgojIyBDYWxpZGFkIGRlIGxhcyBwcmV2aXNpb25lcyBleHRyYS1tdWVzdHJhbGVzIHNlZ8O6biBob3Jpem9udGUgdGVtcG9yYWwKClZhbW9zIGEgYXBsaWNhciBsYSBtZXRvZG9sb2fDrWEgZGUgb3JpZ2VuIGRlIHByZWRpY2Npw7NuIG3Ds3ZpbCBhIGxhIHNlcmllIGRlIERlZnVuY2lvbmVzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMuIApBc3VtaW1vcyBxdWUgc2UgcHJlY2lzYW4gdmVpbnRlIGHDsW9zIHBhcmEgaGFjZXIgdW5hIGJ1ZW5hIGVzdGltYWNpw7NuLCAkaz0yMCQsIHkgcXVlIGVsIGhvcml6b250ZSB0ZW1wb3JhbCBlcyBjaW5jbyBhw7FvcywgJGggPSA1JC4KICAKYGBge3J9ICAKayA8LSAyMCAgICAgICAgICAgICAgICAgICAjTWluaW1vIG51bWVybyBkZSBkYXRvcyBwYXJhIGVzdGltYXIKaCA8LSA1ICAgICAgICAgICAgICAgICAgICAjSG9yaXpvbnRlIGRlIGxhcyBwcmVkaWNpY29uZXMKVFQgPC0gbGVuZ3RoKERlZkVuZkNlcikgICAjTG9uZ2l0dWQgc2VyaWUKcyA8LSBUVC1rLWggICAgICAgICAgICAgICAjVG90YWwgZGUgZXN0aW1hY2lvbmVzCgptYXBlQXJpbWEgPC0gbWF0cml4KE5BLCBzLCBoKQpmb3IgKGkgaW4gMDpzKSB7CiAgdHJhaW4uc2V0IDwtIHN1YnNldChEZWZFbmZDZXIsIHN0YXJ0ID0gaSArIDEsIGVuZCA9IGkgKyBrKQogIHRlc3Quc2V0IDwtICBzdWJzZXQoRGVmRW5mQ2VyLCBzdGFydCA9IGkgKyBrICsgMSwgZW5kID0gaSArIGsgKyBoKQogIAogIGZpdCA8LSBBcmltYSh0cmFpbi5zZXQsIG9yZGVyID0gYygxLCAxLCAwKSxpbmNsdWRlLmRyaWZ0ID0gVFJVRSkKICBmY2FzdDwtZm9yZWNhc3QoZml0LCBoID0gaCkKICBtYXBlQXJpbWFbaSxdIDwtIDEwMCphYnModGVzdC5zZXQgLSBmY2FzdCRtZWFuKS90ZXN0LnNldAp9CgplcnJvckFyaW1hIDwtIGNvbE1lYW5zKG1hcGVBcmltYSkKZXJyb3JBcmltYQpgYGAKClNlIG9ic2VydmEgcXVlOiBpKSBlbCBlcnJvciBkZSBwcmVkaWNjacOzbiBleHRyYS1tdWVzdHJhbCBhIHVuIHBlcmlvZG8gdmlzdGEgZXMgZXF1aXZhbGVudGUgYWwgaW50cmEtbXVlc3RyYWwgKDEuNyUpOyBpaSkgY29uZm9ybWUgYXVtZW50YSBlbCBob3Jpem9udGUgdGVtcG9yYWwgZGUgcHJldmlzacOzbiBlbCBlcnJvciBhdW1lbnRhOyB5IGlpaSkgZW4gdG9kbyBjYXNvIGVsIGVycm9yIHNlIG1hbnRpZW5lIGJham8uCgpcCgojIyBDb21wYXJhY2nDs24gY29uIHVuIG1vZGVsbyBkZSBBbGlzYWRvCgpTaSBlc3RpbWFtb3MgbGEgc2VyaWUgYW51YWwgZGUgRGVmdW5jaW9uZXMgcG9yIGVuZmVybWVkYWRlcyBjZXJlYnJvdmFzY3VsYXJlcyBhcGxpY2FuZG8gdMOpY25pY2FzIGRlIGFsaXNhZG8gZXhwb25lbmNpYWwgbm9zIGVuY29udHJhbW9zIGNvbiB1biBtb2RlbG8gY29uIHBlbmRpZW50ZSBhZGl0aXZhIEVUUyhBLEEsTikuIEFkZW3DoXMsICRcYWxwaGEgPSBcYmV0YSA9IDAkLiBTaSBhcGxpY2Ftb3MgZXN0b3MgdmFsb3JlcyBhIGxhcyBlY3VhY2lvbmVzIGl0ZXJhdGl2YXMgZGUgYWN0dWFsaXphY2nDs24gdGVuZW1vcyBxdWUgJGxfdCA9IGxfMCQgeSBxdWUgJGJfdCA9IGJfMCQuIFBvciB0YW50byAkXHdpZGVoYXR7eX1fdCA9IGxfMCArIHQgYl8wJCwgdW4gbW9kZWxvIGxpbmVhbCAoJGJfMCA9IC02NTUuMzckKS4KCmBgYHtyfQpzdW1tYXJ5KGFsaXNhZG8gPC0gZXRzKERlZkVuZkNlciwgbW9kZWwgPSAiWlpaIikpCmBgYAoKTGEgY2FsaWRhZCBkZWwgYWp1c3RlIGRlbCBtb2RlbG8gZGUgYWxpc2FkbyBlcyBzaW1pbGFyIGEgbGEgZGVsIG1vZGVsbyBBUklNQTogTUFQRSBkZSAxLjglIHBhcmEgZWwgcHJpbWVybyBmcmVudGUgYSAxLjclIHBhcmEgZWwgc2VndW5kbzsgUk1TRSBkZSA3NDcgcGFyYSBlbCBwcmltZXJvIGZyZW50ZSBhIDc4MiBwYXJhIGVsIHNlZ3VuZG8uIE3DoXMgYcO6biwgc2kgc2UgYXBsaWNhIGxhIG1ldG9kb2xvZ8OtYSBkZSBvcmlnZW4gZGUgcHJlZGljY2nDs24gbcOzdmlsIGFsIG1vZGVsbyBkZSBhbGlzYWRvLCBlbCBlcnJvciBhIHVuIHBlcmlvZG8gdmlzdGEgZXMgZGVsIDIuMSUsIHBlcm8gYSBjaW5jbyBwZXJpb2RvcyB2aXN0YSBzZSBtYW50aWVuZSBlbiBlbCAzJS4KCkZpbmFsbWVudGUsIGxhcyBwcmVkaWNjaW9uZXMgcmVhbGl6YWRhcyBjb24gYW1ib3MgbW9kZWxvcyBzb24gcHLDoWN0aWNhbWVudGUgbGFzIG1pc21hcyBjb21vIHNlIHB1ZWRlIG9ic2VydmFyLgoKYGBge3J9CnBhbGlzYWRvIDwtIGZvcmVjYXN0KGFsaXNhZG8sIGggPSA1KQphdXRvcGxvdChEZWZFbmZDZXIsIFBJID0gRkFMU0UsCiAgICAgICAgIHNlcmllcyA9ICJEZWZ1bmNpb25lcyBFbmYuIENlcmVicm92YXNjdWxhcmVzIiwKICAgICAgICAgbWFpbj0iRmlndXJhIDUuIERlZnVuY2lvbmVzIEVuZi4gQ2VyZWJyb3Zhc2N1bGFyZXMgeSBwcmV2aXNpw7NuIiwKICAgICAgICAgeGxhYj0iIiwgCiAgICAgICAgIHlsYWI9IkRlZnVuY2lvbmVzIikgKwogIGF1dG9sYXllcihwYXJpbWExMTAkbWVhbiwgUEkgPSBGQUxTRSwgc2VyaWVzID0gIlByZXZpc2nDs24gY29uIEFyaW1hIikgKwogIGF1dG9sYXllcihwYWxpc2FkbyRtZWFuLCBQSSA9IEZBTFNFLCBzZXJpZXMgPSAiUHJldmlzacOzbiBjb24gQWxpc2FkbyIpICsKICBndWlkZXMoY29sb3VyID0gZ3VpZGVfbGVnZW5kKHRpdGxlID0gIlByZWRpY2Npw7NuIikpICsgCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uPWMoMC45OCwwLjk4KSwgbGVnZW5kLmp1c3RpZmljYXRpb249YygxLDEpKQpgYGAKCkVuIGRlZmluaXRpdmEsIHBhcmEgZXN0YSBzZXJpZSwgcXVlIGVzIGNvcnRhIHkgYXBhcmVudGVtZW50ZSBzZW5jaWxsYSwgbGEgYXByb3hpbWFjacOzbiBwb3IgbGEgbWV0b2RvbG9nw61hIEFSSU1BIG5vIG1lam9yYSBzdXN0YW5jaWFsbWVudGUgZWwgbW9kZWxvIGRlIGFsaXNhZG8sIG3DoXMgZsOhY2lsIGRlIG9idGVuZXIgZSBpbnRlcnByZXRhci4KClwKXApcClwK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiU2VyaWVzIFRlbXBvcmFsZXM6IFByb2Nlc29zIEFSSU1BIgphdXRob3I6ICJJdsOhbiBBcnJpYmFzIChEZXB0by4gQW7DoWxpc2lzIEVjb27Ds21pY28uIFVuaXZlcnNpdGF0IGRlIFZhbMOobmNpYSkiCmRhdGU6ICJDdXJzbyAyMDIwLTIxIgpvdXRwdXQ6IAogIGh0bWxfZG9jdW1lbnQ6CiAgICB0aGVtZTogY2VydWxlYW4KICAgIGhpZ2hsaWdodDogcHlnbWVudHMgCiAgICBmaWdfY2FwdGlvbjogZmFsc2UKICAgIGRmX3ByaW50OiBrYWJsZQogICAgdG9jOiB0cnVlCiAgICB0b2NfZGVwdGg6IDIKICAgIG51bWJlcl9zZWN0aW9uczogdHJ1ZQogICAgc2VsZl9jb250YWluZWQ6IHRydWUKICAgIGNvZGVfZG93bmxvYWQ6IHRydWUKLS0tCgpgYGB7ciBjaHVua19zZXR1cCwgZWNobyA9IEZBTFNFfQprbml0cjo6b3B0c19jaHVuayRzZXQod2FybmluZyA9IEZBTFNFLCAKICAgICAgICAgICAgICAgICAgICAgIG1lc3NhZ2UgPSBGQUxTRSwgCiAgICAgICAgICAgICAgICAgICAgICBjb21tZW50ID0gIiIsCiAgICAgICAgICAgICAgICAgICAgICBmaWcuYWxpZ24gPSAiY2VudGVyIiwgCiAgICAgICAgICAgICAgICAgICAgICBmaWcuc2hvdyA9ICJob2xkIiwKICAgICAgICAgICAgICAgICAgICAgIGZpZy5oZWlnaHQgPSA0LAogICAgICAgICAgICAgICAgICAgICAgZmlnLndpZHRoID0gOCwKICAgICAgICAgICAgICAgICAgICAgIG91dC53aWR0aCA9ICI4MCUiKSAKYGBgCgpgYGB7ciBvcHRpb25zX3NldHVwLCBlY2hvID0gRkFMU0V9Cm9wdGlvbnMoc2NpcGVuID0gOTk5KSAjLSBwYXJhIHF1aXRhciBsYSBub3RhY2lvbiBjaWVudGlmaWNhCmBgYAoKYGBge3IgbGlicmVyaWFzLCBlY2hvID0gRkFMU0V9CmxpYnJhcnkoZm9yZWNhc3QpCmxpYnJhcnkoZ2dwbG90Mik7IHRoZW1lX3NldCh0aGVtZV9idygpKQpsaWJyYXJ5KGdyaWRFeHRyYSkKbGlicmFyeShncmlkKQpsaWJyYXJ5KHRzZXJpZXMpCmxpYnJhcnkoYW9kKQpgYGAKClwKXAoKIyBFamVtcGxvIGRlIGFwbGljYWNpw7NuOiBEZWZ1bmNpb25lcyBwb3IgRW5mZXJtZWRhZGVzIENlcmVicm92YXNjdWxhcmVzIChjb250aW51YWNpw7NuKS4KClwKCiMjIEludHJvZHVjY2nDs24KCkNvbnNpZGVyZW1vcyBkZSBudWV2byBsYSBzZXJpZSB0ZW1wb3JhbCBjb3JyZXNwb25kaWVudGUgYWwgbsO6bWVybyBkZSBkZWZ1bmNpb25lcyBjYXVzYWRhcyBwb3IgZW5mZXJtZWRhZGVzIGNlcmVicm92YXNjdWxhcmVzLCBFc3RhIHNlcmllIGVzdMOhIGRpc3BvbmlibGUgZW4gZWwgSW5zdGl0dXRvIE5hY2lvbmFsIGRlIEVzdGFkw61zdGljYSBkZXNkZSBlbmVybyBkZSAxOTgwIGhhc3RhIGRpY2llbWJyZSBkZSAyMDE4LCB1biB0b3RhbCBkZSAzOSBhw7FvcyBvIDQ2OCBtZXNlcwoKRW4gbGEgZGVzY3JpcHRpdmEgZGVsIGVqZW1wbG8gZGVsIHRlbWEgMSB2aW1vcyBxdWUgbGEgZGVzY29tcG9zaWNpw7NuIHJldmVsYWJhIGxhIHByZXNlbmNpYSBkZSB2YXJpb3MgdmFsb3JlcyBhdMOtcGljb3MgY29uY2VudHJhZG9zIGFsIGluaWNpbyBkZSBsYSBzZXJpZS4gUG9yIGVzdGUgbW90aXZvLCBwYXJhIHN1IGFuw6FsaXNpcyBwb3IgbW9kZWxvcyBBUklNQSB2YW1vcyBhIHJlY29ydGFyIGxhIHNlcmllLCBxdWUgZW1wZXphcsOhIGVsIGVuZXJvIGRlIDE5ODggeSBhIGFudWFsaXphcmxhICgzMSBhw7FvcykuCgpcCgojIyBUcmFuc2Zvcm1hY2nDs24gZGUgbGEgc2VyaWUKCkxhIGZpZ3VyYSAxIG11ZXN0cmEgcXVlIGxhIHNlcmllIG5vIGVzIGVzdGFjaW9uYXJpYSwgcGVybyBzw60gc3UgcHJpbWVyYSBkaWZlcmVuY2lhLiBQb3IgdGFudG8sIHNlIG9wdGEgcG9yIGNvbnNpZGVyYXIgJGQ9MSQgbyAkRGVmRW5mQ2VyIFxzaW0gSSgxKSQuCgoKYGBge3IsIGV2YWwgPSBGQUxTRX0KRGVmRW5mQ2VyIDwtIHJlYWQuY3N2MigiLi9zZXJpZXMvRW5mZXJtZWRhZGVzIGNlcmVicm92YXNjdWxhcmVzLmNzdiIsIGhlYWRlciA9IFRSVUUpCkRlZkVuZkNlciA8LSB0cyhEZWZFbmZDZXJbLDJdLHN0YXJ0ID0gMTk4MCwgZnJlcSA9IDEyKQpEZWZFbmZDZXIgPC0gd2luZG93KERlZkVuZkNlciwgc3RhcnQgPSAxOTg4KQpEZWZFbmZDZXIgPC0gYWdncmVnYXRlKERlZkVuZkNlciwgRlVOID0gc3VtKQoKYXV0b3Bsb3QoRGVmRW5mQ2VyLCB4bGFiID0gIlNlcmllIG9yaWdpbmFsIiwgeWxhYiA9ICIiLCBtYWluID0gIiIpCmF1dG9wbG90KGRpZmYoRGVmRW5mQ2VyKSwgeGxhYiA9ICJTZXJpZSBkaWZlcmVuY2lhZGEiLCB5bGFiID0gIiIsIG1haW4gPSAiIikKZ2dBY2YoRGVmRW5mQ2VyLCB4bGFiID0gIiIsIHlsYWIgPSAiRkFDIiwgbWFpbiA9ICIiKQpnZ0FjZihkaWZmKERlZkVuZkNlciksIHhsYWIgPSAiIiwgeWxhYiA9ICJGQUMiLCBtYWluID0gIiIpCmBgYAoKYGBge3IsIGVjaG8gPSBGQUxTRX0KRGVmRW5mQ2VyIDwtIHJlYWQuY3N2MigiLi9zZXJpZXMvRW5mZXJtZWRhZGVzIGNlcmVicm92YXNjdWxhcmVzLmNzdiIsIGhlYWRlciA9IFRSVUUpCkRlZkVuZkNlciA8LSB0cyhEZWZFbmZDZXJbLDJdLHN0YXJ0PTE5ODAsZnJlcT0xMikKRGVmRW5mQ2VyIDwtIHdpbmRvdyhEZWZFbmZDZXIsIHN0YXJ0ID0gMTk4OCkKRGVmRW5mQ2VyIDwtIGFnZ3JlZ2F0ZShEZWZFbmZDZXIsIEZVTiA9IHN1bSkKCmdyaWQuYXJyYW5nZSgKICBhdXRvcGxvdChEZWZFbmZDZXIsIHhsYWIgPSAiU2VyaWUgb3JpZ2luYWwiLCB5bGFiID0gIiIsIG1haW4gPSAiRmlndXJhIDEuIERlZi4gZW5mLiBjZXJlYnJvdmFzLiIpLAogIGF1dG9wbG90KGRpZmYoRGVmRW5mQ2VyKSwgeGxhYiA9ICJTZXJpZSBkaWZlcmVuY2lhZGEiLCB5bGFiID0gIiIsIG1haW4gPSAiIiksCiAgZ2dBY2YoRGVmRW5mQ2VyLCB4bGFiID0gIiIsIHlsYWIgPSAiRkFDIiwgbWFpbiA9ICIiKSwKICBnZ0FjZihkaWZmKERlZkVuZkNlciksIHhsYWIgPSAiIiwgeWxhYiA9ICJGQUMiLCBtYWluID0gIiIpLAogIG5yb3cgPSAyCikKYGBgCgpQb3Igb3RybyBsYWRvLCBlbCBwYXLDoW1ldHJvICRcbGFtYmRhJCDDs3B0aW1vIGVuIGxhIHRyYW5zZm9ybWFjacOzbiBkZSBCb3gtQ294IGVzIC0wLjgxLCBhc8OtIHF1ZSBubyBzZSByZWFsaXphcsOhIG5pbmd1bmEgdHJhbnNmb3JtYWNpw7NuIGxvZ2Fyw610bWljYS4KCmBgYHtyfQpCb3hDb3gubGFtYmRhKERlZkVuZkNlcikKYGBgCgpcCgojIyBJZGVudGlmaWNhY2nDs24KClZlYW1vcyBhaG9yYSBhIGlkZW50aWZpY2FyIGxvcyB2YWxvcmVzIGRlICRwJCB5ICRxJCBhIHBhcnRpciBkZSBsYSBGQUMgeSBsYSBGQUNQLiBEaWbDrWNpbCBkZWNpZGlyc2UgZW50cmUgdW4gQVIoMSksIHVuIE1BKDEpIG8gaW5jbHVzbyB1biBBUk1BKDEsIDEpLgoKYGBge3J9IApnZ3RzZGlzcGxheShkaWZmKERlZkVuZkNlciksIG1haW4gPSAiRmlndXJhIDIuIERlZi4gcG9yIGVuZi4gY2VyZWJyb3Zhc2N1bGFyZXMgKGRpZi4pIikKYGBgCgrCv1F1w6kgcmVjb21pZW5kYSBgYXV0by5hcmltYWA/IFVuIEFSKDEpIGNvbiBkZXJpdmEuCgpgYGB7cn0gCmF1dG8uYXJpbWEoRGVmRW5mQ2VyLCBkID0gMSkKYGBgCgpMYSBlc3RpbWFjacOzbiBkZSBlc3RlIG1vZGVsbyBtdWVzdHJhIHF1ZSBsb3MgZG9zIGNvZWZpY2llbnRlcyBlc3RpbWFkb3Mgc29uIGFwYXJlbnRlbWVudGUgc2lnbmlmaWNhdGl2b3MgeSBxdWUgbm9zIGhheSB2YWxvcmVzIGV4dHJlbW9zIChmaWd1cmEgMykuCgpgYGB7cn0KYXJpbWExMTAgPC0gQXJpbWEoRGVmRW5mQ2VyLCAKICAgICAgICAgICAgICAgICAgb3JkZXIgPSBjKDEsIDEsIDApLAogICAgICAgICAgICAgICAgICBpbmNsdWRlLmRyaWZ0ID0gVFJVRSkKCmVycm9yIDwtIHJlc2lkdWFscyhhcmltYTExMCkKc2RlcnJvciA8LSBzZChlcnJvcikKCmF1dG9wbG90KGVycm9yLCBzZXJpZXM9IkVycm9yIiwKICAgICAgICAgY29sb3VyID0gImJsYWNrIiwKICAgICAgICAgeGxhYiA9ICIiLAogICAgICAgICB5bGFiID0gIkVycm9yIiwKICAgICAgICAgbWFpbiA9ICJGaWd1cmEgMy4gRXJyb3IgKyBJbnRlcnZlbmNpw7NuIikgKwogIGdlb21faGxpbmUoeWludGVyY2VwdCA9IGMoLTMsIC0yLCAyLCAzKSpzZGVycm9yLCAKICAgICAgICAgICAgIGNvbG91ciA9IGMoInJlZCIsICJncmVlbiIsICJncmVlbiIsICJyZWQiKSwgCiAgICAgICAgICAgICBsdHkgPSAyKSArIAogIGdlb21fcG9pbnQoKSArCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz0gc2VxKDE5ODgsIDIwMTgsIDQpKSAKYGBgCgpcCgojIyBWYWxpZGFjacOzbgoKX19WYXJpYWJsZXMgc29uIHNpZ25pZmljYXRpdmFzX18KCkxvcyBkb3MgY29lZmljaWVudGVzIGVzdGltYWRvcyAoJFxwaGlfMSQgeSAkXG11JCkgc29uIHNpZ25pZmljYXRpdm9zLgoKYGBge3J9CiMgSDA6IHBoaTEgPSAwCndhbGQudGVzdChiID0gY29lZihhcmltYTExMCksIFNpZ21hID0gdmNvdihhcmltYTExMCksIFRlcm1zID0gMSkKIyBIMDogZGVyaXZhCndhbGQudGVzdChiID0gY29lZihhcmltYTExMCksIFNpZ21hID0gdmNvdihhcmltYTExMCksIFRlcm1zID0gMikKYGBgCgpcCgpfX01lZGlkYXMgZGUgZXJyb3JfXwoKRWwgZXJyb3IgbWVkaW8gZXMgYHIgcm91bmQoYWNjdXJhY3koYXJpbWExMTApWzJdLDApYCBkZWZ1bmNpb25lcyAoUk1TRSkgeSBlbCBlcnJvciBwb3JjZW50dWFsIG1lZGlvIGVzIGByIHJvdW5kKGFjY3VyYWN5KGFyaW1hMTEwKVs1XSwyKWAlIChNQVBFKS4KCmBgYHtyLCBldmFsPUZBTFNFfQphY2N1cmFjeShhcmltYTExMCkKYGBgCgpgYGB7cixlY2hvPUZBTFNFfQpyb3VuZChhY2N1cmFjeShhcmltYTExMCksMikKYGBgCgpcCgpfX0luY29ycmVsYWNpw7NuLCBIb21vY2VkYXN0aWNpZGFkIHkgTm9ybWFsaWRhZF9fCgpWZWFtb3MgYWhvcmEgc2kgZWwgcmVzaWR1byBlcyBydWlkbyBibGFuY286CgpgYGB7cn0KQm94LnRlc3QoZXJyb3IsIGxhZyA9IDIsIHR5cGUgPSAiTGp1bmctQm94IikKQm94LnRlc3QoZXJyb3JeMiwgbGFnID0gMiwgdHlwZSA9ICJManVuZy1Cb3giKSAKc2hhcGlyby50ZXN0KGVycm9yKQpgYGAKCgpMYXMgaGlww7N0ZXNpcyBkZSBpbmNvcnJlbGFjacOzbiB5IGhvbW9jZWRhc3RpY2lkYWQgc2UgYWNlcHRhbi4gVGFtYmnDqW4gc2UgYWNlcHRhcsOtYW4gcGFyYSBvdHJvcyB2YWxvcmVzIGRlICRrJCByYXpvbmFibGVzLiBTaW4gZW1iYXJnbywgbm8gc2UgYWNlcHRhIGxhIGhpcMOzdGVzaXMgZGUgbm9ybWFsaWRhZC4gCgpcCgojIyBJbnRlcnByZXRhY2nDs24gZGVsIG1vZGVsbwoKRWwgX19tb2RlbG8gdGXDs3JpY29fXyBlcyAkRGVmRW5mQ2VyIFxzaW0gQVJJTUEoMSwxLDApJCArIGNvbnN0YW50ZToKJCQoMSAtIFxwaGlfMSBMKSgxIC0gTCkgRGVmRW5mQ2VyX3QgPSAgYyArIFx2YXJlcHNpbG9uX3QuJCQKCkRlc2Fycm9sbGFuZG8gcXVlZGE6CiQkRGVmRW5mQ2VyX3QgPSBjICsgRGVmRW5mQ2VyX3t0LTF9ICsgXHBoaV8xKERlZkVuZkNlcl97dC0xfS1EZWZFbmZDZXJfe3QtMn0pICsgXHZhcmVwc2lsb25fdCQkCgpGaW5hbG1lbnRlLiBlbCBfX21vZGVsbyBlc3RpbWFkb19fIGVzIChyZWN1ZXJkYSBxdWUgJGMgPSAoMSAtIFxwaGlfMSlcbXUkKToKJCRcd2lkZWhhdHtEZWZFbmZDZXJ9X3QgPSAtOTUyLjQ5ICsgRGVmRW5mQ2VyX3t0LTF9IC0gMC41NyhEZWZFbmZDZXJfe3QtMX0tRGVmRW5mQ2VyX3t0LTJ9KSAkJApDYWRhIGHDsW8gZWwgbsO6bWVybyBkZSBkZWZ1bmNpb25lcyBwb3IgZW5mZXJtZWRhZGVzIGNlcmVicm92YXNjdWxhcmVzIGVzIGVsIG1pc21vIHF1ZSBlbCBhw7FvIHByZXZpbywgbWVub3MgOTUyLjUgY2Fzb3MsIG1lbm9zIHVuIDU3JSBkZSBsYSB1bHRpbWEgdmFyaWFjacOzbiBvYnNlcnZhZGEuCiAgIApcCgojIyBQcmVkaWNjacOzbgoKCmBgYHtyfQpwYXJpbWExMTAgPC0gZm9yZWNhc3QoYXJpbWExMTAsIAogICAgICAgICAgICAgICAgICAgICAgaCA9IDUsIAogICAgICAgICAgICAgICAgICAgICAgbGV2ZWwgPSA5NSkKcGFyaW1hMTEwCmBgYAoKYGBge3J9CmF1dG9wbG90KHBhcmltYTExMCwgCiAgICAgeWxhYiA9ICJEZWZ1bmNpb25lcyIsCiAgICAgbWFpbiA9ICJGaWd1cmEgNC4gRGVmdW5jaW9uZXMgcG9yIGVuZmVybWVkYWRlcyBjZXJlYnJvdmFzY3VsYXJlcyIpICsKICBzY2FsZV94X2NvbnRpbnVvdXMoYnJlYWtzPSBzZXEoMTk4OCwgMjAyMywgNCkpIApgYGAKClwKCiMjIENhbGlkYWQgZGUgbGFzIHByZXZpc2lvbmVzIGV4dHJhLW11ZXN0cmFsZXMgc2Vnw7puIGhvcml6b250ZSB0ZW1wb3JhbAoKVmFtb3MgYSBhcGxpY2FyIGxhIG1ldG9kb2xvZ8OtYSBkZSBvcmlnZW4gZGUgcHJlZGljY2nDs24gbcOzdmlsIGEgbGEgc2VyaWUgZGUgRGVmdW5jaW9uZXMgcG9yIGVuZmVybWVkYWRlcyBjZXJlYnJvdmFzY3VsYXJlcy4gCkFzdW1pbW9zIHF1ZSBzZSBwcmVjaXNhbiB2ZWludGUgYcOxb3MgcGFyYSBoYWNlciB1bmEgYnVlbmEgZXN0aW1hY2nDs24sICRrPTIwJCwgeSBxdWUgZWwgaG9yaXpvbnRlIHRlbXBvcmFsIGVzIGNpbmNvIGHDsW9zLCAkaCA9IDUkLgogIApgYGB7cn0gIAprIDwtIDIwICAgICAgICAgICAgICAgICAgICNNaW5pbW8gbnVtZXJvIGRlIGRhdG9zIHBhcmEgZXN0aW1hcgpoIDwtIDUgICAgICAgICAgICAgICAgICAgICNIb3Jpem9udGUgZGUgbGFzIHByZWRpY2ljb25lcwpUVCA8LSBsZW5ndGgoRGVmRW5mQ2VyKSAgICNMb25naXR1ZCBzZXJpZQpzIDwtIFRULWstaCAgICAgICAgICAgICAgICNUb3RhbCBkZSBlc3RpbWFjaW9uZXMKCm1hcGVBcmltYSA8LSBtYXRyaXgoTkEsIHMgKyAxLCBoKQpmb3IgKGkgaW4gMDpzKSB7CiAgdHJhaW4uc2V0IDwtIHN1YnNldChEZWZFbmZDZXIsIHN0YXJ0ID0gaSArIDEsIGVuZCA9IGkgKyBrKQogIHRlc3Quc2V0IDwtICBzdWJzZXQoRGVmRW5mQ2VyLCBzdGFydCA9IGkgKyBrICsgMSwgZW5kID0gaSArIGsgKyBoKQogIAogIGZpdCA8LSBBcmltYSh0cmFpbi5zZXQsIG9yZGVyID0gYygxLCAxLCAwKSxpbmNsdWRlLmRyaWZ0ID0gVFJVRSkKICBmY2FzdDwtZm9yZWNhc3QoZml0LCBoID0gaCkKICBtYXBlQXJpbWFbaSArIDEsXSA8LSAxMDAqYWJzKHRlc3Quc2V0IC0gZmNhc3QkbWVhbikvdGVzdC5zZXQKfQoKZXJyb3JBcmltYSA8LSBjb2xNZWFucyhtYXBlQXJpbWEpCmVycm9yQXJpbWEKYGBgCgpTZSBvYnNlcnZhIHF1ZTogaSkgZWwgZXJyb3IgZGUgcHJlZGljY2nDs24gZXh0cmEtbXVlc3RyYWwgYSB1biBwZXJpb2RvIHZpc3RhICgxLjUlKSBlcyBhbGdvIGluZmVyaW9yIGFsIGludHJhLW11ZXN0cmFsICgxLjclKTsgaWkpIGNvbmZvcm1lIGF1bWVudGEgZWwgaG9yaXpvbnRlIHRlbXBvcmFsIGRlIHByZXZpc2nDs24gZWwgZXJyb3IgYXVtZW50YTsgeSBpaWkpIGVuIHRvZG8gY2FzbyBlbCBlcnJvciBzZSBtYW50aWVuZSBiYWpvLgoKXAoKIyMgQ29tcGFyYWNpw7NuIGNvbiB1biBtb2RlbG8gZGUgQWxpc2FkbwoKU2kgZXN0aW1hbW9zIGxhIHNlcmllIGFudWFsIGRlIERlZnVuY2lvbmVzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMgYXBsaWNhbmRvIHTDqWNuaWNhcyBkZSBhbGlzYWRvIGV4cG9uZW5jaWFsIG5vcyBlbmNvbnRyYW1vcyBjb24gdW4gbW9kZWxvIGNvbiBwZW5kaWVudGUgYWRpdGl2YSBFVFMoQSxBLE4pLiBBZGVtw6FzLCAkXGFscGhhID0gXGJldGEgPSAwJC4gU2kgYXBsaWNhbW9zIGVzdG9zIHZhbG9yZXMgYSBsYXMgZWN1YWNpb25lcyBpdGVyYXRpdmFzIGRlIGFjdHVhbGl6YWNpw7NuIHRlbmVtb3MgcXVlICRsX3QgPSBsXzAkIHkgcXVlICRiX3QgPSBiXzAkLiBQb3IgdGFudG8gJFx3aWRlaGF0e3l9X3QgPSBsXzAgKyB0IGJfMCQsIHVuIG1vZGVsbyBsaW5lYWwgKCRcd2lkZWhhdHt5fV90ID0gNDU4MDguNzUgLSA2NTUuMzdcY2RvdCB0JCkuCgpgYGB7cn0Kc3VtbWFyeShhbGlzYWRvIDwtIGV0cyhEZWZFbmZDZXIsIG1vZGVsID0gIlpaWiIpKQpgYGAKCkxhIGNhbGlkYWQgZGVsIGFqdXN0ZSBkZWwgbW9kZWxvIGRlIGFsaXNhZG8gZXMgc2ltaWxhciBhIGxhIGRlbCBtb2RlbG8gQVJJTUE6IE1BUEUgZGUgMS44JSBwYXJhIGVsIHByaW1lcm8gZnJlbnRlIGEgMS43JSBwYXJhIGVsIHNlZ3VuZG87IFJNU0UgZGUgNzQ3IHBhcmEgZWwgcHJpbWVybyBmcmVudGUgYSA3ODIgcGFyYSBlbCBzZWd1bmRvLiBNw6FzIGHDum4sIHNpIHNlIGFwbGljYSBsYSBtZXRvZG9sb2fDrWEgZGUgb3JpZ2VuIGRlIHByZWRpY2Npw7NuIG3Ds3ZpbCBhbCBtb2RlbG8gZGUgYWxpc2FkbywgZWwgZXJyb3IgYSB1biBwZXJpb2RvIHZpc3RhIGVzIGRlbCAyLjElLCBwZXJvIGEgY2luY28gcGVyaW9kb3MgdmlzdGEgc2UgbWFudGllbmUgZW4gZWwgMyUuCgpGaW5hbG1lbnRlLCBsYXMgcHJlZGljY2lvbmVzIHJlYWxpemFkYXMgY29uIGFtYm9zIG1vZGVsb3Mgc29uIHByw6FjdGljYW1lbnRlIGxhcyBtaXNtYXMgY29tbyBzZSBwdWVkZSBvYnNlcnZhci4KCmBgYHtyfQpwYWxpc2FkbyA8LSBmb3JlY2FzdChhbGlzYWRvLCBoID0gNSkKYXV0b3Bsb3QoRGVmRW5mQ2VyLAogICAgICAgICBzZXJpZXMgPSAiRGVmdW5jaW9uZXMgRW5mLiBDZXJlYnJvdmFzY3VsYXJlcyIsCiAgICAgICAgIG1haW49IkZpZ3VyYSA1LiBEZWZ1bmNpb25lcyBFbmYuIENlcmVicm92YXNjdWxhcmVzIHkgcHJldmlzacOzbiIsCiAgICAgICAgIHhsYWI9IiIsIAogICAgICAgICB5bGFiPSJEZWZ1bmNpb25lcyIpICsKICBhdXRvbGF5ZXIocGFyaW1hMTEwJG1lYW4sIHNlcmllcyA9ICJQcmV2aXNpw7NuIGNvbiBBcmltYSIpICsKICBhdXRvbGF5ZXIocGFsaXNhZG8kbWVhbiwgc2VyaWVzID0gIlByZXZpc2nDs24gY29uIEFsaXNhZG8iKSArCiAgZ3VpZGVzKGNvbG91ciA9IGd1aWRlX2xlZ2VuZCh0aXRsZSA9ICJQcmVkaWNjacOzbiIpKSArIAogIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbj1jKDAuOTgsMC45OCksIGxlZ2VuZC5qdXN0aWZpY2F0aW9uPWMoMSwxKSkKYGBgCgpFbiBkZWZpbml0aXZhLCBwYXJhIGVzdGEgc2VyaWUsIHF1ZSBlcyBjb3J0YSB5IGFwYXJlbnRlbWVudGUgc2VuY2lsbGEsIGxhIGFwcm94aW1hY2nDs24gcG9yIGxhIG1ldG9kb2xvZ8OtYSBBUklNQSBubyBtZWpvcmEgc3VzdGFuY2lhbG1lbnRlIGVsIG1vZGVsbyBkZSBhbGlzYWRvLCBtw6FzIGbDoWNpbCBkZSBvYnRlbmVyIGUgaW50ZXJwcmV0YXIuCgpcClwKXApcCg==</div>
 <footer class="footer">
   
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
@@ -812,8 +755,6 @@ This work is licensed under a <a rel="license" href="http://creativecommons.org/
 </footer>
 
 
-</div>
-</div>
 
 </div>
 
@@ -851,32 +792,6 @@ $(document).ready(function () {
 });
 </script>
 
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

@@ -34,7 +34,6 @@ options(scipen = 999) #- para quitar la notacion cientifica
 ```
 
 ```{r librerias, echo = FALSE}
-library("RColorBrewer")
 library(forecast)
 library(ggplot2); theme_set(theme_bw())
 library(gridExtra)
@@ -76,63 +75,63 @@ En este tema y en los siguientes se verán diferentes métodos para predecir una
  
 Dada una serie temporal $\{y_t\}_{t=1}^T$, se define:
 
-* __Previsión $h$ periodos adelante__, como la previsión de la serie para el periodo $t+h$ disponiendo de información hasta el periodo $t$, y se denota por $\widehat{y}_{t+h|t}$. Por simplicidad lo escribiremos también como $\widehat{y}_{t+h}$.
+* __Previsión $h$ periodos adelante__, como la previsión de la serie para el periodo $t+h$ disponiendo de información hasta el periodo $t$, y se denota por $\hat{y}_{t+h|t}$. Por simplicidad lo escribiremos también como $\hat{y}_{t+h}$.
 
-\
+\vspace{0.3cm}
 
-* Así, $\widehat{y}_{t+1|t}$ es la __previsión un periodo adelante__ o a un periodo vista. Es decir, la previsión de la serie en $t+1$ desde el periodo $t$.
+* Así, $\hat{y}_{t+1|t}$ es la __previsión un periodo adelante__ o a un periodo vista. Es decir, la previsión de la serie en $t+1$ desde el periodo $t$.
 
-\
+\vspace{0.3cm}
 
-* De nuevo, por simplicidad denotaremos a $\widehat{y}_{t+1|t}$ como $\widehat{y}_{t+1}$; y como $\widehat{y}_{t}$ a la previsión en $t$, con datos hasta el periodo $t-1$ ($\widehat{y}_{t} = \widehat{y}_{t|t-1}$).
+* De nuevo, por simplicidad denotaremos a $\hat{y}_{t+1|t}$ como $\hat{y}_{t+1}$; y como $\hat{y}_{t}$ a la previsión en $t$, con datos hasta el periodo $t-1$ ($\hat{y}_{t} = \hat{y}_{t|t-1}$).
 
 Se define como __error de previsión (intra-muestral) a un periodo vista__ a 
-$$\widehat{e}_t=y_t-\widehat{y}_t,$$
-\noindent de forma que la serie $\{\widehat{e}_t\}_{t=1}^T$ nos permitirá definir varios criterios de calidad de ajuste. 
+$$\hat{e}_t=y_t-\hat{y}_t,$$
+\noindent de forma que la serie $\{\hat{e}_t\}_{t=1}^T$ nos permitirá definir varios criterios de calidad de ajuste (intra-muestrales a un periodo vista). 
   
 \
 
 ## Medidas de precisión de la predicción
  
-Dada una serie $\{y_t\}_{t=1}^T$, un método de predicción y su vector de errores (intra-muestrales a un periodo vista) asociado $\{\widehat{e}_t\}_{t=1}^T$, podemos definir múltiples medidas de calidad o precisión del método de predicción. Las más habituales son (siglas en inglés):
+Dada una serie $\{y_t\}_{t=1}^T$, un método de predicción y su vector de errores asociado $\{\hat{e}_t\}_{t=1}^T$, podemos definir múltiples medidas de calidad del método de predicción. Las más habituales son (siglas en inglés):
 
-* Error medio (ME): $\frac{1}{T}\sum_{t=1}^T \widehat{e}_t$
+* Error medio (ME): $\frac{1}{T}\sum_{t=1}^T \hat{e}_t$
 
-\
+\vspace{0.3cm}
 
-* __Raíz del error cuadrático medio (RMSE)__: $\sqrt{\frac{1}{T}\sum_{t=1}^T \widehat{e}^2_t}$
+* __Raíz del error cuadrático medio (RMSE)__: $\sqrt{\frac{1}{T}\sum_{t=1}^T \hat{e}^2_t}$
 
-\
+\vspace{0.3cm}
 
-* Error absoluto medio (MAE): $\frac{1}{T}\sum_{t=1}^T |\widehat{e}_t|$
+* Error absoluto medio (MAE): $\frac{1}{T}\sum_{t=1}^T |\hat{e}_t|$
 
-\
+\vspace{0.3cm}
 
-* Error porcentual medio (MPE): $\frac{100}{T}\sum_{t=1}^T \frac{\widehat{e}_t}{y_t}$
+* Error porcentual medio (MPE): $\frac{100}{T}\sum_{t=1}^T \frac{\hat{e}_t}{y_t}$
 
-\
+\vspace{0.3cm}
 
-* __Error porcentual absoluto medio (MAPE)__: $\frac{100}{T}\sum_{t=1}^T \big|\frac{\widehat{e}_t}{y_t}\big|$
+* __Error porcentual absoluto medio (MAPE)__: $\frac{100}{T}\sum_{t=1}^T \big|\frac{\hat{e}_t}{y_t}\big|$
 
-\
+\vspace{0.3cm}
 
-* Error porcentual absoluto medio simétrico (sMAPE): $\frac{200}{T}\sum_{t=1}^T \Big|\frac{\widehat{e}_t}{y_t + \widehat{y}_t}\Big|$
+* Error porcentual absoluto medio simétrico (sMAPE): $\frac{200}{T}\sum_{t=1}^T \Big|\frac{\hat{e}_t}{y_t + \hat{y}_t}\Big|$
 
-\
+\vspace{0.3cm}
 
-* Error escalado absoluto medio (MASE): $\big(\frac{1}{T}\sum_{t=1}^T |\widehat{e}_t|\big)/q$, donde $q$ es el error absoluto medio para un método ingenuo de predicción:
+* Error escalado absoluto medio (MASE): $\big(\frac{1}{T}\sum_{t=1}^T |\hat{e}_t|\big)/q$, donde $q$ es el error absoluto medio para un método ingenuo de predicción:
   * $q=\frac{1}{T-1}\sum_{t=2}^T |y_t-y_{t-1}|$ para series _sin_ estacionalidad
   * $q=\frac{1}{T-m}\sum_{t=m+1}^T |y_t-y_{t-m}|$ para series _con_ estacionalidad
 
-\
+\vspace{0.3cm}
 
-* Correlación entre $\widehat{e}_t$ y $\widehat{e}_{t-1}$ (ACF1).
+* Correlación entre $\hat{e}_t$ y $\hat{e}_{t-1}$ (ACF1).
 
 \
 
 ME y MAE no permiten valorar la calidad de un modelo, pero si el posible sesgo de las predicciones.
 
-* Lo esperado es un valor cercano a cero (relativo al valor medio de la serie). Valores muy alejados de cero son indicadores de sesgo de predicción.
+* Lo esperado es un valor cercano a cero (con relación al valor medio de la serie). Valores muy alejados de cero son indicadores de sesgo de predicción.
 
 RMSE y MAE indican el error medio cometido, medido en las mismas unidades que la serie temporal.
 
@@ -156,50 +155,55 @@ ACF1 no es propiamente un indicador de calidad del modelo, pero indica la capaci
 
 Las _medias_ se pueden sustituir por _medianas_. Esto es especialmente útil cuando para algunas observaciones hay errores atípicamente altos.
 
-Estos indicadores de calidad, por basarse en predicciones intra-muestrales a un periodo vista, adolecen de dos problemas. Primero, evalúan el error de predicción a un periodo vista, cuando en muchas situaciones reales las predicciones se realizan sobre un horizonte temporal más amplio. Segundo, son errores intra-muestrales, resultantes de predecir los mismos datos que se han usado para estimar los parámetros del método de predicción y, por tanto, sobre-estiman la capacidad predictiva del modelo.
+Si estos indicadores de calidad se basan en predicciones intra-muestrales a un periodo vista, presentan dos problemas. Primero, evalúan el error de predicción a un periodo vista, cuando en muchas situaciones reales las predicciones se realizan sobre un horizonte temporal más amplio. Segundo, son errores intra-muestrales, resultantes de predecir los mismos datos que se han usado para estimar los parámetros del método de predicción y, por tanto, sobre-estiman la capacidad predictiva del modelo.
 
-Veremos durante el este tema métodos de evaluación de la calidad de las predicciones que superan estas limitaciones.
+Veremos durante en este tema métodos de evaluación de la calidad de las predicciones que superan estas limitaciones.
 
 \
 \
 
 # Métodos sencillos de predicción
 
-Veamos algunos métodos muy sencillos de predicción y sus funciones en el paquete `forecast`.
+Algunos métodos de predicción son extremadamente sencillos y sorprendentemente eficaces, son los denominados métodos ingenuos. Estos métodos:
+
+* posibilitan realizar predicciones prácticamente sin realizar ningún cálculo. 
+* como son muy sencillos, dan las previsiones con mayor error (menos precisas). El error de un método ingenuo sirve de punto de referencia (_benchmark_) para valorar la necesidad de aplicar otros métodos más complicados con el objetivo de mejorar la calidad de las predicciones. 
+
+Veamos algunos métodos ingenuos y sus funciones en el paquete `forecast`.
 
 \
 
-## Series _sin_ tendencia y _sin_ estacionalidad
+## Métodos sencillos de predicción
 
-Método de la Media: $\widehat{y}_{T+h}=(y_1+\ldots,y_T)/T$.
+### Series _sin_ tendencia y _sin_ estacionalidad {-}
+
+**Método de la Media**: $\hat{y}_{T+h}=(y_1+\ldots,y_T)/T$.
 
 * La predicción para cualquier periodo futuro es la __media__ de las observaciones disponibles previas.
 * Función de `R`: `meanf(y, h)`
     
-Método ingenuo I: $\widehat{y}_{T+h}=y_T$.
+**Método ingenuo I**: $\hat{y}_{T+h}=y_T$.
 
 * La predicción para cualquier periodo futuro es la __última__ observación disponible.
 * Función de `R`: `naive(y, h)` o `rwf(y, h)` (_rw_ de random walk)
 
-\
 
-## Series _con_ tendencia y _sin_ estacionalidad
+### Series _con_ tendencia y _sin_ estacionalidad {-}
 
-Método ingenuo II: $\widehat{y}_{T+h}=y_T + h(y_T-y_{T-1})$.
+**Método ingenuo II**: $\hat{y}_{T+h}=y_T + h(y_T-y_{T-1})$.
 
 * La predicción $h$ periodos adelante es la __última observación__ disponible más $h$ veces el __último incremento__ observado. 
-* No tiene función en `R`.
+* No tiene función en `R`, pero se podría emular mediante la función `holt` (véase epígrafe de 4.5 Alisado exponencial de Holt).
       
-Método de la deriva: $\widehat{y}_{T+h}=y_T+h\frac{y_T - y_1}{T-1}$.
+**Método de la deriva**: $\hat{y}_{T+h}=y_T+h\frac{y_T - y_1}{T-1}$.
 
 * La predicción $h$ periodos adelante es la __última observación__ disponible más $h$ veces el __incremento medio__ observado.
 * Función de `R`: `rwf(y, h, drift = TRUE)`  
 
-\
 
-## Series _sin_ tendencia y _con_ estacionalidad
+### Series _sin_ tendencia y _con_ estacionalidad {-}
 
-Método ingenuo con estacionalidad: $\widehat{y}_{T+h}=y_{T-m(k+1)}$.
+**Método ingenuo con estacionalidad**: $\hat{y}_{T+h}=y_{T-m(k+1)}$.
 
 * $k$ es la parte entera de $(h-1)/m$, es decir, el número de años completos en el periodo de predicción previo al periodo $T+h$.
 * La predicción para un periodo es la __última observación disponible de la misma estación que la fecha que se desea predecir__.
@@ -209,18 +213,20 @@ __No hay métodos ingenuos cuando la serie tiene tendencia y estacionalidad__, a
 
 \
 
-## Ejemplos de aplicación
- 
-### Serie Libros {-}
+## Ejemplo de aplicación
 
+### Serie Libros {-}
+ 
 ```{r}
 libros <- read.csv2("./series/libros.csv", header = TRUE)
 libros <- ts(libros["libros"], start = 1993, frequency  = 1)
 ```
 
-En la figura 1 se muestra el resultado gráfico de la aplicación de algunos de estos métodos sencillos a la serie Libros (número de títulos publicados anualmente en España desde 1993 hasta 2018), con independencia de su adecuación dadas las componentes de esta serie. Se ha fijado un horizonte de previsión de cinco años (`h = 5`). El argumento `PI = FALSE` hace que no se impriman los intervalos de confianza de las predicciones. Los métodos de la Media e Ingenuo I realizan una predicción constante, el primero la media de títulos en el periodo de análisis (`r as.integer(mean(libros))`) y el segundo el último dato observado (`r tail(as.integer(libros), n=1)`). El método de deriva ofrece una predicción creciente porque la serie Libros tiene una pendiente media positiva en el periodo de análisis.
+En la figura 1 se muestra el resultado gráfico de la aplicación de algunos de estos métodos sencillos a la serie Libros (número de títulos publicados anualmente en España desde 1993 hasta 2018), con independencia de su adecuación dadas las componentes de esta serie. Se ha fijado un horizonte de previsión de cinco años (`h = 5`). El argumento `PI = FALSE` hace que no se impriman los intervalos de confianza de las predicciones.
 
-Recuerda que debes cargar las librerias `forecast` y `ggplot2`.
+Los métodos de la Media e Ingenuo I realizan una predicción constante, el primero la media de títulos en el periodo de análisis (`r as.integer(mean(libros))`) y el segundo el último dato observado (`r tail(as.integer(libros), n=1)`). El método de deriva ofrece una predicción creciente porque la serie Libros tiene una pendiente media positiva en el periodo de análisis.
+
+Recuerda que debes cargar las librerías `forecast` y `ggplot2`.
 
 ```{r}
 mediaLibros <- meanf(libros, h = 5)
@@ -258,7 +264,7 @@ rownames(tmp) <- c("Media","Ingenuo I","Deriva")
 tmp
 ```
 
-Observa que:
+Podemos destacar que:
 
 * El método de _Media_ presenta una baja capacidad predictiva debido a que la serie Libros tiene tendencia (MAPE =  14%). 
 * El método de _Deriva_ tiene la mejor calidad de ajuste, con un error porcentual del 6.9% (MAPE), y un error medio aproximado de 6,000 títulos (RMSE).
@@ -268,7 +274,7 @@ Observa que:
 
 ### Serie Nacimientos {-}
 
-Podemos usar el método de deriva con estacionalidad con la serie Nacimientos para obtener una previsión a dos años vista. El error absoluto porcentual medio es del 3.6%. Es decir, aplicando algo tan simple como predecir el número de nacimientos para un mes como los nacimientos del mismo mes del año previo, tenemos ya un error de predicción muy bajo. La figura 2 muestra la serie y la predicción que, debido al método usado, no incorpora la tendencia decreciente de los últimos años.
+Podemos usar el método ingenuo con estacionalidad con la serie Nacimientos para obtener una previsión a dos años vista. El error absoluto porcentual medio es del 3.6%. Es decir, aplicando algo tan simple como predecir el número de nacimientos para un mes como los nacimientos del mismo mes del año previo, tenemos ya un error de predicción muy bajo. La figura 2 muestra la serie y la predicción que, debido al método usado, no incorpora la tendencia decreciente de los últimos años.
 
 ```{r}
 nacimientos <- read.csv2("./series/nacimientos.csv", header = TRUE)
@@ -285,6 +291,8 @@ autoplot(snaive.nacimientos,
          main = "Figura 2. Nacimientos y predicción por el método Ingenuo con estacionalidad")
 ```
 
+\
+\
 
 # Métodos de Alisado Exponencial
 
@@ -309,27 +317,27 @@ Para obtener una predicción en el periodo $t+h$ con datos hasta el periodo $t$ 
 * La estimación de la estacionalidad en el mes correspondiente al periodo $t+h$ con datos hasta $t$: $s_{t + h - m(k+1)}$ (recuerda, $m$ es el orden estacional y $k=\lfloor(h - 1)/m\rfloor$)
 
 A partir de estas componentes, obtenidas en el periodo $t$ y para un esquema aditivo, se tendría que la predicción en el periodo $t+h$ es:
-$$\widehat{y}_{t+h} = l_t+hb_t+s_{t+h-m(k+1)}.$$
+$$\hat{y}_{t+h} = l_t+hb_t+s_{t+h-m(k+1)}.$$
 En general, las componentes pueden __existir o no__ y se pueden combinar entre ellas __aditiva o multiplicativamente__. Veamos algunos casos:
 
 * Existen todas y son multiplicativas:
-$$\widehat{y}_{t+h}=l_t \cdot b_t^h \cdot s_{t + h - m(k+1)}$$
+$$\hat{y}_{t+h}=l_t \cdot b_t^h \cdot s_{t + h - m(k+1)}$$
 * Existen todas, nivel y pendiente aditivas, y estacionalidad multiplicativa:
-$$\widehat{y}_{t+h}=(l_t+hb_t)s_{t + h - m(k+1)}$$
+$$\hat{y}_{t+h}=(l_t+hb_t)s_{t + h - m(k+1)}$$
 * No hay pendiente y la estacionalidad es aditiva:
-$$\widehat{y}_{t+h}=l_t+s_{t + h - m(k+1)}$$
+$$\hat{y}_{t+h}=l_t+s_{t + h - m(k+1)}$$
 
 ¿Como obtenemos los valores de $l_t$, $b_t$ y $s_{t + h - m(k+1)}$? Mediante __expresiones recursivas__, donde cada componente se calcula a partir de los valores hasta $t$ de la serie y de las componentes:
 $$
 \begin{aligned}
 l_t& = f_l(y_t,y_{t-1}\ldots, l_{t-1},l_{t-2}\ldots,b_{t-1},b_{t-2}\ldots,s_{t-1},s_{t-2}\ldots) \\
-b_t& = f_b(y_t,y_{t-1}\ldots, l_{t-1},l_{t-2}\ldots,b_{t-1},b_{t-2}\ldots,s_{t-1},s_{t-2}\ldots) \\
-s_t& = f_s(y_t,y_{t-1}\ldots, l_{t-1},l_{t-2}\ldots,b_{t-1},b_{t-2}\ldots,s_{t-1},s_{t-2}\ldots)
+b_t& = f_b(y_t,y_{t-1}\ldots, l_{t},l_{t-1}\ldots,b_{t-1},b_{t-2}\ldots,s_{t-1},s_{t-2}\ldots) \\
+s_t& = f_s(y_t,y_{t-1}\ldots, l_{t},l_{t-1}\ldots,b_{t},b_{t-1}\ldots,s_{t-1},s_{t-2}\ldots)
 \end{aligned}
 $$
-Por ejemplo, el _método ingenuo I_ se puede interpretar dentro de este contexto como un método de alisado donde $l_t = y_t$ y no hay ni pendiente ni estacionalidad. Por tanto, $\widehat{y}_{T+h} = l_{T} = y_{T}$.
+Por ejemplo, el _método ingenuo I_ se puede interpretar dentro de este contexto como un método de alisado donde $l_t = y_t$ y no hay ni pendiente ni estacionalidad. Por tanto, $\hat{y}_{T+h} = l_{T} = y_{T}$.
 
-De la misma forma, el _método ingenuo II_ se puede interpretar como un método de alisado donde $l_t = y_t$, $b_t = y_t - y_{t-1}$ y no hay estacionalidad. Entonces, $\widehat{y}_{T+h}=l_T + hb_T = y_T + h(y_T - y_{T-1})$.
+De la misma forma, el _método ingenuo II_ se puede interpretar como un método de alisado donde $l_t = y_t$, $b_t = y_t - y_{t-1}$ y no hay estacionalidad. Entonces, $\hat{y}_{T+h}=l_T + hb_T = y_T + h(y_T - y_{T-1})$.
     
 El concepto de componentes aquí visto no coincide con el definido en el Tema 1. Sin embargo, podemos asimilar la tendencia de una serie como la suma (multiplicación) del nivel y la pendiente $T_{t+1} = l_t + b_t$ ($T_{t+1} = l_t \cdot b_t$) y de esta forma ambas definiciones de componentes de una serie se hacen compatibles.
 
@@ -351,7 +359,7 @@ Todas las series tiene nivel, pero dependiendo del tipo de pendiente y estaciona
 
 Cada caso difiere en las componentes que se observan y su esquema, dando lugar a un conjunto diferente de ecuaciones recursivas de actualización.
 
-Si se añade que el error puede ser aditivo o multiplicativo, da 30 posibilidades. El tipo de error (aditivo o multiplicativo) no afecta ni a la estimación ni a la previsión puntual, sólo es relevante en el cálculo del intervalo de confianza de las predicciones.
+Si se añade que el error puede ser aditivo o multiplicativo, da 30 posibilidades. **El tipo de error (aditivo o multiplicativo) no afecta ni a la estimación ni a la previsión puntual, sólo es relevante en el cálculo del intervalo de confianza de las predicciones.**
 
 Los modelos más usuales son:
 
@@ -372,19 +380,19 @@ Acude al artículo de [Rob J. Hyndman y Yeasmin Khandakar (2008)](http://www.jst
 El alisado exponencial simple es adecuado para una serie estacionaria y sin estacionalidad. Es decir, una serie que se mueve alrededor de un nivel constante.
 
 La ecuación de la __predicción intra-muestral__ es 
-$$\widehat{y}_{t+1} = \alpha y_t + \alpha (1-\alpha) y_{t-1} + \alpha (1-\alpha)^2 y_{t-2} + \alpha (1-\alpha)^3 y_{t-3} + \ldots =  \alpha y_t + (1-\alpha)\widehat{y}_{t},$$
+$$\hat{y}_{t+1} = \alpha y_t + \alpha (1-\alpha) y_{t-1} + \alpha (1-\alpha)^2 y_{t-2} + \alpha (1-\alpha)^3 y_{t-3} + \ldots =  \alpha y_t + (1-\alpha)\hat{y}_{t},$$
 donde $0 \leq \alpha \leq 1$ es el parámetro de suavizado. La primera __predicción extra-muestral__ queda 
-$$\widehat{y}_{T+1}=\alpha y_T + (1-\alpha)\widehat{y}_{T}$$
+$$\hat{y}_{T+1}=\alpha y_T + (1-\alpha)\hat{y}_{T}$$
 y para las restantes
-$$\widehat{y}_{T+h} = \widehat{y}_{T+1}.$$
+$$\hat{y}_{T+h} = \hat{y}_{T+1}.$$
 
 ### Formulas interactivas de sus componentes {-}
 
 En el alisado exponencial simple solo hay una componente, el nivel $l_t$.
 
 * La __ecuación recursiva__ de suavizado es $l_t=\alpha y_t + (1-\alpha)l_{t-1}$
-* La ecuación de __predicción intra-muestral__ es $\widehat{y}_{t+1} = l_t$
-* La ecuación de __predicción extra-muestral__ es $\widehat{y}_{T+h} = \widehat{y}_{T+1} = l_T$
+* La ecuación de __predicción intra-muestral__ es $\hat{y}_{t+1} = l_t$
+* La ecuación de __predicción extra-muestral__ es $\hat{y}_{T+h} = \hat{y}_{T+1} = l_T$
 
 Dos estimaciones razonables de $l_t$, el nivel de la serie en el periodo $t$, son el valor observado para la serie en ese periodo $y_t$ y el nivel del periodo previo $l_{t-1}$. La estimación final de $l_t$ es una media ponderada de ambas y esta estimación final es la previsión de la serie para el periodo siguiente. 
 
@@ -394,8 +402,8 @@ Dado el proceso iterativo para el cálculo de $l_t$ se necesita un __valor inici
     
 Respecto de $\alpha$, usualmente se estima el valor __optimo__ según un criterio de precisión de la predicción. El parámetro $\alpha$ __se puede interpretar__ como:
 
-* Si $\alpha = 1$ se tiene el _método ingenuo I_ ($\widehat{y}_{t+1}=y_t$), óptimo cuando el nivel de la serie varía constantemente en el tiempo.
-* Si $\alpha = 0$ se tiene $\widehat{y}_{t} =l_0$, óptimo cuando el nivel permanece constante en el tiempo.
+* Si $\alpha = 1$ se tiene el _método ingenuo I_ ($\hat{y}_{t+1}=y_t$), óptimo cuando el nivel de la serie varía constantemente en el tiempo.
+* Si $\alpha = 0$ se tiene $\hat{y}_{t} =l_0$, óptimo cuando el nivel permanece constante en el tiempo.
 
 ### Ejemplo {-}
 
@@ -412,9 +420,9 @@ Veamos la salida en detalle:
 * El valor de arranque $l_0$ óptimo es `r as.integer(librosf$model$par[2])`. 
 * _sigma_ es la desviación típica del error (aditivo) de predicción. Se diferencia de RMSE en el denominador, dado que para _sigma_ hay una corrección según los grados de libertad.
 * La calidad de las predicciones es razonable, como evidencia el error porcentual medio del 7%.
-* Las predicciones son las mismas para los 5 años, como cabe esperar (recuerda que $\widehat{y}_{T+h} = \widehat{y}_{T+1}$).
+* Las predicciones son las mismas para los 5 años, como cabe esperar (recuerda que $\hat{y}_{T+h} = \hat{y}_{T+1}$).
 
-La figura 3 muestra la serie Libros y las previsiones extra-muestrales que son constantes. 
+La figura 3 muestra la serie Libros y las previsiones extra-muestrales, que son constantes. 
  
 ```{r}
 autoplot(librosf,
@@ -439,11 +447,11 @@ b_t & =\beta (l_t - l_{t-1}) + (1-\beta)b_{t-1}
 \end{aligned}
 $$
 La ecuación de la __predicción intra-muestral__ a un periodo vista es
-$$\widehat{y}_{t+1} = l_t + b_t,$$
+$$\hat{y}_{t+1} = l_t + b_t,$$
 \noindent de forma que la ecuación de __predicción extra-muestral__ es 
-$$\widehat{y}_{T+h}=l_T + h b_T.$$ 
+$$\hat{y}_{T+h}=l_T + h b_T.$$ 
  
-Dos estimaciones razonables del nivel de la serie en el periodo $t$ son el valor observado para la serie en ese periodo $y_t$, y una estimación del nivel del periodo $t$ realizada desde el periodo $t-1$: $l_{t-1} + b_{t-1}$. Por otro lado, dos estimaciones razonables de la pendiente de la serie en el periodo $t$ son el cambio de nivel de $t-1$ a $t$ (el último observado) $l_t-l_{t-1}$, y el valor de la pendiente en el periodo previo, $b_{t-1}$. En ambos casos, nivel y pendiente, la estimación final es una media ponderada, parametrizada por $0 \leq \alpha, \: \beta \leq 1$.
+Dos estimaciones razonables del nivel de la serie en el periodo $t$ son el valor observado para la serie en ese periodo $y_t$, y una estimación del nivel del periodo $t$ realizada desde el periodo $t-1$: $l_{t-1} + b_{t-1}$. Por otro lado, dos estimaciones razonables de la pendiente de la serie en el periodo $t$ son el último cambio de nivel observado $l_t-l_{t-1}$, y el valor de la pendiente en el periodo previo, $b_{t-1}$. En ambos casos, nivel y pendiente, la estimación final es una media ponderada, parametrizada por $0 \leq \alpha, \: \beta \leq 1$.
 
 ### Estimación de los parámetros del modelo {-}
 
@@ -457,7 +465,7 @@ __Interpretación del parámetro $\beta$__:
 * Si $\beta = 0$, $b_t = b_{t-1}= \ldots = b_0$, la pendiente se mantiene constante en el tiempo.
 
 El _método ingenuo II_ es un caso concreto de Alisado de Holt. Si hacemos $\alpha=\beta = 1$, queda $l_t=y_t$ y $b_t=y_t-y_{t-1}$, por tanto
-$$\widehat{y}_{T+h}=l_T + h \cdot b_T = y_T + h(y_T - y_{T-1}).$$
+$$\hat{y}_{T+h}=l_T + h \cdot b_T = y_T + h(y_T - y_{T-1}).$$
 
 ### Ejemplo {-}
 
@@ -476,7 +484,7 @@ La calidad de las predicciones es razonable, con un error porcentual medio del 6
 tail(librosf$model$states, n = 1)
 ```
 
-En el objeto `librosf` la matriz `librosf$model$states` guarda todos los valores del nivel y de la pendiente obtenidos con las ecuaciones recursivas, incluidos los valores de arranque, así que es una matriz con $T+1$ filas. Puedes ver los valores de $l_{2018}$ y $b_{2018}$ en su última fila, que valen respectivamente `r as.integer(librosf$model$states[27,])`. Así, la predicción para $2019$ es $\widehat{y}_{2019}=l_{2018} + b_{2018}=$ `r as.integer(librosf$model$states[27,1])` $+$ `r as.integer(librosf$model$states[27,2])` $=$ `r as.integer(sum(librosf$model$states[27,]))`. Igualmente $\widehat{y}_{2020}=l_{2018} + 2\cdot b_{2018}=$ `r as.integer(librosf$model$states[27,1] + 2* librosf$model$states[27,2])`. Es decir, el incremento entre previsiones es contante e igual a $b_{2018}$ que, por ser $\beta$ nulo, coincide con $b_0$.
+En el objeto `librosf` la matriz `librosf$model$states` guarda todos los valores del nivel y de la pendiente obtenidos con las ecuaciones recursivas, incluidos los valores de arranque, así que es una matriz con $T+1$ filas. Puedes ver los valores de $l_{2018}$ y $b_{2018}$ en su última fila, que valen respectivamente `r round(as.numeric(librosf$model$states[27,]), 1)`. La predicción para $2019$ es $\hat{y}_{2019}=l_{2018} + b_{2018} = `r round(as.numeric(sum(librosf$model$states[27,])), 1)`$. Igualmente $\hat{y}_{2020}=l_{2018} + 2\cdot b_{2018}=$ `r round(as.numeric(librosf$model$states[27,1] + 2* librosf$model$states[27,2]), 1)`. Es decir, el incremento entre previsiones es contante e igual a $b_{2018}$ que, por ser $\beta$ nulo, coincide con $b_0$.
 
 La figura 4 muestra la serie Libros y las previsiones extra-muestrales que muestran una ligera tendencia creciente.
  
@@ -504,9 +512,9 @@ b_t & =\beta (l_t - l_{t-1}) + (1-\beta)\phi b_{t-1}
 \end{aligned}
 $$
 La ecuación de la __predicción intra-muestral__ a un periodo vista es
-$$\widehat{y}_{t+1} = l_t + \phi b_t,$$
+$$\hat{y}_{t+1} = l_t + \phi b_t,$$
 \noindent de forma que la ecuación de __predicción extra-muestral__ es 
-$$\widehat{y}_{T+h}=l_T + (\phi + \phi^2 + \ldots + \phi^h) b_T.$$ 
+$$\hat{y}_{T+h}=l_T + (\phi + \phi^2 + \ldots + \phi^h) b_T.$$ 
  
 Si $\phi = 1$ se tiene el alisado de Holt y si $\phi = 0$ se tiene el alisado simple. Para valores entre $0$ y $1$ en el corto plazo las predicciones tienen pendiente y en el largo plazo se hacen constantes e iguales a $l_T + \phi b_T/(1 - \phi)$.
 
@@ -548,9 +556,9 @@ $$
 con $0 \leq \alpha, \beta, \gamma \leq 1$.
 
 La ecuación de la __predicción intra-muestral__ a un periodo vista es 
-$$\widehat{y}_{t+1}  = l_t + b_t + s_{t+1-m},$$
+$$\hat{y}_{t+1}  = l_t + b_t + s_{t+1-m},$$
 \noindent de forma que la ecuación de __predicción extra-muestral es__:
-$$\widehat{y}_{T+h}=l_T + h b_T + s_{T+h - m(k+1)},$$ 
+$$\hat{y}_{T+h}=l_T + h b_T + s_{T+h - m(k+1)},$$ 
 \noindent con $k = \lfloor(h-1)/m\rfloor$.
 
 ### Alisado de Holt-Winters multiplicativo (A, M) {-}
@@ -565,9 +573,9 @@ s_t & =\gamma \frac{y_t}{l_{t-1} + b_{t-1}} + (1 - \gamma)s_{t-m}
 $$
 
 La ecuación de la __predicción intra-muestral__ a un periodo vista es 
-$$\widehat{y}_{t+1}  = (l_t + b_t)s_{t+1-m},$$
+$$\hat{y}_{t+1}  = (l_t + b_t)s_{t+1-m},$$
 de forma que la ecuación de __predicción extra-muestral es__:
-$$\widehat{y}_{T+h}=(l_T + h b_T)s_{T+h - m(k+1)}.$$ 
+$$\hat{y}_{T+h}=(l_T + h b_T)s_{T+h - m(k+1)}.$$ 
 
 ### Ejemplo {-}
 
@@ -579,7 +587,7 @@ nacimientosbf <- hw(nacimientosb, seasonal = "mult", h = 24)
 summary(nacimientosbf)
 ```
 
-Los valores óptimos de los parámetros son $\alpha=$ `r round(nacimientosbf$model$par[1],2)`, $\beta=$ `r round(nacimientosbf$model$par[2],2)` y $\gamma=$ `r round(nacimientosbf$model$par[3],2)`. Los valores tan bajos para $\beta$ y $\gamma$ indican que ambas, la pendiente y la estacionalidad, modifican su valor muy lentamente. Es decir, hay pendiente y hay efecto estacional, pero varían muy lentamente en el tiempo.
+Los valores óptimos de los parámetros son $\alpha=$ `r round(nacimientosbf$model$par[1],2)`, $\beta=$ `r round(nacimientosbf$model$par[2],2)` y $\gamma=$ `r round(nacimientosbf$model$par[3],2)`. Los valores tan bajos para $\beta$ y $\gamma$ indican que ambas, la pendiente y la estacionalidad, modifican su valor muy lentamente. Es decir, hay pendiente y hay efecto estacional, pero permanecen constantes en el tiempo.
 
 La calidad de las predicciones es notable, con un error porcentual medio del 1.8%. Recuerda que con el método ingenuo con estacionalidad el error era del 3.6%.
 
@@ -594,7 +602,7 @@ TT <- nrow(nacimientosbf$model$states)
 round(nacimientosbf$model$states[TT,], 3)
 ```
 
-Como el último dato de la serie es diciembre de 2018, los valores del nivel $l$ y la pendiente $b$ mostrados corresponden a ese periodo. Sin embargo, la componente estacional tiene un orden muy peculiar: s1 es el valor estacional para diciembre (mes del último dato), s2 el de noviembre, s3 de octubre, hasta s11 que sería febrero y s12 que es enero. Podemos reproducir las predicciones para los primeros 12 meses de enero a febrero con (ojo, el etiquetado de la salida no es correcto):
+Como el último dato de la serie es diciembre de 2018, los valores del nivel $l$ y la pendiente $b$ mostrados corresponden a ese periodo. Sin embargo, la componente estacional tiene un orden muy peculiar: s1 es el valor estacional para diciembre (mes del último dato), s2 el de noviembre, s3 de octubre, hasta s11 que sería febrero y s12 que es enero. Podemos reproducir las predicciones para los primeros 12 meses de enero a diciembre con (ojo, el etiquetado de la salida no es correcto):
 
 ```{r}
 (nacimientosbf$model$states[TT, 1] + (1:12)*nacimientosbf$model$states[TT, 2]) * 
@@ -618,7 +626,7 @@ Una alternativa a predecir la serie Nacimientos, que tiene esquema multiplicativ
 Este proceso se puede realizar de forma sencilla y transparente con cualquiera de las funciones de alisado exponencial que hemos visto a partir de los argumentos `lambda` y `biasadj`.
 
 * `lambda = 0` indica a la función de alisado que se ha de realizar la transformación logarítmica de la serie. Es un parámetro de la transformación Box-Cox que veremos en detalle en el tema 3. 
-* `biasadj = TRUE` es necesario si tras una transformación de la serie original, queremos que las predicciones sean insesgadas. Sea $y_t$ la serie original y $z_t=log(y_t)$ su transformación logarítmica. Si obtenemos una predicción $\widehat{y}_t$ de la serie original, esta será insesgada $E[\widehat{y}_t]=y_t$. Ahora bien, si obtenemos una predicción $\widehat{z}_t$ de la serie transformada, podemos pensar que $e^{\widehat{z}_t}$ es una predicción insesgada de la serie original, pero resulta que $E[e^{\widehat{z}_t}] \neq y_t$. Es decir, la exponencial de la predicción de la serie transformada logarítmicamente no es insesgada. Si el argumento `biasadj` es fijado a FALSE, las predicciones se calcularan de forma directa deshaciendo la transformación y serán sesgadas; si es fijado a TRUE, las predicciones se calcularan por medio de una fórmula alternativa y serán insesgadas. En ambos casos las estimaciones son consistentes, así que para series largas no debería observarse mucha diferencia entre las dos alternativas.
+* `biasadj = TRUE` es necesario si tras una transformación de la serie original, queremos que las predicciones sean insesgadas. Sea $y_t$ la serie original y $z_t=log(y_t)$ su transformación logarítmica. Si obtenemos una predicción $\hat{y}_t$ de la serie original, esta será insesgada $E[\hat{y}_t]=y_t$. Ahora bien, si obtenemos una predicción $\hat{z}_t$ de la serie transformada, podemos pensar que $e^{\hat{z}_t}$ es una predicción insesgada de la serie original, pero resulta que $E[e^{\hat{z}_t}] \neq y_t$. Es decir, la exponencial de la predicción de la serie transformada logarítmicamente no es insesgada. Si el argumento `biasadj` es fijado a FALSE, las predicciones se calcularan de forma directa deshaciendo la transformación y serán sesgadas; si es fijado a TRUE, las predicciones se calcularan por medio de una fórmula alternativa y serán insesgadas. En ambos casos las estimaciones son consistentes, así que para series largas no debería observarse mucha diferencia entre las dos alternativas.
 
 Vamos a poner en práctica este enfoque con la serie Nacimientos. Como se va a predecir el logaritmo de la serie, se debe indicar a la función `hw` que use el modelo Holt-Winters aditivo.
 
@@ -672,7 +680,7 @@ Recordemos que al añadir el error, aditivo o multiplicativo, estos quince model
 
 ### La función `ets` {-}
 
-Podemos estimar cualquiera de los treinta modelos usando la función `ets` del paquete `forecast`. A diferencia de las funciones previas `ses`, `holt` y `hw`, esta función solo estima los modelos, pero no produce predicciones. Para ello habrá que usar la función `forecast` sobre un modelo estimado con `ets`. Mira la ayuda para ver una explicación detallada de los argumentos de estas funciones.
+Podemos estimar cualquiera de los treinta modelos usando la función `ets` del paquete `forecast`. A diferencia de las funciones previas `ses`, `holt` y `hw`, la función `ets` solo estima los modelos, pero no produce predicciones. Para ello habrá que usar la función `forecast` sobre un modelo estimado con `ets`. Mira la ayuda para ver una explicación detallada de los argumentos de estas funciones.
 
 El tipo de modelo en `ets` se especifica con el argumento `model`, un código de tres letras indicando el tipo de Error, Tendencia y eStacionalidad (ETS). Por ejemplo, `model = "ANN"` indica un modelo con error aditivo, sin tendencia ni estacionalidad, es decir, el alisado exponencial simple; `model = "AAN"` indica un modelo con error aditivo, pendiente aditiva, pero sin estacionalidad, el alisado exponencial de Holt. El alisado exponencial de Holt-Winters multiplicativo sería `model = "AAM"`.
 
@@ -690,7 +698,7 @@ __Selección de modelos__
 
 Lo más habitual es no saber cual es el mejor modelo, entendiendo como tal, el que mejor se ajusta a la serie temporal. De hecho, si lo que buscamos es predecir bien, más que entender la naturaleza del proceso generador de datos, el mejor modelo será el que mejor prediga.
 
-Si en una de las tres letras del código del modelo se indica "Z", la función `ets` selecciona de entre los modelos posibles el que mejor se ajusta. Por ejemplo, `model = "AAZ"` indica un modelo con error y pendiente aditivos y dejaría a `ets` la búsqueda de la mejor opción para la estacionalidad (aditiva o multiplicativa). Si se especifica `model = "ZZZ` junto con `damped = NULL` (opciones por defecto) se dejaría a la función total libertad para buscar entre todos los modelos (excepto aquellos con pendiente multiplicativa). Si se desea restringir la búsqueda a modelos sin amortiguamiento basta indicar `damped = FALSE` y si se desea restringir la búsqueda solo a modelos aditivos se puede usar el argumento `additive.only = TRUE`.
+Si en una de las tres letras del código del modelo se indica "Z", la función `ets` selecciona de entre los modelos posibles el que mejor se ajusta. Por ejemplo, `model = "AAZ"` indica un modelo con error y pendiente aditivos y dejaría a `ets` la búsqueda de la mejor opción para la estacionalidad (nula, aditiva o multiplicativa). Si se especifica `model = "ZZZ` junto con `damped = NULL` (opciones por defecto) se dejaría a la función total libertad para buscar entre todos los modelos (excepto aquellos con pendiente multiplicativa). Si se desea restringir la búsqueda a modelos sin amortiguamiento basta indicar `damped = FALSE` y si se desea restringir la búsqueda solo a modelos aditivos se puede usar el argumento `additive.only = TRUE`.
 
 Queda pendiente saber que criterio se usa para seleccionar el modelo cuando se ofrece esta opción. Esto se hace a partir de un criterio de información entre Akaike (aic), Akaike corregido para pequeñas muestras (aicc) y el Bayesiano (bic). Sus fórmulas son:
 $$aic = -2log(L) + 2k$$
@@ -704,7 +712,7 @@ Por defecto se usa Akaike corregido para pequeñas muestras, pero el argumento `
 
 Con el comando `forecast(ets(nacimientos), h = 24)` obtenemos una predicción mensual a dos años vista del número de nacimientos en España. Así de simple, solo 31 caracteres. Todo esto gracias a que un algoritmo interno ha estimado los parámetros de múltiples modelos, elegido el mejor modelo de todos y lo ha usado para obtener las predicciones. Podemos afirmar que tenemos las mejores predicciones. Un momento, ¿podemos?
 
-Parémonos a reflexionar sobre lo que hemos hecho o, más bien, lo que el algoritmo ha hecho y a contrastarlo con lo que nosotros queríamos. Por un lado, el algoritmo estima los parámetros de un menú fijo de modelos y para ello usa un criterio de optimización, que por defecto es maximizar la función de verosimilitud; cuando ya tiene estimados todos los modelos, elije el mejor usando el criterio de información de Akaike corregido para muestras pequeñas; y finalmente, nosotros medimos la capacidad predictiva del modelo seleccionado usando el error absoluto porcentual medio. Vaya, resulta que en los procesos de identificación y estimación del mejor modelo se usan dos criterios diferentes, que además no coinciden con nuestro criterio de calidad de las predicciones.
+Parémonos a reflexionar sobre lo que hemos hecho --más bien lo que el algoritmo ha hecho-- y a contrastarlo con lo que nosotros queríamos. Por un lado, el algoritmo estima los parámetros de un menú fijo de modelos y para ello usa un criterio de optimización, que por defecto es maximizar la función de verosimilitud; cuando ya tiene estimados todos los modelos, elije el mejor usando el criterio de información de Akaike corregido para muestras pequeñas; y finalmente, nosotros medimos la capacidad predictiva del modelo seleccionado usando el error absoluto porcentual medio. Vaya, resulta que en los procesos de identificación y estimación del mejor modelo se usan dos criterios diferentes, que además no coinciden con nuestro criterio de calidad de las predicciones.
 
 Si consideramos que la calidad de un modelo viene dada por el error absoluto porcentual medio en las predicciones intra-muestrales a un periodo vista (lo que hemos decidido llamar MAPE), ¿no deberíamos estimar los parámetros del modelo usando como criterio la minimización del MAPE?, ¿no deberíamos elegir entre varios modelos aquel que presenta un MAPE menor? De esta forma, en todos los pasos del proceso se usa el mismo criterio, que es, además, el criterio que hemos considerado adecuado para valorar la calidad de las predicciones.
 
@@ -716,7 +724,7 @@ Ahora ya podemos dar respuesta a la pregunta del primer párrafo: no, no podemos
 
 Alguien dirá que casi seguro entre las predicciones sub-óptimas obtenidas por el algoritmo con su extraña mezcla de criterios y las predicciones óptimas de verdad no habrá mucha diferencia. Total, que más da una función de verosimilitud que un criterio de información que una medida del error medio. Pero lo cierto es que no lo sabemos, no tenemos ni idea de la distancia que hay entre lo óptimo y lo sub-óptimo, y si el coste de equivocarme en las predicciones es alto, puede que incluso una pequeña diferencia sea relevante.
 
-Esta reflexión realizada en el contexto de series temporales y para la función `ets` es aplicable a todos los casos donde dejamos que un algoritmo ya programado elija el mejor modelo, y se basa en el hecho de que rara vez los criterios de estimación y elección que usan los algoritmos coinciden con el concepto de calidad de ajuste que estamos interesados
+Esta reflexión realizada en el contexto de series temporales y para la función `ets` es aplicable a todos los casos donde dejamos que un algoritmo ya programado elija el mejor modelo, y se basa en el hecho de que rara vez los criterios de estimación y elección que usan los algoritmos coinciden con el concepto de calidad de ajuste que estamos interesados.
 
 A pesar de lo aquí expuesto, como es más cómodo (y rápido) tirar de rutinas ya programadas que escribir tu propio código, seguiremos trabajando con modelos sub-óptimos y obteniendo estimaciones sub-óptimas, pero diciendo que son las mejores.
 
@@ -726,10 +734,10 @@ A pesar de lo aquí expuesto, como es más cómodo (y rápido) tirar de rutinas 
 
 En los modelos de alisado estimados por la función `ets` la fórmula para el cálculo del residuo estimado depende de su naturaleza aditiva o multiplicativa.
 
-Si el __residuo es aditivo__, entonces el modelo es $y_t = \widehat{y}_t + \widehat{\varepsilon}_t$ y el residuo se define de la forma usual 
-$$\widehat{\varepsilon}_t = y_t - \widehat{y}_t.$$
-Ahora bien, si el __residuo es multiplicativo__, entonces el modelo es $y_t = \widehat{y}_t \cdot (1 + \widehat{\varepsilon}_t)$, y no $y_t = \widehat{y}_t \cdot \widehat{\varepsilon}_t$, como se podría esperar. Por tanto, el residuo multiplicativo se define como 
-$$\varepsilon_t = (y_t - \widehat{y}_t)/\widehat{y}_t.$$
+Si el __residuo es aditivo__, entonces el modelo es $y_t = \hat{y}_t + \hat{\varepsilon}_t$ y el residuo se define de la forma usual 
+$$\hat{\varepsilon}_t = y_t - \hat{y}_t.$$
+Ahora bien, si el __residuo es multiplicativo__, entonces el modelo es $y_t = \hat{y}_t \cdot (1 + \hat{\varepsilon}_t)$, y no $y_t = \hat{y}_t \cdot \hat{\varepsilon}_t$, como se podría esperar. Por tanto, el residuo multiplicativo se define como 
+$$\varepsilon_t = (y_t - \hat{y}_t)/\hat{y}_t.$$
 De esta forma en ambos casos el residuo evoluciona alrededor del valor 0 y se le pueden imponer las hipótesis usuales de ruido blanco. 
 
 La función `residual` permite extraer de un objeto `ets` el residuo del modelo. Si el modelo tiene residuo multiplicativo y se desea obtener el residuo aditivo, se debe usar con el argumento `type = "response"`.
@@ -796,7 +804,7 @@ La figura 9 muestra que aunque algún error supera las dos desviaciones típicas
 
 Vamos a mejorar la estimación de la calidad de las predicciones obteniendo el MAPE para __previsiones extra-muestrales a varios periodos vista__. Para ello vamos a reservar, por ejemplo, las últimas 7 observaciones de la serie Libros y ajustar el modelo con las restantes. Después usaremos este modelo para calcular las predicciones a 7 periodos vista y compararlas con los valores reales de la serie Libros. 
 
-Este método para valorar la calidad de las predicciones usa la filosofía del método _trainning set/test set_: el periodo de datos usado en la estimación no se usa como periodo de datos para la validación. Sin embargo, tiene el problema de que el error obtenido es una mezcla de errores de predicción a corto, medio y largo plazo difícil de valorar. Además, los resultados dependen tremendamente del punto de corte temporal seleccionado. En el epígrafe 9 veremos una metodología de validación que superan estas limitaciones.
+Este método para valorar la calidad de las predicciones usa la filosofía del método _trainning set/test set_: el periodo de datos usado en la estimación no se usa como periodo de datos para la validación. Sin embargo, tiene el problema de que el error obtenido es una mezcla de errores de predicción a corto, medio y largo plazo difícil de valorar. Además, los resultados dependen tremendamente del punto de corte temporal seleccionado. En el [Ejemplo de aplicación del tema 2](https://iarribasf.github.io/SeriesTemporales-MASTER/03-07-Ejemplo2.html) veremos una metodología de validación que superan estas limitaciones.
 
 
 ```{r}
@@ -824,7 +832,7 @@ Un gráfico puede ayudar a entender este proceso de validación. En la figura 10
 * La línea de puntos vertical separa el periodo muestral (1993-2011) usado para estimar el modelo, del periodo extra-muestral (2012-2018) usado sólo para hacer las previsiones.
 * La serie Libros aparece como una línea sólida en negro, desde 1993 hasta 2018.
 * La previsión _intra_-muestral (a un periodo vista) de la serie Libros aparece como una línea azul.
-* La línea en rojo es la previsión _extra_-muestral a largo plazo: $\widehat{y}_{T+h}=l_T$, donde $T=2011$. Observa que todas las previsiones están por encima del valor real de la serie.
+* La línea en rojo es la previsión _extra_-muestral a largo plazo: $\hat{y}_{T+h}=l_T$, donde $T=2011$. Observa que todas las previsiones están por encima del valor real de la serie.
 * Al lado de cada previsión se ha indicado el error estimado (MAPE).
 
 Claramente estos resultados dependen del punto de corte seleccionado.
@@ -850,7 +858,7 @@ autoplot(libros, series = "Libros",
 \
 \
 
-__Nota:__ La presencia de tendencia, primero creciente y luego decreciente, en la serie Libros puede hacernos pensar que un modelo más adecuado para su ajuste y predicción sería ETS(M,A,N), forzando a que haya pendiente. De hecho, el error de estimación de este modelo es del 6.2%, frente al 7% para el modelo ETS(M,N,N). Sin embargo, el error de previsión extra-muestral a largo plazo para el modelo ETS(M,A,N) es del 37.3%, frente al 22.8% para el modelo ETS(M,N,N). De nuevo, incidir en que claramente estos resultados dependen del punto de corte seleccionado.
+__Nota:__ La presencia de tendencia, primero creciente y luego decreciente, en la serie Libros puede hacernos pensar que un modelo más adecuado para su ajuste y predicción sería ETS(M,A,N), forzando a que haya pendiente. De hecho, el error de estimación de este modelo es del 6.2%, frente al 7% para el modelo ETS(M,N,N). Sin embargo, el error de previsión extra-muestral a largo plazo para el modelo ETS(M,A,N) es del 37.3%, frente al 22.8% para el modelo ETS(M,N,N). De nuevo, incidir en que mayor calidad de ajuste no implica mayor calidad de predicción; y en que estos resultados dependen del punto de corte seleccionado.
 
 # Ejemplo de aplicación: Nacimientos
 
@@ -938,7 +946,7 @@ autoplot(error, series="Error",
          colour = "black",
          xlab = "Periodo",
          ylab = "Error",
-         main = "Figura 12: Error + Intervención") +
+         main = "Figura 13: Error + Intervención") +
   geom_hline(yintercept = c(-3, -2, 2 ,3)*sderror, 
              colour = c("red", "blue", "blue", "red"), lty = 2) + 
   scale_x_continuous(breaks= seq(2000, 2019, 2)) 
@@ -989,7 +997,7 @@ Yendo un poco más lejos, y dado que el número de nacimientos depende forzosame
 
 También podemos mezclar varios de los enfoques previos o ser aún más imaginativos.
 
-El siguiente código muestra el MAPE para varias de estas opciones. Puedes deducir que se está haciendo en cada caso a partir del código. Sería más adecuado usar otro criterio de validación diferente del MAPE para previsiones intra-muestrales a un periodo vista, pero el objetivo de este epígrafe es recalcar que no hay que quedarse con lo inmediato (predecir Nacimientos con las opciones por defecto de las funciones), sino probar y probar.
+El siguiente código muestra el MAPE (para previsiones intra-muestrales a un periodo vista) para varias de estas opciones. Puedes deducir que se está haciendo en cada caso a partir del código. Sería más adecuado usar otro criterio de validación diferente, pero el objetivo de este epígrafe es recalcar que no hay que quedarse con lo inmediato (predecir Nacimientos con las opciones por defecto de las funciones), sino probar y probar.
 
 ```{r}
 # Serie Nacimientos
@@ -1011,8 +1019,8 @@ accuracy(ets(nacimientos/monthdays(nacimientos), damped = TRUE, allow.multiplica
 
 La principal conclusión en este caso es que salirse de la estimación directa sobre la serie original no reduce el error significativamente. Sin embargo, cabe destacar que:
 
-* El error de estimación de los nacimientos por día es menor, por ser una serie con mejor comportamiento, aunque la ganancia no es mucha. (Cuatro últimos modelos respecto de los cuatro primeros)
-* Usar la transformación logarítmica no mejora la capacidad predictiva del modelo. (Modelos 5 y 6 respecto de los modelos 1 y 2)
+* El error de estimación de los nacimientos por día es menor, al tratarse de una serie con mejor comportamiento, aunque la ganancia no es mucha. (CVéanse los cuatro últimos modelos respecto de los cuatro primeros)
+* Usar la transformación logarítmica no mejora la capacidad predictiva del modelo. (Véanse los nodelos 5 y 6 respecto de los modelos 1 y 2)
 * Permitir una pendiente multiplicativa mejora la calidad del ajuste. (Modelos 1 vs. 3, 2 vs.4, 7 vs. 9 y 8 vs. 10)
 * El mejor modelo estima los nacimientos por día, tiene pendiente multiplicativa amortiguada y estima los parámetros minimizando el error cuadrático medio ("mse"). Todo menos lo _directo_.
 

@@ -10,8 +10,6 @@ output:
     df_print: kable
     toc: true
     toc_depth: 2
-    toc_float: 
-      collapsed: true
     number_sections: true
     self_contained: true
     code_download: true
@@ -33,7 +31,6 @@ options(scipen = 999) #- para quitar la notacion cientifica
 ```
 
 ```{r librerias, echo = FALSE}
-library("RColorBrewer")
 library(forecast)
 library(ggplot2); theme_set(theme_bw())
 library(gridExtra)
@@ -52,7 +49,7 @@ library(urca)
 
 Consideremos de nuevo la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares. Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2018, un total de 39 años o 468 meses
 
-En la descriptiva del tema 1 vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, vamos a recortar la serie y considerarla solo desde enero de 1988, 31 años o 372 meses, tal y como ya hicimos para su análisis en el tema 2.
+En la descriptiva del tema 1 vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, vamos a recortar la serie y considerarla solo desde enero de 1988, 31 años o 372 meses, tal y como ya hicimos para su análisis en el ejemplo del tema 2.
 
 La serie presenta tendencia decreciente y estacionalidad de orden 12 en un claro esquema multiplicativo (véase figura 1).
 
@@ -97,7 +94,7 @@ La figura 2 indica que tanto la diferencia regular (panel segundo) como la difer
 
 Veamos que transformación nos sugiere `R`:
 
-```{r,comment=""}
+```{r}
 (nl <- BoxCox.lambda(DefEnfCer))
 wDefEnfCer <-BoxCox(DefEnfCer, lambda = nl)
 ```
@@ -112,7 +109,7 @@ autoplot(series, facets = TRUE,
          main = "Figura 3. Defunciones causadas por enfermedades cerebrovasculares")
 ```
 
-El segundo panel de la figura 3 (transformación de Box-Cox óptima) muestra una varianza más constante que la del panel superior (serie original). Sin embargo, el valor sugerido por `R` de $\lambda=-0.318$ es difícil de interpretar. Afortunadamente el panel inferior muestra que la transformación logarítmica genera una serie muy similar a la transformación de Box-cox óptima, así que definitivamente se usará el logaritmo de las defunciones causadas por enfermedades cerebrovasculares en lugar de la serie original.
+El segundo panel de la figura 3 (transformación de Box-Cox óptima) muestra una varianza más constante que la del panel superior (serie original). Sin embargo, el valor sugerido por `R` de $\lambda=-0.318$ es difícil de interpretar. Afortunadamente el panel inferior muestra que la transformación logarítmica genera una serie muy similar a la transformación de Box-Cox óptima, así que definitivamente se usará el logaritmo de las defunciones causadas por enfermedades cerebrovasculares en lugar de la serie original.
 
 \
 
@@ -170,9 +167,18 @@ ggtsdisplay(diff(diff(log(DefEnfCer)), lag = 12),
 
 \
 
+__Nota:__ Las funciones `ndiffs`y `nsdiffs` avalan la doble diferenciación regular y estacional, pero como con todo algoritmo de decisión automático sus conclusiones deben considerarse orientativas.
+
+```{r}
+ndiffs(DefEnfCer)
+nsdiffs(DefEnfCer)
+```
+
+\
+
 ## Contraste KPSS
 
-Como la serie original tiene estacionalidad, vamos a realizar la prueba KPSS a partir de la serie anualizada (ya mostrada en el Tema 1).
+Como la serie original tiene estacionalidad, vamos a realizar la prueba KPSS a partir de la serie anualizada (ya mostrada en el ejemplo del tema 1).
 
 ```{r}  
 DefEnfCerAnual <- aggregate(DefEnfCer, FUN = sum)
@@ -194,11 +200,10 @@ Para un nivel de confianza del 5%, si asumimos la presencia de tendencia determi
 
 Si repetimos el contraste con la serie diferenciada, esta vez para un modelo sin tendencia determinista (`type = mu`) no se rechaza la hipótesis nula, la serie diferenciada no tiene raíces unitarias y puede considerarse estacionaria.
 
-```{r, comment = ""}
+```{r}
 summary(ur.kpss(diff(DefEnfCer), type='mu', lags = 'short'))
 ```
 
-__Nota:__ Las funciones `ndiffs`y `nsdiffs` avalan la doble diferenciación regular y estacional, pero como con todo algoritmo de decisión automático sus conclusiones deben considerarse orientativas.
 
 \
 \

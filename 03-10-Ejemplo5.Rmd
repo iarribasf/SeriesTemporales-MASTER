@@ -10,8 +10,6 @@ output:
     df_print: kable
     toc: true
     toc_depth: 2
-    toc_float: 
-      collapsed: true
     number_sections: true
     self_contained: true
     code_download: true
@@ -33,12 +31,10 @@ options(scipen = 999) #- para quitar la notacion cientifica
 ```
 
 ```{r librerias, echo = FALSE}
-library("RColorBrewer")
 library(forecast)
 library(ggplot2); theme_set(theme_bw())
 library(gridExtra)
 library(grid)
-#library(shape)
 library(tseries)
 library(aod)
 library(seasonal)
@@ -55,7 +51,7 @@ library(seasonal)
 
 Consideremos de nuevo la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares, Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2018, un total de 39 años o 468 meses
 
-En la descriptiva del tema 1 vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para su análisis por modelos ARIMA vamos a recortar la serie, que empezará el enero de 1988.
+En la descriptiva del ejemplo del tema 1 vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para su análisis por modelos ARIMA vamos a recortar la serie, que empezará el enero de 1988.
 
 Además, en el tema 3 vimos que  para alcanzar la estacionariedad y verificar la hipótesis de ergodicidad era necesario diferenciar la serie tanto en la parte regular como estacional y decidimos usar la transformación logarítmica para linealizar la serie y ganar en interpretabilidad.
 
@@ -69,14 +65,14 @@ DefEnfCer <- window(DefEnfCer, start = 1988)
 
 ## Identificación
 
-Vamos a identificar los valores de $p$, $q$, $P$ y $Q$. Para ello, analizaremos la FAC y la FACP, y solicitaremos con `auto.arima` y `seas` una identificación automática, en el primer caso incluyendo un efecto calendario para febreros bisiestos y otras variables ficticias para los tres valores atípicos identificados en el tema 2: febrero de 1999, enero de 2005 y febrero de 2012. La descriptiva realizada en el tema 1 revelaba que las muertes por enfermedades cerebrobasculares está poco relacionada con el número de días del mes y más con la estación del año.
+Vamos a identificar los valores de $p$, $q$, $P$ y $Q$. Para ello, analizaremos la FAC y la FACP, y solicitaremos con `auto.arima` y `seas` una identificación automática. Con `auto.arima` incluiremos un efecto calendario para los meses de febrero bisiestos y otras variables ficticias para los tres valores atípicos identificados en el tema 2: febrero de 1999, enero de 2005 y febrero de 2012. La descriptiva realizada en el tema 1 revelaba que las muertes por enfermedades cerebrovasculares está poco relacionada con el número de días del mes y más con la estación del año.
 
 ```{r} 
 ggtsdisplay(diff(diff(log(DefEnfCer), lag = 12)), lag = 48,
             main = "Figura 1. FAC y FACP para Defunciones. (log)")
 ```
 
-En la parte regular la FAC muestra una autocorrelación por encima del IC ($r_1$) y en la FACP se observa decrecimiento. En la parte estacional, la FAC muestra una autocorrelación significativa ($r_{12}$) y la FACP muestra decrecimiento. Así, podemos identificar el proceso como $log(DefEnfCer_t) \sim ARIMA_{12}(0,1,1)(0,1,1)$.
+En la parte regular, la FAC muestra que la primera autocorrelación está por encima del IC95 y en la FACP se observa decrecimiento. En la parte estacional, la FAC muestra una autocorrelación significativa en el orden 12 y la FACP muestra decrecimiento. Así, podemos identificar el proceso como $log(DefEnfCer_t) \sim ARIMA_{12}(0,1,1)(0,1,1)$.
 
 Veamos ahora `auto.arima`
 
@@ -92,14 +88,14 @@ auto.arima(DefEnfCer, d = 1, D = 1,
            xreg = cbind(Bisiestos, d0299, d0105, d0212))
 ```
 
-La función `auto.arima` identifica un proceso $ARIMA_{12}(1,1,1)(1,1,2)$, donde el coeficiente $\theta_{24}$ claramente no es significativo, así como la intervención para años bisiestos. Eliminados estos coeficientes no significativos, se tiene la identificación alcanzada por `seas`, un proceso $ARIMA_{12}(1,1,1)(1,1,1)$, con dos intervenciones en febrero de 1999 y 2012.
+La función `auto.arima` identifica un proceso $ARIMA_{12}(1,1,1)(1,1,2)$, donde los coeficientes $\phi_{12}$ y $\theta_{24}$ claramente no son significativos, así como la intervención para años bisiestos. La identificación alcanzada por `seas` es un proceso $ARIMA_{12}(1,1,1)(1,1,1)$, con dos intervenciones en febrero de 1999 y 2012.
 
 ```{r}
 summary(seas(DefEnfCer))
 ```
 
 
-Vamos a partir de la identificación obtenida a `seas` y `auto.arima` (eliminando los coeficientes no significativos): $log(DefEnfCer) \sim ARIMA_{12}(1,1,1)(1,1,1) + AI$.
+Vamos a partir de la identificación obtenida por `seas` (que es similar a la de `auto.arima` eliminando los coeficientes no significativos), incluyendo las tres variables ficticias que afectan un único mes: $log(DefEnfCer) \sim ARIMA_{12}(1,1,1)(1,1,1) + AI$.
 
 \
 
@@ -131,7 +127,7 @@ autoplot(error, series="Error",
              lty = 2) + 
   scale_x_continuous(breaks= seq(1988, 2018, 2)) 
 ```
-Se observan tres valores claramente atípicos en mayo de 2001, junio de 2003 y enero de 2015. Además, hay otros candidatos a valor extremo, entre los que destacan marzo de 1989 y agosto de 2003. Procederemos a incluirlos en el modelo. Además, vamos a incluir febrero de 2015 que en una segunda ronda de análisis del residuo supera las las tres desviaciones típicas.
+Se observan tres valores claramente atípicos en mayo de 2001, junio de 2003 y enero de 2015. Además, hay otros candidatos a valor extremo, entre los que destacan marzo de 1989 y agosto de 2003. Procederemos a incluirlos en el modelo. Además, vamos a incluir febrero de 2015 que en una ronda posterior del análisis del residuo supera las tres desviaciones típicas.
 
 ```{r}
 d0501 <- 1*(cycle(DefEnfCer) == 5 & trunc(time(DefEnfCer)) == 2001)
@@ -150,7 +146,7 @@ DefEnfCerArima2 <- Arima(DefEnfCer,
 DefEnfCerArima2
 ``` 
 
-Aparentemente las variables de intervención incluidas son significativas. Este hecho lo contrastaremos más adelante. Por otro lado, ningún coeficiente del proceso Arima indica que este sea no estacionario o no invertible. Puedes obtener gráficamente el inverso de la raíces de los polinomios característicos (que deben caer dentro del círculo unidad) con `plot(DefEnfCerArima2)`.
+Aparentemente las variables de intervención incluidas son significativas, exceptuando la de marzo de 1989. Este hecho lo contrastaremos más adelante. Por otro lado, ningún coeficiente del proceso Arima indica que este sea no estacionario o no invertible. Puedes obtener gráficamente el inverso de la raíces de los polinomios característicos (que deben caer dentro del círculo unidad) con `plot(DefEnfCerArima2)`.
 
 Por otro lado, el análisis gráfico del residuo indica que aún hay candidatos a valores atípicos. Aunque ninguno alcanza las tres desviaciones típicas, al menos dos de ellos están muy cerca. Sin embargo, vamos a dar por concluido este proceso.
 
@@ -168,7 +164,7 @@ autoplot(error, series="Error",
              lty = 2) + 
   scale_x_continuous(breaks= seq(1988, 2018, 2)) 
 ```
-Por último, veamos si todos los coeficientes del modelo son significativos. Aunque el coeficiente del efecto de marzo de 1989 no lo es al 5%, si lo es al 10% así que optamos por dejarlo.
+Por último, veamos si todos los coeficientes del modelo son significativos.
 
 ```{r}
 for(i in 1:length(coef(DefEnfCerArima2))) {
@@ -180,11 +176,13 @@ for(i in 1:length(coef(DefEnfCerArima2))) {
 }
 ```
 
+Aunque el coeficiente del efecto de marzo de 1989 no es significativo al 5%, si los es al 10% así que optamos por dejarlo.
+
 \
 
 ## Validación
 
-Analizando los criterios de bondad de ajuste se tiene que: el error medio (ME) `r round(accuracy(DefEnfCerArima2)[1],2)` es prácticamente cero por lo que no parece que haya sesgo en las predicciones; en media nos equivocamos en `r round(accuracy(DefEnfCerArima2)[2],0)` defunciones (RMSE) y el error porcentual medio es `r round(accuracy(DefEnfCerArima2)[5],1)`%, muy bajo.
+Analizando los criterios de bondad de ajuste se tiene que: el error medio (ME), igual a `r round(accuracy(DefEnfCerArima2)[1],2)`, es prácticamente cero por lo que no parece que haya sesgo en las predicciones; en media nos equivocamos en `r round(accuracy(DefEnfCerArima2)[2],0)` defunciones (RMSE); y el error porcentual medio es `r round(accuracy(DefEnfCerArima2)[5],1)`%, muy bajo.
 
 ```{r,eval=FALSE}
 accuracy(DefEnfCerArima2)
@@ -215,11 +213,11 @@ El error muestra ser incorrelado, homocedástico y seguir una distribución norm
 
 ## Ecuación del modelo identificado
 
-Ahora que ya hemos dado por válido el modelo, veamos cuál es su ecuación e interpretación. 
+Ahora que ya hemos dado por válido el modelo, veamos cuál es su ecuación. 
 
 El __modelo teórico__ es
 $$(1 - \phi_1 L)(1 - \phi_{12}L^{12})(1-L)(1-L^{12})log(DefEnfCer_t) =(1+\theta_1 L)(1 + \theta_{12}L^{12})\varepsilon_t +AI.$$
-Debido a la complejidad del modelo, no vamos a desarrollarlo ni interpretarlo.
+Debido a la complejidad del modelo, no vamos a desarrollarlo, ni interpretarlo.
 
 \
 
@@ -251,16 +249,16 @@ El método de Alisado exponencial, aplicado sobre el logaritmo de las defuncione
 summary(ets(DefEnfCer, lambda = 0))
 ```
 
-Para determinar si la aplicación de modelos Arima mejora sustancialmente la calidad de las predicciones, vamos a aplicar la metodología de origen de predicción móvil para estimar la capacidad predictiva del modelo Arima y compararla con el modelo de Alisado. 
+Vamos a determinar si la aplicación de modelos Arima mejora la calidad de las predicciones lo suficiente como para justificar su uso --frente a los métodos de alisado, mucho más sencillos. Para ello, aplicaremos la metodología de origen de predicción móvil para estimar la capacidad predictiva del modelo Arima y compararla con el modelo de Alisado. 
 
 ```{r}  
 k <- 120                   
 h <- 12                    
 T <- length(DefEnfCer)     
-s<-T - k - h               
+s <- T - k - h               
 
-mapeArima <- matrix(NA, s, h)
-mapeAlisado <- matrix(NA, s, h)
+mapeArima <- matrix(NA, s + 1, h)
+mapeAlisado <- matrix(NA, s + 1, h)
 
 X <- cbind(d0299, d0105, d0215, d0212, d0501, d0603, d0115, d0389, d0803)
 
@@ -290,12 +288,12 @@ for (i in 0:s) {
   if (!is.element("try-error", class(fit))) {
     if (length(X.train) > 0) fcast <- forecast(fit, h = h, xreg = X.test) else
       fcast <- forecast(fit, h = h)
-    mapeArima[i,] <- 100*abs(test.set - fcast$mean)/test.set
+    mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
   }
   
   fit <- ets(train.set, lambda = 0, model = "AAA", damped = FALSE)
   fcast<-forecast(fit, h = h)
-  mapeAlisado[i,] <- 100*abs(test.set - fcast$mean)/test.set
+  mapeAlisado[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
 }
   
 errorArima <- colMeans(mapeArima, na.rm = TRUE)

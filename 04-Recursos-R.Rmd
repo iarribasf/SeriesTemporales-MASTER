@@ -28,6 +28,8 @@ Durante el curso usaremos diferentes ficheros de datos para los ejemplos y para 
 - [**Consumo de alimentos per cápita**](series/alimentacionpc.csv): Consumo alimentario en hogar per cápita en España. Esta serie está construida a partir de la serie de consumo alimentario en hogar (fuente Ministerio de Agricultura, Alimentación y Medio Ambiente), y la serie de población (fuente Instituto Nacional de Estadística). Es una serie anual de 1987 a 2018 y la unidad es el Kg per cápita.
 - [**Producción de Chocolate en Australia**](series/Chocolate.csv): Producción de chocolate en Australia desde enero de 1958 hasta diciembre de 1994.
 - [**Defunciones por enfermedades cerebrovasculares**](series/Enfermedades cerebrovasculares.csv): Número de defunciones causadas por enfermedades cerebrovasculares (fuente Instituto Nacional de Estadística). Es una serie mensual de enero de 1980 a diciembre de 2018.
+- [**Pasajeros en transporte urbano**](series/Pasajeros.csv): Número de pasajeros en transporte urbano en España (fuente Instituto Nacional de
+Estadística). Serie mensual de 1996 a diciembre de 2019
 
 \
 
@@ -48,7 +50,7 @@ Tienes el código para los temas de teoría aquí:
 
 \
 
-Para el ejemplo tienes el código aquí:
+Para el ejemplo de Defunciones por enfermedades cerebrovasculares tienes el código aquí:
 
 - [**Código para el ejemplo del tema 1**](codigo/Codigo Ejemplo 1.R)
 - [**Código para el ejemplo del tema 2**](codigo/Codigo Ejemplo 2.R)
@@ -56,6 +58,7 @@ Para el ejemplo tienes el código aquí:
 - [**Código para el ejemplo del tema 4**](codigo/Codigo Ejemplo 4.R)
 - [**Código para el ejemplo del tema 5**](codigo/Codigo Ejemplo 5.R)
 
+Y para el ejemplo de Pasajeros en transporte urbano [aquí](codigo/Codigo Ejemplo Pasajeros.R)
 \
 
 Y si quieres todos los ficheros de código de golpe aqui:

@@ -243,8 +243,8 @@ h <- 12
 T <- length(nacimientos)
 s<-T - k - h            
 
-mapeArima <- matrix(NA, s, h)
-mapeAlisado <- matrix(NA, s, h)
+mapeArima <- matrix(NA, s + 1, h)
+mapeAlisado <- matrix(NA, s + 1, h)
 
 X <- cbind(Bisiestos, d1206, d0408, d0111, d0616)
 
@@ -274,11 +274,11 @@ for (i in 0:s) {
   if (length(X.train) > 0) fcast <- forecast(fit, h = h, xreg = X.test) else
     fcast <- forecast(fit, h = h)
   
-  mapeArima[i,] <- 100*abs(test.set - fcast$mean)/test.set
+  mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
   
   fit <- ets(train.set, lambda = 0, model = "AAA", damped = TRUE)
   fcast<-forecast(fit, h = h)
-  mapeAlisado[i,] <- 100*abs(test.set - fcast$mean)/test.set
+  mapeAlisado[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
 }
   
 errorArima <- colMeans(mapeArima)

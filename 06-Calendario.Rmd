@@ -7,16 +7,18 @@ output:
     toc: false
 ---
 
-<br><br>
+\
+\
 
 
 El módulo de Series Temporales esta distribuido en 10 sesiones teórico/prácticas. En esta página es un **documento vivo** que irá indicando las actividades que se van a realizar en cada sesión.
 
-Si ahora estamos al inicio del curso básicamente se indica qué temas veremos en cada sesión. Pero si estamos con el curso ya avanzado se verá en detalle qué se ha realizado cada una de las sesiones pasadas y los objetivos de la próxima sesión.
+Si ahora estamos al inicio del curso básicamente se indica qué temas veremos en cada sesión. Pero si estamos con el curso ya avanzado se verá en detalle qué se ha realizado en cada una de las sesiones pasadas y los objetivos de la próxima sesión.
 
 ______________________
 
-<br><br>
+\
+\
 
 
 ### Sesión 1: 02/02/2021
@@ -61,5 +63,7 @@ ______________________
 * A descansar
 
 
-<br><br>
-<br><br>
+\
+\
+\
+\

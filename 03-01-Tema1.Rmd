@@ -3,19 +3,19 @@ title: "Series Temporales: Introducción"
 subtitle: "Máster de Bioestadística (Modelización Estadística)"
 author: "Iván Arribas (Depto. Análisis Económico. Universitat de València)"
 date: "Curso 2020-21"
-output: 
+output:
   html_document:
-    theme: cerulean
-    highlight: pygments 
-    fig_caption: false
+    code_download: yes
     df_print: kable
-    toc: true
+    fig_caption: no
+    highlight: pygments
+    number_sections: yes
+    self_contained: yes
+    theme: cerulean
+    toc: yes
     toc_depth: 2
-    toc_float: 
-      collapsed: true
-    number_sections: true
-    self_contained: true
-    code_download: true
+    toc_float:
+      collapsed: yes
 ---
 
 ```{r chunk_setup, echo = FALSE}
@@ -34,7 +34,6 @@ options(scipen = 999) #- para quitar la notacion cientifica
 ```
 
 ```{r librerias, echo = FALSE}
-library("RColorBrewer")
 library(forecast)
 library(ggplot2); theme_set(theme_bw())
 library(gridExtra)
@@ -53,12 +52,12 @@ Las __series temporales__ se analizan para entender el pasado y predecir el futu
 
 La predicción de series temporales es una herramienta a la hora de establecer políticas sociales, empresariales...
 
-/
-/
+\
+\
 
 # Series Temporales
 
-/
+\
 
 ## Definición
 
@@ -73,7 +72,7 @@ El fechado varía en su frecuencia, que puede ser anual (baja frecuencia), trime
 
 En este curso aprenderemos a ajustar modelos a series temporales para su posterior análisis y predicción.
 
-/
+\
 
 ## Proceso generador de datos
 
@@ -120,11 +119,11 @@ autoplot(dt, series="Determinista",
 
 En este curso se asumirá en todo momento que la serie temporal tiene una componente estocástica. 
 
-/
+\
 
 ## Lectura de datos y representación gráfica
 
-Antes de continuar vamos a leer en `R` dos de las series que usaremos de ejemplo en este tema: número de títulos (libros y folletos) publicados anualmente en España y nacimientos mensuales en España.
+Antes de continuar vamos a importar en `R` dos de las series que usaremos de ejemplo en este tema: número de títulos (libros y folletos) publicados anualmente en España y nacimientos mensuales en España.
 
 ### Títulos publicados en España {-}
 
@@ -135,9 +134,9 @@ libros <- read.csv2("./series/libros.csv", header = TRUE)
 libros <- ts(libros["libros"], start = 1993, frequency  = 1)
 ```
 
-Usamos para leer los datos `read.csv2`, indicando que la primera línea tiene el nombre de las variables. Esta función asume que el separador decimal es la coma "," y que en caso de leerse más de una columna, el separador entre ellas es el punto y coma ";". Si el separador decimal es el punto "." y el separador de columnas en la coma ",", debes usar `read.csv`. En cualquiera de estas funciones, puedes modificar el separador decimal por medio del argumento `dec`; también puedes usar el argumento `sep` para indicar el carácter usado como separador de columnas.
+Usamos para leer los datos `read.csv2`, indicando que la primera línea tiene el nombre de las variables. Esta función asume que el separador decimal es la coma "," y que el separador entre variables es el punto y coma ";". Si el separador decimal es el punto "." y el separador de variables es la coma ",", debes usar `read.csv`. En cualquiera de estas funciones, puedes modificar el separador decimal por medio del argumento `dec`; también puedes usar el argumento `sep` para indicar el carácter usado como separador de variables.
 
-La función `ts` convierte un objeto a la clase _serie temporal_ y pertenece a la librería `stats`.
+La función `ts`, de la librería `stats`, convierte un objeto (vector o matriz) a la clase _serie temporal_.
 
 * Con `start` indicamos el fechado del primer dato.
 * Con `frequency` indicamos la frecuencia, que en este caso es un dato por año.
@@ -145,7 +144,7 @@ La función `ts` convierte un objeto a la clase _serie temporal_ y pertenece a l
 
 Podemos dibujar la serie Libros con la función `plot` o mejor con `autoplot`. Esta última está en el paquete `forecast`.
 
-En general, las funciones gráficas que se vamos a usar pertenecen a la libraría `forecast`, pero en ocasiones las ampliaremos con funciones de la librería `ggplot2`. Te recomiendo cargar estas dos librerias desde el inicio. En casi todos los casos, existe una versión en la librería `stats` de la función gráfica usada. Además, usaremos las librerias `grid` y `gridExtra` para componer un conjunto de gráficas en una misma figura. 
+En general, las funciones gráficas que vamos a usar pertenecen a la libraría `forecast`, pero en ocasiones las ampliaremos con funciones de la librería `ggplot2`. Te recomiendo cargar estas dos librerías desde el inicio. En casi todos los casos existe una versión de la función gráfica usada en la librería `stats`. Además, usaremos las librerías `grid` y `gridExtra` para combinar un conjunto de gráficas en una misma figura. 
 
 ```{r, eval = FALSE}
 library(forecast)
@@ -187,7 +186,7 @@ autoplot(nacimientos,
 ```
 
 
-/
+\
 
 ## Funciones útiles para objetos de clase `ts`
 
@@ -207,12 +206,12 @@ head(time(nacimientos), n = 48)  #Mostramos sólo los 4 primeros años
 head(cycle(nacimientos), n = 48) #Mostramos sólo los 4 primeros años
 ```
 
-/
-/
+\
+\
 
 # Componentes de una serie temporal y su combinación
 
-/
+\
 
 ## Tendencia, $T_t$
   
@@ -238,7 +237,7 @@ Respecto del __proceso generador__ de la tendencia, puede ser:
   
 En la figura 4 se muestran ejemplos de series temporales según dirección del movimiento y pendiente de la tendencia. Recuerda que en la figura 1 se mostraban ejemplos de series temporales según su proceso generador.
 
-/
+\
   
 ```{r, echo=FALSE}
 set.seed(123456)
@@ -285,11 +284,11 @@ grid.arrange(
 )
 ```
 
-/
+\
 
 Si la serie temporal es suficientemente larga es posible observar cambios en la dirección del movimiento de la tendencia que definen los __ciclos__.
 
-/
+\
 
 ## Ciclo, $C_t$
 
@@ -299,7 +298,7 @@ Por ejemplo, los ciclos económicos, los cambios climáticos asociados al fenóm
 
 ![](./imagenes/ciclo.png)
 
-/
+\
 
 La serie de __Nacimientos__ es lo suficientemente larga como para observarse un ciclo completo, que queda identificado por dos cambios de tendencia consecutivos de signo opuesto:
 
@@ -319,7 +318,7 @@ autoplot(nacimientos,
   annotate("text", x=2014, y=58000, label="Tendencia Decreciente")
 ```
 
-
+\
 
 ## Estacionalidad, $S_t$
 
@@ -329,7 +328,7 @@ El __orden de la periodicidad lo denominaremos $m$__, por tanto el patrón estac
 
 La componente estacional surge por factores climatológicos, institucionales o sociales.
 
-En ocasiones no es fácil determinar la existencia de estacionalidad o su orden. En este caso, se puede usar el análisis espectral para analizar esta componente, que no veremos en este curso. La librería `forecast` dispone de la función `findfrequency` que devuelve la frecuencia dominante de una serie usando el análisis espectral.
+En ocasiones no es fácil determinar la existencia de estacionalidad o su orden. En este caso, se puede usar el análisis espectral, que no veremos en este curso, para analizar esta componente. La librería `forecast` dispone de la función `findfrequency` que devuelve la frecuencia dominante de una serie usando el análisis espectral.
 
 La serie Nacimientos tiene una estacionalidad de orden 12, causada principalmente por el número de días del mes. Los valles en la figura 7 corresponden a febrero, que por tener 28 días (o 29 en años bisiestos) presenta  menor número de nacimientos.
 
@@ -362,7 +361,6 @@ Si el fechado de la serie es de muy alta frecuencia, puede ocurrir que se superp
 
 ![](./imagenes/TripleFechado.png)
 
-
 \
 
 ## Intervención, $I_t$
@@ -374,7 +372,7 @@ Por su relación con fechas concretas, podemos distinguir dos tipos:
 * _Efectos calendario_: Navidad y festivos en series diarias; Semana Santa, días laborales y febrero bisiesto en series mensuales.
 * _Otros efectos no sujetos a calendario_: catástrofes, huelgas, etc.
 
-En la serie Nacimientos, los meses de febrero bisiestos (puntos rojos) presentan un número de nacimientos mayor que los febreros no bisiestos. Para algunos años este hecho es mas claro (véase figura 10).
+En la serie Nacimientos, los meses de febrero bisiestos (puntos rojos) presentan un número de nacimientos mayor que los meses de febrero no bisiestos. Para algunos años este hecho es mas claro (véase figura 10).
 
 ```{r,echo=FALSE}
 autoplot(nacimientosb,
@@ -391,9 +389,9 @@ autoplot(nacimientosb,
 
 Por su naturaleza, podemos distinguir tres tipos básicos de intervención (aunque hay más):
 
-* _Pulso (Additive Outlier)_: En un periodo aislado la serie toma un valor anómalo. Por ejemplo, un día el cajero automático no funciona y la extracción de dinero es nula. Véase figura 11, panel derecho
-* _Cambio transitorio (Transitory Change)_: En un periodo un _shock_ genera un valor anómalo en la serie y el efecto del _shock_ va desapareciendo poco a poco. Por ejemplo, un brote infeccioso aumenta el número de muertes en una población, pero al tomarse medidas sanitarias las muertes vuelven poco a poco al nivel previo al brote. Véase figura 11, panel central
-* _Cambio permanente (Level Shift)_: En un periodo la serie cambia de nivel y permanece de forma permanente en este nuevo nivel. Por ejemplo, enfrente de una tienda abre la competencia, de forma que sus ventas descienden bruscamente y de forma permanente. Véase figura 11, panel izquierdo.
+* _Pulso (Additive Outlier)_: En un periodo aislado la serie toma un valor anómalo. Por ejemplo, un día el cajero automático no funciona y la extracción de dinero es nula. Véase figura 11, panel derecho.
+* _Cambio transitorio (Transitory Change)_: En un periodo un _shock_ genera un valor anómalo en la serie y el efecto del _shock_ va desapareciendo poco a poco. Por ejemplo, un brote infeccioso aumenta el número de muertes en una población, pero al tomarse medidas sanitarias las muertes vuelven poco a poco al nivel previo al brote. Véase figura 11, panel central.
+* _Cambio permanente (Level Shift)_: En un periodo la serie cambia de nivel y permanece de forma permanente en este nuevo nivel. Por ejemplo, enfrente de una tienda abre la competencia, de forma que sus ventas descienden bruscamente de forma permanente. Véase figura 11, panel izquierdo.
     
 ```{r,echo=FALSE, warning=FALSE, message=FALSE, fig.height=3}
 AO <- rep(0, 100)
@@ -477,7 +475,7 @@ Podemos _manipular_ una serie temporal con diferentes fines:
   
 * __extraer la tendencia__ (eliminando la estacionalidad), por ejemplo, pasando de una serie mensual a una anual.
 * __extraer la estacionalidad__ (eliminando la tendencia) de forma sencilla, aunque no muy precisa.
-* __recortar__ una serie para obtener una submuestra.
+* __recortar__ una serie para obtener una sub-muestra.
 * __extraer una subserie__ correspondiente a un único periodo estacional. Por ejemplo, los nacimientos en febrero o la extracción de dinero en fin de semana.
 
 
@@ -489,7 +487,7 @@ Estas operaciones nos permitirán mejorar nuestra capacidad descriptiva de la se
 
 Si agregamos la serie, obteniendo un dato por año si la serie es mensual o un dato por semana si es diaria, obtenemos una nueva serie sin estacionalidad, solo con _tendencia_. 
 
-Dependiendo de la naturaleza de la serie, convendrá agregar sumando los datos (consumo eléctrico, títulos publicados, viajeros transportados, nacimiento) o sacando la media (temperatura, número de parados).
+Dependiendo de la naturaleza de la serie, convendrá agregar sumando los datos (consumo eléctrico, títulos publicados, viajeros transportados, nacimientos) o sacando la media (temperatura, número de parados).
 
 Veamos como extraer la tendencia de la serie Nacimientos usando la función `aggregate` con el argumento `FUN = sum`.
 
@@ -515,7 +513,7 @@ La función `aggregate` aplicada a una serie temporal agrega los datos de cada p
 
 * Una serie trimestral o mensual la transforma en anual, una serie diaria en semanal.
 * La función a usar dependerá de la naturaleza de los datos y del objetivo perseguido (`FUN=sum`, `FUN=mean`, `FUN=sd`...)
-* Tiene un uso más amplio en `R`. Usa la función `help` para aprenderlo. 
+* Esta función tiene un uso más amplio en `R`. Usa la función `help` para aprenderlo. 
 
 \
 
@@ -534,7 +532,7 @@ ggseasonplot(nacimientosb,
              year.labels.left=TRUE,
              xlab = "",
              ylab = "Nacimientos",
-             main = "Figura 16. Gráfico estacional de lineas.\nNacimientos")
+             main = "Figura 16. Gráfico estacional de lineas")
 ```
 
 ```{r, fig.width=8}
@@ -554,7 +552,7 @@ ggsubseriesplot(nacimientosb) +
   ggtitle("Figura 18. Gráfico estacional de subseries.\nNacimientos")
 ```
 
-Las gráficas ayudan a poder describir y entender un poco mejor la componente estacional. Sin embargo, si deseamos estimar dicha componente, debemos proceder de otra forma.
+Las gráficas ayudan a describir y entender un poco mejor la componente estacional. Sin embargo, si deseamos estimar dicha componente, debemos proceder de otra forma.
 
 La siguiente sintaxis usa la función `tapply` para estimar numéricamente la componente estacional. Básicamente, calcula para cada mes (argumento `cycle(nacimientosb)`) la media (`FUN = mean`) del cociente `nacimientosb / mean(nacimientosb)`. Si el esquema fuera aditivo se usaría la expresión `nacimientosb - mean(nacimientosb)`.
 
@@ -606,7 +604,7 @@ Hay múltiples formas de realizar una descomposición. Aquí veremos dos de ella
 
 Además, `R` proporciona el método de descomposición que utiliza el _US Census Bureau and Statistics Canada_, denominado __X11__, y el método que utiliza el _Banco de España_, denominado __SEATS__ (Seasonal Extraction in ARIMA Time Series), aunque estos métodos solo son válidos para series mensuales y trimestrales.
 
-En origen los métodos de descomposición no sirven para realizar predicciones, pero actualmente se usan también con este fin (véase las funciones `stlm` y `stlf` del paquete `forecast`). A lo largo del curso veremos otros métodos de descomposición que si permitirán realizar predicciones (Tema 2).
+En origen los métodos de descomposición no sirven para realizar predicciones, pero actualmente se usan también con este fin (véase las funciones `stlm` y `stlf` del paquete `forecast`).
 
 \
 
@@ -616,24 +614,31 @@ En origen los métodos de descomposición no sirven para realizar predicciones, 
 
 La función `decompose` estima las componentes de tendencia y estacionalidad usando el método de medias móviles. En concreto `decompose` sigue los siguientes pasos para obtener cada componente:
 
-__Paso 1:__ Se estima la tendencia de una serie con orden estacional par a partir de una media móvil ponderada de orden $m + 1$, y si el orden estacional es impar a partir de una  media móvil de orden $m$. En concreto,
+__Paso 1:__ Se estima la tendencia de una serie a partir de una media móvil centrada. Si el orden estacional es par, la media móvil es ponderada de orden $m + 1$; y si el orden estacional es impar, la media móvil es de orden $m$. En concreto,
 
 * Si $m=2k$: $\hat{T}_t = \frac{\frac{1}{2}y_{t-k} + y_{t-k+1} + \ldots + y_t + \ldots +  y_{t+k-1} + \frac{1}{2} y_{t+k}}{m}$,
 * Si $m=2k+1$: $\hat{T}_t = \frac{y_{t-k} + y_{t-k+1} + \ldots + y_t + \ldots +  y_{t+k-1} + y_{t+k}}{m}$.
 
-__Paso 2:__ Para un modelo con esquema aditivo calculamos la serie sin tendencia como $y_t - \widehat{T}_t$ y para un esquema multiplicativo como $y_t/ \widehat{T}_t$.
+__Paso 2:__ Para un modelo con esquema aditivo calculamos la serie sin tendencia como $y_t - \hat{T}_t$ y para un esquema multiplicativo como $y_t/ \hat{T}_t$.
 
-__Paso 3:__ Para estimar la componente estacional para cada periodo estacional, calculamos el valor medio de la serie sin tendencia (paso 2) independientemente para los datos de cada estación. Así, obtenemos un vector con la estimación de las $m$ componentes estacionales. 
+__Paso 3:__ Para estimar la componente estacional para cada periodo estacional, calculamos el valor medio de la serie sin tendencia (paso 2) de forma independiente para los datos de cada estación. Así, obtenemos un vector con la estimación de las $m$ componentes estacionales. 
 
-Después estos valores se ajustan para que sumen 0 (esquema aditivo) o para que sumen $m$ (esquema multiplicativo). La componente estacional se obtiene repitiendo el vector de $m$ componentes ajustadas hasta alcanzar la longitud de la serie original. Esto da $\widehat{S}_t$
+Después estos valores se ajustan para que sumen 0 (esquema aditivo) o para que sumen $m$ (esquema multiplicativo). La componente estacional se obtiene repitiendo el vector de $m$ componentes ajustadas hasta alcanzar la longitud de la serie original. Esto da $\hat{S}_t$
 
-__Paso 4:__ El residuo se obtiene como $\widehat{R}_t = y_t - \widehat{T}_t - \widehat{S}_t$ (esquema aditivo) o $\widehat{R}_t = y_t / (\widehat{T}_t \cdot \widehat{S}_t)$ (esquema multiplicativo)
+__Paso 4:__ El residuo se obtiene como $\hat{R}_t = y_t - \hat{T}_t - \hat{S}_t$ (esquema aditivo) o $\hat{R}_t = y_t / (\hat{T}_t \cdot \hat{S}_t)$ (esquema multiplicativo)
 
 \
 
-La siguiente tabla muestra un ejemplo de descomposición aditiva por medias móviles para una serie simulada de orden estacional 5. La dos primeras columnas indican la estación de cada dato y el valor de la serie, para un total de 25 datos. La columna _Ten_ ha sido obtenida siguiendo el paso 1 como una media móvil de orden 5: 
+La siguiente tabla muestra un ejemplo de descomposición aditiva por medias móviles para una serie simulada de orden estacional 5. 
+
+* La dos primeras columnas indican la estación de cada dato y el valor de la serie, para un total de 25 datos. La columna _Ten_ ha sido obtenida siguiendo el paso 1 como una media móvil de orden 5: 
 $$Ten_t = (Serie_{t-2} + Serie_{t-1} + Serie_{t} + Serie_{t+1} + Serie_{t+2})/5.$$ 
-La serie sin tendencia, columna _Est + Res_, se obtiene restando a la columna _Serie_ la columna _Ten_, tal y como se indica en el paso 2. Para el cálculo de la columna _Est_, que repite de forma periódica la primera estimación de las 5 componentes estacionales, se sigue el paso 3. Para cada estación se promedian los valores de la columna _Est + Res_ correspondientes a dicha estación. La suma de los cinco valores de la componente estacional así obtenidos vale 1.1. Para ajustar la componente estacional para que sume 0 a cada valor de la componente estacional se le resta su suma actual, 1.1, dividida por 5, el número de estaciones. El resultado de este ajuste aparece en la columna _Est corregida_ que será la componente estacional final. Siguiendo el paso 4, la columna _Res_ se calcula restando a la serie original (columna _Serie_) la suma de la tendencia y la estacionalidad (columnas _Ten_ y _Est corregida_). Observa que en el proceso de descomposición se han perdido 4 datos para la tendencia y el residuo, dos al inicio de la serie y dos al final.
+* La serie sin tendencia, columna _Est + Res_, se obtiene restando a la columna _Serie_ la columna _Ten_, tal y como se indica en el paso 2. 
+* Para el cálculo de la columna _Est_, que repite de forma periódica la primera estimación de las 5 componentes estacionales, se sigue el paso 3. Para cada estación se promedian los valores de la columna _Est + Res_ correspondientes a dicha estación. La suma de los cinco valores de la componente estacional así obtenidos vale 1.1. 
+* Para ajustar la componente estacional para que sume 0 a cada valor de la componente estacional se le resta su suma actual, 1.1, dividida por 5, el número de estaciones. El resultado de este ajuste aparece en la columna _Est corregida_ que será la componente estacional final. 
+* Siguiendo el paso 4, la columna _Res_ se calcula restando a la serie original (columna _Serie_) la suma de la tendencia y la estacionalidad (columnas _Ten_ y _Est corregida_). 
+
+Observa que en el proceso de descomposición se han perdido 4 datos para la tendencia y el residuo, dos al inicio de la serie y dos al final.
 
 ```{r, echo = FALSE}
 set.seed(324535)
@@ -663,12 +668,9 @@ datos
 
 \
 
-Los principales inconvenientes de este método de descomposición son:
+Los principales **inconvenientes de este método** de descomposición son que se perderán datos al inicio y final de la serie --por ejemplo, si la serie es mensual se perderán seis datos al inicio y seis al final--, y que asume que la componente estacional no ha variado en el tiempo. Sin embargo, sabemos que para muchas series sociales y de consumo la componente estacional se ha suavizando con el tiempo.
 
-* se perderán datos al inicio y final de la serie. Por ejemplo, si la serie es mensual se perderán seis datos al inicio y seis al final. 
-* asume que la componente estacional no ha variado en el tiempo. Sin embargo, sabemos que para muchas series sociales y de consumo la componente estacional se ha suavizando con el tiempo.
-
-Por el contrario, una se las ventajas de este método, además de su sencillez de cálculo, es que se puede usar tanto para esquemas aditivos (`type="addi"`) como multiplicativos (`type="multi"`).
+Por el contrario, una se las **ventajas de este método**, además de su sencillez de cálculo, es que se puede usar tanto para esquemas aditivos (`type="addi"`) como multiplicativos (`type="multi"`).
 
 La función `decompose` genera un objeto con las siguientes componentes:
 
@@ -694,9 +696,14 @@ autoplot(nacDesAdi,
 ```
 
 Es fácil verificar que si se suma para cada fecha la tendencia, las estacionalidad y el residuo se obtiene exactamente el valor de la serie:
-```{r}  
+```{r, eval = FALSE}  
 summary(nacimientos - trendcycle(nacDesAdi) - seasonal(nacDesAdi) 
         - remainder(nacDesAdi))
+```
+
+```{r, echo = FALSE}  
+tmp <- nacimientos - trendcycle(nacDesAdi) - seasonal(nacDesAdi) - remainder(nacDesAdi)
+summary(as.numeric(tmp))
 ```
 
 A continuación, tienes un ejemplo del manejo de las componentes extraídas para hacer una gráfica.
@@ -744,23 +751,29 @@ autoplot(nacDesMul,
 
 Observa que por tratarse de un esquema multiplicativo en la figura 22 la componente estacional se mueve alrededor del valor 1 y debe interpretarse como una variación porcentual. Igualmente, el residuo también gira en torno al valor 1.
 
-Las componentes estacionales se deben interpretar como incrementos porcentuales: en febrero nacen un 9.1% menos de niños y en octubre un 3.2% más, respecto de la media anual. Además, la suma de las componentes estacionales será 12.
+Las componentes estacionales se deben interpretar como incrementos porcentuales: en febrero nacen un 9.1% menos de niños y en octubre un 3.3% más, respecto de la media anual. Además, la suma de las componentes estacionales será 12.
 
 ```{r}  
 nacDesMul$figure
 sum(nacDesMul$figure)
 ```
 
+Para finalizar, en la figura 23 se muestra la primera componente estacionalidad obtenida previamente con `tapply` como una simple media por estación, y la obtenida ahora con `decompose` bajo esquema multiplicativo. Como se puede observar, la estimación de la componente estacional depende del método utilizado. En este caso, parece que las estimaciones obtenidas con `tapply` son más _extremas_ que las obtenidas con `decompose` por alejarse más del nivel de referencia 1.
+
 ```{r}
-ggplot() + 
-  geom_line(aes(x = 1:12, y = nacDesMul$figure)) + 
+ggplot() +
+  geom_line(aes(x = 1:12, y = componenteEstacional, colour = "black")) + 
+  geom_line(aes(x = 1:12, y = nacDesMul$figure, colour = "red")) + 
   geom_hline(yintercept = 1, colour = "blue", lty = 2) +
-  ggtitle("Figura 24: Componente estacional de Nacimientos (esquema multiplicativo)") +
+  ggtitle("Figura 23. Componente estacional de Nacimientos") +
   xlab("") +
-  ylab("Componente estacional") +
+  ylab("Efecto estacional") +
   scale_x_continuous(breaks= 1:12, 
                      labels = c("Ene", "Feb", "Mar", "Abr", "May", "Jun", 
-                                "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")) 
+                                "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")) +
+  scale_color_discrete(name = "Componente estacional", 
+                       labels = c("Descriptiva simple", "Medias móviles")) +
+  theme(legend.position=c(0.98,0.02), legend.justification=c(1,0))
 ```
 
 \
@@ -769,7 +782,7 @@ ggplot() +
 
 ### Ideas generales {-}
 
-La función `stl` estima las componentes de tendencia y estacionalidad a partir de regresiones locales ponderadas (técnica conocida como loess)
+La función `stl` estima las componentes de tendencia y estacionalidad a partir de regresiones locales ponderadas (técnica conocida como _loess_)
 
 Sus ventajas son:
 
@@ -802,7 +815,7 @@ head(nacStl$time.series)
 ```{r, fig.height= 7}  
 autoplot(nacStl,
          xlab = "",
-         main = "Figura 25. Descomposición de Nacimientos por regresores locales ponderados")
+         main = "Figura 24. Descomposición de Nacimientos por regresores locales ponderados")
 ```
 
 Podemos ver numéricamente las componentes estacionales, que de nuevo deben sumar cero.
@@ -811,7 +824,7 @@ head(seasonal(nacStl), 12)
 sum(head(seasonal(nacStl), 12))
 ```
 
-Si en lugar de `periodic`, fijamos el parámetro `s.window` a un valor impar, por ejemplo 17, estaremos permitiendo que la estacionalidad cambien en el tiempo. La figura 26 muestra la componente estacional estimada previamente (bajo el supuesto de componente estacional constante) y la que se obtiene con el argumento `s.window = 17`. Para el periodo mostrado se observa que la amplitud estacional en la componente no constante se ha ido incrementado enel tiempo. Cuanto mayor es el valor (impar) de `s.window` más constante en el tiempo es la componente estacional. 
+Si en lugar de `periodic`, fijamos el parámetro `s.window` a un valor impar, por ejemplo 17, estaremos permitiendo que la estacionalidad cambien en el tiempo. La figura 25 muestra la componente estacional estimada previamente (bajo el supuesto de componente estacional constante) y la que se obtiene con el argumento `s.window = 17`. Para el periodo mostrado se observa que la amplitud estacional en la componente no constante se ha ido incrementado con el tiempo. Cuanto mayor es el valor (impar) de `s.window` más constante en el tiempo es la componente estacional. 
 
 ```{r, echo = FALSE} 
 nacStl17 <- stl(nacimientos[, 1], 
@@ -822,28 +835,10 @@ xx <- window(seasonal(nacStl), start = 1995, end = 2005 - 1/12)
 yy <- window(seasonal(nacStl17), start = 1995, end = 2005 - 1/12)
 autoplot(xx, series="s.window = 'periodic'",
          ylab = "Componente estacional",
-         main = "Figura 26. Componente estacional para Nacimientos") +
+         main = "Figura 25. Componente estacional para Nacimientos") +
   autolayer(yy, series="s.window = 17") +
   scale_colour_manual(values=c("s.window = 'periodic'"="black","s.window = 17"="red"))#,
                  #     breaks=c("s.window = 'periodic'","s.window = 17"))
-```
-
-Para finalizar, en la figura 27 se muestra la primera componente estacionalidad obtenida con `tapply` como una simple media por estación, y la obtenida con `decompose` bajo esquema multiplicativo. Como se puede observar, la estimación de la componente estacional depende del método utilizado. En este caso, parece que las estimaciones obtenidas con `tapply` son más _extremas_ que las obtenidas con `decompose` por alejarse más del nivel de referencia 1.
-
-```{r}
-ggplot() +
-  geom_line(aes(x = 1:12, y = componenteEstacional, colour = "black")) + 
-  geom_line(aes(x = 1:12, y = nacDesMul$figure, colour = "red")) + 
-  geom_hline(yintercept = 1, colour = "blue", lty = 2) +
-  ggtitle("Figura 27. Componente estacional de Nacimientos") +
-  xlab("") +
-  ylab("Efecto estacional") +
-  scale_x_continuous(breaks= 1:12, 
-                     labels = c("Ene", "Feb", "Mar", "Abr", "May", "Jun", 
-                                "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")) +
-  scale_color_discrete(name = "Componente estacional", 
-                       labels = c("Descriptiva simple", "Medias móviles")) +
-  theme(legend.position=c(0.98,0.02), legend.justification=c(1,0))
 ```
 
 \

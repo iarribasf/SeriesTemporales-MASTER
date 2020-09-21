@@ -37,11 +37,11 @@ El programa de la asignatura contiene 5 temas distribuidos en **10 sesiones de 5
 * Sesión 8 y 9:		Tema 5. Modelos ARIMA con estacionalidad
 * Sesión 10:		  Tutorías
 
-Puedes consultar la <a href="otros/GuiaDocenteSeriesTemporales_20_21.pdf">**Guía Docente**</a> de la asignatura para ver detalladamente el contenido de cada tema.
+Puedes consultar la <a href="otros/Programa_Series_Temporales_20_21.pdf">**Guía Docente**</a> de la asignatura para ver detalladamente el contenido de cada tema.
 
 Pasar de una sesión a la siguiente supone incrementar la complejidad de las técnicas empleadas para el análisis de una serie temporal de forma que podréis valorar con datos reales la relación entre complejidad--tiempo--resultados y optar por la metodología más adecuada.
 
-El desarrollo detallado de cada sesión lo podréis encontrar en la sección [Calendario](https://iarribasf.github.io/Series-Temporales-web-master/06-Calendario.html) de la página web. Esta es una sección viva, que se irá ampliado y modificando según avance el curso.
+El desarrollo detallado de cada sesión lo podréis encontrar en la sección [Calendario](https://iarribasf.github.io/SeriesTemporales-MASTER/06-Calendario.html) de la página web. Esta es una sección viva, que se irá ampliado y modificando según avance el curso.
 
 <br>
 
@@ -54,7 +54,7 @@ El desarrollo detallado de cada sesión lo podréis encontrar en la sección [Ca
 Dado el carácter eminentemente práctico del módulo, todas las sesiones se impartirán en el aula de informática, donde se alternará entre teoría y práctica según convenga:
 
 1. _Tiempo de teórica_: os plantearé los conceptos nucleares de cada tema, de forma precisa y rigurosa, en lenguaje natural, gráfico y formal. El material teórico lo podéis encontrar en la sección **Diapos**. 
-2. _Tiempo de práctica_: a partir del código y de los ficheros de datos que podéis encontrar en la sección [**Recursos de R**](https://iarribasf.github.io/Series-Temporales-web-master/04-Recursos-R.html) practicaréis los conceptos teóricos y aprenderéis el manejo de R para el análisis de series temporales.
+2. _Tiempo de práctica_: a partir del código y de los ficheros de datos que podéis encontrar en la sección [**Recursos de R**](https://iarribasf.github.io/SeriesTemporales-MASTER/04-Recursos-R.html) practicaréis los conceptos teóricos y aprenderéis el manejo de R para el análisis de series temporales.
 3. _Tiempo de evaluación_: tras cada tema realizaréis una breve prueba tipo test, con tiempo limitado, para valorar si habéis adquirido los conocimientos teóricos y las habilidades practicas básicas.
 4. _Trabajo práctico de evaluación_: también en clase os daré tiempo para realizar parte de los trabajos prácticos que servirán de evaluación del módulo.
 
@@ -62,7 +62,7 @@ Dado el carácter eminentemente práctico del módulo, todas las sesiones se imp
 
 Aunque tenéis a vuestra disposición los ordenadores del aula de informática, lo cierto es que cada vez resulta más aconsejable que os traigáis vuestro ordenador para trabajar.
 
-Todo el material necesario para este curso lo tenéis disponible en esta página web así como en [**Aula Virtual**](https://aulavirtual.uv.es). También podéis encontrar los detalles en la sección [Logística](https://iarribasf.github.io/Series-Temporales-web-master/02-Logistics.html) de la web.
+Todo el material necesario para este curso lo tenéis disponible en esta página web así como en [**Aula Virtual**](https://aulavirtual.uv.es). También podéis encontrar los detalles en la sección [Logística](https://iarribasf.github.io/SeriesTemporales-MASTER/02-Logistics.html) de la web.
 
 <br>
 

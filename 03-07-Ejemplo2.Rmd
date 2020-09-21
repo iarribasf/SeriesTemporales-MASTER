@@ -10,8 +10,6 @@ output:
     df_print: kable
     toc: true
     toc_depth: 2
-    toc_float: 
-      collapsed: true
     number_sections: true
     self_contained: true
     code_download: true
@@ -33,7 +31,6 @@ options(scipen = 999) #- para quitar la notacion cientifica
 ```
 
 ```{r librerias, echo = FALSE}
-library("RColorBrewer")
 library(forecast)
 library(ggplot2); theme_set(theme_bw())
 library(gridExtra)
@@ -168,6 +165,8 @@ autoplot(error,
 
 Se aprecian tres meses, febrero de 1999, enero de 2005 y febrero de 2012 en los que el residuo supera las tres desviaciones típicas porque el número de muertes por enfermedades cerebrovasculares fue muy superior al estimado por el modelo. Además, otros residuos cercanos a las tres desviaciones típicas son susceptibles de ser considerados intervención: enero de 1988, diciembre de 1990 y junio y agosto de 2003. 
 
+\
+
 ## Validación
 
 Ya hemos visto que el modelo comete un error próximo al 3.8%. Este valor es la estimación del _error en la previsión intra-muestral y a un periodo vista_. A fin de poder estimar mejor la capacidad predictiva del modelo vamos a estimar _el error de previsión extra-muestral a largo plazo_. Con este fin vamos a reserva tres años o 36 observaciones.
@@ -218,6 +217,8 @@ Los principales resultados muestran que:
 
 Podemos concluir que trabajar con el logaritmo de la serie no mejora sensiblemente la calidad de las previsiones a largo plazo.
 
+\
+
 ## Cambio del criterio de estimación de los parámetros
 
 Veamos los resultados de estimar los parámetros del modelo usando el criterio de minimizar el error cuadrático medio.
@@ -245,6 +246,9 @@ accuracy(mDefEnfCerIntraEtsPre, DefEnfCerExtra)
 
 De nuevo concluimos que, en este caso, el cambio de criterio para la estimación de los parámetros del modelo no mejora la calidad de las previsiones.
 
+\
+\
+
 # Validación cruzada para Series Temporales
 
 Hasta ahora hemos visto dos alternativas para evaluar la calidad de un método de predicción de series temporales, uno basado en predicciones intra-muestrales a un periodo vista y otro basado en predicciones extra-muestrales a largo plazo, ambas con sus inconvenientes.
@@ -269,10 +273,11 @@ Este procedimiento se denomina __origen de predicción móvil__ (_rolling foreca
 
 Cuando se aplica esta metodología hay que tener en cuenta que los resultados pueden depender del número $k$ de datos usados para la estimación del modelo.
 
+\
+
 ## Ejemplo: Defunciones por Enfermedades Cerebrovasculares
 
-Vamos a aplicar la metodología previa a la serie de Defunciones por Enfermedades Cerebrovasculares
-Recordemos que la serie va de enero de 1980 hasta diciembre de 2018, pero que se ha analizado desde enero de 1988. Se ha ajustado a un alisado exponencial ETS(M,A,M), con un error de predicción intra-muestral a un periodo vista del 3.8%.
+Vamos a aplicar la metodología previa a la serie de Defunciones por Enfermedades Cerebrovasculares.
 
 Asumimos que se precisan diez años para hacer una buena estimación, $k=120$, y que el horizonte temporal es un año, $h = 12$ meses. La siguiente rutina permite obtener el MAPE para previsiones con un horizonte temporal desde 1 mes hasta 12 meses.
   
@@ -282,14 +287,14 @@ h <- 12                  #Horizonte de las predicicones
 TT <- length(DefEnfCer)  #Longitud serie
 s <- TT - k - h          #Total de estimaciones
 
-mapeAlisado <- matrix(NA, s, h)
+mapeAlisado <- matrix(NA, s + 1, h)
 for (i in 0:s) {
   train.set <- subset(DefEnfCer, start = i + 1, end = i + k)
   test.set <-  subset(DefEnfCer, start = i + k + 1, end = i + k + h)
   
   fit <- ets(train.set, model = "MAM", damped = FALSE)
   fcast<-forecast(fit, h = h)
-  mapeAlisado[i,] <- 100*abs(test.set - fcast$mean)/test.set
+  mapeAlisado[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
 }
 
 errorAlisado <- colMeans(mapeAlisado)
@@ -307,7 +312,9 @@ La figura 6 muestra el error de previsión extra-muestral según el horizonte de
 
 Sin embargo, para previsiones a más largo plazo el error de predicción decrece, hasta situarse en el 4.3% en las previsiones a doce meses vista. Este comportamiento es un tanto anómalo.
 
-## Ejemplo: análisis alternativos
+\
+
+## Modelos alternativos
 
 ¿Podemos reducir el error extra-muestral de previsión si cambiamos las opciones por defecto de `ets`o la serie a analizar? La figura 7 muestra el error de previsión extra-muestral según el horizonte de previsión para los siguientes modelos (todos sin amortiguamiento):
 
@@ -326,12 +333,12 @@ h <- 12                  #Horizonte de las predicicones
 TT <- length(DefEnfCer)  #Longitud serie
 s <- TT - k - h          #Total de estimaciones
 
-mapeAlisado1 <- matrix(NA, s, h)
-mapeAlisado2 <- matrix(NA, s, h)
-mapeAlisado3 <- matrix(NA, s, h)
-mapeAlisado4 <- matrix(NA, s, h)
-mapeAlisado5 <- matrix(NA, s, h)
-mapeAlisado6 <- matrix(NA, s, h)
+mapeAlisado1 <- matrix(NA, s + 1, h)
+mapeAlisado2 <- matrix(NA, s + 1, h)
+mapeAlisado3 <- matrix(NA, s + 1, h)
+mapeAlisado4 <- matrix(NA, s + 1, h)
+mapeAlisado5 <- matrix(NA, s + 1, h)
+mapeAlisado6 <- matrix(NA, s + 1, h)
 
 for (i in 0:s) {
   train.set <- subset(DefEnfCer, start = i + 1, end = i + k)
@@ -339,27 +346,27 @@ for (i in 0:s) {
   
   fit <- ets(train.set, model = "MAM", damped = FALSE)
   fcast<-forecast(fit, h = h)
-  mapeAlisado1[i,] <- 100*abs(test.set - fcast$mean)/test.set
+  mapeAlisado1[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
   
   fit <- ets(train.set, model = "MAM", damped = FALSE, opt.crit = "amse", nmse = 2)
   fcast<-forecast(fit, h = h)
-  mapeAlisado2[i,] <- 100*abs(test.set - fcast$mean)/test.set
+  mapeAlisado2[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
   
   fit <- ets(train.set, model = "AAA", lambda = 0, biasadj = TRUE, damped = FALSE)
   fcast<-forecast(fit, h = h, biasadj = TRUE)
-  mapeAlisado3[i,] <- 100*abs(test.set - fcast$mean)/test.set
+  mapeAlisado3[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
   
   fit <- ets(train.set, model = "AAA", lambda = 0, biasadj = TRUE, damped = FALSE,  opt.crit = "amse", nmse = 2)
   fcast<-forecast(fit, h = h, biasadj = TRUE)
-  mapeAlisado4[i,] <- 100*abs(test.set - fcast$mean)/test.set
+  mapeAlisado4[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
   
   fit <- ets(train.set/monthdays(train.set), model = "MAM", damped = FALSE)
   fcast<-forecast(fit, h = h)
-  mapeAlisado5[i,] <- 100*abs(test.set - fcast$mean * monthdays(fcast$mean))/test.set
+  mapeAlisado5[i + 1,] <- 100*abs(test.set - fcast$mean * monthdays(fcast$mean))/test.set
   
   fit <- ets(train.set/monthdays(train.set), model = "MAM", damped = FALSE, opt.crit = "amse", nmse = 2)
   fcast<-forecast(fit, h = h)
-  mapeAlisado6[i,] <- 100*abs(test.set - fcast$mean * monthdays(fcast$mean))/test.set
+  mapeAlisado6[i + 1,] <- 100*abs(test.set - fcast$mean * monthdays(fcast$mean))/test.set
 }
 
 
@@ -387,7 +394,7 @@ ggplot() +
 
 De la figura 7 deducimos que aunque todos los métodos resultan razonablemente equivalentes en el corto plazo, en el medio y largo plazo las diferencias pueden ser significativas: la mayor diferencia entre los modelos se da para la previsión a ocho y nueve meses vista y es de 0.7 puntos porcentuales. Si queremos entrar en matices:
 
-* Globalmente el modelo que ofrece mejores previsiones es el modelo 6, realizado sobre las defunciones media por día y donde el criterio para estimar los parámetros es la minimización del error de las previsiones a dos periodos vista. Este modelo es de los mejores en previsiones a corto y medio plazo y el mejor a largo plazo.
+* Globalmente el modelo que ofrece mejores previsiones es el modelo 6, realizado sobre las defunciones medias por día y donde el criterio para estimar los parámetros es la minimización del error de las previsiones a dos periodos vista. Este modelo es de los mejores en previsiones a corto y medio plazo y el mejor a largo plazo.
 * A corto plazo destaca el modelo 4, seguido de los modelos 2 y 5.
 * A medio plazo destacan los modelos 2 y 5.
 

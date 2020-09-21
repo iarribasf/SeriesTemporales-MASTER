@@ -10,8 +10,6 @@ output:
     df_print: kable
     toc: true
     toc_depth: 2
-    toc_float: 
-      collapsed: true
     number_sections: true
     self_contained: true
     code_download: true
@@ -33,7 +31,6 @@ options(scipen = 999) #- para quitar la notacion cientifica
 ```
 
 ```{r librerias, echo = FALSE}
-library("RColorBrewer")
 library(forecast)
 library(ggplot2); theme_set(theme_bw())
 library(gridExtra)
@@ -75,7 +72,7 @@ autoplot(DefEnfCer,
   scale_x_continuous(breaks= seq(1980, 2018, 2)) 
 ```
 
-Conforme disminuye el número de muertes año tras año, también disminuye la amplitud estacional. En los 80 la diferencia entre los meses de más y menos incidencia de la enfermedad era muy acusada (aproximadamente 2500 casos), mientras que en los últimos años esta diferencia es más reducida (unos 1000 casos). Parece, por tanto, que estamos ante un __esquema multiplicativo__. Para confirmar este aspecto se ha realizado un gráfico de puntos entre el numero anual de casos de muertes causadas por enfermedades cerebrovasculares y la desviación típica intra-anual (figura 2).
+Conforme disminuye el número de muertes año tras año, también disminuye la amplitud estacional. En los 80 la diferencia entre los meses con más y con menos incidencia de la enfermedad era muy acusada (aproximadamente 2500 casos), mientras que en los últimos años esta diferencia es más reducida (unos 1000 casos). Parece, por tanto, que estamos ante un __esquema multiplicativo__. Para confirmar este aspecto, se ha realizado un gráfico de puntos entre el numero anual de casos de muertes causadas por enfermedades cerebrovasculares y la desviación típica intra-anual (figura 2).
 
 ```{r}
 CasosAnual = as.numeric(aggregate(DefEnfCer, FUN = sum))
@@ -94,9 +91,9 @@ Efectivamente, los años con mayor número de casos de defunciones se correspond
 
 ## Tendencia y Estacionalidad
 
-### Tendencia
+### Tendencia {-}
 
-Hemos obtenido la serie anual de casos de defunciones causadas por enfermedades cerebrovasculares, que presentamos en la figura 3. Se confirma la tendencia decreciente, puntualmente interrumpida algunos años. En los años 80 el número de defunciones prácticamente alcanzaba las 50,000, mientras que actualmente apenas superan las 25,000. Es decir, una caída media anual de 1.5% en el número de defunciones.
+Hemos obtenido la serie anual de casos de defunciones causadas por enfermedades cerebrovasculares, que presentamos en la figura 3. Se confirma la tendencia decreciente, puntualmente interrumpida algunos años. En los 80 el número de defunciones prácticamente alcanzaba las 50,000 al año, mientras que actualmente apenas superan las 25,000. Es decir, una caída media anual de 1.5% en el número de defunciones.
 
 ```{r}
 autoplot(aggregate(DefEnfCer, FUN = sum),
@@ -106,7 +103,7 @@ autoplot(aggregate(DefEnfCer, FUN = sum),
   scale_x_continuous(breaks= seq(1980, 2018, 2)) 
 ```
 
-### Estacionalidad
+### Estacionalidad {-}
 
 Veamos ahora como varía la incidencia de las muertes causadas por enfermedades cerebrovasculares según el mes del año. 
 
@@ -123,7 +120,7 @@ Cada subserie en la figura 4 vuelve a mostrar la reducción en las defunciones c
 
 ## Descomposición
 
-Vamos a obtener cada una de las componentes de la serie usando el método de medias móviles `decompose`. Se ha optado por este método dado que la serie muestra un esquema multiplicativo. La otra opción hubiera sido usar el método de regresiones locales ponderadas, pero entonces trabajaríamos con el logaritmo de la serie perdiendo interpretabilidad.
+Vamos a obtener cada una de las componentes de la serie usando el método de medias móviles `decompose`. Se ha optado por este método dado que la serie muestra un esquema multiplicativo. Otra opción hubiera sido usar el método de regresiones locales ponderadas trabajando con el logaritmo de la serie, pero entonces hubiéramos perdiendo interpretabilidad.
 
 ```{r, fig.height=7}
 DefEnfCerDesMul <- decompose(DefEnfCer, type = "mult")
@@ -142,9 +139,9 @@ Respecto de la __componente estacional__, se confirma el análisis preliminar: a
 round(DefEnfCerDesMul$figure, 2)
 ```
 
-A fin de aislar de la componente estacional el efecto _tamaño del mes_ del efecto de la temperatura, se ha aplicado la descomposición a la serie _defunciones por día causadas por enfermedad cerebrovascular_ resultante de dividir la serie original por el número de días del mes (que obtenenos con la función `monthdays`. En esta nueva serie todo el efecto estacional se deberá a la temperatura.
+A fin de aislar de la componente estacional el efecto _tamaño del mes_ del efecto de la temperatura, se ha aplicado la descomposición a la serie _defunciones por día causadas por enfermedad cerebrovascular_ resultante de dividir la serie original por el número de días del mes (que obtenemos con la función `monthdays`. En esta nueva serie todo el efecto estacional se deberá a la temperatura.
 
-La figura 6 muestra que la componente estacional estimada para las defunciones por día es más suave que la componente obtenida a partir la serie original. También se aprecia que el efecto del tamaño del mes es muy acusado en febrero. Para este mes el efecto estacional es el resultado de dos fuerzas opuestas: la baja temperatura incrementa la componente estacional pero el tamaño del mes (28 días) la reduce. Sobre la serie original ambas fuerzas tienen lugar y el resultado es una componente estacional para febrero menor que la de marzo, siendo este último un mes que por se más cálido deberia tener una componente estacional menor que la de febrero. En la serie de defunciones por día el efecto tamaño ha sido eliminado, solo queda el efecto temperatura y por eso la componente de febrero es menor que la de enero, pero mayor que la de marzo. El fenómeno opuesto se observa en los meses de Julio y Agosto respecto del mes de Junio: debido a que Julio y Agosto son meses cálidos (menos defunciones) pero de 31 días (más defunciones), presentan más defunciones que Junio, un mes menos cálido pero de 30 días.
+La figura 6 muestra que la componente estacional estimada para las defunciones por día es más suave que la componente obtenida a partir la serie original. También se aprecia que el efecto del tamaño del mes es muy acusado en febrero. Para este mes el efecto estacional es el resultado de dos fuerzas opuestas: la baja temperatura incrementa la componente estacional pero el tamaño del mes (28 días) la reduce. Sobre la serie original ambas fuerzas tienen lugar y el resultado es una componente estacional para febrero menor que la de marzo, siendo este último un mes que por se más cálido debería tener una componente estacional menor que la de febrero. En la serie de defunciones por día el efecto tamaño ha sido eliminado, solo queda el efecto temperatura y por eso la componente de febrero es menor que la de enero, pero mayor que la de marzo. El fenómeno opuesto se observa en los meses de Julio y Agosto respecto del mes de Junio: debido a que Julio y Agosto son meses cálidos (menos defunciones) pero de 31 días (más defunciones), presentan más defunciones que Junio, un mes menos cálido pero de 30 días.
 
 
 ```{r}
@@ -200,7 +197,7 @@ gglagplot(error,
           main = "Figura 8. Error de un periodo frente al error del periodo previo")
 ```
 
-Para analizar mejor la homocedasticidad hemos obtenido la variabilidad del error dentro de cada año (figura 9). La presencia de valores extremos afecta el cálculo de la desviación estándar y puede generar la impresión de heterocedasticidad en procesos claramente homocedásticos. Si hay sospechas de que este pueda ser el caso, una solución es calcular la mediana de las desviaciones medianas (median absolute deviation) como medida de dispersión usando la función `mad`. Si la variabilidad intra-anual se mantiene constante, podemos asumir la hipótesis de homocedasticidad. La figura 9 indica que no parece que este sea el caso, dado que conforme pasan los años la desviación típica del residuo se va reduciendo.
+Para analizar mejor la homocedasticidad hemos obtenido la variabilidad del error dentro de cada año (figura 9). La presencia de valores extremos afecta el cálculo de la desviación estándar y puede generar la impresión de heterocedasticidad en procesos claramente homocedásticos. Si hay sospechas de que este pueda ser el caso, una solución es calcular la mediana de las desviaciones medianas (_median absolute deviation_) como medida de dispersión usando la función `mad`. Si la variabilidad intra-anual se mantiene constante, podemos asumir la hipótesis de homocedasticidad. La figura 9 indica que no parece que este sea el caso, dado que conforme pasan los años la desviación típica del residuo se va reduciendo.
 
 En todo caso este es sólo un análisis gráfico sin ninguna validez estadística.
 

@@ -34,7 +34,6 @@ options(scipen = 999) #- para quitar la notacion cientifica
 ```
 
 ```{r librerias, echo = FALSE}
-library("RColorBrewer")
 library(forecast)
 library(ggplot2); theme_set(theme_bw())
 library(gridExtra)
@@ -124,7 +123,7 @@ $$Cov[Y_t, Y_{t+k}] = E[(Y_t - \mu)(Y_{t+k} - \mu)] = \gamma_k,\,\,\,\forall t$$
 
 Observa que la varianza será entonces $Var[Y_t] = E[(Y_t - \mu)^2] = \gamma_0$.
 
-La figura 2 muestra una serie que es estacionaria en media, pero no lo es en sentido amplio: al inicio de la serie hay una mayor variablidad en los datos que en la zona intermedia.
+La figura 2 muestra una serie que es estacionaria en media, pero no lo es en sentido amplio: al inicio de la serie hay una mayor variabilidad en los datos que en la zona intermedia.
       
 ```{r, echo=FALSE}
 dnac <- diff(nacimientos)
@@ -170,6 +169,8 @@ $$\lim_{k\rightarrow \infty} \gamma_k = 0.$$
 
 # Transformaciones de una serie
 
+\
+
 ## Ideas generales
 
 Una serie temporal $\{y_t\}_{t=1}^T$ no tiene porque verificar las condiciones de estacionariedad, ergodicidad y normalidad.
@@ -204,7 +205,7 @@ Usualmente, la serie diferenciada $\nabla y_t$ ya es estacionaria en media. Por 
 
 En algunos casos la serie diferenciada puede continuar presentando tendencia. En ese caso habrá que seguir diferenciando hasta obtener la estacionariedad en media.
     
-Si $\nabla y_t$ no es estacionaria, se diferencia (regularmente) una segunda vez para obtener una diferenciación de segundo orden:
+Si $\nabla y_t$ no es estacionaria, se diferencia (regularmente) una segunda vez para obtener una doble diferenciación de primer orden:
 $$\nabla^{2} y_t = \nabla(\nabla y_t) = \nabla y_t - \nabla y_{t-1} = (y_t - y_{t-1}) - (y_{t-1} - y_{t-2}) = y_t - 2y_{t-1} + y_{t-2}$$
 En la práctica una sola diferenciación suele ser suficiente para obtener la estacionariedad en media; diferenciar dos veces es excepcional; y diferenciar tres o más veces no se da.
 
@@ -247,12 +248,12 @@ Si necesitas calcular una diferencia regular y otra estacional, $\nabla\nabla_m 
 
 ## Transformación de Box-Cox
 
-En el tema 2 vimos el argumento `lambda`, que fijado a 0 indicaba que había que transformar la serie logaritmicamente. Veamos en detalle que hay detrás de este argumento.
+En el tema 2 vimos el argumento `lambda`, que fijado a 0 indicaba que había que transformar la serie logarítmicamente. Veamos en detalle que hay detrás de este argumento.
 
 
 ### Transformación logarítmica {-}
 
-Si la serie original no es estacionaria en varianza porque los datos crecen con el nivel de la serie, es posible obtener esta propiedad por medio de transformaciones simples.
+Si la serie original no es estacionaria en varianza porque los datos crecen con el nivel de la serie, es posible obtener la estacionariedad por medio de transformaciones simples.
   
 La transformación logarítmica de una serie es una alternativa. La figura 5 muestra la serie Nacimientos y su logaritmo. La variabilidad estacional con la transformación logarítmica (panel segundo) es menor que en la serie original (panel superior). 
 
@@ -302,7 +303,7 @@ $$\nabla_m \log(y_t) \approx \frac{y_t - y_{t-m}}{y_{t-m}} =TV_m y_t.$$
 
 Es decir, para una serie mensual _la diferencia estacional del logaritmo es la Tasa de Variación Anual de la serie_ $(\nabla_{12} \log(y_t)=TVA y_t)$.
 
-La figura 6 muestra para la serie Nacimientos la serie original (panel superior), las tasas de variación mensual y anual (paneles dos y tres, respectivamente) y la doble diferencia regular y estacional del logarítmo de nacimientos (panel inferior). Parece que la tasa de variación mensual de los nacimientos y la doble diferencia son, de todas las transformaciones probadas en este epígrafe, las más estacionarias en media y varianza.
+La figura 6 muestra para la serie Nacimientos la serie original (panel superior), las tasas de variación mensual y anual (paneles dos y tres, respectivamente) y la doble diferencia regular y estacional del logaritmo de nacimientos (panel inferior). Parece que la tasa de variación mensual de los nacimientos y la doble diferencia son, de todas las transformaciones probadas en este epígrafe, las series más estacionarias en media y varianza.
 
 ```{r, echo=FALSE, fig.height = 6}
 cbind("Nacidos" = nacimientos,
@@ -340,7 +341,7 @@ Recuerda que en la figura 5 puedes ver la serie original, la transformación log
 
 ## Función de autocorrelación
 
-Ya hemos indicado que bajo ciertas hipótesis los momentos primero y segundo de la serie caracterizan perfectamente el proceso estocástico. En el contexto de series temporales, si se da la estacionariedad en media, el primer momento de la serie es constante y, por tanto, no informativo. _Son los segundos momentos de la serie (covarianzas) los que caracterizan el proceso estocástico_.
+Ya hemos indicado que bajo ciertas hipótesis los momentos primero y segundo de la serie caracterizan perfectamente el proceso estocástico. En el contexto de series temporales, si se da la estacionariedad en media, el primer momento de la serie es constante y, por tanto, no informativo. **Son los segundos momentos de la serie (covarianzas) los que caracterizan el proceso estocástico**.
 
 Recordemos que $\gamma_k=Cov(y_t,y_{t-k})$ es la autocovarianza de orden k. Por tanto $\gamma_0$ es la varianza de la serie $y_t$. Sea $\rho_k$ la autocorrelación se orden $k$. Se puede verificar que:
 $$\rho_k = cor(y_t, y_{t-k}) =\frac{\gamma_k}{\gamma_0}.$$
@@ -469,8 +470,6 @@ ggtsdisplay(diff(libros), main = "Figura 11. FAC y FACP para la Libros diferenci
 
 ## Tipos de tendencia
 ```{r, echo = FALSE}
-library("RColorBrewer")
-
 set.seed(123456)
 trend <- 1:500
 e <- rnorm(500)
@@ -486,7 +485,7 @@ rw.de <- ts(rw.de, start = 1, freq = 1)
 autoplot(dt, series="Determinista",
          xlab = "",
          ylab = "",
-         main = "Figura 1. Ejemplos de procesos generadores") +
+         main = "Figura 12. Ejemplos de procesos generadores") +
   autolayer(rw, series = "Estocástico") +
   autolayer(rw.de, series = "Ambos") +
   scale_colour_manual(values=c("Determinista"="blue",
@@ -560,7 +559,7 @@ Puedes encontrar los detalles de este contraste en Kwiatkowski, D., Phillips, P.
 
 `R` proporciona dos implementaciones de esta prueba, `ur.kpss` en el paquete `urca` (que será la que usaremos) y `kpss.test` en el paquete `tseries`. En ambos casos el usuario debe decidir el valor adecuado del parámetro $l$ para el cálculo de $\widehat{\sigma}^2_{\varepsilon}(l)$. Como los resultados pueden depender de este parámetro, es conveniente repetir el contraste para diferentes valores. 
 
-Además, en `forecast` está disponible la función `ndiffs` que estima el número de diferencias necesarias para que una serie sea estacionaria. Por defecto emplea el contraste KPSS, pero también están disponibles Dickey-Fuller y Phillips-Perron.
+Además, en `forecast` está disponible la función `ndiffs` que estima el número de diferencias necesarias para que una serie sea estacionaria. Por defecto la función `ndiffs` emplea el contraste KPSS, pero también están disponibles Dickey-Fuller y Phillips-Perron.
 
 Los principales argumentos de la función `ur.kpss` son:
 
@@ -664,7 +663,7 @@ ndiffs(nacimientosAnual, alpha = 0.05, test = "kpss", type = "trend")
 | `nsdiffs`     | forecast | identifica el número necesario de diferenciaciones estacionales   |
 |`ggAcf`, `ggPacf`| forecast  |función de autocorrelación y autocorrelación parcial  |
 |`ggtsdisplay`    | forecast  |dibuja la serie, junto con su ACF y PACF              |
-|`BoxCox.lambda`  | forecast |estima el parámetro de la transformación de Box-cox más adecuado|
+|`BoxCox.lambda`  | forecast |estima el parámetro de la transformación de Box-Cox más adecuado|
 |`BoxCox`         | forecast |realiza la transformación de Box-Cox                  |
 |`InvBoxCox`      | forecast |realiza la inversa de la transformación de Box-Cox    |
 

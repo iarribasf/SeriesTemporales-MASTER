@@ -120,8 +120,8 @@ h <- 12
 T <- length(DefEnfCer)     
 s<-T - k - h               
 
-mapeArima <- matrix(NA, s, h)
-mapeAlisado <- matrix(NA, s, h)
+mapeArima <- matrix(NA, s + 1, h)
+mapeAlisado <- matrix(NA, s + 1, h)
 
 X <- cbind(d0299, d0105, d0215, d0212, d0501, d0603, d0115, d0389, d0803)
 
@@ -151,12 +151,12 @@ for (i in 0:s) {
   if (!is.element("try-error", class(fit))) {
     if (length(X.train) > 0) fcast <- forecast(fit, h = h, xreg = X.test) else
       fcast <- forecast(fit, h = h)
-    mapeArima[i,] <- 100*abs(test.set - fcast$mean)/test.set
+    mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
   }
   
   fit <- ets(train.set, lambda = 0, model = "AAA", damped = FALSE)
   fcast<-forecast(fit, h = h)
-  mapeAlisado[i,] <- 100*abs(test.set - fcast$mean)/test.set
+  mapeAlisado[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
 }
   
 errorArima <- colMeans(mapeArima, na.rm = TRUE)

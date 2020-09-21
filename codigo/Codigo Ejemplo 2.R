@@ -100,14 +100,14 @@ h <- 12
 TT <- length(DefEnfCer)  
 s <- TT - k - h          
 
-mapeAlisado <- matrix(NA, s, h)
+mapeAlisado <- matrix(NA, s + 1, h)
 for (i in 0:s) {
   train.set <- subset(DefEnfCer, start = i + 1, end = i + k)
   test.set <-  subset(DefEnfCer, start = i + k + 1, end = i + k + h)
   
   fit <- ets(train.set, model = "MAM", damped = FALSE)
   fcast<-forecast(fit, h = h)
-  mapeAlisado[i,] <- 100*abs(test.set - fcast$mean)/test.set
+  mapeAlisado[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
 }
 
 errorAlisado <- colMeans(mapeAlisado)

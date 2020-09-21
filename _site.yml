@@ -37,7 +37,11 @@ navbar:
         - text: "Ejemplo Tema 4"
           href: 03-09-Ejemplo4.html  
         - text: "Ejemplo Tema 5"
-          href: 03-10-Ejemplo5.html 
+          href: 03-10-Ejemplo5.html
+        - text: "---------------"
+        - text: "Otro ejemplo"
+        - text: "Ejemplo de Pasajeros"
+          href: 03-11-Ejemplo-Pasajeros.html
     - text: "Recursos de R"
       icon: fa-code
       href: 04-Recursos-R.html

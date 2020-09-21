@@ -10,8 +10,6 @@ output:
     df_print: kable
     toc: true
     toc_depth: 2
-    toc_float: 
-      collapsed: true
     number_sections: true
     self_contained: true
     code_download: true
@@ -33,12 +31,10 @@ options(scipen = 999) #- para quitar la notacion cientifica
 ```
 
 ```{r librerias, echo = FALSE}
-library("RColorBrewer")
 library(forecast)
 library(ggplot2); theme_set(theme_bw())
 library(gridExtra)
 library(grid)
-#library(shape)
 library(tseries)
 library(aod)
 ```
@@ -54,13 +50,13 @@ library(aod)
 
 Consideremos de nuevo la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares, Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2018, un total de 39 años o 468 meses
 
-En la descriptiva del tema 1 vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para su análisis por modelos ARIMA vamos a recortar la serie, que empezará el enero de 1988 y a anualizarla (31 años).
+En la descriptiva del ejemplo del tema 1 vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para su análisis por modelos ARIMA vamos a recortar la serie, que empezará el enero de 1988 y a anualizarla (31 años).
 
 \
 
 ## Transformación de la serie
 
-La figura 1 muestra que la serie no es estacionaria, pero si su primera diferencia. Por tanto se opta por considerar $d=1$ o $DefEnfCer \sim I(1)$.
+La figura 1 muestra que la serie no es estacionaria, pero sí su primera diferencia. Por tanto, se opta por considerar $d=1$ o $DefEnfCer \sim I(1)$.
 
 
 ```{r, eval = FALSE}
@@ -100,7 +96,7 @@ BoxCox.lambda(DefEnfCer)
 
 ## Identificación
 
-Veamos ahora a identificar los valores de $p$ y $q$ a partir de la FAC y la FACP. Difícil decidirse por un AR(1), un MA(1) o incluso un ARMA(1, 1).
+Veamos ahora a identificar los valores de $p$ y $q$ a partir de la FAC y la FACP. Difícil decidirse entre un AR(1), un MA(1) o incluso un ARMA(1, 1).
 
 ```{r} 
 ggtsdisplay(diff(DefEnfCer), main = "Figura 2. Def. por enf. cerebrovasculares (dif.)")
@@ -176,7 +172,7 @@ shapiro.test(error)
 ```
 
 
-Las hipótesis de incorrelación y homocedasticidad se aceptan. También se aceptarían para otros valores de $k$ razonables. Si embargo, no se acepta la hipótesis de normalidad. 
+Las hipótesis de incorrelación y homocedasticidad se aceptan. También se aceptarían para otros valores de $k$ razonables. Sin embargo, no se acepta la hipótesis de normalidad. 
 
 \
 
@@ -224,27 +220,27 @@ h <- 5                    #Horizonte de las predicicones
 TT <- length(DefEnfCer)   #Longitud serie
 s <- TT-k-h               #Total de estimaciones
 
-mapeArima <- matrix(NA, s, h)
+mapeArima <- matrix(NA, s + 1, h)
 for (i in 0:s) {
   train.set <- subset(DefEnfCer, start = i + 1, end = i + k)
   test.set <-  subset(DefEnfCer, start = i + k + 1, end = i + k + h)
   
   fit <- Arima(train.set, order = c(1, 1, 0),include.drift = TRUE)
   fcast<-forecast(fit, h = h)
-  mapeArima[i,] <- 100*abs(test.set - fcast$mean)/test.set
+  mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
 }
 
 errorArima <- colMeans(mapeArima)
 errorArima
 ```
 
-Se observa que: i) el error de predicción extra-muestral a un periodo vista es equivalente al intra-muestral (1.7%); ii) conforme aumenta el horizonte temporal de previsión el error aumenta; y iii) en todo caso el error se mantiene bajo.
+Se observa que: i) el error de predicción extra-muestral a un periodo vista (1.5%) es algo inferior al intra-muestral (1.7%); ii) conforme aumenta el horizonte temporal de previsión el error aumenta; y iii) en todo caso el error se mantiene bajo.
 
 \
 
 ## Comparación con un modelo de Alisado
 
-Si estimamos la serie anual de Defunciones por enfermedades cerebrovasculares aplicando técnicas de alisado exponencial nos encontramos con un modelo con pendiente aditiva ETS(A,A,N). Además, $\alpha = \beta = 0$. Si aplicamos estos valores a las ecuaciones iterativas de actualización tenemos que $l_t = l_0$ y que $b_t = b_0$. Por tanto $\widehat{y}_t = l_0 + t b_0$, un modelo lineal ($b_0 = -655.37$).
+Si estimamos la serie anual de Defunciones por enfermedades cerebrovasculares aplicando técnicas de alisado exponencial nos encontramos con un modelo con pendiente aditiva ETS(A,A,N). Además, $\alpha = \beta = 0$. Si aplicamos estos valores a las ecuaciones iterativas de actualización tenemos que $l_t = l_0$ y que $b_t = b_0$. Por tanto $\widehat{y}_t = l_0 + t b_0$, un modelo lineal ($\widehat{y}_t = 45808.75 - 655.37\cdot t$).
 
 ```{r}
 summary(alisado <- ets(DefEnfCer, model = "ZZZ"))
@@ -256,13 +252,13 @@ Finalmente, las predicciones realizadas con ambos modelos son prácticamente las
 
 ```{r}
 palisado <- forecast(alisado, h = 5)
-autoplot(DefEnfCer, PI = FALSE,
+autoplot(DefEnfCer,
          series = "Defunciones Enf. Cerebrovasculares",
          main="Figura 5. Defunciones Enf. Cerebrovasculares y previsión",
          xlab="", 
          ylab="Defunciones") +
-  autolayer(parima110$mean, PI = FALSE, series = "Previsión con Arima") +
-  autolayer(palisado$mean, PI = FALSE, series = "Previsión con Alisado") +
+  autolayer(parima110$mean, series = "Previsión con Arima") +
+  autolayer(palisado$mean, series = "Previsión con Alisado") +
   guides(colour = guide_legend(title = "Predicción")) + 
   theme(legend.position=c(0.98,0.98), legend.justification=c(1,1))
 ```

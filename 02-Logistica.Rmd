@@ -23,7 +23,7 @@ El grueso del material del curso lo podéis encontrar en esta página web. Sin e
 
 ### Contenidos del curso
 
-- [**"Página en Github con el curso"**](https://iarribasf.github.io/SeriesTemporales-MASTER/index.html) dónde encontraras todos el material teórico y práctico necesario para seguir el curso y realizar las prácticas de evaluación.
+- [**"Página en Github con el curso"**](https://iarribasf.github.io/SeriesTemporales-MASTER/index.html) dónde encontrarás todo el material teórico y práctico necesario para seguir el curso y realizar las prácticas de evaluación.
 
 - [**Aula Virtual**](https://aulavirtual.uv.es) donde encontrarás una copia de todo el material del curso en un único fichero comprimido. Además, Aulavirtual será el medio de comunicación *oficial* entre nosotros, será dónde subiréis las prácticas de evaluación como tareas y dónde realizaréis las pruebas tipo test.
 

@@ -34,12 +34,10 @@ options(scipen = 999) #- para quitar la notacion cientifica
 ```
 
 ```{r librerias, echo = FALSE}
-library("RColorBrewer")
 library(forecast)
 library(ggplot2); theme_set(theme_bw())
 library(gridExtra)
 library(grid)
-#library(shape)
 library(tseries)
 library(aod)
 ```
@@ -60,6 +58,7 @@ __Los procesos ARIMA y los métodos de Alisado Exponencial son complementarios__
 * Muchos modelos Arima no tiene contrapartida en los modelos de Alisado.  
 
 \
+\
 
 # Operador Retardo
 
@@ -77,7 +76,6 @@ data.frame(y = 1:7, lag1_y = c(NA, 1:6), lag2_y = c(NA,NA,1:5) )
 
 \
 \
-
 
 # Hipótesis
 
@@ -104,19 +102,19 @@ También asumiremos que el residuo del modelo $\{\varepsilon_t\}_{t=1}^T$ es __r
 
 * Media cero: $E[\varepsilon_t]=0$
 
-\
+\vspace{0.3cm}
 
 * Varianza constante (homocedástico): $E[\varepsilon_t^2]=\sigma^2$
 
-\
+\vspace{0.3cm}
 
 * Incorrelación: $E[\varepsilon_t \cdot \varepsilon_{s}]=0 \;\;\; t \neq s$
 
-\
+\vspace{0.3cm}
 
 * Distribución Normal: $\varepsilon_t \sim N$
 
-\
+\vspace{0.3cm}
 
 Es decir, $\varepsilon_t \sim N(0,\sigma^2)$ i.i.d.
 
@@ -126,6 +124,7 @@ Es decir, $\varepsilon_t \sim N(0,\sigma^2)$ i.i.d.
 # Procesos ARIMA
 
 ARIMA surge de combinar las siglas de tres procesos diferentes: __AR__ de AutoRegresive, __I__ de Integrated y __MA__ de Moving Average. Veamos cada uno de estos tres conceptos por separado y luego su combinación. 
+
 \
 
 ## Procesos autorregresivos AR(p)
@@ -347,7 +346,7 @@ La siguiente figura muestra el flujo de procesos asociado a la modelización por
 * __Validación__ de las hipótesis sobre el residuo, contraste de significatividad de los parámetros estimados y comprobación de que no hay más intervención. Si la validación no se pasa, puede ser necesario volver al proceso inicial y realizar una nueva identificación del modelo.
 * __Predicción__ e interpretación del modelo válido. Si las predicciones se alejan de los valores reales más de lo esperado o presentan sesgo, puede ser necesario identificar y estimar un nuevo modelo.
 
-![Aproximación Box-Jenkins](BoxJenkins.png)
+![Aproximación Box-Jenkins](./imagenes/BoxJenkins.png)
 
 \
 \
@@ -373,7 +372,7 @@ autoplot(libros,
 
 ### Transformación de la serie {-}
 
-El primer paso es transformar la serie original para que sea estacionaria. En el tema 3 ya vimos que la primera diferencia de la serie Libros es estacionaria y ergódica. Es decir, $d=1$ o $libros \sim I(1)$. Como recordatorio, la figura 14 muestra la gráfica temporal y la FAC para la serie original y su primera diferencia. 
+El primer paso es transformar la serie original para que sea estacionaria. En el tema 3 ya vimos que la primera diferencia de la serie Libros es estacionaria y ergódica. Es decir, $d=1$ o $libros_t \sim I(1)$. Como recordatorio, la figura 14 muestra la gráfica temporal y la FAC para la serie original y su primera diferencia. 
 
 ```{r, eval = FALSE}
 autoplot(libros, xlab = "", ylab = "", main = "Libros")
@@ -442,7 +441,7 @@ arima010 <- Arima(libros,
 arima010
 ```
 
-Nuestro modelo estimado es: $\widehat{libros}_t = libros_{t-1}$
+Nuestro modelo estimado es: $\widehat{libros}_t = libros_{t-1}$ ¡el método ingenuo I!
 
 ### Validación {-}
 
@@ -716,7 +715,7 @@ Veamos que el residuo verifica todas las hipótesis.
 
 __Intervención__ 
 
-La figura 21b muestra que para ningún año se observa un error atípico. El residuo más elevado en 1974 si se incluye, no resulta significativo.
+La figura 22 muestra que para ningún año se observa un error atípico. El residuo más elevado en 1974 si se incluye, no resulta significativo.
 
 ```{r}
 error <- residuals(arima120)
@@ -726,7 +725,7 @@ autoplot(error, series="Error",
          colour = "black",
          xlab = "",
          ylab = "Error",
-         main = "Figura 21b. Error + Intervención") +
+         main = "Figura 22. Error + Intervención") +
   geom_hline(yintercept = c(-3, -2, 2, 3)*sderror, 
              colour = c("red", "green", "green", "red"), 
              lty = 2) + 
@@ -769,7 +768,7 @@ Las hipótesis de incorrelación y homocedasticidad se aceptan. También se acep
 El __modelo teórico__ es $log(aforo_t) \sim ARIMA(1,2,0) + d1979 + d1981 + d9184 + d2011$:
 $$(1 - \phi_1 L)(1 - L)^2 log(aforo_t) =  \varepsilon_t + \gamma_1 \cdot d1979 + \gamma_2 \cdot d1981 + \gamma_3 \cdot d1984 + \gamma_4 \cdot d2011.$$
 
-Si sustituimos $(1 - L)^2 log(aforo_t)$ por $(1 - L) TVAaforo_t$, donde $TVAaforo$ es la tasa de variación anual del aforo, y desarrollando queda:
+Si sustituimos $(1 - L)^2 log(aforo_t)$ por $(1 - L) TVAaforo_t$, donde $TVAaforo$ es la tasa de variación anual del aforo, y desarrollamos, queda:
 $$TVAaforo_t = TVAaforo_{t-1} + \phi_1(TVAaforo_{t-1}-TVAaforo_{t-2}) +$$
 $$\gamma_1 \cdot d1979 + \gamma_2 \cdot d1981 + \gamma_3 \cdot d1984 + \gamma_4 \cdot d2011 + \varepsilon_t.$$
 
@@ -778,7 +777,7 @@ $$\widehat{TVAaforo}_t = TVAaforo_{t-1} -0.66(TVAaforo_{t-1}-TVAaforo_{t-2}) + $
 $$ - 0.15 \cdot d1979 + 0.08 \cdot d1981 + 0.08 \cdot d1984 - 0.09 \cdot d2011.$$
 Cada año la tasa de variación del aforo es el misma que la del año pasado menos un 66% del último incremento entre las tasas de variación.
     
-Respecto de la intervención, en 1979 hubo un 15% menos de vehículos de lo esperado, en 1981 y 1984 en torna a 8% más y en 2011 un 9% menos.
+Respecto de la intervención, en 1979 hubo un 15% menos de vehículos de lo esperado, en 1981 y 1984 en torna a un 8% más de vehículos y en 2011 un 9% menos.
       
 
 ### Predicción {-}
@@ -799,7 +798,7 @@ parima120
 ```{r}
 autoplot(parima120, 
      ylab = 'Vehículos (000)',
-     main = 'Figura 22. Aforo (1960-2018) y predicción (2019-2023)') +
+     main = 'Figura 23. Aforo (1960-2018) y predicción (2019-2023)') +
   scale_x_continuous(breaks= seq(1960, 2023, 4)) 
 ```
 
@@ -807,7 +806,7 @@ autoplot(parima120,
 
 ## Consumo de alimentos en el hogar per cápita
 
-Analizaremos el __consumo alimentario en hogar per cápita__ en España. Esta serie está construida a partir de la serie de consumo alimentario en hogar (disponible en el Ministerio de Agricultura, Alimentación y Medio Ambiente), y la serie de población (disponible en el Instituto Nacional de Estadística). Es una serie anual de 1987 a 2018 (32 datos) y la unidad es el Kg per cápita. La figura 23 muestra que es una serie muy irregular, con cambios de tendencia constantes.
+Analizaremos el __consumo alimentario en hogar per cápita__ en España. Esta serie está construida a partir de la serie de consumo alimentario en hogar (disponible en el Ministerio de Agricultura, Alimentación y Medio Ambiente), y la serie de población (disponible en el Instituto Nacional de Estadística). Es una serie anual de 1987 a 2018 (32 datos) y la unidad es el Kg per cápita. La figura 24 muestra que es una serie muy irregular, con cambios de tendencia constantes.
 
 ```{r}
 alimentospc <- read.csv2("./series/alimentacionpc.csv", header = TRUE)
@@ -816,12 +815,12 @@ alimentospc <- ts(alimentospc, start = 1987, freq = 1)
 autoplot(alimentospc, 
          xlab = "", 
          ylab = "Kg per cápita",
-         main = "Figura 23. Consumo alimentario en hogar")
+         main = "Figura 24. Consumo alimentario en hogar")
 ```
 
 ### Transformación de la serie {-}
 
-La figura 24 indica que la serie original ya es estacionaria. El contraste KPSS así lo confirma, por tanto asumimos que $d=0$ o $alimentospc_t \sim I(0)$.
+La figura 25 indica que la serie original ya es estacionaria. El contraste KPSS así lo confirma, por tanto asumimos que $d=0$ o $alimentospc_t \sim I(0)$.
 
 ```{r, eval = FALSE}
 autoplot(alimentospc, xlab = "", ylab = "", main = "Alimentos")
@@ -832,7 +831,7 @@ ggAcf(diff(alimentospc), xlab = "", ylab = "FAC", main = "")
 
 ```{r, echo = FALSE}
 grid.arrange(
-  autoplot(log(alimentospc), xlab = "Alimentos", ylab = "", main = "Figura 24. Consumo de alimentos"),
+  autoplot(log(alimentospc), xlab = "Alimentos", ylab = "", main = "Figura 25. Consumo de alimentos"),
   autoplot(diff(log(alimentospc)), xlab = "Diferencia de alimentos", ylab = "", main = ""),
   ggAcf(log(alimentospc), xlab = "", ylab = "FAC", main = ""),
   ggAcf(diff(log(alimentospc)), xlab = "", ylab = "FAC", main = ""),
@@ -845,7 +844,7 @@ grid.arrange(
 Para identificar los valores de $p$ y $q$ analizaremos la FAC y la FACP y veremos que nos sugiere `auto.arima` :
 
 ```{r} 
-ggtsdisplay(alimentospc, main = "Figura 25. Consumo de alimentos per cápita")
+ggtsdisplay(alimentospc, main = "Figura 26. Consumo de alimentos per cápita")
 ```
 
 
@@ -855,7 +854,7 @@ auto.arima(alimentospc)
 
 Es difícil realizar una identificación a partir del análisis de la FAC y FACP. La identificación automática sugiere un proceso AR(1) con constante y ambos coeficientes parecen significativos.
 
-Vamos a ver la gráfica de los residuos de este proceso para identificar rápidamente si hay valores extremos (figura 26).
+Vamos a ver la gráfica de los residuos de este proceso para identificar rápidamente si hay valores extremos (figura 27).
 
 
 ```{r}
@@ -869,7 +868,7 @@ autoplot(error, series="Error",
          colour = "black",
          xlab = "",
          ylab = "Error",
-         main = "Figura 26. Error + Intervención") +
+         main = "Figura 27. Error + Intervención") +
   geom_hline(yintercept = c(-3, -2, 2, 3)*sderror, 
              colour = c("red", "green", "green", "red"), 
              lty = 2) + 
@@ -924,13 +923,13 @@ Las hipótesis de incorrelación y homocedasticidad se aceptan. También se acep
 El __modelo teórico__ identificado es $alimentospc_t \sim ARIMA(1,0,0)$ + constante:
 $$(1 - \phi_1 L) alimentospc_t = c + \varepsilon_t,$$
 
-\noindent que desarrollando queda:
+que desarrollando queda:
 $$alimentospc_t = c + \phi_1 alimentospc_{t-1}+ \varepsilon_t.$$
 
 Finalmente. el __modelo estimado__ es:
 $$\widehat{alimentospc}_t = 225.21 + 0.65 \cdot alimentospc_{t-1}$$
 
-__Observación__: El término contante $\mu$ que estima R no el valor de "c" que hemos visto en la teoría. Para convertir la contante estimada por R en "c" hemos de multiplicarla por el polinomio autoregresivo. En este caso,
+__Observación__: El término contante $\mu$ que estima R no es el valor de "c" que hemos visto en la teoría. Para convertir la contante estimada por R en "c" hemos de multiplicarla por el polinomio autoregresivo. En este caso,
 $$c = \mu \cdot (1 - \phi_1) = 639.2512\cdot(1 - 0.6477) = 225.2082.$$
 
 Cada año el consumo de alimentos per cápita en el hogar es 225 kilos más un 65% del consumo del año pasado.
@@ -948,7 +947,7 @@ Puedes comprobar que cada valor de la predicción se ha obtenido a partir del mo
 ```{r}
 autoplot(parima100, 
      ylab = "Kilos per cápita",
-     main = "Figura 27. Consumo de alimentos y predicción") +
+     main = "Figura 28. Consumo de alimentos y predicción") +
   scale_x_continuous(breaks= seq(1987, 2023, 4)) 
 ```
 
@@ -977,7 +976,7 @@ Veamos una comparativa, para los tres ejemplos vistos, entre los resultados obte
 * Alimentos per cápita:
     + MAPE ARIMA: $1.37$ - ARIMA(1,0,0) con constante
     
-    + MAPE ETS:   $1.43$ - ets(M,N,N), $\alpha = 1$
+    + MAPE ETS:   $1.43$ - ETS(M,N,N), $\alpha = 1$
     
     + Cada método ha estimado un modelo diferente, pero con una bondad de ajuste similar.
 
