@@ -1,5 +1,5 @@
 #---------------------------------------------------------------
-# Codigo Tema 5: junio 2020
+# Codigo Tema 5
 #---------------------------------------------------------------
 
 
@@ -12,7 +12,7 @@ library(seasonal)
 
 #- Serie Nacimientos
 nacimientos <- read.csv2("nacimientos.csv", header = TRUE)
-nacimientos <- ts(nacimientos["nacimientos"],
+nacimientos <- ts(nacimientos[, 2],
                   start = c(1975, 1),
                   freq = 12)
 nacimientos <- window(nacimientos, start = 2000)
@@ -94,14 +94,14 @@ wald.test(b = coef(nac.ar2), Sigma = vcov(nac.ar2), Terms = 8)
 
 accuracy(nac.ar2)
 
-ggAcf(error, lag = 36, ylim = c(-0.3, 0.3), 
-      main = "FAC del error del modelo")
-
 Box.test(error, lag = 2,type = "Ljung-Box")
 Box.test(error, lag = 24,type = "Ljung-Box")
 Box.test(error^2, lag = 2, type = "Ljung-Box")
 Box.test(error^2, lag = 24, type = "Ljung-Box")
 jarque.bera.test(error) 
+
+ggAcf(error, lag = 36, ylim = c(-0.3, 0.3), 
+      main = "FAC del error del modelo")
 
 pbi <- 1*(monthdays(ts(0, start = 2019, end = c(2022, 12), freq = 12)) == 29)
 pnac.ar2 <- forecast(nac.ar2, 
@@ -143,6 +143,9 @@ ggAcf(log(chocolate), lag = 48)
 ggAcf(diff(log(chocolate)), lag = 48)
 ggAcf(diff(log(chocolate), lag = 12), lag = 48)
 ggAcf(diff(diff(log(chocolate), lag = 48, lag = 12)))
+
+ndiffs(log(chocolate))
+nsdiffs(log(chocolate))
 
 ggtsdisplay(diff(diff(log(chocolate), lag = 12)), lag = 48, main = "FAC y FACP para Chocolate (log)")
 
@@ -211,7 +214,6 @@ wald.test(b = coef(choco.ar2), Sigma = vcov(choco.ar2), Terms = 8)
 
 accuracy(choco.ar2)
 
-ggAcf(error, lag = 36)
 Box.test(error, lag = 2,type = "Ljung-Box")
 Box.test(error, lag = 24,type = "Ljung-Box")
 Box.test(error^2, lag = 2, type = "Ljung-Box")

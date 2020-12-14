@@ -1,7 +1,7 @@
 ---
-title: "Series Temporales: Introducción"
+title: "Defunciones por Enfermedades Cerebrovasculares"
+subtitle: "Descriptiva"
 author: "Iván Arribas (Depto. Análisis Económico. Universitat de València)"
-date: "Curso 2020-21"
 output: 
   html_document:
     theme: cerulean
@@ -40,13 +40,9 @@ library(grid)
 \
 \
 
-# Ejemplo de aplicación: Defunciones por Enfermedades Cerebrovasculares
+# Introducción
 
-\
-
-## Introducción
-
-Consideremos la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares, Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2018, un total de 39 años y 468 observaciones.
+Consideremos la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares. Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2018, un total de 39 años y 468 observaciones.
 
 La serie y su fechado están en el fichero "Enfermedades cerebrovasculares.csv".
 
@@ -57,8 +53,9 @@ DefEnfCer <- ts(DefEnfCer[,2], start = 1980, freq = 12)
 ```
 
 \
+\
 
-## Análisis preliminar gráfico
+# Análisis preliminar gráfico
 
 La gráfica de la serie temporal (figura 1) muestra una __tendencia__ decreciente en el número de muertes causadas por enfermedades cerebrovasculares en España. 
 
@@ -85,15 +82,18 @@ ggplot() +
   ggtitle("Figura 2: Análisis del tipo de esquema") 
 ```
 
-Efectivamente, los años con mayor número de casos de defunciones se corresponden con una mayor variabilidad intra-anual, por lo que confirmamos el esquema multiplicativo de la serie.
+Efectivamente, los años con mayor número de defunciones se corresponden con una mayor variabilidad intra-anual, por lo que confirmamos el esquema multiplicativo de la serie.
+
+\
+\
+
+# Análisis de las componentes
 
 \
 
-## Tendencia y Estacionalidad
+## Tendencia
 
-### Tendencia {-}
-
-Hemos obtenido la serie anual de casos de defunciones causadas por enfermedades cerebrovasculares, que presentamos en la figura 3. Se confirma la tendencia decreciente, puntualmente interrumpida algunos años. En los 80 el número de defunciones prácticamente alcanzaba las 50,000 al año, mientras que actualmente apenas superan las 25,000. Es decir, una caída media anual de 1.5% en el número de defunciones.
+Hemos obtenido la serie anual de casos de defunciones causadas por enfermedades cerebrovasculares, que presentamos en la figura 3. Se confirma la tendencia decreciente, puntualmente interrumpida algunos años. En los 80 el número de defunciones prácticamente alcanzaba las 50,000 al año, mientras que actualmente apenas superan las 25,000. Esto supone una caída media anual de 1.5% en el número de defunciones.
 
 ```{r}
 autoplot(aggregate(DefEnfCer, FUN = sum),
@@ -103,7 +103,9 @@ autoplot(aggregate(DefEnfCer, FUN = sum),
   scale_x_continuous(breaks= seq(1980, 2018, 2)) 
 ```
 
-### Estacionalidad {-}
+\
+
+## Estacionalidad
 
 Veamos ahora como varía la incidencia de las muertes causadas por enfermedades cerebrovasculares según el mes del año. 
 
@@ -116,9 +118,12 @@ ggmonthplot(DefEnfCer,
   guides(colour=FALSE)
 ```
 
-Cada subserie en la figura 4 vuelve a mostrar la reducción en las defunciones causadas por enfermedades cerebrovasculares durante el periodo de análisis. Respecto de la estacionalidad, se aprecia que el principal determinante es la temperatura puesto que la incidencia de la enfermedad es mayor en los meses de invierno y menor en los de verano. También cabría esperar un efecto _tamaño del mes_ y observar más incidencia en los meses de 31 días que en los de 30, pero el efecto de la temperatura es tan dominante que anula cualquier otro efecto.
+Cada subserie en la figura 4 vuelve a mostrar la reducción en las defunciones causadas por enfermedades cerebrovasculares durante el periodo de análisis. Respecto de la estacionalidad, se aprecia que el principal determinante es la temperatura puesto que la incidencia de la enfermedad es mayor en los meses de invierno y menor en los de verano. También cabría esperar un efecto _días del mes_ y observar más incidencia en los meses de 31 días que en los de 30, pero el efecto de la temperatura es tan dominante que anula cualquier otro efecto.
 
-## Descomposición
+\
+\
+
+# Descomposición
 
 Vamos a obtener cada una de las componentes de la serie usando el método de medias móviles `decompose`. Se ha optado por este método dado que la serie muestra un esquema multiplicativo. Otra opción hubiera sido usar el método de regresiones locales ponderadas trabajando con el logaritmo de la serie, pero entonces hubiéramos perdiendo interpretabilidad.
 
@@ -126,7 +131,7 @@ Vamos a obtener cada una de las componentes de la serie usando el método de med
 DefEnfCerDesMul <- decompose(DefEnfCer, type = "mult")
 autoplot(DefEnfCerDesMul,
          xlab = "",
-         main = "Figura 5. Descomposición aditiva por medias móviles")
+         main = "Figura 5. Descomposición multiplicativa por medias móviles")
 ```
 
 La __tendencia__ obtenida tras la descomposición no hace sino confirmar lo ya observado, una tendencia decreciente en los casos de defunciones por enfermedad cerebrovascular. 
@@ -139,9 +144,11 @@ Respecto de la __componente estacional__, se confirma el análisis preliminar: a
 round(DefEnfCerDesMul$figure, 2)
 ```
 
-A fin de aislar de la componente estacional el efecto _tamaño del mes_ del efecto de la temperatura, se ha aplicado la descomposición a la serie _defunciones por día causadas por enfermedad cerebrovascular_ resultante de dividir la serie original por el número de días del mes (que obtenemos con la función `monthdays`. En esta nueva serie todo el efecto estacional se deberá a la temperatura.
+A fin de aislar de la componente estacional el efecto _días del mes_ del efecto de la temperatura, se ha aplicado la descomposición a la serie _defunciones por día causadas por enfermedad cerebrovascular_ resultante de dividir la serie original por el número de días del mes (que obtenemos con la función `monthdays`). En esta nueva serie todo el efecto estacional se deberá a la temperatura.
 
-La figura 6 muestra que la componente estacional estimada para las defunciones por día es más suave que la componente obtenida a partir la serie original. También se aprecia que el efecto del tamaño del mes es muy acusado en febrero. Para este mes el efecto estacional es el resultado de dos fuerzas opuestas: la baja temperatura incrementa la componente estacional pero el tamaño del mes (28 días) la reduce. Sobre la serie original ambas fuerzas tienen lugar y el resultado es una componente estacional para febrero menor que la de marzo, siendo este último un mes que por se más cálido debería tener una componente estacional menor que la de febrero. En la serie de defunciones por día el efecto tamaño ha sido eliminado, solo queda el efecto temperatura y por eso la componente de febrero es menor que la de enero, pero mayor que la de marzo. El fenómeno opuesto se observa en los meses de Julio y Agosto respecto del mes de Junio: debido a que Julio y Agosto son meses cálidos (menos defunciones) pero de 31 días (más defunciones), presentan más defunciones que Junio, un mes menos cálido pero de 30 días.
+La figura 6 muestra que la componente estacional estimada para las defunciones por día es más suave que la componente obtenida a partir la serie original. También se aprecia que el efecto del tamaño del mes es muy acusado en febrero. Para este mes el efecto estacional es el resultado de dos fuerzas opuestas: la baja temperatura incrementa la componente estacional pero el tamaño del mes (28 días) la reduce. Sobre la serie original ambas fuerzas tienen lugar y el resultado es una componente estacional para febrero menor que la de marzo, siendo este último un mes que por ser más cálido debería tener una componente estacional menor que la de febrero. En la serie de defunciones por día el efecto número de días del mes ha sido eliminado, solo queda el efecto temperatura y por eso la componente de febrero es menor que la de enero, pero mayor que la de marzo.
+
+El fenómeno opuesto se observa en los meses de Julio y Agosto respecto del mes de Junio: debido a que Julio y Agosto son meses cálidos (menos defunciones) pero de 31 días (más defunciones), presentan más defunciones que Junio, un mes menos cálido pero de 30 días.
 
 
 ```{r}
@@ -162,10 +169,12 @@ ggplot() +
   theme(legend.position=c(0.02,0.02), legend.justification=c(0,0))
 ```
 
+\
+\
 
-## Análisis del residuo del método de descomposición
+# Análisis del residuo del método de descomposición
 
-Los métodos de descomposición no requieren de ningún supuesto sobre los residuos. Sin embargo, vamos a realizar una análisis gráfico informal de estos, adelantando conceptos que irán siendo necesarios según avancemos en el curso.
+Los métodos de descomposición no requieren de ningún supuesto sobre los residuos. Sin embargo, vamos a realizar una análisis gráfico informal de estos, adelantando conceptos que irán siendo necesarios según avancemos en el ejemplo.
 
 Como la descomposición es multiplicativa, el error es en tanto por uno y tiene media 1. Para analizar las propiedades del residuo, vamos a calcularlo como error aditivo. Para ello vamos a restar a la serie original la serie estimada, obtenida como el producto de la tendencia por la estacionalidad, es decir, $R_t = y_t - (T_t * S_t)$.
 
@@ -187,14 +196,14 @@ autoplot(error,
   scale_x_continuous(breaks= seq(1980, 2018, 4)) 
 ```
 
-Por otro lado, el residuo parece incorrelado pero heterocedástico. Para analizar la incorrelación con más detalle hemos obtenido la gráfica del error de un periodo $e_t$ respecto del error del periodo previo $e_{t-1}$ (véase figura 8).  Si el error es incorrelado deberemos ver una nube de puntos sin ningún patrón, como así ocurre, salvo para los valores atípicos. (Existe la función `lag.plot` en `stats`.)
+Por otro lado, el residuo parece incorrelado pero heterocedástico. Para analizar la incorrelación con más detalle hemos obtenido la gráfica del error de un periodo $e_t$ respecto del error del periodo previo $e_{t-1}$ (véase figura 8).  Si el error es incorrelado deberemos ver una nube de puntos sin ningún patrón, como así ocurre, salvo para los valores atípicos.
 
 ```{r}
 gglagplot(error, 
           lags = 1, 
           do.lines = FALSE, 
           colour = FALSE, 
-          main = "Figura 8. Error de un periodo frente al error del periodo previo")
+          main = "Figura 8. Análisis de la incorrelación")
 ```
 
 Para analizar mejor la homocedasticidad hemos obtenido la variabilidad del error dentro de cada año (figura 9). La presencia de valores extremos afecta el cálculo de la desviación estándar y puede generar la impresión de heterocedasticidad en procesos claramente homocedásticos. Si hay sospechas de que este pueda ser el caso, una solución es calcular la mediana de las desviaciones medianas (_median absolute deviation_) como medida de dispersión usando la función `mad`. Si la variabilidad intra-anual se mantiene constante, podemos asumir la hipótesis de homocedasticidad. La figura 9 indica que no parece que este sea el caso, dado que conforme pasan los años la desviación típica del residuo se va reduciendo.

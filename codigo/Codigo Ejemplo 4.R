@@ -1,5 +1,5 @@
 #---------------------------------------------------------------
-# Codigo ejemplo tema 4: junio 2020
+# Codigo ejemplo tema 4
 #---------------------------------------------------------------
 
 
@@ -21,8 +21,6 @@ autoplot(diff(DefEnfCer), xlab = "Serie diferenciada", ylab = "", main = "")
 
 ggAcf(DefEnfCer)
 ggAcf(diff(DefEnfCer))
-
-BoxCox.lambda(DefEnfCer)
 
 ggtsdisplay(diff(DefEnfCer), main = "Def. por enf. cerebrovasculares (dif.)")
 

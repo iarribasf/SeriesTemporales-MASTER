@@ -2,7 +2,6 @@
 title: "Series Temporales: Procesos ARIMA"
 subtitle: "Máster de Bioestadística (Modelización Estadística)"
 author: "Iván Arribas (Depto. Análisis Económico. Universitat de València)"
-date: "Curso 2020-21"
 output: 
   html_document:
     theme: cerulean
@@ -47,7 +46,7 @@ library(aod)
 
 Los __modelos ARIMA__ han mostrado ser uno se los métodos de ajuste de series temporales más valiosos desde que fueran formalizados en 1976 por Box y Jenkins, en su libro [Time series analysis, forecasting and control](http://www.amazon.com/Time-Analysis-Forecasting-George-Box/dp/0470272848). Además, dieron las pautas a seguir en el ajuste de una serie temporal para alcanzar buenas predicciones (véase epígrafe 5).
 
-En este tema, y el siguiente, definiremos estos procesos y aprenderemos a identificarlos, estimarlos y hacer predicciones.
+En este tema y el siguiente, definiremos estos procesos y aprenderemos a identificarlos, estimarlos y hacer predicciones.
 
 __Los procesos ARIMA son ahora el tronco de una amplia familia de procesos__ que requieren menos hipótesis para su aplicación: ARCH, GARCH, NGARCH,  IGARCH, EGARCH, GARCH-M, QGARCH, GJR-GARCH, TGARCH, fGARCH...
 
@@ -133,7 +132,7 @@ ARIMA surge de combinar las siglas de tres procesos diferentes: __AR__ de AutoRe
 
 El modelo general __autorregresivo de orden p__, $y_t \sim AR(p)$ viene definido por
 $$y_t=c + \phi_1 y_{t-1} + \phi_2 y_{t-2} + ... + \phi_p y_{t-p} + \varepsilon_t,$$
-\noindent que usando el operador retardo queda
+que usando el operador retardo queda
 $$(1 - \phi_1 L - \phi_2 L^2 - ... - \phi_p L^p)y_t = c + \varepsilon_t$$
 
 ### Propiedades {-}
@@ -159,7 +158,7 @@ __Sobre todo__,
 
 ### Simulación de procesos autorregresivos {-}
 
-Las figuras 1 y 2 muestran dos simulaciones del proceso AR(1) con $y_t = 0.8y_{t-1} + \varepsilon_t$, la primera con 20 datos y la segunda con 100 datos. En ambos casos $\varepsilon_t$ se distribuye como una normal con media cero y varianza la unidad. (Todas las simulaciones se han realizado con la función `arima.sim` de la librería `stats`.)
+Las figuras 1 y 2 muestran dos simulaciones del proceso AR(1) $y_t = 0.8y_{t-1} + \varepsilon_t$, la primera con 20 datos y la segunda con 100 datos. En ambos casos $\varepsilon_t$ se distribuye como una normal con media cero y varianza la unidad. (Todas las simulaciones se han realizado con la función `arima.sim` de la librería `stats`.)
 
 ```{r, echo = FALSE}
 set.seed(111116)
@@ -189,7 +188,7 @@ ggtsdisplay(y100b, main = "Figura 4. AR(2) - n = 100")
 
 El modelo general __en medias móviles de orden q__, $y_t \sim MA(q)$ viene definido por
 $$y_t=c + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \theta_2 \varepsilon_{t-2} + ... + \theta_q \varepsilon_{t-q},$$
-\noindent que usando el operador retardo queda
+que usando el operador retardo queda
 $$y_t = c + (1 + \theta_1 L + \theta_2 L^2 + ... + \theta_q L^q) \varepsilon_t$$
 
 ### Propiedades {-}
@@ -211,7 +210,7 @@ __Sobre todo__,
 
 ### Simulación de procesos en medias móviles {-}
 
-Las figuras 5 y 6 ofrecen dos simulaciones del proceso MA(1) con $y_t = 0.8\varepsilon_{t-1} + \varepsilon_t$, la primera con 20 datos y la segunda con 100 datos. En ambos casos $\varepsilon_t$ se distribuye como una normal con media cero y varianza la unidad.
+Las figuras 5 y 6 ofrecen dos simulaciones del proceso MA(1) $y_t = 0.8\varepsilon_{t-1} + \varepsilon_t$, la primera con 20 datos y la segunda con 100 datos. En ambos casos $\varepsilon_t$ se distribuye como una normal con media cero y varianza la unidad.
 
 ```{r, echo=FALSE}
 set.seed(654321)
@@ -243,7 +242,7 @@ El modelo general $y_t \sim ARMA(p,q)$ viene dado por
 $$y_t = c + \phi_1 y_{t-1} + \phi_2 y_{t-2} + ... + \phi_p y_{t-p}  + 
         \theta_1 \varepsilon_{t-1} + \theta_2 \varepsilon_{t-2} + ... +
         \theta_q \varepsilon_{t-q}+ \varepsilon_t,$$
-\noindent que usando el operador retardo queda
+que usando el operador retardo queda
 $$(1 - \phi_1 L - ... - \phi_p L^p)y_t = c + (1 + \theta_1 L + ... + \theta_q L^q) \varepsilon_t.$$
 
 El proceso más simple es el ARMA(1,1), $y_t = c  + \phi_1 y_{t-1} + \theta_1 \varepsilon_{t-1} + \varepsilon_{t}$.
@@ -306,9 +305,9 @@ grid.arrange(
 
 ## Proceso ARIMA(p,d,q)
 
-__Si la serie $y_t$ no es estacionaria pero tras diferenciarla $d$ veces se hace estacionaria, diremos que la serie es integrada de orden $d$__: $y_t \sim I(d)$.
+__Si la serie $y_t$ no es estacionaria pero tras diferenciarla $d$ veces se hace estacionaria, diremos que la serie es integrada de orden $d$__: $y_t \sim I(d)$. Por tanto,
 
-* Por tanto, una serie estacionaria se indicará como $y_t \sim I(0)$
+* una serie estacionaria se indicará como $y_t \sim I(0)$
 * $y_t \sim I(d)$ es equivalente a $\nabla^d y_t = (1 - L)^d y_t \sim I(0)$
 
 Una serie $y_t$ sigue un proceso __$ARIMA(p,d,q)$__ si:
@@ -318,7 +317,7 @@ Una serie $y_t$ sigue un proceso __$ARIMA(p,d,q)$__ si:
       
 Entonces, podemos escribir: 
 $$y_t \sim  ARIMA(p,d,q): \;\;\; (1 - \phi_1 L - \ldots - \phi_p L^p)(1- L)^d y_t = c + (1 + \theta_1 L + ... + \theta_q L^q) \varepsilon_t.$$
-Veamos la FAC de tres series simuladas no estacionarias: un paseo aleatorio, un paseo aleatorio con deriva y un modelo lineal. Sus FAC son indistinguibles, pero en los tres casos revelan claramente su carácter no estacionario.
+Veamos la FAC de tres series simuladas no estacionarias: un paseo aleatorio, un paseo aleatorio con deriva y un modelo lineal. Sus FAC son indistinguibles, pero los tres casos revelan claramente su carácter no estacionario.
 
 ```{r, echo = FALSE}
 y1 <- cumsum(rnorm(200))
@@ -362,7 +361,7 @@ Vamos a aplicar la metodología de Box-Jenkins a la serie Libros (número de tí
 
 ```{r}
 libros <- read.csv2("./series/libros.csv", header = TRUE)
-libros <- ts(libros["libros"], start = 1993, frequency = 1)
+libros <- ts(libros[, 2], start = 1993, frequency = 1)
 
 autoplot(libros,
          xlab = "", 
@@ -447,7 +446,7 @@ Nuestro modelo estimado es: $\widehat{libros}_t = libros_{t-1}$ ¡el método ing
 
 Veamos si el residuo verifica todas las hipótesis indicadas en el epígrafe 3.2
 
-__Media cero__
+#### Media cero {-}
 
 No se puede contrastar si el residuo tiene __media cero__, pero el error medio es $ME=$ `r round(accuracy(arima010)[1],2)`, relativamente bajo en comparación con el valor medio de la serie.
 
@@ -463,7 +462,7 @@ round(accuracy(arima010),2)
   
 \
 
-__Incorrelación__. 
+#### Incorrelación {-}     
 
 Lo veremos con el test de Box-Ljung
 
@@ -485,7 +484,7 @@ data.frame(k = 1:4, "valor de p" = pp)
 
 \
 
-__Homocedasticidad__ (varianza constante).
+#### Homocedasticidad (varianza constante) {-} 
 
 Lo veremos con el test de Box-Ljung para el residuo al cuadrado. La hipótesis nula seria que las primeras $k$ autocorrelaciones estimadas sobre el cuadrado del residuo son cero.
 
@@ -505,7 +504,7 @@ data.frame(k = 1:4, "valor de p" = pp)
 
 \
 
-__Normalidad__
+#### Normalidad {-} 
 
 Recuerda que todos las pruebas de normalidad son muy sensibles al tamaño de la muestra. Siempre es recomendable empezar por un análisis gráfico (histograma, gráfico PP, gráfico QQ).
 
@@ -518,7 +517,7 @@ jarque.bera.test(error)
 
 \
 
-__Intervención__
+#### Intervención {-}
 
 Se analiza si para algún año se observa un error atípico  (por ejemplo 3 veces superior al error estándar). La figura 16 muestra que en este caso en dos periodos, años 2008 y 2013, el residuo sobrepasa los dos errores estándar pero queda lejos de los tres errores estándar así que asumiremos que no hay valores atípicos.
 
@@ -568,7 +567,7 @@ El paquete `forecast` dispone de la función `auto.arima()` que localiza el mejo
     * a partir del modelo seleccionado, se hacen pequeñas variaciones modificando en una unidad _p_ y _q_ y añadiendo/quitando la constante y se vuelve a seleccionar el mejor de los nuevos modelos.
 3. Se repite el paso 2 hasta que no se puede mejorar el AICc. 
 
-Otras cuestiones a tener en cuenta son:
+Cuando usemos esta función, debemos tener cuenta que:
 
 * La función `auto.arima` no permite contante si la suma de las diferenciaciones es 2 o superior. 
 * Si se desea hacer una búsqueda exhaustiva entre todos los posibles modelos se debe usar el argumento `stepwise = FALSE`.
@@ -631,6 +630,10 @@ grid.arrange(
 )
 ```
 
+```{r}
+ndiffs(log(aforo))
+```
+
 
 ### Identificación {-}
 
@@ -682,7 +685,7 @@ d2011 <- 1*(time(error) == 2011)
 auto.arima(aforo, lambda = 0, xreg = cbind(d1979, d1981, d1984, d2011))
 ```
 
-Observa como la inclusión de intervención modifica la auto-identificación, que ahora es un proceso ARIMA(1,2,0). Así, ahora tememos el modelo identificado a partir de la FAC y la FACP ARIMA(0,2,1) y el modelo auto-identificado ARIMA(1,2,0). Un análisis de la calidad de las previsiones y del comportamiento del residuo indica que el segundo proceso es más adecuado. Por tanto, asumimos que $log(aforo_t) \sim ARIMA(1,2,0)$ con intervención.
+Observa como la inclusión de intervención modifica la auto-identificación, que ahora es un proceso ARIMA(1,2,0). Así, ahora tememos el modelo identificado por nosotros a partir de la FAC y la FACP ARIMA(0,2,1) y el modelo auto-identificado ARIMA(1,2,0). Un análisis de la calidad de las previsiones y del comportamiento del residuo indica que el segundo proceso es más adecuado. Por tanto, asumimos que $log(aforo_t) \sim ARIMA(1,2,0)$ con intervención.
 
 ### Estimación {-}
 
@@ -697,25 +700,23 @@ arima120
 Se puede comprobar que todas las variables son significativas.
 
 ```{r}
-#H0: phi1 = 0
-wald.test(b = coef(arima120), Sigma = vcov(arima120), Terms = 1)
-#H0: d1979 = 0
-wald.test(b = coef(arima120), Sigma = vcov(arima120), Terms = 2)
-#H0: d1981 = 0
-wald.test(b = coef(arima120), Sigma = vcov(arima120), Terms = 3)
-#H0: d1984 = 0
-wald.test(b = coef(arima120), Sigma = vcov(arima120), Terms = 4)
-#H0: d2011 = 0
-wald.test(b = coef(arima120), Sigma = vcov(arima120), Terms = 5)
+ancho <- max(nchar(names(coef(arima120)))) + 2
+for(i in 1:length(coef(arima120))) {
+  wt <- wald.test(b = coef(arima120), 
+                  Sigma = vcov(arima120), 
+                  Terms = i)
+  cat("\nCoeficiente: ", format(names(coef(arima120))[i], width = ancho), "valor de p: ", 
+      formatC(wt$result$chi2[3], digits = 4, format = "f"))
+}
 ```
 
 ### Validación {-}
 
 Veamos que el residuo verifica todas las hipótesis.
 
-__Intervención__ 
+#### Intervención {-}
 
-La figura 22 muestra que para ningún año se observa un error atípico. El residuo más elevado en 1974 si se incluye, no resulta significativo.
+La figura 22 muestra que para ningún año se observa un error atípico. Si se incluye una intervención asociada al residuo más elevado en 1974, no resulta significativa.
 
 ```{r}
 error <- residuals(arima120)
@@ -735,7 +736,7 @@ autoplot(error, series="Error",
 
 \
 
-__Medidas de error__
+#### Medidas de error {-}
 
 El error medio es `r round(accuracy(arima120)[2],0)` miles de vehículos (RMSE) y el error porcentual medio (MAPE) es `r round(accuracy(arima120)[5],2)`%.
 
@@ -749,7 +750,7 @@ round(accuracy(arima120),2)
 
 \
 
-__Incorrelación, Homocedasticidad y Normalidad__
+#### Incorrelación, Homocedasticidad y Normalidad {-} 
 
 Veamos ahora si el residuo es ruido blanco:
 
@@ -831,12 +832,16 @@ ggAcf(diff(alimentospc), xlab = "", ylab = "FAC", main = "")
 
 ```{r, echo = FALSE}
 grid.arrange(
-  autoplot(log(alimentospc), xlab = "Alimentos", ylab = "", main = "Figura 25. Consumo de alimentos"),
-  autoplot(diff(log(alimentospc)), xlab = "Diferencia de alimentos", ylab = "", main = ""),
-  ggAcf(log(alimentospc), xlab = "", ylab = "FAC", main = ""),
-  ggAcf(diff(log(alimentospc)), xlab = "", ylab = "FAC", main = ""),
+  autoplot(alimentospc, xlab = "Alimentos", ylab = "", main = "Figura 25. Consumo de alimentos"),
+  autoplot(diff(alimentospc), xlab = "Diferencia de alimentos", ylab = "", main = ""),
+  ggAcf(alimentospc, xlab = "", ylab = "FAC", main = ""),
+  ggAcf(diff(alimentospc), xlab = "", ylab = "FAC", main = ""),
   nrow = 2
 )
+```
+
+```{r}
+ndiffs(alimentospc)
 ```
 
 ### Identificación {-}
@@ -880,7 +885,7 @@ Ningún residuo supera las 2.5 desviaciones típicas así que consideraremos que
 
 ### Validación {-}
 
-__Coeficientes significativos__
+#### Coeficientes significativos {-}
 
 Tanto $\phi_1$ como $\mu$ (la constante del modelo) son significativos.
 
@@ -891,7 +896,7 @@ wald.test(b = coef(arima100), Sigma = vcov(arima100), Terms = 2)
 
 \
 
-__Medidas de error__
+#### Medidas de error {-}
 
 El error medio es $RMSE=$ `r round(accuracy(arima100)[2],0)` kilos per cápita y el error porcentual medio es $MAPE=$ `r round(accuracy(arima100)[5],1)`%.
 
@@ -905,7 +910,7 @@ round(accuracy(arima100),2)
 
 \
 
-__Incorrelación, Homocedasticidad y Normalidad__
+#### Incorrelación, Homocedasticidad y Normalidad {-}
 
 Veamos ahora si el residuo es ruido blanco:
 
@@ -916,7 +921,9 @@ shapiro.test(error)
 ```
 
 
-Las hipótesis de incorrelación y homocedasticidad se aceptan. También se aceptarían para otros valores de $k$ razonables. La hipótesis de normalidad se rechaza 5%.
+Las hipótesis de incorrelación y homocedasticidad se aceptan. También se aceptarían para otros valores de $k$ razonables. 
+
+La hipótesis de normalidad se rechaza 5%. Además, la muestra es demasido pequeña como para poder aplicar el Teorema Central del Límite. Toda la inferencia realizada queda invalidada, no podemos afirmar si un coeficiente es o deja de ser significativo. Sin embargo, el modelo estimado sigue siendo válido con fines predictivos.
 
 ### Interpretación del modelo {-}
 
@@ -964,6 +971,8 @@ Veamos una comparativa, para los tres ejemplos vistos, entre los resultados obte
     
     + Ambos métodos han estimado el mismo modelo.
 
+\vspace{3cm}
+
 * Aforo (log):
     + MAPE ARIMA: $5.24\%$ - ARIMA(1,2,0) sin deriva, con intervención
     
@@ -972,6 +981,8 @@ Veamos una comparativa, para los tres ejemplos vistos, entre los resultados obte
     + Cada método estima un modelo diferente
     
     + ARIMA tiene menor error a costa de incluir cuatro variables de intervención
+
+\vspace{3cm}
 
 * Alimentos per cápita:
     + MAPE ARIMA: $1.37$ - ARIMA(1,0,0) con constante
@@ -987,7 +998,7 @@ Veamos una comparativa, para los tres ejemplos vistos, entre los resultados obte
 # Resumen de los comandos utilizados
 
 
-|Función        |         |Descripción                                             |
+|Función        |Paquete |  Descripción                                             |
 |:--------------|:-------------------|:-------------------------------------------------------|
 |`arima.sim`    |stats  |genera una simulación de un proceso ARIMA               |
 |`Arima`        |forecast  |estima un proceso ARIMA |

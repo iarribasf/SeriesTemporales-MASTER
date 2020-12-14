@@ -2,7 +2,6 @@
 title: "Series Temporales: Alisado Exponencial"
 subtitle: "Máster de Bioestadística (Modelización Estadística)"
 author: "Iván Arribas (Depto. Análisis Económico. Universitat de València)"
-date: "Curso 2020-21"
 output: 
   html_document:
     theme: cerulean
@@ -85,9 +84,9 @@ Dada una serie temporal $\{y_t\}_{t=1}^T$, se define:
 
 * De nuevo, por simplicidad denotaremos a $\hat{y}_{t+1|t}$ como $\hat{y}_{t+1}$; y como $\hat{y}_{t}$ a la previsión en $t$, con datos hasta el periodo $t-1$ ($\hat{y}_{t} = \hat{y}_{t|t-1}$).
 
-Se define como __error de previsión (intra-muestral) a un periodo vista__ a 
+Se define como __error de previsión__, en este caso intra-muestral a un periodo vista, a 
 $$\hat{e}_t=y_t-\hat{y}_t,$$
-\noindent de forma que la serie $\{\hat{e}_t\}_{t=1}^T$ nos permitirá definir varios criterios de calidad de ajuste (intra-muestrales a un periodo vista). 
+de forma que la serie $\{\hat{e}_t\}_{t=1}^T$ nos permitirá definir varios criterios de calidad de ajuste. 
   
 \
 
@@ -155,6 +154,8 @@ ACF1 no es propiamente un indicador de calidad del modelo, pero indica la capaci
 
 Las _medias_ se pueden sustituir por _medianas_. Esto es especialmente útil cuando para algunas observaciones hay errores atípicamente altos.
 
+\
+
 Si estos indicadores de calidad se basan en predicciones intra-muestrales a un periodo vista, presentan dos problemas. Primero, evalúan el error de predicción a un periodo vista, cuando en muchas situaciones reales las predicciones se realizan sobre un horizonte temporal más amplio. Segundo, son errores intra-muestrales, resultantes de predecir los mismos datos que se han usado para estimar los parámetros del método de predicción y, por tanto, sobre-estiman la capacidad predictiva del modelo.
 
 Veremos durante en este tema métodos de evaluación de la calidad de las predicciones que superan estas limitaciones.
@@ -219,7 +220,7 @@ __No hay métodos ingenuos cuando la serie tiene tendencia y estacionalidad__, a
  
 ```{r}
 libros <- read.csv2("./series/libros.csv", header = TRUE)
-libros <- ts(libros["libros"], start = 1993, frequency  = 1)
+libros <- ts(libros[, 2], start = 1993, frequency  = 1)
 ```
 
 En la figura 1 se muestra el resultado gráfico de la aplicación de algunos de estos métodos sencillos a la serie Libros (número de títulos publicados anualmente en España desde 1993 hasta 2018), con independencia de su adecuación dadas las componentes de esta serie. Se ha fijado un horizonte de previsión de cinco años (`h = 5`). El argumento `PI = FALSE` hace que no se impriman los intervalos de confianza de las predicciones.
@@ -278,7 +279,7 @@ Podemos usar el método ingenuo con estacionalidad con la serie Nacimientos para
 
 ```{r}
 nacimientos <- read.csv2("./series/nacimientos.csv", header = TRUE)
-nacimientos <- ts(nacimientos["nacimientos"],
+nacimientos <- ts(nacimientos[, 2],
                   start = c(1975, 1),
                   frequency = 12)
 
@@ -419,7 +420,7 @@ Veamos la salida en detalle:
 * El valor de $\alpha$ que optimiza el criterio usado para medir la calidad del ajuste es $\alpha =$ `r round(librosf$model$par[1],2)`, un valor muy cercano a 1. Esto es un indicativo de que: i) la serie Libros cambia de nivel de forma constante, un rasgo en los procesos puramente estocásticos como el paseo aleatorio; ii) y el método de alisado exponencial simple se aproxima al método Ingenuo I. 
 * El valor de arranque $l_0$ óptimo es `r as.integer(librosf$model$par[2])`. 
 * _sigma_ es la desviación típica del error (aditivo) de predicción. Se diferencia de RMSE en el denominador, dado que para _sigma_ hay una corrección según los grados de libertad.
-* La calidad de las predicciones es razonable, como evidencia el error porcentual medio del 7%.
+* La calidad de ajuste es razonable, como evidencia el error porcentual medio del 7%.
 * Las predicciones son las mismas para los 5 años, como cabe esperar (recuerda que $\hat{y}_{T+h} = \hat{y}_{T+1}$).
 
 La figura 3 muestra la serie Libros y las previsiones extra-muestrales, que son constantes. 
@@ -484,7 +485,7 @@ La calidad de las predicciones es razonable, con un error porcentual medio del 6
 tail(librosf$model$states, n = 1)
 ```
 
-En el objeto `librosf` la matriz `librosf$model$states` guarda todos los valores del nivel y de la pendiente obtenidos con las ecuaciones recursivas, incluidos los valores de arranque, así que es una matriz con $T+1$ filas. Puedes ver los valores de $l_{2018}$ y $b_{2018}$ en su última fila, que valen respectivamente `r round(as.numeric(librosf$model$states[27,]), 1)`. La predicción para $2019$ es $\hat{y}_{2019}=l_{2018} + b_{2018} = `r round(as.numeric(sum(librosf$model$states[27,])), 1)`$. Igualmente $\hat{y}_{2020}=l_{2018} + 2\cdot b_{2018}=$ `r round(as.numeric(librosf$model$states[27,1] + 2* librosf$model$states[27,2]), 1)`. Es decir, el incremento entre previsiones es contante e igual a $b_{2018}$ que, por ser $\beta$ nulo, coincide con $b_0$.
+En el objeto `librosf` la matriz `librosf$model$states` guarda todos los valores del nivel y de la pendiente obtenidos con las ecuaciones recursivas, incluidos los valores de arranque, así que es una matriz con $T+1$ filas. Puedes ver los valores de $l_{2018}$ y $b_{2018}$ en su última fila, que valen respectivamente `r round(as.numeric(librosf$model$states[27,]), 1)`. La predicción para $2019$ es $\hat{y}_{2019}=l_{2018} + b_{2018} = `r round(as.numeric(sum(librosf$model$states[27,])), 1)`$. Igualmente $\hat{y}_{2020}=l_{2018} + 2\cdot b_{2018}=$ `r round(as.numeric(librosf$model$states[27,1] + 2* librosf$model$states[27,2]), 1)`. Es decir, el incremento entre previsiones es contante e igual a $b_{2018}$ que, por ser $\beta$ practicamente nulo, coincide con $b_0$.
 
 La figura 4 muestra la serie Libros y las previsiones extra-muestrales que muestran una ligera tendencia creciente.
  
@@ -520,7 +521,7 @@ Si $\phi = 1$ se tiene el alisado de Holt y si $\phi = 0$ se tiene el alisado si
 
 ### Ejemplo {-}
 
-Vamos a usar el método de alisado con amortiguamiento para predecir, una vez más, la serie Libros añadiendo a la función `holt` el argumento `damped = TRUE`. Por razones prácticas el rango de búsqueda de $\phi$ queda en el intervalo $[0.8, 0.98]$. En este caso, para ver el efecto de _amortiguamiento_ vamos a fijar el valor de $\phi$ a $0.9$ y vamos a pedir un horizonte temporal más largo.
+Vamos a usar el método de alisado con amortiguamiento para predecir, una vez más, la serie Libros añadiendo a la función `holt` el argumento `damped = TRUE`. Por razones prácticas el rango de búsqueda de $\phi$ queda en el intervalo $[0.8, 0.98]$. En este caso, para ver el efecto del _amortiguamiento_ vamos a fijar el valor de $\phi$ a $0.9$ y vamos a pedir un horizonte temporal más largo.
 
 ```{r}
 librosfd <- holt(libros, damped = TRUE, h = 15, phi = 0.9)
@@ -628,7 +629,7 @@ Este proceso se puede realizar de forma sencilla y transparente con cualquiera d
 * `lambda = 0` indica a la función de alisado que se ha de realizar la transformación logarítmica de la serie. Es un parámetro de la transformación Box-Cox que veremos en detalle en el tema 3. 
 * `biasadj = TRUE` es necesario si tras una transformación de la serie original, queremos que las predicciones sean insesgadas. Sea $y_t$ la serie original y $z_t=log(y_t)$ su transformación logarítmica. Si obtenemos una predicción $\hat{y}_t$ de la serie original, esta será insesgada $E[\hat{y}_t]=y_t$. Ahora bien, si obtenemos una predicción $\hat{z}_t$ de la serie transformada, podemos pensar que $e^{\hat{z}_t}$ es una predicción insesgada de la serie original, pero resulta que $E[e^{\hat{z}_t}] \neq y_t$. Es decir, la exponencial de la predicción de la serie transformada logarítmicamente no es insesgada. Si el argumento `biasadj` es fijado a FALSE, las predicciones se calcularan de forma directa deshaciendo la transformación y serán sesgadas; si es fijado a TRUE, las predicciones se calcularan por medio de una fórmula alternativa y serán insesgadas. En ambos casos las estimaciones son consistentes, así que para series largas no debería observarse mucha diferencia entre las dos alternativas.
 
-Vamos a poner en práctica este enfoque con la serie Nacimientos. Como se va a predecir el logaritmo de la serie, se debe indicar a la función `hw` que use el modelo Holt-Winters aditivo.
+Vamos a practicar el uso de estos argumentos con la serie Nacimientos. Como se va a predecir el logaritmo de la serie, se debe indicar a la función `hw` que use el modelo Holt-Winters aditivo.
 
 ```{r}
 nacimientosbfl <- hw(nacimientosb, 
@@ -639,7 +640,7 @@ nacimientosbfl <- hw(nacimientosb,
 summary(nacimientosbfl)
 ```
 
-Observa que en este caso la calidad de las predicciones es inferior a la obtenida con la serie sin transformar (MAPE = 1.9%).
+Observa que en este caso la calidad de las predicciones (MAPE = 1.9%) es inferior a la obtenida con la serie sin transformar.
 
 La figura 7 muestra la serie Nacimientos y las previsiones extra-muestrales obtenidas con y sin la transformación logarítmica.
  
@@ -682,11 +683,10 @@ Recordemos que al añadir el error, aditivo o multiplicativo, estos quince model
 
 Podemos estimar cualquiera de los treinta modelos usando la función `ets` del paquete `forecast`. A diferencia de las funciones previas `ses`, `holt` y `hw`, la función `ets` solo estima los modelos, pero no produce predicciones. Para ello habrá que usar la función `forecast` sobre un modelo estimado con `ets`. Mira la ayuda para ver una explicación detallada de los argumentos de estas funciones.
 
-El tipo de modelo en `ets` se especifica con el argumento `model`, un código de tres letras indicando el tipo de Error, Tendencia y eStacionalidad (ETS). Por ejemplo, `model = "ANN"` indica un modelo con error aditivo, sin tendencia ni estacionalidad, es decir, el alisado exponencial simple; `model = "AAN"` indica un modelo con error aditivo, pendiente aditiva, pero sin estacionalidad, el alisado exponencial de Holt. El alisado exponencial de Holt-Winters multiplicativo sería `model = "AAM"`.
-
-Si se desea incluir amortiguamiento, hay que incluir el argumento `damped = TRUE`. Por defecto `ets` no considera modelos con tendencia multiplicativa (últimas dos líneas de la taxonomía del epígrafe 4.3). Debes fijar el parámetro `allow.multiplicative.trend=TRUE` para contemplar esta opción.
-
-Además, se sigue disponiendo de los argumentos `lambda` y `biasadj`.
+* El tipo de modelo en `ets` se especifica con el argumento `model`, un código de tres letras indicando el tipo de Error, Tendencia y eStacionalidad (ETS). Por ejemplo, `model = "ANN"` indica un modelo con error aditivo, sin tendencia ni estacionalidad, es decir, el alisado exponencial simple; `model = "AAN"` indica un modelo con error aditivo, pendiente aditiva, pero sin estacionalidad, el alisado exponencial de Holt. El alisado exponencial de Holt-Winters multiplicativo sería `model = "AAM"`.
+* Si se desea incluir amortiguamiento, hay que incluir el argumento `damped = TRUE`. 
+* Por defecto `ets` no considera modelos con tendencia multiplicativa (últimas dos líneas de la taxonomía del epígrafe 4.3). Debes fijar el parámetro `allow.multiplicative.trend=TRUE` para contemplar esta opción.
+* Además, se sigue disponiendo de los argumentos `lambda` y `biasadj`.
 
 __Criterios de optimización__
 
@@ -762,7 +762,7 @@ El modelo estimado es ETS(M,N,N), un modelo de alisado exponencial simple con er
 
 El valor de $\alpha$ técnicamente es 1, indicando que el nivel de la serie varia en el tiempo y que realmente estamos usando el método ingenuo I.
 
-Respecto de la calidad del ajuste, el valor de MAPE= $`r round(accuracy(librosEts)[5],1)`$% evidencia que estamos ante un modelo con una calidad predictiva razonable, y MASE= $`r round(accuracy(librosEts)[6],2)`$% indica que el modelo de alisado exponencial simple reduce en solo un $`r 100 - round(100*accuracy(librosEts)[6],0)`$% el error del método ingenuo I.
+Respecto de la calidad del modelo, el valor de MAPE= $`r round(accuracy(librosEts)[5],1)`$% evidencia que estamos ante un modelo que ajusta razonablemente bien a los datos, y MASE= $`r round(accuracy(librosEts)[6],2)`$ indica que el modelo de alisado exponencial simple reduce en solo un $`r 100 - round(100*accuracy(librosEts)[6],0)`$% el error del método ingenuo I.
 
 
 ## Predicción
@@ -802,22 +802,22 @@ La figura 9 muestra que aunque algún error supera las dos desviaciones típicas
 
 ## Validación: error extra-muestral
 
-Vamos a mejorar la estimación de la calidad de las predicciones obteniendo el MAPE para __previsiones extra-muestrales a varios periodos vista__. Para ello vamos a reservar, por ejemplo, las últimas 7 observaciones de la serie Libros y ajustar el modelo con las restantes. Después usaremos este modelo para calcular las predicciones a 7 periodos vista y compararlas con los valores reales de la serie Libros. 
+Vamos a mejorar la estimación de la calidad de las predicciones obteniendo el MAPE para __previsiones extra-muestrales a varios periodos vista__. Para ello vamos a reservar, por ejemplo, las últimas 6 observaciones de la serie Libros y ajustar el modelo con las restantes. Después usaremos este modelo para calcular las predicciones a 6 periodos vista y compararlas con los valores reales de la serie Libros. 
 
 Este método para valorar la calidad de las predicciones usa la filosofía del método _trainning set/test set_: el periodo de datos usado en la estimación no se usa como periodo de datos para la validación. Sin embargo, tiene el problema de que el error obtenido es una mezcla de errores de predicción a corto, medio y largo plazo difícil de valorar. Además, los resultados dependen tremendamente del punto de corte temporal seleccionado. En el [Ejemplo de aplicación del tema 2](https://iarribasf.github.io/SeriesTemporales-MASTER/03-07-Ejemplo2.html) veremos una metodología de validación que superan estas limitaciones.
 
 
 ```{r}
 # Definimos las observaciones intra- y extra-muestrales
-librosIntra <- subset(libros, end = length(libros) - 7)
-librosExtra <- subset(libros, start = length(libros) - 6)
+librosIntra <- subset(libros, end = length(libros) - 6)
+librosExtra <- subset(libros, start = length(libros) - 5)
 
-# Estimamos el modelo con todos los datos menos los 7 ultimos
+# Estimamos el modelo con todos los datos menos los 6 ultimos
 librosIntraEts <- ets(librosIntra, model = "MNN", damped = FALSE)
 
 # Predecimos los 7 años que hemos quitado de la serie y 
 # vemos la calidad del ajuste.
-librosExtraPre <- forecast(librosIntraEts, h = 7)
+librosExtraPre <- forecast(librosIntraEts, h = 6)
 accuracy(librosExtraPre, librosExtra)
 ```
 
@@ -825,14 +825,14 @@ accuracy(librosExtraPre, librosExtra)
 error.muestral.1 <- round(accuracy(librosExtraPre, librosExtra)[1,5], 1)
 error.extramuestral.n <- round(accuracy(librosExtraPre, librosExtra)[2,5],1)
 ```
-Atendiendo al MAPE se tiene que el error de __previsión a un periodo vista__ en el __periodo intra-muestral__ de __1993 a 2011__ es del `r error.muestral.1`%; mientras que el error de __previsión a largo plazo__ en el __periodo extra-muestral__ de __2012 a 2018__ es del `r error.extramuestral.n`%. Ademas, para el periodo extra-muestral el error medio (ME) es negativo y muy elevado, un indicativo de que las previsiones están segadas. En resumen, la calidad del modelo se deteriora muy rápidamente en cuanto nos salimos de las condiciones óptimas. 
+Atendiendo al MAPE se tiene que el error de __previsión a un periodo vista__ en el __periodo intra-muestral__ de __1993 a 2012__ es del `r error.muestral.1`%; mientras que el error de __previsión a largo plazo__ en el __periodo extra-muestral__ de __2013 a 2018__ es del `r error.extramuestral.n`%. Ademas, para el periodo extra-muestral el error medio (ME) es negativo y muy elevado, un indicativo de que las previsiones están segadas. En resumen, la calidad del modelo se deteriora muy rápidamente en cuanto nos salimos de las condiciones óptimas. 
 
 Un gráfico puede ayudar a entender este proceso de validación. En la figura 10:
 
-* La línea de puntos vertical separa el periodo muestral (1993-2011) usado para estimar el modelo, del periodo extra-muestral (2012-2018) usado sólo para hacer las previsiones.
+* La línea de puntos vertical separa el periodo muestral (1993-2012) usado para estimar el modelo, del periodo extra-muestral (2013-2018) usado sólo para hacer las previsiones.
 * La serie Libros aparece como una línea sólida en negro, desde 1993 hasta 2018.
 * La previsión _intra_-muestral (a un periodo vista) de la serie Libros aparece como una línea azul.
-* La línea en rojo es la previsión _extra_-muestral a largo plazo: $\hat{y}_{T+h}=l_T$, donde $T=2011$. Observa que todas las previsiones están por encima del valor real de la serie.
+* La línea en rojo es la previsión _extra_-muestral a largo plazo: $\hat{y}_{T+h}=l_T$, donde $T=2012$. Observa que todas las previsiones están por encima del valor real de la serie.
 * Al lado de cada previsión se ha indicado el error estimado (MAPE).
 
 Claramente estos resultados dependen del punto de corte seleccionado.
@@ -845,20 +845,20 @@ autoplot(libros, series = "Libros",
          ) +
   autolayer(fitted(librosIntraEts), series = "Libros (ajustada)") + 
   autolayer(librosExtraPre$mean, series = "Predicción") + 
-  geom_vline(xintercept = 2011.5, lty = 2, col = "black") +
+  geom_vline(xintercept = 2012.5, lty = 2, col = "black") +
   scale_colour_manual(values=c("Libros"="black",
                                "Libros (ajustada)"="blue", 
                                "Predicción" = "red")) +
   guides(colour = guide_legend(title = "Series")) +
-  annotate("text", x=1999, y=65000, label="7.3%", colour = "blue") +
-  annotate("text", x=2016, y=70000, label="22.8%", colour = "red") +
+  annotate("text", x=1999, y=65000, label="7.2%", colour = "blue") +
+  annotate("text", x=2016, y=72000, label="17.8%", colour = "red") +
   theme(legend.position=c(0.02,0.98), legend.justification=c(0,1)) 
 ```
 
 \
 \
 
-__Nota:__ La presencia de tendencia, primero creciente y luego decreciente, en la serie Libros puede hacernos pensar que un modelo más adecuado para su ajuste y predicción sería ETS(M,A,N), forzando a que haya pendiente. De hecho, el error de estimación de este modelo es del 6.2%, frente al 7% para el modelo ETS(M,N,N). Sin embargo, el error de previsión extra-muestral a largo plazo para el modelo ETS(M,A,N) es del 37.3%, frente al 22.8% para el modelo ETS(M,N,N). De nuevo, incidir en que mayor calidad de ajuste no implica mayor calidad de predicción; y en que estos resultados dependen del punto de corte seleccionado.
+__Nota:__ La presencia de tendencia, primero creciente y luego decreciente, en la serie Libros puede hacernos pensar que un modelo más adecuado para su ajuste y predicción sería ETS(M,A,N), forzando a que haya pendiente. De hecho, el error de estimación de este modelo es del 6.2%, frente al 7% para el modelo ETS(M,N,N). Sin embargo, el error de previsión extra-muestral a largo plazo para el modelo ETS(M,A,N) es del 31.5%, frente al 17.8% para el modelo ETS(M,N,N). De nuevo, incidir en que mayor calidad de ajuste no implica mayor calidad de predicción; y en que estos resultados dependen del punto de corte seleccionado.
 
 # Ejemplo de aplicación: Nacimientos
 
@@ -883,8 +883,7 @@ autoplot(nacimientosEts,
          main = "Figura 11. Componentes del modelo óptimo para Nacimientos")
 ```
 
-
-Respecto de la calidad del modelo, el MAPE de `r round(accuracy(nacimientosEts)[5],1)`% indica que estamos ante un modelo con buena capacidad predictiva; y el valor de MASE igual a `r round(summary(nacimientosEts)[6],2)` indica que este modelo reduce en un `r 100 - round(100*summary(nacimientosEts)[6],0)`% el error del método ingenuo con estacionalidad, el más sencillo posible, que ya utilizamos en el epígrafe 3 (aunque para la serie nacimientos completa).
+Respecto de la calidad del modelo, el MAPE de `r round(accuracy(nacimientosEts)[5],1)`% indica que estamos ante un modelo que se ajusta muy bien a los datos; y el valor de MASE igual a `r round(summary(nacimientosEts)[6],2)` indica que este modelo reduce en un `r 100 - round(100*summary(nacimientosEts)[6],0)`% el error del método ingenuo con estacionalidad, el más sencillo posible, que ya utilizamos en el epígrafe 3 (aunque para la serie nacimientos completa).
       
 Podemos ver los últimos valores estimados del nivel, la pendiente y la estacionalidad para interpretarlos.
 
@@ -1001,25 +1000,46 @@ El siguiente código muestra el MAPE (para previsiones intra-muestrales a un per
 
 ```{r}
 # Serie Nacimientos
-accuracy(ets(nacimientos, damped = TRUE))[5]
-accuracy(ets(nacimientos, damped = TRUE, opt.crit = "mse"))[5]
-accuracy(ets(nacimientos, damped = TRUE, allow.multiplicative.trend = TRUE))[5]
-accuracy(ets(nacimientos, damped = TRUE, allow.multiplicative.trend = TRUE, opt.crit = "mse"))[5]
+accuracy(ets(nacimientos, 
+             damped = TRUE))[5]
+accuracy(ets(nacimientos, 
+             damped = TRUE, 
+             opt.crit = "mse"))[5]
+accuracy(ets(nacimientos, 
+             damped = TRUE, 
+             allow.multiplicative.trend = TRUE))[5]
+accuracy(ets(nacimientos, 
+             damped = TRUE, 
+             allow.multiplicative.trend = TRUE, 
+             opt.crit = "mse"))[5]
 
 # Transformación logarítmica
-accuracy(ets(nacimientos, lambda = 0, damped = TRUE))[5]
-accuracy(ets(nacimientos, lambda = 0, damped = TRUE, opt.crit = "mse"))[5]
+accuracy(ets(nacimientos, 
+             lambda = 0, 
+             damped = TRUE))[5]
+accuracy(ets(nacimientos, 
+             lambda = 0, 
+             damped = TRUE, 
+             opt.crit = "mse"))[5]
 
 # Nacimientos por dia
-accuracy(ets(nacimientos/monthdays(nacimientos), damped = TRUE))[5]
-accuracy(ets(nacimientos/monthdays(nacimientos), damped = TRUE, opt.crit = "mse"))[5]
-accuracy(ets(nacimientos/monthdays(nacimientos), damped = TRUE, allow.multiplicative.trend = TRUE))[5]
-accuracy(ets(nacimientos/monthdays(nacimientos), damped = TRUE, allow.multiplicative.trend = TRUE, opt.crit = "mse"))[5]
+accuracy(ets(nacimientos/monthdays(nacimientos), 
+             damped = TRUE))[5]
+accuracy(ets(nacimientos/monthdays(nacimientos), 
+             damped = TRUE, 
+             opt.crit = "mse"))[5]
+accuracy(ets(nacimientos/monthdays(nacimientos), 
+             damped = TRUE, 
+             allow.multiplicative.trend = TRUE))[5]
+accuracy(ets(nacimientos/monthdays(nacimientos), 
+             damped = TRUE, 
+             allow.multiplicative.trend = TRUE, 
+             opt.crit = "mse"))[5]
 ```
 
 La principal conclusión en este caso es que salirse de la estimación directa sobre la serie original no reduce el error significativamente. Sin embargo, cabe destacar que:
 
-* El error de estimación de los nacimientos por día es menor, al tratarse de una serie con mejor comportamiento, aunque la ganancia no es mucha. (CVéanse los cuatro últimos modelos respecto de los cuatro primeros)
+* El error de estimación de los nacimientos por día es menor, al tratarse de una serie con mejor comportamiento, aunque la ganancia no es mucha. (Véanse los cuatro últimos modelos respecto de los cuatro primeros)
 * Usar la transformación logarítmica no mejora la capacidad predictiva del modelo. (Véanse los nodelos 5 y 6 respecto de los modelos 1 y 2)
 * Permitir una pendiente multiplicativa mejora la calidad del ajuste. (Modelos 1 vs. 3, 2 vs.4, 7 vs. 9 y 8 vs. 10)
 * El mejor modelo estima los nacimientos por día, tiene pendiente multiplicativa amortiguada y estima los parámetros minimizando el error cuadrático medio ("mse"). Todo menos lo _directo_.

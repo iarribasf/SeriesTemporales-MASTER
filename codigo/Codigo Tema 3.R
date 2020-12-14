@@ -1,5 +1,5 @@
 #---------------------------------------------------------------
-# Codigo Tema 3: junio 2020
+# Codigo Tema 3
 #---------------------------------------------------------------
 
 
@@ -10,11 +10,11 @@ library(urca)
 
 #- Serie libros
 libros <- read.csv2("libros.csv", header = TRUE)
-libros <- ts(libros["libros"], start = 1993, freq = 1)
+libros <- ts(libros[, 2], start = 1993, freq = 1)
 
 #- Serie nacimientos
 nacimientos <- read.csv2("nacimientos.csv", header = TRUE)
-nacimientos <- ts(nacimientos["nacimientos"],
+nacimientos <- ts(nacimientos[, 2],
                   start = c(1975, 1),
                   freq = 12)
 
@@ -74,13 +74,8 @@ ggPacf(diff(diff(nacimientos), lag = 12), lag = 48)
 summary(ur.kpss(libros, type='tau', lags = 'short'))
 summary(ur.kpss(libros, type='mu', lags = 'short'))
 
-tmp <- NULL
-for(l in 1:8) {
-  ttt <- summary(ur.kpss(libros, type='tau', use.lag = l))
-  tmp <- c(tmp, ttt@teststat)
-}
-names(tmp) <- 1:8
-round(tmp, 3)
+
+summary(ur.kpss(libros, type='tau', use.lag = 3)) # Variar use.lag de 1 a 8
 
 ndiffs(libros, alpha = 0.05, test = "kpss", type = "trend")
 
@@ -88,13 +83,7 @@ ndiffs(libros, alpha = 0.05, test = "kpss", type = "trend")
 nacimientosAnual<-aggregate(nacimientos, FUN = sum)
 summary(ur.kpss(nacimientosAnual, type='tau', lags = "short"))
 
-tmp <- NULL
-for(l in 1:8) {
-  ttt <- summary(ur.kpss(nacimientosAnual, type='tau', use.lag = l))
-  tmp <- c(tmp, ttt@teststat)
-}
-names(tmp) <- 1:8
-round(tmp, 3)
+summary(ur.kpss(nacimientosAnual, type='tau', use.lag = 3)) #Variar use.lag de 1 a 8
 
 ndiffs(nacimientosAnual, alpha = 0.05, test = "kpss", type = "trend")
 

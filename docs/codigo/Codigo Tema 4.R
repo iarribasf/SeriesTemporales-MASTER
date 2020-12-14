@@ -1,5 +1,5 @@
 #---------------------------------------------------------------
-# Codigo Tema 4: junio 2020
+# Codigo Tema 4
 #---------------------------------------------------------------
 
 
@@ -11,7 +11,7 @@ library(aod)
 
 #- Analisis de Libros
 libros <- read.csv2("libros.csv", header = TRUE)
-libros <- ts(libros["libros"], start = 1993, frequency = 1)
+libros <- ts(libros[, 2], start = 1993, frequency = 1)
 
 autoplot(libros, xlab = "", ylab = "", main = "Libros")
 autoplot(diff(libros), xlab = "", ylab = "", main = "Diferencia libros")
@@ -82,6 +82,8 @@ autoplot(diff(log(aforo), differences = 2), xlab = "Dos diferencias de log(Aforo
 ggAcf(log(aforo))
 ggAcf(diff(log(aforo)))
 ggAcf(diff(log(aforo), differences = 2))
+
+ndiffs(log(aforo))
 
 ggtsdisplay(diff(log(aforo), differences = 2), 
             main = "Aforo (log y dos diferencias)")
@@ -170,6 +172,8 @@ autoplot(diff(alimentospc), xlab = "", ylab = "", main = "Diferencia alimentos")
 
 ggAcf(alimentospc)
 ggAcf(diff(alimentospc))
+
+ndiffs(alimentospc)
 
 ggtsdisplay(alimentospc, main = "Consumo de alimentos per cápita")
 

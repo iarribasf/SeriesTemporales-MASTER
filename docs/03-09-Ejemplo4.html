@@ -12,7 +12,7 @@
 <meta name="author" content="Iván Arribas (Depto. Análisis Económico. Universitat de València)" />
 
 
-<title>Series Temporales: Procesos ARIMA</title>
+<title>Defunciones por Enfermedades Cerebrovasculares</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -499,67 +499,62 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Series Temporales: Procesos ARIMA</h1>
+<h1 class="title toc-ignore">Defunciones por Enfermedades Cerebrovasculares</h1>
+<h3 class="subtitle">Procesos ARIMA (sin estacionalidad)</h3>
 <h4 class="author">Iván Arribas (Depto. Análisis Económico. Universitat de València)</h4>
-<h4 class="date">Curso 2020-21</h4>
 
 </div>
 
 <div id="TOC">
 <ul>
-<li><a href="#ejemplo-de-aplicación-defunciones-por-enfermedades-cerebrovasculares-continuación."><span class="toc-section-number">1</span> Ejemplo de aplicación: Defunciones por Enfermedades Cerebrovasculares (continuación).</a><ul>
-<li><a href="#introducción"><span class="toc-section-number">1.1</span> Introducción</a></li>
-<li><a href="#transformación-de-la-serie"><span class="toc-section-number">1.2</span> Transformación de la serie</a></li>
-<li><a href="#identificación"><span class="toc-section-number">1.3</span> Identificación</a></li>
-<li><a href="#validación"><span class="toc-section-number">1.4</span> Validación</a></li>
-<li><a href="#interpretación-del-modelo"><span class="toc-section-number">1.5</span> Interpretación del modelo</a></li>
-<li><a href="#predicción"><span class="toc-section-number">1.6</span> Predicción</a></li>
-<li><a href="#calidad-de-las-previsiones-extra-muestrales-según-horizonte-temporal"><span class="toc-section-number">1.7</span> Calidad de las previsiones extra-muestrales según horizonte temporal</a></li>
-<li><a href="#comparación-con-un-modelo-de-alisado"><span class="toc-section-number">1.8</span> Comparación con un modelo de Alisado</a></li>
-</ul></li>
+<li><a href="#introducción"><span class="toc-section-number">1</span> Introducción</a></li>
+<li><a href="#transformación-de-la-serie"><span class="toc-section-number">2</span> Transformación de la serie</a></li>
+<li><a href="#identificación"><span class="toc-section-number">3</span> Identificación</a></li>
+<li><a href="#validación"><span class="toc-section-number">4</span> Validación</a></li>
+<li><a href="#interpretación-del-modelo"><span class="toc-section-number">5</span> Interpretación del modelo</a></li>
+<li><a href="#predicción"><span class="toc-section-number">6</span> Predicción</a></li>
+<li><a href="#calidad-de-las-previsiones-extra-muestrales-según-horizonte-temporal"><span class="toc-section-number">7</span> Calidad de las previsiones extra-muestrales según horizonte temporal</a></li>
+<li><a href="#comparación-con-un-modelo-de-alisado"><span class="toc-section-number">8</span> Comparación con un modelo de Alisado</a></li>
 </ul>
 </div>
 
 <p><br />
 <br />
 </p>
-<div id="ejemplo-de-aplicación-defunciones-por-enfermedades-cerebrovasculares-continuación." class="section level1">
-<h1><span class="header-section-number">1</span> Ejemplo de aplicación: Defunciones por Enfermedades Cerebrovasculares (continuación).</h1>
-<p><br />
-</p>
-<div id="introducción" class="section level2">
-<h2><span class="header-section-number">1.1</span> Introducción</h2>
+<div id="introducción" class="section level1">
+<h1><span class="header-section-number">1</span> Introducción</h1>
 <p>Consideremos de nuevo la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares, Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2018, un total de 39 años o 468 meses</p>
-<p>En la descriptiva del ejemplo del tema 1 vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para su análisis por modelos ARIMA vamos a recortar la serie, que empezará el enero de 1988 y a anualizarla (31 años).</p>
-<p><br />
-</p>
-</div>
-<div id="transformación-de-la-serie" class="section level2">
-<h2><span class="header-section-number">1.2</span> Transformación de la serie</h2>
-<p>La figura 1 muestra que la serie no es estacionaria, pero sí su primera diferencia. Por tanto, se opta por considerar <span class="math inline">\(d=1\)</span> o <span class="math inline">\(DefEnfCer \sim I(1)\)</span>.</p>
+<p>En la descriptiva vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para su análisis por modelos ARIMA vamos a recortar la serie, que empezará el enero de 1988 y a anualizarla (31 años).</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">DefEnfCer &lt;-<span class="st"> </span><span class="kw">read.csv2</span>(<span class="st">&quot;./series/Enfermedades cerebrovasculares.csv&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2">DefEnfCer &lt;-<span class="st"> </span><span class="kw">ts</span>(DefEnfCer[,<span class="dv">2</span>],<span class="dt">start =</span> <span class="dv">1980</span>, <span class="dt">freq =</span> <span class="dv">12</span>)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3">DefEnfCer &lt;-<span class="st"> </span><span class="kw">window</span>(DefEnfCer, <span class="dt">start =</span> <span class="dv">1988</span>)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">DefEnfCer &lt;-<span class="st"> </span><span class="kw">aggregate</span>(DefEnfCer, <span class="dt">FUN =</span> sum)</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="kw">autoplot</span>(DefEnfCer, <span class="dt">xlab =</span> <span class="st">&quot;Serie original&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw">autoplot</span>(<span class="kw">diff</span>(DefEnfCer), <span class="dt">xlab =</span> <span class="st">&quot;Serie diferenciada&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="kw">ggAcf</span>(DefEnfCer, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;FAC&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="kw">ggAcf</span>(<span class="kw">diff</span>(DefEnfCer), <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;FAC&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a></code></pre></div>
-<p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<p>Por otro lado, el parámetro <span class="math inline">\(\lambda\)</span> óptimo en la transformación de Box-Cox es -0.81, así que no se realizará ninguna transformación logarítmica.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">BoxCox.lambda</span>(DefEnfCer)</a></code></pre></div>
-<pre><code>[1] -0.8126561</code></pre>
+<a class="sourceLine" id="cb1-4" data-line-number="4">DefEnfCer &lt;-<span class="st"> </span><span class="kw">aggregate</span>(DefEnfCer, <span class="dt">FUN =</span> sum)</a></code></pre></div>
 <p><br />
+<br />
 </p>
 </div>
-<div id="identificación" class="section level2">
-<h2><span class="header-section-number">1.3</span> Identificación</h2>
-<p>Veamos ahora a identificar los valores de <span class="math inline">\(p\)</span> y <span class="math inline">\(q\)</span> a partir de la FAC y la FACP. Difícil decidirse entre un AR(1), un MA(1) o incluso un ARMA(1, 1).</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">ggtsdisplay</span>(<span class="kw">diff</span>(DefEnfCer), <span class="dt">main =</span> <span class="st">&quot;Figura 2. Def. por enf. cerebrovasculares (dif.)&quot;</span>)</a></code></pre></div>
+<div id="transformación-de-la-serie" class="section level1">
+<h1><span class="header-section-number">2</span> Transformación de la serie</h1>
+<p>Por un lado, el parámetro <span class="math inline">\(\lambda\)</span> óptimo en la transformación de Box-Cox es -0.81, así que no se realizará ninguna transformación logarítmica.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">BoxCox.lambda</span>(DefEnfCer)</a></code></pre></div>
+<pre><code>[1] -0.8126561</code></pre>
+<p>Por otro lado, la figura 1 muestra que la serie no es estacionaria, pero sí su primera diferencia. Por tanto, se opta por considerar <span class="math inline">\(d=1\)</span> o <span class="math inline">\(DefEnfCer \sim I(1)\)</span>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">autoplot</span>(DefEnfCer, <span class="dt">xlab =</span> <span class="st">&quot;Serie original&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">autoplot</span>(<span class="kw">diff</span>(DefEnfCer), <span class="dt">xlab =</span> <span class="st">&quot;Serie diferenciada&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw">ggAcf</span>(DefEnfCer, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;FAC&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="kw">ggAcf</span>(<span class="kw">diff</span>(DefEnfCer), <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;FAC&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a></code></pre></div>
 <p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+<br />
+</p>
+</div>
+<div id="identificación" class="section level1">
+<h1><span class="header-section-number">3</span> Identificación</h1>
+<p>Veamos ahora a identificar los valores de <span class="math inline">\(p\)</span> y <span class="math inline">\(q\)</span> a partir de la FAC y la FACP. Difícil decidirse entre un AR(1), un MA(1) o incluso un ARMA(1, 1).</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">ggtsdisplay</span>(<span class="kw">diff</span>(DefEnfCer), <span class="dt">main =</span> <span class="st">&quot;Figura 2. Def. por enf. cerebrovasculares (dif.)&quot;</span>)</a></code></pre></div>
+<p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>¿Qué recomienda <code>auto.arima</code>? Un AR(1) con deriva.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">auto.arima</span>(DefEnfCer, <span class="dt">d =</span> <span class="dv">1</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">auto.arima</span>(DefEnfCer, <span class="dt">d =</span> <span class="dv">1</span>)</a></code></pre></div>
 <pre><code>Series: DefEnfCer 
 ARIMA(1,1,0) with drift 
 
@@ -571,40 +566,42 @@ s.e.   0.1435    93.5852
 sigma^2 estimated as 676809:  log likelihood=-243.1
 AIC=492.21   AICc=493.13   BIC=496.41</code></pre>
 <p>La estimación de este modelo muestra que los dos coeficientes estimados son aparentemente significativos y que nos hay valores extremos (figura 3).</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">arima110 &lt;-<span class="st"> </span><span class="kw">Arima</span>(DefEnfCer, </a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">                  <span class="dt">order =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">                  <span class="dt">include.drift =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">error &lt;-<span class="st"> </span><span class="kw">residuals</span>(arima110)</a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">sderror &lt;-<span class="st"> </span><span class="kw">sd</span>(error)</a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="kw">autoplot</span>(error, <span class="dt">series=</span><span class="st">&quot;Error&quot;</span>,</a>
-<a class="sourceLine" id="cb7-9" data-line-number="9">         <span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>,</a>
-<a class="sourceLine" id="cb7-10" data-line-number="10">         <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>,</a>
-<a class="sourceLine" id="cb7-11" data-line-number="11">         <span class="dt">ylab =</span> <span class="st">&quot;Error&quot;</span>,</a>
-<a class="sourceLine" id="cb7-12" data-line-number="12">         <span class="dt">main =</span> <span class="st">&quot;Figura 3. Error + Intervención&quot;) +</span></a>
-<a class="sourceLine" id="cb7-13" data-line-number="13"><span class="st">  geom_hline(yintercept = c(-3, -2, 2, 3)*sderror, </span></a>
-<a class="sourceLine" id="cb7-14" data-line-number="14"><span class="st">             colour = c(&quot;</span>red<span class="st">&quot;, &quot;</span>green<span class="st">&quot;, &quot;</span>green<span class="st">&quot;, &quot;</span>red<span class="st">&quot;), </span></a>
-<a class="sourceLine" id="cb7-15" data-line-number="15"><span class="st">             lty = 2) + </span></a>
-<a class="sourceLine" id="cb7-16" data-line-number="16"><span class="st">  geom_point() +</span></a>
-<a class="sourceLine" id="cb7-17" data-line-number="17"><span class="st">  scale_x_continuous(breaks= seq(1988, 2018, 4)) </span></a></code></pre></div>
-<p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">arima110 &lt;-<span class="st"> </span><span class="kw">Arima</span>(DefEnfCer, </a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">                  <span class="dt">order =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">                  <span class="dt">include.drift =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">error &lt;-<span class="st"> </span><span class="kw">residuals</span>(arima110)</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">sderror &lt;-<span class="st"> </span><span class="kw">sd</span>(error)</a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="kw">autoplot</span>(error, <span class="dt">series=</span><span class="st">&quot;Error&quot;</span>,</a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">         <span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>,</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10">         <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb8-11" data-line-number="11">         <span class="dt">ylab =</span> <span class="st">&quot;Error&quot;</span>,</a>
+<a class="sourceLine" id="cb8-12" data-line-number="12">         <span class="dt">main =</span> <span class="st">&quot;Figura 3. Error + Intervención&quot;) +</span></a>
+<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="st">  geom_hline(yintercept = c(-3, -2, 2, 3)*sderror, </span></a>
+<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="st">             colour = c(&quot;</span>red<span class="st">&quot;, &quot;</span>green<span class="st">&quot;, &quot;</span>green<span class="st">&quot;, &quot;</span>red<span class="st">&quot;), </span></a>
+<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="st">             lty = 2) + </span></a>
+<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="st">  geom_point() +</span></a>
+<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="st">  scale_x_continuous(breaks= seq(1988, 2018, 4)) </span></a></code></pre></div>
+<p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p><br />
+<br />
 </p>
 </div>
-<div id="validación" class="section level2">
-<h2><span class="header-section-number">1.4</span> Validación</h2>
-<p><strong>Variables son significativas</strong></p>
+<div id="validación" class="section level1">
+<h1><span class="header-section-number">4</span> Validación</h1>
+<div id="variables-son-significativas" class="section level3 unnumbered">
+<h3>Variables son significativas</h3>
 <p>Los dos coeficientes estimados (<span class="math inline">\(\phi_1\)</span> y <span class="math inline">\(\mu\)</span>) son significativos.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># H0: phi1 = 0</span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw">wald.test</span>(<span class="dt">b =</span> <span class="kw">coef</span>(arima110), <span class="dt">Sigma =</span> <span class="kw">vcov</span>(arima110), <span class="dt">Terms =</span> <span class="dv">1</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># H0: phi1 = 0</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw">wald.test</span>(<span class="dt">b =</span> <span class="kw">coef</span>(arima110), <span class="dt">Sigma =</span> <span class="kw">vcov</span>(arima110), <span class="dt">Terms =</span> <span class="dv">1</span>)</a></code></pre></div>
 <pre><code>Wald test:
 ----------
 
 Chi-squared test:
 X2 = 15.7, df = 1, P(&gt; X2) = 0.000072</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># H0: deriva</span></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw">wald.test</span>(<span class="dt">b =</span> <span class="kw">coef</span>(arima110), <span class="dt">Sigma =</span> <span class="kw">vcov</span>(arima110), <span class="dt">Terms =</span> <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co"># H0: deriva</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw">wald.test</span>(<span class="dt">b =</span> <span class="kw">coef</span>(arima110), <span class="dt">Sigma =</span> <span class="kw">vcov</span>(arima110), <span class="dt">Terms =</span> <span class="dv">2</span>)</a></code></pre></div>
 <pre><code>Wald test:
 ----------
 
@@ -612,94 +609,106 @@ Chi-squared test:
 X2 = 42.0, df = 1, P(&gt; X2) = 0.000000000089</code></pre>
 <p><br />
 </p>
-<p><strong>Medidas de error</strong></p>
+</div>
+<div id="medidas-de-error" class="section level3 unnumbered">
+<h3>Medidas de error</h3>
 <p>El error medio es 782 defunciones (RMSE) y el error porcentual medio es 1.7% (MAPE).</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">accuracy</span>(arima110)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">accuracy</span>(arima110)</a></code></pre></div>
 <pre><code>                ME   RMSE    MAE   MPE MAPE MASE  ACF1
 Training set -0.71 781.86 591.48 -0.01  1.7 0.62 -0.12</code></pre>
 <p><br />
 </p>
-<p><strong>Incorrelación, Homocedasticidad y Normalidad</strong></p>
+</div>
+<div id="incorrelación-homocedasticidad-y-normalidad" class="section level3 unnumbered">
+<h3>Incorrelación, Homocedasticidad y Normalidad</h3>
 <p>Veamos ahora si el residuo es ruido blanco:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">Box.test</span>(error, <span class="dt">lag =</span> <span class="dv">2</span>, <span class="dt">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">Box.test</span>(error, <span class="dt">lag =</span> <span class="dv">2</span>, <span class="dt">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>)</a></code></pre></div>
 <pre><code>
     Box-Ljung test
 
 data:  error
 X-squared = 2.0985, df = 2, p-value = 0.3502</code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">Box.test</span>(error<span class="op">^</span><span class="dv">2</span>, <span class="dt">lag =</span> <span class="dv">2</span>, <span class="dt">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">Box.test</span>(error<span class="op">^</span><span class="dv">2</span>, <span class="dt">lag =</span> <span class="dv">2</span>, <span class="dt">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>) </a></code></pre></div>
 <pre><code>
     Box-Ljung test
 
 data:  error^2
 X-squared = 2.6067, df = 2, p-value = 0.2716</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">shapiro.test</span>(error)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">shapiro.test</span>(error)</a></code></pre></div>
 <pre><code>
     Shapiro-Wilk normality test
 
 data:  error
 W = 0.90145, p-value = 0.007838</code></pre>
-<p>Las hipótesis de incorrelación y homocedasticidad se aceptan. También se aceptarían para otros valores de <span class="math inline">\(k\)</span> razonables. Sin embargo, no se acepta la hipótesis de normalidad.</p>
+<p>Las hipótesis de incorrelación y homocedasticidad se aceptan. También se aceptarían para otros valores de <span class="math inline">\(k\)</span> razonables. Sin embargo, no se acepta la hipótesis de normalidad, por lo que toda la inferencia realizada queda invalidada. Sin embargo, esto no impide usar el modelo ARIMA para predecir.</p>
 <p><br />
+<br />
 </p>
 </div>
-<div id="interpretación-del-modelo" class="section level2">
-<h2><span class="header-section-number">1.5</span> Interpretación del modelo</h2>
+</div>
+<div id="interpretación-del-modelo" class="section level1">
+<h1><span class="header-section-number">5</span> Interpretación del modelo</h1>
 <p>El <strong>modelo teórico</strong> es <span class="math inline">\(DefEnfCer \sim ARIMA(1,1,0)\)</span> + constante: <span class="math display">\[(1 - \phi_1 L)(1 - L) DefEnfCer_t =  c + \varepsilon_t.\]</span></p>
 <p>Desarrollando queda: <span class="math display">\[DefEnfCer_t = c + DefEnfCer_{t-1} + \phi_1(DefEnfCer_{t-1}-DefEnfCer_{t-2}) + \varepsilon_t\]</span></p>
 <p>Finalmente. el <strong>modelo estimado</strong> es (recuerda que <span class="math inline">\(c = (1 - \phi_1)\mu\)</span>): <span class="math display">\[\widehat{DefEnfCer}_t = -952.49 + DefEnfCer_{t-1} - 0.57(DefEnfCer_{t-1}-DefEnfCer_{t-2}) \]</span> Cada año el número de defunciones por enfermedades cerebrovasculares es el mismo que el año previo, menos 952.5 casos, menos un 57% de la ultima variación observada.</p>
 <p><br />
+<br />
 </p>
 </div>
-<div id="predicción" class="section level2">
-<h2><span class="header-section-number">1.6</span> Predicción</h2>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">parima110 &lt;-<span class="st"> </span><span class="kw">forecast</span>(arima110, </a>
-<a class="sourceLine" id="cb20-2" data-line-number="2">                      <span class="dt">h =</span> <span class="dv">5</span>, </a>
-<a class="sourceLine" id="cb20-3" data-line-number="3">                      <span class="dt">level =</span> <span class="dv">95</span>)</a>
-<a class="sourceLine" id="cb20-4" data-line-number="4">parima110</a></code></pre></div>
+<div id="predicción" class="section level1">
+<h1><span class="header-section-number">6</span> Predicción</h1>
+<p>Podemos usar el modelo estimado para predecir los casos de defunciones por enfermedad cerebrovascular para los próximos 5 años.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">parima110 &lt;-<span class="st"> </span><span class="kw">forecast</span>(arima110, </a>
+<a class="sourceLine" id="cb21-2" data-line-number="2">                      <span class="dt">h =</span> <span class="dv">5</span>, </a>
+<a class="sourceLine" id="cb21-3" data-line-number="3">                      <span class="dt">level =</span> <span class="dv">95</span>)</a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">parima110</a></code></pre></div>
 <pre><code>     Point Forecast    Lo 95    Hi 95
 2019       25761.99 24149.56 27374.42
 2020       25184.30 23428.85 26939.75
 2021       24560.86 22424.74 26696.98
 2022       23963.48 21637.99 26288.97
 2023       23351.26 20783.46 25919.06</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">autoplot</span>(parima110, </a>
-<a class="sourceLine" id="cb22-2" data-line-number="2">     <span class="dt">ylab =</span> <span class="st">&quot;Defunciones&quot;</span>,</a>
-<a class="sourceLine" id="cb22-3" data-line-number="3">     <span class="dt">main =</span> <span class="st">&quot;Figura 4. Defunciones por enfermedades cerebrovasculares&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks=</span> <span class="kw">seq</span>(<span class="dv">1988</span>, <span class="dv">2023</span>, <span class="dv">4</span>)) </a></code></pre></div>
-<p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">autoplot</span>(parima110, </a>
+<a class="sourceLine" id="cb23-2" data-line-number="2">     <span class="dt">ylab =</span> <span class="st">&quot;Defunciones&quot;</span>,</a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">     <span class="dt">main =</span> <span class="st">&quot;Figura 4. Defunciones por enfermedades cerebrovasculares&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb23-4" data-line-number="4"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks=</span> <span class="kw">seq</span>(<span class="dv">1988</span>, <span class="dv">2023</span>, <span class="dv">4</span>)) </a></code></pre></div>
+<p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>El modelo predice un descenso anual en el número de defunciones de aproximadamente 600 casos.</p>
 <p><br />
+<br />
 </p>
 </div>
-<div id="calidad-de-las-previsiones-extra-muestrales-según-horizonte-temporal" class="section level2">
-<h2><span class="header-section-number">1.7</span> Calidad de las previsiones extra-muestrales según horizonte temporal</h2>
-<p>Vamos a aplicar la metodología de origen de predicción móvil a la serie de Defunciones por enfermedades cerebrovasculares. Asumimos que se precisan veinte años para hacer una buena estimación, <span class="math inline">\(k=20\)</span>, y que el horizonte temporal es cinco años, <span class="math inline">\(h = 5\)</span>.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">k &lt;-<span class="st"> </span><span class="dv">20</span>                   <span class="co">#Minimo numero de datos para estimar</span></a>
-<a class="sourceLine" id="cb23-2" data-line-number="2">h &lt;-<span class="st"> </span><span class="dv">5</span>                    <span class="co">#Horizonte de las predicicones</span></a>
-<a class="sourceLine" id="cb23-3" data-line-number="3">TT &lt;-<span class="st"> </span><span class="kw">length</span>(DefEnfCer)   <span class="co">#Longitud serie</span></a>
-<a class="sourceLine" id="cb23-4" data-line-number="4">s &lt;-<span class="st"> </span>TT<span class="op">-</span>k<span class="op">-</span>h               <span class="co">#Total de estimaciones</span></a>
-<a class="sourceLine" id="cb23-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb23-6" data-line-number="6">mapeArima &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, s <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, h)</a>
-<a class="sourceLine" id="cb23-7" data-line-number="7"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">0</span><span class="op">:</span>s) {</a>
-<a class="sourceLine" id="cb23-8" data-line-number="8">  train.set &lt;-<span class="st"> </span><span class="kw">subset</span>(DefEnfCer, <span class="dt">start =</span> i <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">end =</span> i <span class="op">+</span><span class="st"> </span>k)</a>
-<a class="sourceLine" id="cb23-9" data-line-number="9">  test.set &lt;-<span class="st">  </span><span class="kw">subset</span>(DefEnfCer, <span class="dt">start =</span> i <span class="op">+</span><span class="st"> </span>k <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">end =</span> i <span class="op">+</span><span class="st"> </span>k <span class="op">+</span><span class="st"> </span>h)</a>
-<a class="sourceLine" id="cb23-10" data-line-number="10">  </a>
-<a class="sourceLine" id="cb23-11" data-line-number="11">  fit &lt;-<span class="st"> </span><span class="kw">Arima</span>(train.set, <span class="dt">order =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),<span class="dt">include.drift =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb23-12" data-line-number="12">  fcast&lt;-<span class="kw">forecast</span>(fit, <span class="dt">h =</span> h)</a>
-<a class="sourceLine" id="cb23-13" data-line-number="13">  mapeArima[i <span class="op">+</span><span class="st"> </span><span class="dv">1</span>,] &lt;-<span class="st"> </span><span class="dv">100</span><span class="op">*</span><span class="kw">abs</span>(test.set <span class="op">-</span><span class="st"> </span>fcast<span class="op">$</span>mean)<span class="op">/</span>test.set</a>
-<a class="sourceLine" id="cb23-14" data-line-number="14">}</a>
-<a class="sourceLine" id="cb23-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb23-16" data-line-number="16">errorArima &lt;-<span class="st"> </span><span class="kw">colMeans</span>(mapeArima)</a>
-<a class="sourceLine" id="cb23-17" data-line-number="17">errorArima</a></code></pre></div>
+<div id="calidad-de-las-previsiones-extra-muestrales-según-horizonte-temporal" class="section level1">
+<h1><span class="header-section-number">7</span> Calidad de las previsiones extra-muestrales según horizonte temporal</h1>
+<p>Vamos a aplicar la metodología de origen de predicción móvil a la serie de Defunciones por enfermedades cerebrovasculares.</p>
+<p>Asumimos que se precisan veinte años para hacer una buena estimación, <span class="math inline">\(k=20\)</span>, y que el horizonte temporal es cinco años, <span class="math inline">\(h = 5\)</span>.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">k &lt;-<span class="st"> </span><span class="dv">20</span>                   <span class="co">#Minimo numero de datos para estimar</span></a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">h &lt;-<span class="st"> </span><span class="dv">5</span>                    <span class="co">#Horizonte de las predicicones</span></a>
+<a class="sourceLine" id="cb24-3" data-line-number="3">TT &lt;-<span class="st"> </span><span class="kw">length</span>(DefEnfCer)   <span class="co">#Longitud serie</span></a>
+<a class="sourceLine" id="cb24-4" data-line-number="4">s &lt;-<span class="st"> </span>TT<span class="op">-</span>k<span class="op">-</span>h               <span class="co">#Total de estimaciones</span></a>
+<a class="sourceLine" id="cb24-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb24-6" data-line-number="6">mapeArima &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, s <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, h)</a>
+<a class="sourceLine" id="cb24-7" data-line-number="7"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">0</span><span class="op">:</span>s) {</a>
+<a class="sourceLine" id="cb24-8" data-line-number="8">  train.set &lt;-<span class="st"> </span><span class="kw">subset</span>(DefEnfCer, <span class="dt">start =</span> i <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">end =</span> i <span class="op">+</span><span class="st"> </span>k)</a>
+<a class="sourceLine" id="cb24-9" data-line-number="9">  test.set &lt;-<span class="st">  </span><span class="kw">subset</span>(DefEnfCer, <span class="dt">start =</span> i <span class="op">+</span><span class="st"> </span>k <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">end =</span> i <span class="op">+</span><span class="st"> </span>k <span class="op">+</span><span class="st"> </span>h)</a>
+<a class="sourceLine" id="cb24-10" data-line-number="10">  </a>
+<a class="sourceLine" id="cb24-11" data-line-number="11">  fit &lt;-<span class="st"> </span><span class="kw">Arima</span>(train.set, <span class="dt">order =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),<span class="dt">include.drift =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb24-12" data-line-number="12">  fcast&lt;-<span class="kw">forecast</span>(fit, <span class="dt">h =</span> h)</a>
+<a class="sourceLine" id="cb24-13" data-line-number="13">  mapeArima[i <span class="op">+</span><span class="st"> </span><span class="dv">1</span>,] &lt;-<span class="st"> </span><span class="dv">100</span><span class="op">*</span><span class="kw">abs</span>(test.set <span class="op">-</span><span class="st"> </span>fcast<span class="op">$</span>mean)<span class="op">/</span>test.set</a>
+<a class="sourceLine" id="cb24-14" data-line-number="14">}</a>
+<a class="sourceLine" id="cb24-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb24-16" data-line-number="16">errorArima &lt;-<span class="st"> </span><span class="kw">colMeans</span>(mapeArima)</a>
+<a class="sourceLine" id="cb24-17" data-line-number="17">errorArima</a></code></pre></div>
 <pre><code>[1] 1.494510 2.388923 2.822362 3.334597 3.864334</code></pre>
 <p>Se observa que: i) el error de predicción extra-muestral a un periodo vista (1.5%) es algo inferior al intra-muestral (1.7%); ii) conforme aumenta el horizonte temporal de previsión el error aumenta; y iii) en todo caso el error se mantiene bajo.</p>
 <p><br />
+<br />
 </p>
 </div>
-<div id="comparación-con-un-modelo-de-alisado" class="section level2">
-<h2><span class="header-section-number">1.8</span> Comparación con un modelo de Alisado</h2>
+<div id="comparación-con-un-modelo-de-alisado" class="section level1">
+<h1><span class="header-section-number">8</span> Comparación con un modelo de Alisado</h1>
 <p>Si estimamos la serie anual de Defunciones por enfermedades cerebrovasculares aplicando técnicas de alisado exponencial nos encontramos con un modelo con pendiente aditiva ETS(A,A,N). Además, <span class="math inline">\(\alpha = \beta = 0\)</span>. Si aplicamos estos valores a las ecuaciones iterativas de actualización tenemos que <span class="math inline">\(l_t = l_0\)</span> y que <span class="math inline">\(b_t = b_0\)</span>. Por tanto <span class="math inline">\(\widehat{y}_t = l_0 + t b_0\)</span>, un modelo lineal (<span class="math inline">\(\widehat{y}_t = 45808.75 - 655.37\cdot t\)</span>).</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">summary</span>(alisado &lt;-<span class="st"> </span><span class="kw">ets</span>(DefEnfCer, <span class="dt">model =</span> <span class="st">&quot;ZZZ&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">summary</span>(alisado &lt;-<span class="st"> </span><span class="kw">ets</span>(DefEnfCer, <span class="dt">model =</span> <span class="st">&quot;ZZZ&quot;</span>))</a></code></pre></div>
 <pre><code>ETS(A,A,N) 
 
 Call:
@@ -723,29 +732,28 @@ Training set error measures:
 Training set -116.3082 746.5983 616.4059 -0.2799447 1.811351 0.6496918
                   ACF1
 Training set 0.1025637</code></pre>
-<p>La calidad del ajuste del modelo de alisado es similar a la del modelo ARIMA: MAPE de 1.8% para el primero frente a 1.7% para el segundo; RMSE de 747 para el primero frente a 782 para el segundo. Más aún, si se aplica la metodología de origen de predicción móvil al modelo de alisado, el error a un periodo vista es del 2.1%, pero a cinco periodos vista se mantiene en el 3%.</p>
+<p>La calidad del ajuste del modelo de alisado es similar a la del modelo ARIMA: MAPE de 1.8% para el primero frente a 1.7% para el segundo; RMSE de 747 para el primero frente a 782 para el segundo. Más aún, si se aplica la metodología de origen de predicción móvil al modelo de alisado, el error a un periodo vista es del 2.1%, pero a cinco periodos vista se mantiene en el 3%. Es resumen, el mejor modelo depende del criterio considerado.</p>
 <p>Finalmente, las predicciones realizadas con ambos modelos son prácticamente las mismas como se puede observar.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">palisado &lt;-<span class="st"> </span><span class="kw">forecast</span>(alisado, <span class="dt">h =</span> <span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="kw">autoplot</span>(DefEnfCer,</a>
-<a class="sourceLine" id="cb27-3" data-line-number="3">         <span class="dt">series =</span> <span class="st">&quot;Defunciones Enf. Cerebrovasculares&quot;</span>,</a>
-<a class="sourceLine" id="cb27-4" data-line-number="4">         <span class="dt">main=</span><span class="st">&quot;Figura 5. Defunciones Enf. Cerebrovasculares y previsión&quot;,</span></a>
-<a class="sourceLine" id="cb27-5" data-line-number="5"><span class="st">         xlab=&quot;&quot;, </span></a>
-<a class="sourceLine" id="cb27-6" data-line-number="6"><span class="st">         ylab=&quot;</span>Defunciones<span class="st">&quot;) +</span></a>
-<a class="sourceLine" id="cb27-7" data-line-number="7"><span class="st">  autolayer(parima110$mean, series = &quot;</span>Previsión con Arima<span class="st">&quot;) +</span></a>
-<a class="sourceLine" id="cb27-8" data-line-number="8"><span class="st">  autolayer(palisado$mean, series = &quot;</span>Previsión con Alisado<span class="st">&quot;) +</span></a>
-<a class="sourceLine" id="cb27-9" data-line-number="9"><span class="st">  guides(colour = guide_legend(title = &quot;</span>Predicción&quot;)<span class="er">)</span> <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb27-10" data-line-number="10"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="kw">c</span>(<span class="fl">0.98</span>,<span class="fl">0.98</span>), <span class="dt">legend.justification=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</a></code></pre></div>
-<p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<p>En definitiva, para esta serie, que es corta y aparentemente sencilla, la aproximación por la metodología ARIMA no mejora sustancialmente el modelo de alisado, más fácil de obtener e interpretar.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">palisado &lt;-<span class="st"> </span><span class="kw">forecast</span>(alisado, <span class="dt">h =</span> <span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="kw">autoplot</span>(DefEnfCer,</a>
+<a class="sourceLine" id="cb28-3" data-line-number="3">         <span class="dt">series =</span> <span class="st">&quot;Defunciones Enf. Cerebrovasculares&quot;</span>,</a>
+<a class="sourceLine" id="cb28-4" data-line-number="4">         <span class="dt">main=</span><span class="st">&quot;Figura 5. Defunciones Enf. Cerebrovasculares y previsión&quot;,</span></a>
+<a class="sourceLine" id="cb28-5" data-line-number="5"><span class="st">         xlab=&quot;&quot;, </span></a>
+<a class="sourceLine" id="cb28-6" data-line-number="6"><span class="st">         ylab=&quot;</span>Defunciones<span class="st">&quot;) +</span></a>
+<a class="sourceLine" id="cb28-7" data-line-number="7"><span class="st">  autolayer(parima110$mean, series = &quot;</span>Previsión con Arima<span class="st">&quot;) +</span></a>
+<a class="sourceLine" id="cb28-8" data-line-number="8"><span class="st">  autolayer(palisado$mean, series = &quot;</span>Previsión con Alisado<span class="st">&quot;) +</span></a>
+<a class="sourceLine" id="cb28-9" data-line-number="9"><span class="st">  guides(colour = guide_legend(title = &quot;</span>Predicción&quot;)<span class="er">)</span> <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb28-10" data-line-number="10"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="kw">c</span>(<span class="fl">0.98</span>,<span class="fl">0.98</span>), <span class="dt">legend.justification=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</a></code></pre></div>
+<p><img src="03-09-Ejemplo4_files/figure-html/unnamed-chunk-16-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>En definitiva, para esta serie, que es corta y aparentemente sencilla, la aproximación por la metodología ARIMA no mejora sustancialmente el modelo de Alisado exponencial, más fácil de obtener e interpretar.</p>
 <p><br />
 <br />
 <br />
 <br />
 </p>
 </div>
-</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiU2VyaWVzIFRlbXBvcmFsZXM6IFByb2Nlc29zIEFSSU1BIgphdXRob3I6ICJJdsOhbiBBcnJpYmFzIChEZXB0by4gQW7DoWxpc2lzIEVjb27Ds21pY28uIFVuaXZlcnNpdGF0IGRlIFZhbMOobmNpYSkiCmRhdGU6ICJDdXJzbyAyMDIwLTIxIgpvdXRwdXQ6IAogIGh0bWxfZG9jdW1lbnQ6CiAgICB0aGVtZTogY2VydWxlYW4KICAgIGhpZ2hsaWdodDogcHlnbWVudHMgCiAgICBmaWdfY2FwdGlvbjogZmFsc2UKICAgIGRmX3ByaW50OiBrYWJsZQogICAgdG9jOiB0cnVlCiAgICB0b2NfZGVwdGg6IDIKICAgIG51bWJlcl9zZWN0aW9uczogdHJ1ZQogICAgc2VsZl9jb250YWluZWQ6IHRydWUKICAgIGNvZGVfZG93bmxvYWQ6IHRydWUKLS0tCgpgYGB7ciBjaHVua19zZXR1cCwgZWNobyA9IEZBTFNFfQprbml0cjo6b3B0c19jaHVuayRzZXQod2FybmluZyA9IEZBTFNFLCAKICAgICAgICAgICAgICAgICAgICAgIG1lc3NhZ2UgPSBGQUxTRSwgCiAgICAgICAgICAgICAgICAgICAgICBjb21tZW50ID0gIiIsCiAgICAgICAgICAgICAgICAgICAgICBmaWcuYWxpZ24gPSAiY2VudGVyIiwgCiAgICAgICAgICAgICAgICAgICAgICBmaWcuc2hvdyA9ICJob2xkIiwKICAgICAgICAgICAgICAgICAgICAgIGZpZy5oZWlnaHQgPSA0LAogICAgICAgICAgICAgICAgICAgICAgZmlnLndpZHRoID0gOCwKICAgICAgICAgICAgICAgICAgICAgIG91dC53aWR0aCA9ICI4MCUiKSAKYGBgCgpgYGB7ciBvcHRpb25zX3NldHVwLCBlY2hvID0gRkFMU0V9Cm9wdGlvbnMoc2NpcGVuID0gOTk5KSAjLSBwYXJhIHF1aXRhciBsYSBub3RhY2lvbiBjaWVudGlmaWNhCmBgYAoKYGBge3IgbGlicmVyaWFzLCBlY2hvID0gRkFMU0V9CmxpYnJhcnkoZm9yZWNhc3QpCmxpYnJhcnkoZ2dwbG90Mik7IHRoZW1lX3NldCh0aGVtZV9idygpKQpsaWJyYXJ5KGdyaWRFeHRyYSkKbGlicmFyeShncmlkKQpsaWJyYXJ5KHRzZXJpZXMpCmxpYnJhcnkoYW9kKQpgYGAKClwKXAoKIyBFamVtcGxvIGRlIGFwbGljYWNpw7NuOiBEZWZ1bmNpb25lcyBwb3IgRW5mZXJtZWRhZGVzIENlcmVicm92YXNjdWxhcmVzIChjb250aW51YWNpw7NuKS4KClwKCiMjIEludHJvZHVjY2nDs24KCkNvbnNpZGVyZW1vcyBkZSBudWV2byBsYSBzZXJpZSB0ZW1wb3JhbCBjb3JyZXNwb25kaWVudGUgYWwgbsO6bWVybyBkZSBkZWZ1bmNpb25lcyBjYXVzYWRhcyBwb3IgZW5mZXJtZWRhZGVzIGNlcmVicm92YXNjdWxhcmVzLCBFc3RhIHNlcmllIGVzdMOhIGRpc3BvbmlibGUgZW4gZWwgSW5zdGl0dXRvIE5hY2lvbmFsIGRlIEVzdGFkw61zdGljYSBkZXNkZSBlbmVybyBkZSAxOTgwIGhhc3RhIGRpY2llbWJyZSBkZSAyMDE4LCB1biB0b3RhbCBkZSAzOSBhw7FvcyBvIDQ2OCBtZXNlcwoKRW4gbGEgZGVzY3JpcHRpdmEgZGVsIGVqZW1wbG8gZGVsIHRlbWEgMSB2aW1vcyBxdWUgbGEgZGVzY29tcG9zaWNpw7NuIHJldmVsYWJhIGxhIHByZXNlbmNpYSBkZSB2YXJpb3MgdmFsb3JlcyBhdMOtcGljb3MgY29uY2VudHJhZG9zIGFsIGluaWNpbyBkZSBsYSBzZXJpZS4gUG9yIGVzdGUgbW90aXZvLCBwYXJhIHN1IGFuw6FsaXNpcyBwb3IgbW9kZWxvcyBBUklNQSB2YW1vcyBhIHJlY29ydGFyIGxhIHNlcmllLCBxdWUgZW1wZXphcsOhIGVsIGVuZXJvIGRlIDE5ODggeSBhIGFudWFsaXphcmxhICgzMSBhw7FvcykuCgpcCgojIyBUcmFuc2Zvcm1hY2nDs24gZGUgbGEgc2VyaWUKCkxhIGZpZ3VyYSAxIG11ZXN0cmEgcXVlIGxhIHNlcmllIG5vIGVzIGVzdGFjaW9uYXJpYSwgcGVybyBzw60gc3UgcHJpbWVyYSBkaWZlcmVuY2lhLiBQb3IgdGFudG8sIHNlIG9wdGEgcG9yIGNvbnNpZGVyYXIgJGQ9MSQgbyAkRGVmRW5mQ2VyIFxzaW0gSSgxKSQuCgoKYGBge3IsIGV2YWwgPSBGQUxTRX0KRGVmRW5mQ2VyIDwtIHJlYWQuY3N2MigiLi9zZXJpZXMvRW5mZXJtZWRhZGVzIGNlcmVicm92YXNjdWxhcmVzLmNzdiIsIGhlYWRlciA9IFRSVUUpCkRlZkVuZkNlciA8LSB0cyhEZWZFbmZDZXJbLDJdLHN0YXJ0ID0gMTk4MCwgZnJlcSA9IDEyKQpEZWZFbmZDZXIgPC0gd2luZG93KERlZkVuZkNlciwgc3RhcnQgPSAxOTg4KQpEZWZFbmZDZXIgPC0gYWdncmVnYXRlKERlZkVuZkNlciwgRlVOID0gc3VtKQoKYXV0b3Bsb3QoRGVmRW5mQ2VyLCB4bGFiID0gIlNlcmllIG9yaWdpbmFsIiwgeWxhYiA9ICIiLCBtYWluID0gIiIpCmF1dG9wbG90KGRpZmYoRGVmRW5mQ2VyKSwgeGxhYiA9ICJTZXJpZSBkaWZlcmVuY2lhZGEiLCB5bGFiID0gIiIsIG1haW4gPSAiIikKZ2dBY2YoRGVmRW5mQ2VyLCB4bGFiID0gIiIsIHlsYWIgPSAiRkFDIiwgbWFpbiA9ICIiKQpnZ0FjZihkaWZmKERlZkVuZkNlciksIHhsYWIgPSAiIiwgeWxhYiA9ICJGQUMiLCBtYWluID0gIiIpCmBgYAoKYGBge3IsIGVjaG8gPSBGQUxTRX0KRGVmRW5mQ2VyIDwtIHJlYWQuY3N2MigiLi9zZXJpZXMvRW5mZXJtZWRhZGVzIGNlcmVicm92YXNjdWxhcmVzLmNzdiIsIGhlYWRlciA9IFRSVUUpCkRlZkVuZkNlciA8LSB0cyhEZWZFbmZDZXJbLDJdLHN0YXJ0PTE5ODAsZnJlcT0xMikKRGVmRW5mQ2VyIDwtIHdpbmRvdyhEZWZFbmZDZXIsIHN0YXJ0ID0gMTk4OCkKRGVmRW5mQ2VyIDwtIGFnZ3JlZ2F0ZShEZWZFbmZDZXIsIEZVTiA9IHN1bSkKCmdyaWQuYXJyYW5nZSgKICBhdXRvcGxvdChEZWZFbmZDZXIsIHhsYWIgPSAiU2VyaWUgb3JpZ2luYWwiLCB5bGFiID0gIiIsIG1haW4gPSAiRmlndXJhIDEuIERlZi4gZW5mLiBjZXJlYnJvdmFzLiIpLAogIGF1dG9wbG90KGRpZmYoRGVmRW5mQ2VyKSwgeGxhYiA9ICJTZXJpZSBkaWZlcmVuY2lhZGEiLCB5bGFiID0gIiIsIG1haW4gPSAiIiksCiAgZ2dBY2YoRGVmRW5mQ2VyLCB4bGFiID0gIiIsIHlsYWIgPSAiRkFDIiwgbWFpbiA9ICIiKSwKICBnZ0FjZihkaWZmKERlZkVuZkNlciksIHhsYWIgPSAiIiwgeWxhYiA9ICJGQUMiLCBtYWluID0gIiIpLAogIG5yb3cgPSAyCikKYGBgCgpQb3Igb3RybyBsYWRvLCBlbCBwYXLDoW1ldHJvICRcbGFtYmRhJCDDs3B0aW1vIGVuIGxhIHRyYW5zZm9ybWFjacOzbiBkZSBCb3gtQ294IGVzIC0wLjgxLCBhc8OtIHF1ZSBubyBzZSByZWFsaXphcsOhIG5pbmd1bmEgdHJhbnNmb3JtYWNpw7NuIGxvZ2Fyw610bWljYS4KCmBgYHtyfQpCb3hDb3gubGFtYmRhKERlZkVuZkNlcikKYGBgCgpcCgojIyBJZGVudGlmaWNhY2nDs24KClZlYW1vcyBhaG9yYSBhIGlkZW50aWZpY2FyIGxvcyB2YWxvcmVzIGRlICRwJCB5ICRxJCBhIHBhcnRpciBkZSBsYSBGQUMgeSBsYSBGQUNQLiBEaWbDrWNpbCBkZWNpZGlyc2UgZW50cmUgdW4gQVIoMSksIHVuIE1BKDEpIG8gaW5jbHVzbyB1biBBUk1BKDEsIDEpLgoKYGBge3J9IApnZ3RzZGlzcGxheShkaWZmKERlZkVuZkNlciksIG1haW4gPSAiRmlndXJhIDIuIERlZi4gcG9yIGVuZi4gY2VyZWJyb3Zhc2N1bGFyZXMgKGRpZi4pIikKYGBgCgrCv1F1w6kgcmVjb21pZW5kYSBgYXV0by5hcmltYWA/IFVuIEFSKDEpIGNvbiBkZXJpdmEuCgpgYGB7cn0gCmF1dG8uYXJpbWEoRGVmRW5mQ2VyLCBkID0gMSkKYGBgCgpMYSBlc3RpbWFjacOzbiBkZSBlc3RlIG1vZGVsbyBtdWVzdHJhIHF1ZSBsb3MgZG9zIGNvZWZpY2llbnRlcyBlc3RpbWFkb3Mgc29uIGFwYXJlbnRlbWVudGUgc2lnbmlmaWNhdGl2b3MgeSBxdWUgbm9zIGhheSB2YWxvcmVzIGV4dHJlbW9zIChmaWd1cmEgMykuCgpgYGB7cn0KYXJpbWExMTAgPC0gQXJpbWEoRGVmRW5mQ2VyLCAKICAgICAgICAgICAgICAgICAgb3JkZXIgPSBjKDEsIDEsIDApLAogICAgICAgICAgICAgICAgICBpbmNsdWRlLmRyaWZ0ID0gVFJVRSkKCmVycm9yIDwtIHJlc2lkdWFscyhhcmltYTExMCkKc2RlcnJvciA8LSBzZChlcnJvcikKCmF1dG9wbG90KGVycm9yLCBzZXJpZXM9IkVycm9yIiwKICAgICAgICAgY29sb3VyID0gImJsYWNrIiwKICAgICAgICAgeGxhYiA9ICIiLAogICAgICAgICB5bGFiID0gIkVycm9yIiwKICAgICAgICAgbWFpbiA9ICJGaWd1cmEgMy4gRXJyb3IgKyBJbnRlcnZlbmNpw7NuIikgKwogIGdlb21faGxpbmUoeWludGVyY2VwdCA9IGMoLTMsIC0yLCAyLCAzKSpzZGVycm9yLCAKICAgICAgICAgICAgIGNvbG91ciA9IGMoInJlZCIsICJncmVlbiIsICJncmVlbiIsICJyZWQiKSwgCiAgICAgICAgICAgICBsdHkgPSAyKSArIAogIGdlb21fcG9pbnQoKSArCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz0gc2VxKDE5ODgsIDIwMTgsIDQpKSAKYGBgCgpcCgojIyBWYWxpZGFjacOzbgoKX19WYXJpYWJsZXMgc29uIHNpZ25pZmljYXRpdmFzX18KCkxvcyBkb3MgY29lZmljaWVudGVzIGVzdGltYWRvcyAoJFxwaGlfMSQgeSAkXG11JCkgc29uIHNpZ25pZmljYXRpdm9zLgoKYGBge3J9CiMgSDA6IHBoaTEgPSAwCndhbGQudGVzdChiID0gY29lZihhcmltYTExMCksIFNpZ21hID0gdmNvdihhcmltYTExMCksIFRlcm1zID0gMSkKIyBIMDogZGVyaXZhCndhbGQudGVzdChiID0gY29lZihhcmltYTExMCksIFNpZ21hID0gdmNvdihhcmltYTExMCksIFRlcm1zID0gMikKYGBgCgpcCgpfX01lZGlkYXMgZGUgZXJyb3JfXwoKRWwgZXJyb3IgbWVkaW8gZXMgYHIgcm91bmQoYWNjdXJhY3koYXJpbWExMTApWzJdLDApYCBkZWZ1bmNpb25lcyAoUk1TRSkgeSBlbCBlcnJvciBwb3JjZW50dWFsIG1lZGlvIGVzIGByIHJvdW5kKGFjY3VyYWN5KGFyaW1hMTEwKVs1XSwyKWAlIChNQVBFKS4KCmBgYHtyLCBldmFsPUZBTFNFfQphY2N1cmFjeShhcmltYTExMCkKYGBgCgpgYGB7cixlY2hvPUZBTFNFfQpyb3VuZChhY2N1cmFjeShhcmltYTExMCksMikKYGBgCgpcCgpfX0luY29ycmVsYWNpw7NuLCBIb21vY2VkYXN0aWNpZGFkIHkgTm9ybWFsaWRhZF9fCgpWZWFtb3MgYWhvcmEgc2kgZWwgcmVzaWR1byBlcyBydWlkbyBibGFuY286CgpgYGB7cn0KQm94LnRlc3QoZXJyb3IsIGxhZyA9IDIsIHR5cGUgPSAiTGp1bmctQm94IikKQm94LnRlc3QoZXJyb3JeMiwgbGFnID0gMiwgdHlwZSA9ICJManVuZy1Cb3giKSAKc2hhcGlyby50ZXN0KGVycm9yKQpgYGAKCgpMYXMgaGlww7N0ZXNpcyBkZSBpbmNvcnJlbGFjacOzbiB5IGhvbW9jZWRhc3RpY2lkYWQgc2UgYWNlcHRhbi4gVGFtYmnDqW4gc2UgYWNlcHRhcsOtYW4gcGFyYSBvdHJvcyB2YWxvcmVzIGRlICRrJCByYXpvbmFibGVzLiBTaW4gZW1iYXJnbywgbm8gc2UgYWNlcHRhIGxhIGhpcMOzdGVzaXMgZGUgbm9ybWFsaWRhZC4gCgpcCgojIyBJbnRlcnByZXRhY2nDs24gZGVsIG1vZGVsbwoKRWwgX19tb2RlbG8gdGXDs3JpY29fXyBlcyAkRGVmRW5mQ2VyIFxzaW0gQVJJTUEoMSwxLDApJCArIGNvbnN0YW50ZToKJCQoMSAtIFxwaGlfMSBMKSgxIC0gTCkgRGVmRW5mQ2VyX3QgPSAgYyArIFx2YXJlcHNpbG9uX3QuJCQKCkRlc2Fycm9sbGFuZG8gcXVlZGE6CiQkRGVmRW5mQ2VyX3QgPSBjICsgRGVmRW5mQ2VyX3t0LTF9ICsgXHBoaV8xKERlZkVuZkNlcl97dC0xfS1EZWZFbmZDZXJfe3QtMn0pICsgXHZhcmVwc2lsb25fdCQkCgpGaW5hbG1lbnRlLiBlbCBfX21vZGVsbyBlc3RpbWFkb19fIGVzIChyZWN1ZXJkYSBxdWUgJGMgPSAoMSAtIFxwaGlfMSlcbXUkKToKJCRcd2lkZWhhdHtEZWZFbmZDZXJ9X3QgPSAtOTUyLjQ5ICsgRGVmRW5mQ2VyX3t0LTF9IC0gMC41NyhEZWZFbmZDZXJfe3QtMX0tRGVmRW5mQ2VyX3t0LTJ9KSAkJApDYWRhIGHDsW8gZWwgbsO6bWVybyBkZSBkZWZ1bmNpb25lcyBwb3IgZW5mZXJtZWRhZGVzIGNlcmVicm92YXNjdWxhcmVzIGVzIGVsIG1pc21vIHF1ZSBlbCBhw7FvIHByZXZpbywgbWVub3MgOTUyLjUgY2Fzb3MsIG1lbm9zIHVuIDU3JSBkZSBsYSB1bHRpbWEgdmFyaWFjacOzbiBvYnNlcnZhZGEuCiAgIApcCgojIyBQcmVkaWNjacOzbgoKCmBgYHtyfQpwYXJpbWExMTAgPC0gZm9yZWNhc3QoYXJpbWExMTAsIAogICAgICAgICAgICAgICAgICAgICAgaCA9IDUsIAogICAgICAgICAgICAgICAgICAgICAgbGV2ZWwgPSA5NSkKcGFyaW1hMTEwCmBgYAoKYGBge3J9CmF1dG9wbG90KHBhcmltYTExMCwgCiAgICAgeWxhYiA9ICJEZWZ1bmNpb25lcyIsCiAgICAgbWFpbiA9ICJGaWd1cmEgNC4gRGVmdW5jaW9uZXMgcG9yIGVuZmVybWVkYWRlcyBjZXJlYnJvdmFzY3VsYXJlcyIpICsKICBzY2FsZV94X2NvbnRpbnVvdXMoYnJlYWtzPSBzZXEoMTk4OCwgMjAyMywgNCkpIApgYGAKClwKCiMjIENhbGlkYWQgZGUgbGFzIHByZXZpc2lvbmVzIGV4dHJhLW11ZXN0cmFsZXMgc2Vnw7puIGhvcml6b250ZSB0ZW1wb3JhbAoKVmFtb3MgYSBhcGxpY2FyIGxhIG1ldG9kb2xvZ8OtYSBkZSBvcmlnZW4gZGUgcHJlZGljY2nDs24gbcOzdmlsIGEgbGEgc2VyaWUgZGUgRGVmdW5jaW9uZXMgcG9yIGVuZmVybWVkYWRlcyBjZXJlYnJvdmFzY3VsYXJlcy4gCkFzdW1pbW9zIHF1ZSBzZSBwcmVjaXNhbiB2ZWludGUgYcOxb3MgcGFyYSBoYWNlciB1bmEgYnVlbmEgZXN0aW1hY2nDs24sICRrPTIwJCwgeSBxdWUgZWwgaG9yaXpvbnRlIHRlbXBvcmFsIGVzIGNpbmNvIGHDsW9zLCAkaCA9IDUkLgogIApgYGB7cn0gIAprIDwtIDIwICAgICAgICAgICAgICAgICAgICNNaW5pbW8gbnVtZXJvIGRlIGRhdG9zIHBhcmEgZXN0aW1hcgpoIDwtIDUgICAgICAgICAgICAgICAgICAgICNIb3Jpem9udGUgZGUgbGFzIHByZWRpY2ljb25lcwpUVCA8LSBsZW5ndGgoRGVmRW5mQ2VyKSAgICNMb25naXR1ZCBzZXJpZQpzIDwtIFRULWstaCAgICAgICAgICAgICAgICNUb3RhbCBkZSBlc3RpbWFjaW9uZXMKCm1hcGVBcmltYSA8LSBtYXRyaXgoTkEsIHMgKyAxLCBoKQpmb3IgKGkgaW4gMDpzKSB7CiAgdHJhaW4uc2V0IDwtIHN1YnNldChEZWZFbmZDZXIsIHN0YXJ0ID0gaSArIDEsIGVuZCA9IGkgKyBrKQogIHRlc3Quc2V0IDwtICBzdWJzZXQoRGVmRW5mQ2VyLCBzdGFydCA9IGkgKyBrICsgMSwgZW5kID0gaSArIGsgKyBoKQogIAogIGZpdCA8LSBBcmltYSh0cmFpbi5zZXQsIG9yZGVyID0gYygxLCAxLCAwKSxpbmNsdWRlLmRyaWZ0ID0gVFJVRSkKICBmY2FzdDwtZm9yZWNhc3QoZml0LCBoID0gaCkKICBtYXBlQXJpbWFbaSArIDEsXSA8LSAxMDAqYWJzKHRlc3Quc2V0IC0gZmNhc3QkbWVhbikvdGVzdC5zZXQKfQoKZXJyb3JBcmltYSA8LSBjb2xNZWFucyhtYXBlQXJpbWEpCmVycm9yQXJpbWEKYGBgCgpTZSBvYnNlcnZhIHF1ZTogaSkgZWwgZXJyb3IgZGUgcHJlZGljY2nDs24gZXh0cmEtbXVlc3RyYWwgYSB1biBwZXJpb2RvIHZpc3RhICgxLjUlKSBlcyBhbGdvIGluZmVyaW9yIGFsIGludHJhLW11ZXN0cmFsICgxLjclKTsgaWkpIGNvbmZvcm1lIGF1bWVudGEgZWwgaG9yaXpvbnRlIHRlbXBvcmFsIGRlIHByZXZpc2nDs24gZWwgZXJyb3IgYXVtZW50YTsgeSBpaWkpIGVuIHRvZG8gY2FzbyBlbCBlcnJvciBzZSBtYW50aWVuZSBiYWpvLgoKXAoKIyMgQ29tcGFyYWNpw7NuIGNvbiB1biBtb2RlbG8gZGUgQWxpc2FkbwoKU2kgZXN0aW1hbW9zIGxhIHNlcmllIGFudWFsIGRlIERlZnVuY2lvbmVzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMgYXBsaWNhbmRvIHTDqWNuaWNhcyBkZSBhbGlzYWRvIGV4cG9uZW5jaWFsIG5vcyBlbmNvbnRyYW1vcyBjb24gdW4gbW9kZWxvIGNvbiBwZW5kaWVudGUgYWRpdGl2YSBFVFMoQSxBLE4pLiBBZGVtw6FzLCAkXGFscGhhID0gXGJldGEgPSAwJC4gU2kgYXBsaWNhbW9zIGVzdG9zIHZhbG9yZXMgYSBsYXMgZWN1YWNpb25lcyBpdGVyYXRpdmFzIGRlIGFjdHVhbGl6YWNpw7NuIHRlbmVtb3MgcXVlICRsX3QgPSBsXzAkIHkgcXVlICRiX3QgPSBiXzAkLiBQb3IgdGFudG8gJFx3aWRlaGF0e3l9X3QgPSBsXzAgKyB0IGJfMCQsIHVuIG1vZGVsbyBsaW5lYWwgKCRcd2lkZWhhdHt5fV90ID0gNDU4MDguNzUgLSA2NTUuMzdcY2RvdCB0JCkuCgpgYGB7cn0Kc3VtbWFyeShhbGlzYWRvIDwtIGV0cyhEZWZFbmZDZXIsIG1vZGVsID0gIlpaWiIpKQpgYGAKCkxhIGNhbGlkYWQgZGVsIGFqdXN0ZSBkZWwgbW9kZWxvIGRlIGFsaXNhZG8gZXMgc2ltaWxhciBhIGxhIGRlbCBtb2RlbG8gQVJJTUE6IE1BUEUgZGUgMS44JSBwYXJhIGVsIHByaW1lcm8gZnJlbnRlIGEgMS43JSBwYXJhIGVsIHNlZ3VuZG87IFJNU0UgZGUgNzQ3IHBhcmEgZWwgcHJpbWVybyBmcmVudGUgYSA3ODIgcGFyYSBlbCBzZWd1bmRvLiBNw6FzIGHDum4sIHNpIHNlIGFwbGljYSBsYSBtZXRvZG9sb2fDrWEgZGUgb3JpZ2VuIGRlIHByZWRpY2Npw7NuIG3Ds3ZpbCBhbCBtb2RlbG8gZGUgYWxpc2FkbywgZWwgZXJyb3IgYSB1biBwZXJpb2RvIHZpc3RhIGVzIGRlbCAyLjElLCBwZXJvIGEgY2luY28gcGVyaW9kb3MgdmlzdGEgc2UgbWFudGllbmUgZW4gZWwgMyUuCgpGaW5hbG1lbnRlLCBsYXMgcHJlZGljY2lvbmVzIHJlYWxpemFkYXMgY29uIGFtYm9zIG1vZGVsb3Mgc29uIHByw6FjdGljYW1lbnRlIGxhcyBtaXNtYXMgY29tbyBzZSBwdWVkZSBvYnNlcnZhci4KCmBgYHtyfQpwYWxpc2FkbyA8LSBmb3JlY2FzdChhbGlzYWRvLCBoID0gNSkKYXV0b3Bsb3QoRGVmRW5mQ2VyLAogICAgICAgICBzZXJpZXMgPSAiRGVmdW5jaW9uZXMgRW5mLiBDZXJlYnJvdmFzY3VsYXJlcyIsCiAgICAgICAgIG1haW49IkZpZ3VyYSA1LiBEZWZ1bmNpb25lcyBFbmYuIENlcmVicm92YXNjdWxhcmVzIHkgcHJldmlzacOzbiIsCiAgICAgICAgIHhsYWI9IiIsIAogICAgICAgICB5bGFiPSJEZWZ1bmNpb25lcyIpICsKICBhdXRvbGF5ZXIocGFyaW1hMTEwJG1lYW4sIHNlcmllcyA9ICJQcmV2aXNpw7NuIGNvbiBBcmltYSIpICsKICBhdXRvbGF5ZXIocGFsaXNhZG8kbWVhbiwgc2VyaWVzID0gIlByZXZpc2nDs24gY29uIEFsaXNhZG8iKSArCiAgZ3VpZGVzKGNvbG91ciA9IGd1aWRlX2xlZ2VuZCh0aXRsZSA9ICJQcmVkaWNjacOzbiIpKSArIAogIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbj1jKDAuOTgsMC45OCksIGxlZ2VuZC5qdXN0aWZpY2F0aW9uPWMoMSwxKSkKYGBgCgpFbiBkZWZpbml0aXZhLCBwYXJhIGVzdGEgc2VyaWUsIHF1ZSBlcyBjb3J0YSB5IGFwYXJlbnRlbWVudGUgc2VuY2lsbGEsIGxhIGFwcm94aW1hY2nDs24gcG9yIGxhIG1ldG9kb2xvZ8OtYSBBUklNQSBubyBtZWpvcmEgc3VzdGFuY2lhbG1lbnRlIGVsIG1vZGVsbyBkZSBhbGlzYWRvLCBtw6FzIGbDoWNpbCBkZSBvYnRlbmVyIGUgaW50ZXJwcmV0YXIuCgpcClwKXApcCg==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiRGVmdW5jaW9uZXMgcG9yIEVuZmVybWVkYWRlcyBDZXJlYnJvdmFzY3VsYXJlcyIKc3VidGl0bGU6ICJQcm9jZXNvcyBBUklNQSAoc2luIGVzdGFjaW9uYWxpZGFkKSIKYXV0aG9yOiAiSXbDoW4gQXJyaWJhcyAoRGVwdG8uIEFuw6FsaXNpcyBFY29uw7NtaWNvLiBVbml2ZXJzaXRhdCBkZSBWYWzDqG5jaWEpIgpvdXRwdXQ6IAogIGh0bWxfZG9jdW1lbnQ6CiAgICB0aGVtZTogY2VydWxlYW4KICAgIGhpZ2hsaWdodDogcHlnbWVudHMgCiAgICBmaWdfY2FwdGlvbjogZmFsc2UKICAgIGRmX3ByaW50OiBrYWJsZQogICAgdG9jOiB0cnVlCiAgICB0b2NfZGVwdGg6IDIKICAgIG51bWJlcl9zZWN0aW9uczogdHJ1ZQogICAgc2VsZl9jb250YWluZWQ6IHRydWUKICAgIGNvZGVfZG93bmxvYWQ6IHRydWUKLS0tCgpgYGB7ciBjaHVua19zZXR1cCwgZWNobyA9IEZBTFNFfQprbml0cjo6b3B0c19jaHVuayRzZXQod2FybmluZyA9IEZBTFNFLCAKICAgICAgICAgICAgICAgICAgICAgIG1lc3NhZ2UgPSBGQUxTRSwgCiAgICAgICAgICAgICAgICAgICAgICBjb21tZW50ID0gIiIsCiAgICAgICAgICAgICAgICAgICAgICBmaWcuYWxpZ24gPSAiY2VudGVyIiwgCiAgICAgICAgICAgICAgICAgICAgICBmaWcuc2hvdyA9ICJob2xkIiwKICAgICAgICAgICAgICAgICAgICAgIGZpZy5oZWlnaHQgPSA0LAogICAgICAgICAgICAgICAgICAgICAgZmlnLndpZHRoID0gOCwKICAgICAgICAgICAgICAgICAgICAgIG91dC53aWR0aCA9ICI4MCUiKSAKYGBgCgpgYGB7ciBvcHRpb25zX3NldHVwLCBlY2hvID0gRkFMU0V9Cm9wdGlvbnMoc2NpcGVuID0gOTk5KSAjLSBwYXJhIHF1aXRhciBsYSBub3RhY2lvbiBjaWVudGlmaWNhCmBgYAoKYGBge3IgbGlicmVyaWFzLCBlY2hvID0gRkFMU0V9CmxpYnJhcnkoZm9yZWNhc3QpCmxpYnJhcnkoZ2dwbG90Mik7IHRoZW1lX3NldCh0aGVtZV9idygpKQpsaWJyYXJ5KGdyaWRFeHRyYSkKbGlicmFyeShncmlkKQpsaWJyYXJ5KHRzZXJpZXMpCmxpYnJhcnkoYW9kKQpgYGAKClwKXAoKIyBJbnRyb2R1Y2Npw7NuCgpDb25zaWRlcmVtb3MgZGUgbnVldm8gbGEgc2VyaWUgdGVtcG9yYWwgY29ycmVzcG9uZGllbnRlIGFsIG7Dum1lcm8gZGUgZGVmdW5jaW9uZXMgY2F1c2FkYXMgcG9yIGVuZmVybWVkYWRlcyBjZXJlYnJvdmFzY3VsYXJlcywgRXN0YSBzZXJpZSBlc3TDoSBkaXNwb25pYmxlIGVuIGVsIEluc3RpdHV0byBOYWNpb25hbCBkZSBFc3RhZMOtc3RpY2EgZGVzZGUgZW5lcm8gZGUgMTk4MCBoYXN0YSBkaWNpZW1icmUgZGUgMjAxOCwgdW4gdG90YWwgZGUgMzkgYcOxb3MgbyA0NjggbWVzZXMKCkVuIGxhIGRlc2NyaXB0aXZhIHZpbW9zIHF1ZSBsYSBkZXNjb21wb3NpY2nDs24gcmV2ZWxhYmEgbGEgcHJlc2VuY2lhIGRlIHZhcmlvcyB2YWxvcmVzIGF0w61waWNvcyBjb25jZW50cmFkb3MgYWwgaW5pY2lvIGRlIGxhIHNlcmllLiBQb3IgZXN0ZSBtb3Rpdm8sIHBhcmEgc3UgYW7DoWxpc2lzIHBvciBtb2RlbG9zIEFSSU1BIHZhbW9zIGEgcmVjb3J0YXIgbGEgc2VyaWUsIHF1ZSBlbXBlemFyw6EgZWwgZW5lcm8gZGUgMTk4OCB5IGEgYW51YWxpemFybGEgKDMxIGHDsW9zKS4KCmBgYHtyfQpEZWZFbmZDZXIgPC0gcmVhZC5jc3YyKCIuL3Nlcmllcy9FbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMuY3N2IiwgaGVhZGVyID0gVFJVRSkKRGVmRW5mQ2VyIDwtIHRzKERlZkVuZkNlclssMl0sc3RhcnQgPSAxOTgwLCBmcmVxID0gMTIpCkRlZkVuZkNlciA8LSB3aW5kb3coRGVmRW5mQ2VyLCBzdGFydCA9IDE5ODgpCkRlZkVuZkNlciA8LSBhZ2dyZWdhdGUoRGVmRW5mQ2VyLCBGVU4gPSBzdW0pCmBgYAoKXApcCgojIFRyYW5zZm9ybWFjacOzbiBkZSBsYSBzZXJpZQoKUG9yIHVuIGxhZG8sIGVsIHBhcsOhbWV0cm8gJFxsYW1iZGEkIMOzcHRpbW8gZW4gbGEgdHJhbnNmb3JtYWNpw7NuIGRlIEJveC1Db3ggZXMgLTAuODEsIGFzw60gcXVlIG5vIHNlIHJlYWxpemFyw6EgbmluZ3VuYSB0cmFuc2Zvcm1hY2nDs24gbG9nYXLDrXRtaWNhLgoKYGBge3J9CkJveENveC5sYW1iZGEoRGVmRW5mQ2VyKQpgYGAKClBvciBvdHJvIGxhZG8sIGxhIGZpZ3VyYSAxIG11ZXN0cmEgcXVlIGxhIHNlcmllIG5vIGVzIGVzdGFjaW9uYXJpYSwgcGVybyBzw60gc3UgcHJpbWVyYSBkaWZlcmVuY2lhLiBQb3IgdGFudG8sIHNlIG9wdGEgcG9yIGNvbnNpZGVyYXIgJGQ9MSQgbyAkRGVmRW5mQ2VyIFxzaW0gSSgxKSQuCgoKYGBge3IsIGV2YWwgPSBGQUxTRX0KYXV0b3Bsb3QoRGVmRW5mQ2VyLCB4bGFiID0gIlNlcmllIG9yaWdpbmFsIiwgeWxhYiA9ICIiLCBtYWluID0gIiIpCmF1dG9wbG90KGRpZmYoRGVmRW5mQ2VyKSwgeGxhYiA9ICJTZXJpZSBkaWZlcmVuY2lhZGEiLCB5bGFiID0gIiIsIG1haW4gPSAiIikKZ2dBY2YoRGVmRW5mQ2VyLCB4bGFiID0gIiIsIHlsYWIgPSAiRkFDIiwgbWFpbiA9ICIiKQpnZ0FjZihkaWZmKERlZkVuZkNlciksIHhsYWIgPSAiIiwgeWxhYiA9ICJGQUMiLCBtYWluID0gIiIpCmBgYAoKYGBge3IsIGVjaG8gPSBGQUxTRX0KZ3JpZC5hcnJhbmdlKAogIGF1dG9wbG90KERlZkVuZkNlciwgeGxhYiA9ICJTZXJpZSBvcmlnaW5hbCIsIHlsYWIgPSAiIiwgbWFpbiA9ICJGaWd1cmEgMS4gRGVmLiBlbmYuIGNlcmVicm92YXMuIiksCiAgYXV0b3Bsb3QoZGlmZihEZWZFbmZDZXIpLCB4bGFiID0gIlNlcmllIGRpZmVyZW5jaWFkYSIsIHlsYWIgPSAiIiwgbWFpbiA9ICIiKSwKICBnZ0FjZihEZWZFbmZDZXIsIHhsYWIgPSAiIiwgeWxhYiA9ICJGQUMiLCBtYWluID0gIiIpLAogIGdnQWNmKGRpZmYoRGVmRW5mQ2VyKSwgeGxhYiA9ICIiLCB5bGFiID0gIkZBQyIsIG1haW4gPSAiIiksCiAgbnJvdyA9IDIKKQpgYGAKClwKXAoKIyBJZGVudGlmaWNhY2nDs24KClZlYW1vcyBhaG9yYSBhIGlkZW50aWZpY2FyIGxvcyB2YWxvcmVzIGRlICRwJCB5ICRxJCBhIHBhcnRpciBkZSBsYSBGQUMgeSBsYSBGQUNQLiBEaWbDrWNpbCBkZWNpZGlyc2UgZW50cmUgdW4gQVIoMSksIHVuIE1BKDEpIG8gaW5jbHVzbyB1biBBUk1BKDEsIDEpLgoKYGBge3J9IApnZ3RzZGlzcGxheShkaWZmKERlZkVuZkNlciksIG1haW4gPSAiRmlndXJhIDIuIERlZi4gcG9yIGVuZi4gY2VyZWJyb3Zhc2N1bGFyZXMgKGRpZi4pIikKYGBgCgrCv1F1w6kgcmVjb21pZW5kYSBgYXV0by5hcmltYWA/IFVuIEFSKDEpIGNvbiBkZXJpdmEuCgpgYGB7cn0gCmF1dG8uYXJpbWEoRGVmRW5mQ2VyLCBkID0gMSkKYGBgCgpMYSBlc3RpbWFjacOzbiBkZSBlc3RlIG1vZGVsbyBtdWVzdHJhIHF1ZSBsb3MgZG9zIGNvZWZpY2llbnRlcyBlc3RpbWFkb3Mgc29uIGFwYXJlbnRlbWVudGUgc2lnbmlmaWNhdGl2b3MgeSBxdWUgbm9zIGhheSB2YWxvcmVzIGV4dHJlbW9zIChmaWd1cmEgMykuCgpgYGB7cn0KYXJpbWExMTAgPC0gQXJpbWEoRGVmRW5mQ2VyLCAKICAgICAgICAgICAgICAgICAgb3JkZXIgPSBjKDEsIDEsIDApLAogICAgICAgICAgICAgICAgICBpbmNsdWRlLmRyaWZ0ID0gVFJVRSkKCmVycm9yIDwtIHJlc2lkdWFscyhhcmltYTExMCkKc2RlcnJvciA8LSBzZChlcnJvcikKCmF1dG9wbG90KGVycm9yLCBzZXJpZXM9IkVycm9yIiwKICAgICAgICAgY29sb3VyID0gImJsYWNrIiwKICAgICAgICAgeGxhYiA9ICIiLAogICAgICAgICB5bGFiID0gIkVycm9yIiwKICAgICAgICAgbWFpbiA9ICJGaWd1cmEgMy4gRXJyb3IgKyBJbnRlcnZlbmNpw7NuIikgKwogIGdlb21faGxpbmUoeWludGVyY2VwdCA9IGMoLTMsIC0yLCAyLCAzKSpzZGVycm9yLCAKICAgICAgICAgICAgIGNvbG91ciA9IGMoInJlZCIsICJncmVlbiIsICJncmVlbiIsICJyZWQiKSwgCiAgICAgICAgICAgICBsdHkgPSAyKSArIAogIGdlb21fcG9pbnQoKSArCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz0gc2VxKDE5ODgsIDIwMTgsIDQpKSAKYGBgCgpcClwKCiMgVmFsaWRhY2nDs24KCiMjIyBWYXJpYWJsZXMgc29uIHNpZ25pZmljYXRpdmFzIHstfQoKTG9zIGRvcyBjb2VmaWNpZW50ZXMgZXN0aW1hZG9zICgkXHBoaV8xJCB5ICRcbXUkKSBzb24gc2lnbmlmaWNhdGl2b3MuCgpgYGB7cn0KIyBIMDogcGhpMSA9IDAKd2FsZC50ZXN0KGIgPSBjb2VmKGFyaW1hMTEwKSwgU2lnbWEgPSB2Y292KGFyaW1hMTEwKSwgVGVybXMgPSAxKQojIEgwOiBkZXJpdmEKd2FsZC50ZXN0KGIgPSBjb2VmKGFyaW1hMTEwKSwgU2lnbWEgPSB2Y292KGFyaW1hMTEwKSwgVGVybXMgPSAyKQpgYGAKClwKCiMjIyBNZWRpZGFzIGRlIGVycm9yIHstfQoKRWwgZXJyb3IgbWVkaW8gZXMgYHIgcm91bmQoYWNjdXJhY3koYXJpbWExMTApWzJdLDApYCBkZWZ1bmNpb25lcyAoUk1TRSkgeSBlbCBlcnJvciBwb3JjZW50dWFsIG1lZGlvIGVzIGByIHJvdW5kKGFjY3VyYWN5KGFyaW1hMTEwKVs1XSwyKWAlIChNQVBFKS4KCmBgYHtyLCBldmFsPUZBTFNFfQphY2N1cmFjeShhcmltYTExMCkKYGBgCgpgYGB7cixlY2hvPUZBTFNFfQpyb3VuZChhY2N1cmFjeShhcmltYTExMCksMikKYGBgCgpcCgojIyMgSW5jb3JyZWxhY2nDs24sIEhvbW9jZWRhc3RpY2lkYWQgeSBOb3JtYWxpZGFkIHstfSAgCgpWZWFtb3MgYWhvcmEgc2kgZWwgcmVzaWR1byBlcyBydWlkbyBibGFuY286CgpgYGB7cn0KQm94LnRlc3QoZXJyb3IsIGxhZyA9IDIsIHR5cGUgPSAiTGp1bmctQm94IikKQm94LnRlc3QoZXJyb3JeMiwgbGFnID0gMiwgdHlwZSA9ICJManVuZy1Cb3giKSAKc2hhcGlyby50ZXN0KGVycm9yKQpgYGAKCgpMYXMgaGlww7N0ZXNpcyBkZSBpbmNvcnJlbGFjacOzbiB5IGhvbW9jZWRhc3RpY2lkYWQgc2UgYWNlcHRhbi4gVGFtYmnDqW4gc2UgYWNlcHRhcsOtYW4gcGFyYSBvdHJvcyB2YWxvcmVzIGRlICRrJCByYXpvbmFibGVzLiBTaW4gZW1iYXJnbywgbm8gc2UgYWNlcHRhIGxhIGhpcMOzdGVzaXMgZGUgbm9ybWFsaWRhZCwgcG9yIGxvIHF1ZSB0b2RhIGxhIGluZmVyZW5jaWEgcmVhbGl6YWRhIHF1ZWRhIGludmFsaWRhZGEuIFNpbiBlbWJhcmdvLCBlc3RvIG5vIGltcGlkZSB1c2FyIGVsIG1vZGVsbyBBUklNQSBwYXJhIHByZWRlY2lyLiAKClwKXAoKIyBJbnRlcnByZXRhY2nDs24gZGVsIG1vZGVsbwoKRWwgX19tb2RlbG8gdGXDs3JpY29fXyBlcyAkRGVmRW5mQ2VyIFxzaW0gQVJJTUEoMSwxLDApJCArIGNvbnN0YW50ZToKJCQoMSAtIFxwaGlfMSBMKSgxIC0gTCkgRGVmRW5mQ2VyX3QgPSAgYyArIFx2YXJlcHNpbG9uX3QuJCQKCkRlc2Fycm9sbGFuZG8gcXVlZGE6CiQkRGVmRW5mQ2VyX3QgPSBjICsgRGVmRW5mQ2VyX3t0LTF9ICsgXHBoaV8xKERlZkVuZkNlcl97dC0xfS1EZWZFbmZDZXJfe3QtMn0pICsgXHZhcmVwc2lsb25fdCQkCgpGaW5hbG1lbnRlLiBlbCBfX21vZGVsbyBlc3RpbWFkb19fIGVzIChyZWN1ZXJkYSBxdWUgJGMgPSAoMSAtIFxwaGlfMSlcbXUkKToKJCRcd2lkZWhhdHtEZWZFbmZDZXJ9X3QgPSAtOTUyLjQ5ICsgRGVmRW5mQ2VyX3t0LTF9IC0gMC41NyhEZWZFbmZDZXJfe3QtMX0tRGVmRW5mQ2VyX3t0LTJ9KSAkJApDYWRhIGHDsW8gZWwgbsO6bWVybyBkZSBkZWZ1bmNpb25lcyBwb3IgZW5mZXJtZWRhZGVzIGNlcmVicm92YXNjdWxhcmVzIGVzIGVsIG1pc21vIHF1ZSBlbCBhw7FvIHByZXZpbywgbWVub3MgOTUyLjUgY2Fzb3MsIG1lbm9zIHVuIDU3JSBkZSBsYSB1bHRpbWEgdmFyaWFjacOzbiBvYnNlcnZhZGEuCgpcClwKCiMgUHJlZGljY2nDs24KClBvZGVtb3MgdXNhciBlbCBtb2RlbG8gZXN0aW1hZG8gcGFyYSBwcmVkZWNpciBsb3MgY2Fzb3MgZGUgZGVmdW5jaW9uZXMgcG9yIGVuZmVybWVkYWQgY2VyZWJyb3Zhc2N1bGFyIHBhcmEgbG9zIHByw7N4aW1vcyA1IGHDsW9zLgoKYGBge3J9CnBhcmltYTExMCA8LSBmb3JlY2FzdChhcmltYTExMCwgCiAgICAgICAgICAgICAgICAgICAgICBoID0gNSwgCiAgICAgICAgICAgICAgICAgICAgICBsZXZlbCA9IDk1KQpwYXJpbWExMTAKYGBgCgpgYGB7cn0KYXV0b3Bsb3QocGFyaW1hMTEwLCAKICAgICB5bGFiID0gIkRlZnVuY2lvbmVzIiwKICAgICBtYWluID0gIkZpZ3VyYSA0LiBEZWZ1bmNpb25lcyBwb3IgZW5mZXJtZWRhZGVzIGNlcmVicm92YXNjdWxhcmVzIikgKwogIHNjYWxlX3hfY29udGludW91cyhicmVha3M9IHNlcSgxOTg4LCAyMDIzLCA0KSkgCmBgYAoKRWwgbW9kZWxvIHByZWRpY2UgdW4gZGVzY2Vuc28gYW51YWwgZW4gZWwgbsO6bWVybyBkZSBkZWZ1bmNpb25lcyBkZSBhcHJveGltYWRhbWVudGUgNjAwIGNhc29zLiAKClwKXAoKIyBDYWxpZGFkIGRlIGxhcyBwcmV2aXNpb25lcyBleHRyYS1tdWVzdHJhbGVzIHNlZ8O6biBob3Jpem9udGUgdGVtcG9yYWwKClZhbW9zIGEgYXBsaWNhciBsYSBtZXRvZG9sb2fDrWEgZGUgb3JpZ2VuIGRlIHByZWRpY2Npw7NuIG3Ds3ZpbCBhIGxhIHNlcmllIGRlIERlZnVuY2lvbmVzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMuIAoKQXN1bWltb3MgcXVlIHNlIHByZWNpc2FuIHZlaW50ZSBhw7FvcyBwYXJhIGhhY2VyIHVuYSBidWVuYSBlc3RpbWFjacOzbiwgJGs9MjAkLCB5IHF1ZSBlbCBob3Jpem9udGUgdGVtcG9yYWwgZXMgY2luY28gYcOxb3MsICRoID0gNSQuCiAgCmBgYHtyfSAgCmsgPC0gMjAgICAgICAgICAgICAgICAgICAgI01pbmltbyBudW1lcm8gZGUgZGF0b3MgcGFyYSBlc3RpbWFyCmggPC0gNSAgICAgICAgICAgICAgICAgICAgI0hvcml6b250ZSBkZSBsYXMgcHJlZGljaWNvbmVzClRUIDwtIGxlbmd0aChEZWZFbmZDZXIpICAgI0xvbmdpdHVkIHNlcmllCnMgPC0gVFQtay1oICAgICAgICAgICAgICAgI1RvdGFsIGRlIGVzdGltYWNpb25lcwoKbWFwZUFyaW1hIDwtIG1hdHJpeChOQSwgcyArIDEsIGgpCmZvciAoaSBpbiAwOnMpIHsKICB0cmFpbi5zZXQgPC0gc3Vic2V0KERlZkVuZkNlciwgc3RhcnQgPSBpICsgMSwgZW5kID0gaSArIGspCiAgdGVzdC5zZXQgPC0gIHN1YnNldChEZWZFbmZDZXIsIHN0YXJ0ID0gaSArIGsgKyAxLCBlbmQgPSBpICsgayArIGgpCiAgCiAgZml0IDwtIEFyaW1hKHRyYWluLnNldCwgb3JkZXIgPSBjKDEsIDEsIDApLGluY2x1ZGUuZHJpZnQgPSBUUlVFKQogIGZjYXN0PC1mb3JlY2FzdChmaXQsIGggPSBoKQogIG1hcGVBcmltYVtpICsgMSxdIDwtIDEwMCphYnModGVzdC5zZXQgLSBmY2FzdCRtZWFuKS90ZXN0LnNldAp9CgplcnJvckFyaW1hIDwtIGNvbE1lYW5zKG1hcGVBcmltYSkKZXJyb3JBcmltYQpgYGAKClNlIG9ic2VydmEgcXVlOiBpKSBlbCBlcnJvciBkZSBwcmVkaWNjacOzbiBleHRyYS1tdWVzdHJhbCBhIHVuIHBlcmlvZG8gdmlzdGEgKDEuNSUpIGVzIGFsZ28gaW5mZXJpb3IgYWwgaW50cmEtbXVlc3RyYWwgKDEuNyUpOyBpaSkgY29uZm9ybWUgYXVtZW50YSBlbCBob3Jpem9udGUgdGVtcG9yYWwgZGUgcHJldmlzacOzbiBlbCBlcnJvciBhdW1lbnRhOyB5IGlpaSkgZW4gdG9kbyBjYXNvIGVsIGVycm9yIHNlIG1hbnRpZW5lIGJham8uCgpcClwKCiMgQ29tcGFyYWNpw7NuIGNvbiB1biBtb2RlbG8gZGUgQWxpc2FkbwoKU2kgZXN0aW1hbW9zIGxhIHNlcmllIGFudWFsIGRlIERlZnVuY2lvbmVzIHBvciBlbmZlcm1lZGFkZXMgY2VyZWJyb3Zhc2N1bGFyZXMgYXBsaWNhbmRvIHTDqWNuaWNhcyBkZSBhbGlzYWRvIGV4cG9uZW5jaWFsIG5vcyBlbmNvbnRyYW1vcyBjb24gdW4gbW9kZWxvIGNvbiBwZW5kaWVudGUgYWRpdGl2YSBFVFMoQSxBLE4pLiBBZGVtw6FzLCAkXGFscGhhID0gXGJldGEgPSAwJC4gU2kgYXBsaWNhbW9zIGVzdG9zIHZhbG9yZXMgYSBsYXMgZWN1YWNpb25lcyBpdGVyYXRpdmFzIGRlIGFjdHVhbGl6YWNpw7NuIHRlbmVtb3MgcXVlICRsX3QgPSBsXzAkIHkgcXVlICRiX3QgPSBiXzAkLiBQb3IgdGFudG8gJFx3aWRlaGF0e3l9X3QgPSBsXzAgKyB0IGJfMCQsIHVuIG1vZGVsbyBsaW5lYWwgKCRcd2lkZWhhdHt5fV90ID0gNDU4MDguNzUgLSA2NTUuMzdcY2RvdCB0JCkuCgpgYGB7cn0Kc3VtbWFyeShhbGlzYWRvIDwtIGV0cyhEZWZFbmZDZXIsIG1vZGVsID0gIlpaWiIpKQpgYGAKCkxhIGNhbGlkYWQgZGVsIGFqdXN0ZSBkZWwgbW9kZWxvIGRlIGFsaXNhZG8gZXMgc2ltaWxhciBhIGxhIGRlbCBtb2RlbG8gQVJJTUE6IE1BUEUgZGUgMS44JSBwYXJhIGVsIHByaW1lcm8gZnJlbnRlIGEgMS43JSBwYXJhIGVsIHNlZ3VuZG87IFJNU0UgZGUgNzQ3IHBhcmEgZWwgcHJpbWVybyBmcmVudGUgYSA3ODIgcGFyYSBlbCBzZWd1bmRvLiBNw6FzIGHDum4sIHNpIHNlIGFwbGljYSBsYSBtZXRvZG9sb2fDrWEgZGUgb3JpZ2VuIGRlIHByZWRpY2Npw7NuIG3Ds3ZpbCBhbCBtb2RlbG8gZGUgYWxpc2FkbywgZWwgZXJyb3IgYSB1biBwZXJpb2RvIHZpc3RhIGVzIGRlbCAyLjElLCBwZXJvIGEgY2luY28gcGVyaW9kb3MgdmlzdGEgc2UgbWFudGllbmUgZW4gZWwgMyUuIEVzIHJlc3VtZW4sIGVsIG1lam9yIG1vZGVsbyBkZXBlbmRlIGRlbCBjcml0ZXJpbyBjb25zaWRlcmFkby4KCkZpbmFsbWVudGUsIGxhcyBwcmVkaWNjaW9uZXMgcmVhbGl6YWRhcyBjb24gYW1ib3MgbW9kZWxvcyBzb24gcHLDoWN0aWNhbWVudGUgbGFzIG1pc21hcyBjb21vIHNlIHB1ZWRlIG9ic2VydmFyLgoKYGBge3J9CnBhbGlzYWRvIDwtIGZvcmVjYXN0KGFsaXNhZG8sIGggPSA1KQphdXRvcGxvdChEZWZFbmZDZXIsCiAgICAgICAgIHNlcmllcyA9ICJEZWZ1bmNpb25lcyBFbmYuIENlcmVicm92YXNjdWxhcmVzIiwKICAgICAgICAgbWFpbj0iRmlndXJhIDUuIERlZnVuY2lvbmVzIEVuZi4gQ2VyZWJyb3Zhc2N1bGFyZXMgeSBwcmV2aXNpw7NuIiwKICAgICAgICAgeGxhYj0iIiwgCiAgICAgICAgIHlsYWI9IkRlZnVuY2lvbmVzIikgKwogIGF1dG9sYXllcihwYXJpbWExMTAkbWVhbiwgc2VyaWVzID0gIlByZXZpc2nDs24gY29uIEFyaW1hIikgKwogIGF1dG9sYXllcihwYWxpc2FkbyRtZWFuLCBzZXJpZXMgPSAiUHJldmlzacOzbiBjb24gQWxpc2FkbyIpICsKICBndWlkZXMoY29sb3VyID0gZ3VpZGVfbGVnZW5kKHRpdGxlID0gIlByZWRpY2Npw7NuIikpICsgCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uPWMoMC45OCwwLjk4KSwgbGVnZW5kLmp1c3RpZmljYXRpb249YygxLDEpKQpgYGAKCkVuIGRlZmluaXRpdmEsIHBhcmEgZXN0YSBzZXJpZSwgcXVlIGVzIGNvcnRhIHkgYXBhcmVudGVtZW50ZSBzZW5jaWxsYSwgbGEgYXByb3hpbWFjacOzbiBwb3IgbGEgbWV0b2RvbG9nw61hIEFSSU1BIG5vIG1lam9yYSBzdXN0YW5jaWFsbWVudGUgZWwgbW9kZWxvIGRlIEFsaXNhZG8gZXhwb25lbmNpYWwsIG3DoXMgZsOhY2lsIGRlIG9idGVuZXIgZSBpbnRlcnByZXRhci4KClwKXApcClwK</div>
 <footer class="footer">
   
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>

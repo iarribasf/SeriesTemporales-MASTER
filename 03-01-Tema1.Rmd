@@ -2,7 +2,6 @@
 title: "Series Temporales: Introducción"
 subtitle: "Máster de Bioestadística (Modelización Estadística)"
 author: "Iván Arribas (Depto. Análisis Económico. Universitat de València)"
-date: "Curso 2020-21"
 output:
   html_document:
     code_download: yes
@@ -131,7 +130,7 @@ Libros es una _serie anual_ de 1993 a 2018 (fuente [Instituto Nacional de Estad�
     
 ```{r}
 libros <- read.csv2("./series/libros.csv", header = TRUE)
-libros <- ts(libros["libros"], start = 1993, frequency  = 1)
+libros <- ts(libros[, 2], start = 1993, frequency  = 1)
 ```
 
 Usamos para leer los datos `read.csv2`, indicando que la primera línea tiene el nombre de las variables. Esta función asume que el separador decimal es la coma "," y que el separador entre variables es el punto y coma ";". Si el separador decimal es el punto "." y el separador de variables es la coma ",", debes usar `read.csv`. En cualquiera de estas funciones, puedes modificar el separador decimal por medio del argumento `dec`; también puedes usar el argumento `sep` para indicar el carácter usado como separador de variables.
@@ -140,7 +139,8 @@ La función `ts`, de la librería `stats`, convierte un objeto (vector o matriz)
 
 * Con `start` indicamos el fechado del primer dato.
 * Con `frequency` indicamos la frecuencia, que en este caso es un dato por año.
-* Usa `help(ts)` para obtener más información y `str(libros)` para ver qué contiene un objeto _serie temporal_.
+
+Usa `help(ts)` para obtener más información y `str(libros)` para ver qué contiene un objeto _serie temporal_.
 
 Podemos dibujar la serie Libros con la función `plot` o mejor con `autoplot`. Esta última está en el paquete `forecast`.
 
@@ -168,7 +168,7 @@ Nacimientos es una _serie mensual_ de enero de 1975 a diciembre de 2018 (fuente:
 
 ```{r}
 nacimientos <- read.csv2("./series/nacimientos.csv", header = TRUE)
-nacimientos <- ts(nacimientos["nacimientos"],
+nacimientos <- ts(nacimientos[, 2],
                   start = c(1975, 1),
                   frequency = 12)
 ```
@@ -270,10 +270,6 @@ p5 <- ggplot(data.frame(t=1:100, x=x5), aes(x=t, y=x, colours= "black")) + geom_
 p6 <- ggplot(data.frame(t=1:100, x=x6), aes(x=t, y=x, colours= "black")) + geom_line() + xlab("") + ylab("") +
   scale_x_continuous(breaks=NULL) + scale_y_continuous(breaks=NULL) +
   ggtitle("Decreciente logarítmica") + guides(colour=FALSE)
-
-
-library(gridExtra)
-library(grid)
 
 grid.arrange(
   grobs = list(p0, p1, p2, p3, p4, p5, p6),
@@ -442,7 +438,7 @@ autoplot(sucursalb,
          main = "Figura 12. Extracción de dinero de un cajero")
 ```
 
-En el __esquema multiplicativo__ cada componente supone un incremento porcentual respecto de las demás, $y_t = T_t \cdot S_t \cdot C_t \cdot I_t \cdot R_t$. La serie Nacimientos es un ejemplo de esquema multiplicativo (Figura 13).
+En el __esquema multiplicativo__ cada componente supone un incremento porcentual respecto de las demás, $y_t = T_t \cdot S_t \cdot C_t \cdot I_t \cdot R_t$. La serie Nacimientos es un ejemplo de esquema multiplicativo (Figura 13). Observa que para la serie Nacimientos, según decrece el nivel de la serie, también decrece la amplitud estacional.
 
 
 ```{r,echo=FALSE, fig.width=8}
@@ -478,16 +474,15 @@ Podemos _manipular_ una serie temporal con diferentes fines:
 * __recortar__ una serie para obtener una sub-muestra.
 * __extraer una subserie__ correspondiente a un único periodo estacional. Por ejemplo, los nacimientos en febrero o la extracción de dinero en fin de semana.
 
-
-Estas operaciones nos permitirán mejorar nuestra capacidad descriptiva de la serie, identificar mejor el esquema aditivo o multiplicativo de las componentes, facilitar la estimación del proceso generador o ampliar las herramientas de análisis y predicción de una serie temporal.
+Estas operaciones nos permitirán mejorar nuestra capacidad descriptiva de la serie, identificar mejor el tipo de esquema entre las componentes, facilitar la estimación del proceso generador o ampliar las herramientas de análisis y predicción de una serie temporal.
 
 \
 
 ## Extracción de la tendencia
 
-Si agregamos la serie, obteniendo un dato por año si la serie es mensual o un dato por semana si es diaria, obtenemos una nueva serie sin estacionalidad, solo con _tendencia_. 
+Si tenemos una serie con estacionalidad y agregamos la serie, obteniendo un dato por año si la serie es mensual o un dato por semana si es diaria, obtenemos una nueva serie sin estacionalidad, solo con _tendencia_. 
 
-Dependiendo de la naturaleza de la serie, convendrá agregar sumando los datos (consumo eléctrico, títulos publicados, viajeros transportados, nacimientos) o sacando la media (temperatura, número de parados).
+Dependiendo de la naturaleza de la serie, convendrá agregar sumando los datos (consumo eléctrico, títulos publicados, viajeros transportados, nacimientos) o sacando la media (temperatura, número de parados, ocupación hotelera).
 
 Veamos como extraer la tendencia de la serie Nacimientos usando la función `aggregate` con el argumento `FUN = sum`.
 
@@ -539,8 +534,7 @@ ggseasonplot(nacimientosb,
 ggseasonplot(nacimientosb, polar=TRUE,
              xlab = "",
              ylab = "",
-             main = "Figura 17. Gráfico estacional polar.\nNacimientos") +
-  guides(colour=FALSE)
+             main = "Figura 17. Gráfico estacional polar")
 ```
 
 El gráfico de subseries (figura 18) muestra para cada periodo estacional la subserie de valores de ese periodo y el valor medio en la subserie. Para las series con tendencia y esquema multiplicativo, el valor medio de las subseries (líneas horizontales) puede llevarnos a una interpretación incorrecta de la estacionalidad. (La función `monthplot` de `stats` realiza un gráfico similar.)
@@ -549,7 +543,7 @@ El gráfico de subseries (figura 18) muestra para cada periodo estacional la sub
 ggsubseriesplot(nacimientosb) +
   ylab("Nacimientos") +
   xlab("") +
-  ggtitle("Figura 18. Gráfico estacional de subseries.\nNacimientos")
+  ggtitle("Figura 18. Gráfico estacional de subseries")
 ```
 
 Las gráficas ayudan a describir y entender un poco mejor la componente estacional. Sin embargo, si deseamos estimar dicha componente, debemos proceder de otra forma.
@@ -557,7 +551,9 @@ Las gráficas ayudan a describir y entender un poco mejor la componente estacion
 La siguiente sintaxis usa la función `tapply` para estimar numéricamente la componente estacional. Básicamente, calcula para cada mes (argumento `cycle(nacimientosb)`) la media (`FUN = mean`) del cociente `nacimientosb / mean(nacimientosb)`. Si el esquema fuera aditivo se usaría la expresión `nacimientosb - mean(nacimientosb)`.
 
 ```{r}
-componenteEstacional <- tapply(nacimientosb/mean(nacimientosb), cycle(nacimientosb), FUN = mean)
+componenteEstacional <- tapply(nacimientosb/mean(nacimientosb), 
+                               cycle(nacimientosb), 
+                               FUN = mean)
 round(componenteEstacional, 2)
 ```
 
@@ -784,13 +780,13 @@ ggplot() +
 
 La función `stl` estima las componentes de tendencia y estacionalidad a partir de regresiones locales ponderadas (técnica conocida como _loess_)
 
-Sus ventajas son:
+Sus **ventajas** son:
 
 * No se perderán datos al inicio o al final de la serie.
 * Asume que tanto la tendencia como la estacionalidad pueden cambiar con el tiempo y posibilita controlar este cambio a partir de parámetros.
 * Es bastante robusta frente a valores atípicos.
 
-Su principal desventaja es que esta técnica de descomposición solo es válida para esquemas aditivos. Es posible obtener con `stl` una descomposición multiplicativa descomponiendo primero el logaritmo de la serie, para después calcular la exponencial de las componentes.
+Su **principal desventaja** es que esta técnica de descomposición solo es válida para esquemas aditivos. Es posible obtener con `stl` una descomposición multiplicativa descomponiendo primero el logaritmo de la serie, para después calcular la exponencial de las componentes.
 
 La función `stl` genera un objeto con la componente `$time.series` que contiene en columna 
 tres series temporales: _seasonal_, _trend_ y _remainder_ (de nuevo usa `names` y `str` para aprender más).
@@ -798,14 +794,14 @@ tres series temporales: _seasonal_, _trend_ y _remainder_ (de nuevo usa `names` 
 Los dos parámetros principales que deben elegirse cuando se utiliza `stl` son la ventana de tendencia (`t.window`) y la ventana estacional (`s.window`). Estos parámetros controlan la rapidez con la que pueden cambiar los componentes de tendencia y estacional con el tiempo. Valores pequeños permiten cambios más rápidos, valores grandes implican que no hay cambios. Ambos parámetros deben ser números impares:
 
 * `t.window` es el número de observaciones consecutivas que se deben utilizar al estimar la tendencia. Consulta la ayuda para ver el valor por defecto.
-* `s.window` está relacionado con el número observaciones que se deben utilizar al estimar cada valor de la componente estacional. No hay ningún valor por defecto para este parámetro. Establecerlo como `periodic` equivale a obligar a que la componente estacional sea periódica (es decir, idéntica a lo largo de los años).
+* `s.window` está relacionado con el número observaciones que se deben utilizar al estimar cada valor de la componente estacional. No hay ningún valor por defecto para este parámetro. Establecerlo como `periodic` equivale a obligar a que la componente estacional sea periódica (es decir, idéntica a lo largo de los años). Si es un valor numérico, debe ser impar y mayor o igual a 7.
 
 ### Ejemplo {-}
 
 Veamos un ejemplo de su uso para la serie Nacimientos. Se ha usado el valor por defecto para `t.window` y se ha indicado que la estacionalidad es constante en el tiempo (`s.window = "periodic"`). Además, se ha especificado que se tenga en cuenta la posible existencia de valores atípicos (`robust = TRUE`).
 
 ```{r}
-nacStl <- stl(nacimientos[, 1], 
+nacStl <- stl(nacimientos, 
                s.window = "periodic",
                robust = TRUE)
 head(nacStl$time.series)
@@ -824,10 +820,10 @@ head(seasonal(nacStl), 12)
 sum(head(seasonal(nacStl), 12))
 ```
 
-Si en lugar de `periodic`, fijamos el parámetro `s.window` a un valor impar, por ejemplo 17, estaremos permitiendo que la estacionalidad cambien en el tiempo. La figura 25 muestra la componente estacional estimada previamente (bajo el supuesto de componente estacional constante) y la que se obtiene con el argumento `s.window = 17`. Para el periodo mostrado se observa que la amplitud estacional en la componente no constante se ha ido incrementado con el tiempo. Cuanto mayor es el valor (impar) de `s.window` más constante en el tiempo es la componente estacional. 
+Si en lugar de `periodic`, fijamos el parámetro `s.window` a, por ejemplo, 17 (siempre un valor impar), estaremos permitiendo que la estacionalidad cambien en el tiempo. La figura 25 muestra la componente estacional estimada previamente (bajo el supuesto de componente estacional constante) y la que se obtiene con el argumento `s.window = 17`. Para el periodo mostrado se observa que la amplitud estacional en la componente no constante se ha ido incrementado con el tiempo. Cuanto mayor es el valor (impar) de `s.window` más constante en el tiempo es la componente estacional. 
 
 ```{r, echo = FALSE} 
-nacStl17 <- stl(nacimientos[, 1], 
+nacStl17 <- stl(nacimientos, 
                 s.window = 17,
                 robust = TRUE)
 

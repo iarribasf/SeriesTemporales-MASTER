@@ -11,7 +11,7 @@ output:
 
 <br><br>
 
-Durante el curso usaremos diferentes ficheros de datos para los ejemplos y para el código en `R`. Desde esta página puedes descargarte todo el material
+Durante el curso usaremos diferentes ficheros para los datos de los ejemplos y para el código en `R`. Desde esta página puedes descargarte todo el material
 
 <br>
 
@@ -58,10 +58,9 @@ Para el ejemplo de Defunciones por enfermedades cerebrovasculares tienes el cód
 - [**Código para el ejemplo del tema 4**](codigo/Codigo Ejemplo 4.R)
 - [**Código para el ejemplo del tema 5**](codigo/Codigo Ejemplo 5.R)
 
-Y para el ejemplo de Pasajeros en transporte urbano [aquí](codigo/Codigo Ejemplo Pasajeros.R)
-\
+Y para el ejemplo de Pasajeros en transporte urbano [aquí](codigo/Codigo Ejemplo Pasajeros.R).
 
-Y si quieres todos los ficheros de código de golpe aqui:
+\
 
 - [**Todos los ficheros de código en un único fichero comprimido**](codigo/todoslosficherosdecodigo.zip)
 

@@ -18,7 +18,7 @@ Pasajeros <- ts(Pasajeros/1000, start = 1996, freq = 12)
 autoplot(Pasajeros, colour = "darkblue",
          xlab = "",
          ylab = "Millones de pasajeros",
-         main = "Figura 1.1. Pasajeros en transporte urbano (datos mensuales)") +
+         main = "Pasajeros en transporte urbano (datos mensuales)") +
   scale_x_continuous(breaks= seq(1996, 2019, 2)) 
 
 
@@ -26,14 +26,13 @@ PasajerosAnual <- aggregate(Pasajeros, FUN = sum)
 autoplot(PasajerosAnual, colour = "darkblue",
          xlab = "",
          ylab = "Millones de pasajeros",
-         main = "Figura 2.1. Pasajeros en transporte urbano (datos anuales)") +
+         main = "Pasajeros en transporte urbano (datos anuales)") +
   scale_x_continuous(breaks= seq(1996, 2019, 2))
 
 
 AnoNuevo <- timeCalendar(d = 1, m = 1, y = 1996:2024)
 Reyes <- timeCalendar(d = 6, m = 1, y = 1996:2024)
 ViernesSanto <- Easter(1996:2024, shift = -2)
-DomingoSanto <- Easter(1996:2024)
 DiaTrabajo <- timeCalendar(d = 1, m = 5, y = 1996:2024)
 Asuncion <- timeCalendar(d = 15, m = 8, y = 1996:2024)
 Hispanidad <- timeCalendar(d = 12, m = 10, y = 1996:2024)
@@ -42,7 +41,7 @@ Constitucion <- timeCalendar(d = 6, m = 12, y = 1996:2024)
 Inmaculada <- timeCalendar(d = 8, m = 12, y = 1996:2024)
 Navidad <- timeCalendar(d = 25, m = 12, y = 1996:2024)
 
-FestivosNacionales <- c(AnoNuevo, Reyes, ViernesSanto, DomingoSanto, 
+FestivosNacionales <- c(AnoNuevo, Reyes, ViernesSanto,
                         DiaTrabajo, Asuncion,  Hispanidad, TodoSantos, 
                         Constitucion, Inmaculada, Navidad)
 
@@ -53,23 +52,22 @@ bizdays <- format(biz, format = "%Y-%m")
 DiasLaborables <- table(bizdays)
 DiasLaborables <- ts(DiasLaborables, start = 1996, frequency = 12)
 
-subset(DiasLaborables, start = 229) #Mostramos solo los 10 últimos años
+subset(DiasLaborables, start = 229)
 
 pDiasLaborables <- subset(DiasLaborables, start = length(DiasLaborables) - 59)
 DiasLaborables <- subset(DiasLaborables, end = length(DiasLaborables) - 60)
-
 
 PasajerosDL <- Pasajeros/DiasLaborables
 
 g1 <- ggsubseriesplot(Pasajeros) +
   ylab("Millones de pasajeros") +
   xlab("") +
-  ggtitle("Figura 2.2a. Gráfico estacional para Pasajeros")
+  ggtitle("Gráfico estacional para Pasajeros")
 
 g2 <- ggsubseriesplot(PasajerosDL) +
   ylab("Millones de pasajeros") +
   xlab("") +
-  ggtitle("Figura 2.2b. Gráfico estacional para Pasajeros por día laboral")
+  ggtitle("Gráfico estacional para Pasajeros por día laboral")
 
 grid.arrange(
   grobs = list(g1, g2),
@@ -84,7 +82,7 @@ ggplot() +
   geom_point(aes(x = MediaAnual, y = DesviacionAnual), size = 2) +
   xlab("Media de pasajeros por año") + 
   ylab("Desviación típica de pasajeros por año") + 
-  ggtitle("Figura 2.3. Identificación del tipo de esquema")
+  ggtitle("Identificación del tipo de esquema")
 
 
 PasajerosMedia <- tapply(Pasajeros - mean(Pasajeros), 
@@ -111,7 +109,7 @@ sderror <- sd(error)
 autoplot(error,
          xlab = "",
          ylab = "Error",
-         main = "Figura 2.4. Error + Intervención",
+         main = "Error + Intervención",
          colour = "darkblue") +
   geom_hline(yintercept = c(3, 2, -2, -3)*sderror, 
              colour = c("red", "green", "green", "red"),
@@ -119,7 +117,7 @@ autoplot(error,
   scale_x_continuous(breaks= seq(1996, 2019, 4))
 
 
-PasajerosStl <- stl(PasajerosDL[,1], s.window = "periodic", robust = TRUE)
+PasajerosStl <- stl(PasajerosDL[, 1], s.window = "periodic", robust = TRUE)
 
 error <- remainder(PasajerosStl)
 sderror <- sd(error)
@@ -127,20 +125,20 @@ sderror <- sd(error)
 autoplot(error,
          xlab = "",
          ylab = "Error",
-         main = "Figura 2.5. Error + Intervención",
+         main = "Error + Intervención",
          colour = "darkblue") +
   geom_hline(yintercept = c(3, 2, -2, -3)*sderror, 
              colour = c("red", "green", "green", "red"),
              lty = 2) + 
   scale_x_continuous(breaks= seq(1996, 2019, 4))
 
-
+PasajerosSnaive <- snaive(Pasajeros, h = 60)
 accuracy(PasajerosSnaive)
 autoplot(PasajerosSnaive, 
          PI = FALSE,
          xlab = "",
          ylab = "Millones de pasajeros",
-         main = "Figura 3.1. Pasajeros en transporte urbano y predicción.\nMétodo ingenuo con estacionalidad") +
+         main = "Pasajeros en transporte urbano y predicción.\nMétodo ingenuo con estacionalidad") +
   scale_x_continuous(breaks= seq(1996, 2024, 2))
 
 
@@ -156,7 +154,7 @@ round(PasajerosEtsEst, 2)
 ggplot() +
   geom_line(aes(x = 1:12, y = PasajerosEtsEst), colour = "darkblue") + 
   geom_hline(yintercept = 0, colour = "black", lty = 2) +
-  ggtitle("Figura 4.1. Componente estacional estimada con Alisado exponencial") +
+  ggtitle("Componente estacional estimada con Alisado exponencial") +
   xlab("") +
   ylab("Efecto estacional") +
   scale_x_continuous(breaks= 1:12, 
@@ -167,7 +165,7 @@ PasajerosEtsPre <- forecast(PasajerosEts, h = 60, level = 95)
 autoplot(PasajerosEtsPre,
          xlab = "",
          ylab = "Millones de pasajeros",
-         main = "Figura 4.2. Pasajeros (1996-2019) y predicción (2020-2024).\nMétodo de alisado exponencial") 
+         main = "Pasajeros (1996-2019) y predicción (2020-2024).\nMétodo de alisado exponencial") 
 
 
 error <- residuals(PasajerosEts)
@@ -176,7 +174,7 @@ sderror <- sd(error)
 autoplot(error,
          xlab = "",
          ylab = "Error",
-         main = "Figura 4.3. Error + Intervención. Método de alisado",
+         main = "Error + Intervención. Método de alisado",
          colour = "darkblue") +
   geom_hline(yintercept = c(-3, -2, 2 ,3)*sderror, 
              colour = c("red", "green", "green", "red"), lty = 2) + 
@@ -238,7 +236,7 @@ datos <- data.frame(
 
 ggplot(datos, aes(x = x, y = y,  colour= factor)) + 
   geom_line() +
-  ggtitle("Figura 4.4. Error de predicción (MAPE) según horizonte temporal y enfoque") +
+  ggtitle("Error de predicción (MAPE) según horizonte temporal y enfoque") +
   xlab("Horizonte temporal de predicción") +
   ylab("%") +
   scale_x_continuous(breaks= 1:12) +
@@ -251,7 +249,7 @@ BoxCox.lambda(Pasajeros)
 
 
 grid.arrange(
-  ggAcf(log(Pasajeros), lag = 72, main = "Figura 5.1. FAC para Pasajeros (log)", 
+  ggAcf(log(Pasajeros), lag = 72, main = "FAC para Pasajeros (log)", 
         xlab = "", ylab = expression(log(y[t]))),
   ggAcf(diff(log(Pasajeros)), lag = 72, main = "", 
         xlab = "", ylab = expression(nabla*log(y[t]))),
@@ -272,11 +270,11 @@ series <- cbind("Original" = Pasajeros,
 autoplot(series, facets = TRUE,
          xlab = "",
          ylab = "",
-         main = "Figura 5.2. Pasajeros ")
+         main = "Pasajeros ")
 
 
 ggtsdisplay(diff(diff(log(Pasajeros), lag = 12)), lag = 72,
-            main = "Figura 5.3. FAC y FACP Pasajeros (log y d = D = 1)")
+            main = "FAC y FACP Pasajeros (log y d = D = 1)")
 
 
 DiasNoLaborables <- monthdays(Pasajeros) - DiasLaborables
@@ -331,7 +329,7 @@ DiasPascua <- subset(DiasPascua, end = length(DiasPascua) - 60)
 autoplot(DiasPreSanta, series="Pre Semana Santa",
          xlab = "",
          ylab = "Proporción de días en marzo",
-         main = "Figura 5.4. Intervención para periodos vacacionales de Semana Santa") +
+         main = "ntervención para periodos vacacionales de Semana Santa") +
   autolayer(DiasPascua, series="Post Semana Santa") +
   scale_colour_manual(values=c("Pre Semana Santa"="black","Post Semana Santa"="red"),
                       breaks=c("Pre Semana Santa","Post Semana Santa"))
@@ -363,7 +361,7 @@ autoplot(error, series="Error",
          colour = "black",
          xlab = "",
          ylab = "Error",
-         main = "Figura 5.5. Error + Intervención. Modelo ARIMA") +
+         main = "Error + Intervención. Modelo ARIMA") +
   geom_hline(yintercept = c(-3, -2, 0, 2, 3)*sderror, 
              colour = c("red", "blue", "black", "blue", "red"), 
              lty = 2) + 
@@ -411,7 +409,6 @@ for(i in 1:length(coef(PasajerosAri))) {
 kable(datos, digits = 4, row.names = FALSE)
 
 
-ggAcf(error, lag = 36, main = "Figura 5.6. FAC del error del modelo")
 Box.test(error, lag = 2,type = "Ljung-Box")
 Box.test(error, lag = 24,type = "Ljung-Box")
 Box.test(error^2, lag = 2, type = "Ljung-Box")
@@ -477,7 +474,7 @@ pPasajerosAri <- forecast(PasajerosAri,
 autoplot(pPasajerosAri, 
          xlab = "",
          ylab = "",
-         main = "Figura 5.7. Pasajeros (1996-2019) y predicción (2020-2024). Modelo Arima.") +
+         main = "Pasajeros (1996-2019) y predicción (2020-2024). Modelo Arima.") +
   scale_x_continuous(breaks= seq(1996, 2024, 4))
 
 
@@ -490,10 +487,11 @@ datos <- data.frame(
 
 ggplot(datos, aes(x = x, y = y,  colour= factor)) + 
   geom_line() +
-  ggtitle("Figura 6.1. Error de predicción (MAPE) según horizonte temporal y enfoque") +
+  ggtitle("Error de predicción (MAPE) según horizonte temporal y enfoque") +
   xlab("Horizonte temporal de predicción") +
   ylab("%") +
   scale_x_continuous(breaks= 1:12) +
   scale_y_continuous(breaks= seq(1.5, 4, .5)) +
   guides(colour = guide_legend(title = "Métodos")) + 
   theme(legend.position=c(0.02,0.98), legend.justification=c(0,1))
+

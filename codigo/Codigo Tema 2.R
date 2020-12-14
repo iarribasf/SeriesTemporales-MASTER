@@ -1,5 +1,5 @@
 #---------------------------------------------------------------
-# Codigo Tema 2: junio 2020
+# Codigo Tema 2
 #---------------------------------------------------------------
 
 
@@ -9,11 +9,11 @@ library(ggplot2)
 
 #- Serie libros
 libros <- read.csv2("libros.csv", header = TRUE)
-libros <- ts(libros["libros"], start = 1993, frequency  = 1)
+libros <- ts(libros[, 2], start = 1993, frequency  = 1)
 
 #- Serie nacimientos
 nacimientos <- read.csv2("nacimientos.csv", header = TRUE)
-nacimientos <- ts(nacimientos["nacimientos"],
+nacimientos <- ts(nacimientos[, 2],
                   start = c(1975, 1),
                   frequency = 12)
 
@@ -110,13 +110,15 @@ autoplot(nacimientosb,
   theme(legend.position=c(0.98,0.98), legend.justification=c(1,1)) 
 
 #- Alisado de Holt-Winters aditivo para el logartimo sin correcion de sesgo   
-nacimientosbfl2 <- hw(nacimientosb, seasonal = "addit", h=24, lambda = 0, biasadj = FALSE)
-datos <- cbind(
-  `Sin transformar` = nacimientosbf$mean,
-  `log(Nac) insesgadas` = nacimientosbfl$mean,
-  `log(Nac) sesgadas` = nacimientosbfl2$mean
-  )
-head(datos, 12)
+nacimientosbfl2 <- hw(nacimientosb, 
+                      seasonal = "addit", 
+                      h=24, 
+                      lambda = 0,
+                      biasadj = FALSE)
+nacimientosbf$mean
+nacimientosbfl$mean
+nacimientosbfl2$mean
+
 
 #- Alisado exponencial: funcion ETS - Serie Libros
 librosEts <- ets(libros)
@@ -140,10 +142,10 @@ autoplot(error, series="Error",
              colour = c("red", "blue", "blue", "red"), lty = 2) + 
   scale_x_continuous(breaks= seq(1993, 2019, 2)) 
 
-librosIntra <- subset(libros, end = length(libros) - 7)
-librosExtra <- subset(libros, start = length(libros) - 6)
+librosIntra <- subset(libros, end = length(libros) - 6)
+librosExtra <- subset(libros, start = length(libros) - 5)
 librosIntraEts <- ets(librosIntra, model = "MNN", damped = FALSE)
-librosExtraPre <- forecast(librosIntraEts, h = 7)
+librosExtraPre <- forecast(librosIntraEts, h = 6)
 accuracy(librosExtraPre, librosExtra)
 
 #- Alisado exponencial: funcion ETS - Serie Nacimientos
@@ -188,18 +190,39 @@ nacimientosExtraPre <- forecast(nacimientosIntraEts, h = 36)
 accuracy(nacimientosExtraPre, nacimientosExtra)
 
 #- Modelos alternativos: serie original
-accuracy(ets(nacimientos, damped = TRUE))[5]
-accuracy(ets(nacimientos, damped = TRUE, opt.crit = "mse"))[5]
-accuracy(ets(nacimientos, damped = TRUE, allow.multiplicative.trend = TRUE))[5]
-accuracy(ets(nacimientos, damped = TRUE, allow.multiplicative.trend = TRUE, opt.crit = "mse"))[5]
+accuracy(ets(nacimientos, 
+             damped = TRUE))
+accuracy(ets(nacimientos, 
+             damped = TRUE, 
+             opt.crit = "mse"))
+accuracy(ets(nacimientos, 
+             damped = TRUE, 
+             allow.multiplicative.trend = TRUE))
+accuracy(ets(nacimientos, 
+             damped = TRUE, 
+             allow.multiplicative.trend = TRUE, 
+             opt.crit = "mse"))
 
 #- Modelos alternativos: transformación logarítmica
-accuracy(ets(nacimientos, lambda = 0, damped = TRUE))[5]
-accuracy(ets(nacimientos, lambda = 0, damped = TRUE, opt.crit = "mse"))[5]
+accuracy(ets(nacimientos, 
+             lambda = 0, 
+             damped = TRUE))
+accuracy(ets(nacimientos, 
+             lambda = 0, 
+             damped = TRUE, 
+             opt.crit = "mse"))
 
 #- Modelos alternativos: nacimientos por dia
-accuracy(ets(nacimientos/monthdays(nacimientos), damped = TRUE))[5]
-accuracy(ets(nacimientos/monthdays(nacimientos), damped = TRUE, opt.crit = "mse"))[5]
-accuracy(ets(nacimientos/monthdays(nacimientos), damped = TRUE, allow.multiplicative.trend = TRUE))[5]
-accuracy(ets(nacimientos/monthdays(nacimientos), damped = TRUE, allow.multiplicative.trend = TRUE, opt.crit = "mse"))[5]
+accuracy(ets(nacimientos/monthdays(nacimientos), 
+             damped = TRUE))
+accuracy(ets(nacimientos/monthdays(nacimientos), 
+             damped = TRUE, 
+             opt.crit = "mse"))
+accuracy(ets(nacimientos/monthdays(nacimientos), 
+             damped = TRUE, 
+             allow.multiplicative.trend = TRUE))
+accuracy(ets(nacimientos/monthdays(nacimientos), 
+             damped = TRUE, 
+             allow.multiplicative.trend = TRUE, 
+             opt.crit = "mse"))
 

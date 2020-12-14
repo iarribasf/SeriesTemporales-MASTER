@@ -1,5 +1,4 @@
 ---
-#title: "Macroenometrics (44343)"
 output:
   html_document:
     theme: cerulean
@@ -7,8 +6,6 @@ output:
     number_sections: no
     toc: true
     toc_float: true
-    #code_folding: show
-    #self_contained: TRUE
 ---
 
 \
@@ -36,7 +33,7 @@ El grueso del material del curso lo podéis encontrar en esta página web. Sin e
 
 ### Materiales
 
-- **Contenidos teóricos**: los encontrarás en la sección **Diapos**. Son diez entradas, las primeras cinco corresponden a los contenidos teóricos del curso y las cinco restantes a un ejemplo práctico de aplicación para cada tema. 
+- **Contenidos teóricos**: los encontrarás en la sección **Diapos**. Son once entradas, las primeras cinco corresponden a los contenidos teóricos del curso, las siguientes cinco a un ejemplo práctico de aplicación para cada tema. La última entrada es un extenso ejemplo que va más allá de una simple aplicación de los conceptos visto durante el curso.
 
 - [**Recursos de R**](https://iarribasf.github.io/SeriesTemporales-MASTER/04-Recursos-R.html): contiene los ficheros de datos de los ejemplos utilizados durante el curso (ficheros .csv) así como el código de R que usaremos en las clases (ficheros .R).
 
@@ -93,7 +90,7 @@ Sentíos libres de hurgar en la web en busca de tutoriales, videos, libros... qu
 
 \
 
-**Bibliografía de Series Temporales con R**
+**Series Temporales con R**
 
 - Cowpertwait, P. S. P. y Metcalfe, A. V. (2009) [Introductory Time Series with R](https://link.springer.com/book/10.1007/978-0-387-88698-5). Springer (Collection Use R!)
 - Pfaff, B. (2008) [Analysis of Integrated and Cointegrated Time Series with R](https://www.springer.com/gp/book/9780387759661). Springer (Collection Use R!)
@@ -115,7 +112,7 @@ Sentíos libres de hurgar en la web en busca de tutoriales, videos, libros... qu
 **Software gratuito**
 
 - [R-project](https://cran.R-project.org): creo que ya lo conocemos todos.
-- [JDemetra+](https://ec.europa.eu/eurostat/cros/content/software-jdemetra_en): ajuste automático de series con modelos ARIMA aplicando dos métodos: TRAMO-SEATS y X12-ARIMA
+- [JDemetra+](https://ec.europa.eu/eurostat/cros/content/software-jdemetra_en): ajuste automático de series con modelos ARIMA aplicando dos métodos: TRAMO-SEATS y X-12-ARIMA
 - [Gretl](http://gretl.sourceforge.net/): programa de modelización gratuito: regresión múltiple, modelos de elección binaria, series temporales, etc. 
 
 

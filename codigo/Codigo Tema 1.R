@@ -1,5 +1,5 @@
 #---------------------------------------------------------------
-# Codigo Tema 1: junio 2020
+# Codigo Tema 1
 #---------------------------------------------------------------
 
 
@@ -7,18 +7,18 @@
 library(forecast)
 library(ggplot2)
 
-# - Serie Libros
+#- Serie Libros
 libros <- read.csv2("libros.csv", header = TRUE)
-libros <- ts(libros["libros"], start = 1993, frequency  = 1)
+libros <- ts(libros[, 2], start = 1993, frequency  = 1)
 
 autoplot(libros,
          xlab = "",
          ylab = "Títulos",
          main = "Títulos publicados (libros y folletos)")
 
-# - Serie Nacimientos
+#- Serie Nacimientos
 nacimientos <- read.csv2("nacimientos.csv", header = TRUE)
-nacimientos <- ts(nacimientos["nacimientos"],
+nacimientos <- ts(nacimientos[, 2],
                   start = c(1975, 1),
                   frequency = 12)
 
@@ -33,7 +33,7 @@ frequency(nacimientos)
 head(time(nacimientos), n = 48)  #Mostramos sólo los 4 primeros años
 head(cycle(nacimientos), n = 48) #Mostramos sólo los 4 primeros años
 
-# - Serie Sucursal
+#- Serie Sucursal
 sucursal <- read.table("sucursal.csv", header = TRUE)
 sucursal <- ts(sucursal, start = c(1, 5), freq = 7)
 autoplot(sucursal,
@@ -76,7 +76,9 @@ ggsubseriesplot(nacimientosb) +
   ggtitle("Gráfico estacional de subseries.\nNacimientos")
 
 #- Calculo de la componente estacional. Método sencillo
-componenteEstacional <- tapply(nacimientosb/mean(nacimientosb), cycle(nacimientosb), FUN = mean)
+componenteEstacional <- tapply(nacimientosb/mean(nacimientosb), 
+                               cycle(nacimientosb), 
+                               FUN = mean)
 round(componenteEstacional, 2)
 
 #- Descomposicion ADITIVA por medias moviles
@@ -142,7 +144,7 @@ head(seasonal(nacStl), 12)
 sum(head(seasonal(nacStl), 12))
 
 #- Lo mismo asumiendo que la estacionalidad varia en el tiempo
-nacStl17 <- stl(nacimientos[, 1], 
+nacStl17 <- stl(nacimientos, 
                 s.window = 17,
                 robust = TRUE)
 
@@ -154,19 +156,3 @@ autoplot(xx, series="s.window = 'periodic'",
   autolayer(yy, series="s.window = 17") +
   scale_colour_manual(values=c("s.window = 'periodic'"="black","s.window = 17"="red"))#,
                  #     breaks=c("s.window = 'periodic'","s.window = 17"))
-
-#- Conparativa de componentes estacionales
-ggplot() +
-  geom_line(aes(x = 1:12, y = componenteEstacional, colour = "black")) + 
-  geom_line(aes(x = 1:12, y = nacDesMul$figure, colour = "red")) + 
-  geom_hline(yintercept = 1, colour = "blue", lty = 2) +
-  ggtitle("Componente estacional de Nacimientos") +
-  xlab("") +
-  ylab("Efecto estacional") +
-  scale_x_continuous(breaks= 1:12, 
-                     labels = c("Ene", "Feb", "Mar", "Abr", "May", "Jun", 
-                                "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")) +
-  scale_color_discrete(name = "Componente estacional", 
-                       labels = c("Descriptiva simple", "Medias móviles")) +
-  theme(legend.position=c(0.98,0.02), legend.justification=c(1,0))
-

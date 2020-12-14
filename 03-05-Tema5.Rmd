@@ -2,7 +2,6 @@
 title: "Series Temporales: Procesos ARIMA con estacionalidad"
 subtitle: "Máster de Bioestadística (Modelización Estadística)"
 author: "Iván Arribas (Depto. Análisis Económico. Universitat de València)"
-date: "Curso 2020-21"
 output: 
   html_document:
     theme: cerulean
@@ -42,8 +41,6 @@ library(tseries)
 library(aod)
 library(seasonal)
 ```
-
-
 
 # Introducción
 
@@ -85,7 +82,7 @@ __Sobre todo__,
 
 ### Simulaciones de procesos autorregresivos $AR_m(P)$ {-}
 
-La figura 1 muestran una simulación del proceso $AR_{4}(2)$ definido por $y_t = 0.7y_{t-4} - 0.7y_{t-8} + \varepsilon_t$, y la figura 2 simula el proceso $AR_{12}(1)$ definido por $y_t = 0.6y_{t-12} + \varepsilon_t$. En ambos casos la muestra es de tamaño 500 y $\varepsilon_t$ se distribuye como una normal con media cero y varianza la unidad. (Todas las simulaciones se han realizado con la función `arima.sim` de la librería `stats`.)
+La figura 1 muestran una simulación del proceso $AR_{4}(2)$ $y_t = 0.7y_{t-4} - 0.7y_{t-8} + \varepsilon_t$, y la figura 2 simula el proceso $AR_{12}(1)$ $y_t = 0.6y_{t-12} + \varepsilon_t$. En ambos casos la muestra es de tamaño 500 y $\varepsilon_t$ se distribuye como una normal con media cero y varianza la unidad. (Todas las simulaciones se han realizado con la función `arima.sim` de la librería `stats`.)
 
 
 ```{r, echo = FALSE}
@@ -123,7 +120,7 @@ __Sobre todo__,
 
 ### Simulaciones de procesos en medias móviles $MA_m(Q)$ {-}
 
-La figura 3 muestra una simulación del proceso $MA_{4}(2)$ definido por $y_t = 0.7\varepsilon_{t-4} - 0.7\varepsilon_{t-8} + \varepsilon_t$, y la figura 4 simula el proceso $MA_{12}(1)$ definido por $y_t = 0.6\varepsilon_{t-12} + \varepsilon_t$. En ambos casos la muestra es de tamaño 500 y $\varepsilon_t$ se distribuye como una normal con media cero y varianza la unidad.
+La figura 3 muestra una simulación del proceso $MA_{4}(2)$ $y_t = 0.7\varepsilon_{t-4} - 0.7\varepsilon_{t-8} + \varepsilon_t$, y la figura 4 simula el proceso $MA_{12}(1)$ $y_t = 0.6\varepsilon_{t-12} + \varepsilon_t$. En ambos casos la muestra es de tamaño 500 y $\varepsilon_t$ se distribuye como una normal con media cero y varianza la unidad.
 
 ```{r, echo = FALSE}
 set.seed(31416592)
@@ -165,7 +162,7 @@ __Sobre todo__,
 
 ### Simulación de un proceso $ARMA_m(P,Q)$ {-}
 
-La figura 5 muestra una simulación de tamaño 500 para el proceso $ARMA_7(1,1)$ definido por $y_t = 0.7y_{t-7} - 0.5\varepsilon_{t-7} + \varepsilon_t$.
+La figura 5 muestra una simulación de tamaño 500 para el proceso $ARMA_7(1,1)$ $y_t = 0.7y_{t-7} - 0.5\varepsilon_{t-7} + \varepsilon_t$.
 
 ```{r, echo = FALSE}
 set.seed(31416592)
@@ -177,9 +174,9 @@ ggtsdisplay(yarma7_1_1, main = "Figura 5. ARMA7(1,1) - n = 500", lag = 35)
 
 ## Procesos $ARIMA_m(P,D,Q)$
 
-__Si la serie $y_t$ no es estacionaria en su parte estacional, pero tras diferenciarla $D$ veces se hace estacionaria, diremos que la serie es integrada estacionalmente de orden $D$__: $y_t \sim I_m(D)$.
+__Si la serie $y_t$ no es estacionaria en su parte estacional, pero tras diferenciarla $D$ veces se hace estacionaria, diremos que la serie es integrada estacionalmente de orden $D$__: $y_t \sim I_m(D)$. Por tanto,
 
-* Por tanto, una serie estacionaria estacionalmente se indicará como $y_t \sim I_m(0)$.
+* una serie estacionaria estacionalmente se indicará como $y_t \sim I_m(0)$.
 * $y_t \sim I_m(1)$ es equivalente a $\nabla_m y_t = (1 - L^m)y_t \sim I_m(0)$ 
 
 Una serie $y_t$ sigue un proceso __$ARIMA_m(P,D,Q)$__ si:
@@ -205,6 +202,12 @@ $$c + (1 + \theta_1 L + ... + \theta_q L^q)(1 + \theta_m L^m + ... + \theta_{Qm}
 Por ejemplo, entre las series mensuales uno de los procesos más comunes es $ARIMA_{12}(0, 1, 1)(0, 1, 1)$, denominado *modelo de las aerolíneas* por ser el PGD de muchas series mensuales de transporte de pasajeros, en concreto la serie mensual de pasajeros de avión. La ecuación de este modelo es
 
 $$(1-L)(1-L^{12})y_t = (1+ \theta_1L)(1 + \theta_{12}L^{12})\varepsilon_t$$
+que si desarrollamos queda
+$$y_t = y_{t-1} + (y_{t-12} - y_{t-13}) + \theta_1 \varepsilon_{t-1} + \theta_{12} \varepsilon_{t-12} + \theta_{13} \varepsilon_{t-13} + \varepsilon_t $$
+
+* El número de pasajeros del mes $t$ es el mismo que el del mes previo $t-1$, más el incremento mensual entre estos meses observado el año pasado. 
+* Si en los meses usados parsa la predicción ($t-1$, $t-12$ y $t-12$) ha ocurrido algo extraordinario, hay que tenerlo en cuenta a la hora de afinar la predicción.
+
 
 ### Simulaciones de un proceso $ARIMA_m(p,d,q)(P,D,Q)$ {-}
 
@@ -237,7 +240,7 @@ Vamos a aplicar la metodología de Box-Jenkins a la serie de __nacimientos en Es
 
 ```{r}
 nacimientos <- read.csv2("./series/nacimientos.csv", header = TRUE)
-nacimientos <- ts(nacimientos["nacimientos"],
+nacimientos <- ts(nacimientos[, 2],
                   start = c(1975, 1),
                   freq = 12)
 nacimientos <- window(nacimientos, start = 2000)
@@ -301,12 +304,12 @@ Indica $ARIMA_{12}(0,1,1)(0,1,2)$, aunque no está claro si coeficiente `sma2` s
  
 \
 
-Una alternativa `auto.arima` es la función `seas` de la librería `seasonal`. La función `seas` tiene como ventajas que también analiza la conveniencia de usar la transformación logarítmica, que identifica posibles efectos calendario y valores extremos, y que suele ser más parsimoniosa que `auto.arima`. Sus desventajas es que sólo se puede aplicar para series mensuales o trimestrales. Veamos que identificación ofrece `seas`:
+Una alternativa a `auto.arima` es la función `seas` de la librería `seasonal`. La función `seas` tiene como ventajas que también analiza la conveniencia de usar la transformación logarítmica, que identifica posibles efectos calendario y valores extremos, y que suele ser más parsimoniosa que `auto.arima`. Su desventaja es que sólo se puede aplicar para series mensuales o trimestrales. Veamos que identificación ofrece `seas`:
 ```{r} 
 summary(seas(nacimientos))
 ``` 
 
-En primer lugar, la función identifica el modelo de las aerolíneas para la transformación logarítmica de Nacimientos. Este resultado está en consonancia con el alcanzado con la función `auto.arima`. Además, identifica un valor extremo en diciembre de 2010, un efecto calendario Semana Santa (que estudiaremos en detalle en el siguiente ejemplo) y un efecto calendario días laborables del mes (que podemos entender equivalente a nuestro efecto días del mes).
+En primer lugar, la función identifica el modelo de las aerolíneas para la transformación logarítmica de Nacimientos. Este resultado está en consonancia con el alcanzado con la función `auto.arima`. Además, identifica un valor extremo en diciembre de 2010, un efecto calendario Semana Santa (cuyo análisis puedes ver en el Ejemplo de Pasajeros) y un efecto calendario días laborables del mes (que podemos entender equivalente a nuestro efecto días del mes).
 
 Tras estos análisis alternativos, concluimos que la identificación de partida es $ARIMA_{12}(0,1,1)(0,1,2)+AI$,
 $$(1 - L^{12})(1 - L)\log(nacimientos_t) = (1 + \theta_1 L)(1 + \theta_{12} L^{12} + \theta_{24} L^{24})\varepsilon_t + AI.$$
@@ -344,7 +347,7 @@ autoplot(error, series="Error",
 
 Se observa que hay dos candidatos a valores atípicos en diciembre 2006 y junio de 2016, dado que los errores asociados se acercan a las 3 desviaciones típicas. Por tanto,
 
-* Se crea una variable de intervención para caso
+* Se crea una variable de intervención para cada caso
 * Se estima de nuevo el modelo incluyendo estas variables
 * Se vuelve a analizar si quedan valores atípicos
 
@@ -358,10 +361,8 @@ nac.ar2 <- Arima(nacimientos,
                  lambda = 0,
                  xreg = cbind(Bisiestos, d1206, d0408, d0111, d0616))
 nac.ar2
-```
 
-Ahora debemos volver a verificar si en el nuevo modelo hay valores extremos. Observamos que no hay.
-```{r} 
+
 error <- residuals(nac.ar2)
 sderror <- sd(error)
 
@@ -376,25 +377,19 @@ autoplot(error, series="Error",
   scale_x_continuous(breaks= seq(2000, 2018, 2)) 
 ```
 
+Observamos que no hay valores extremos.
+
 Por último, veamos si todos los coeficientes del modelo son significativos. Para ello, aplicamos la prueba de Wald y verificamos que  efectivamente todos coeficientes estimados son _individualmente_ significativos.
 
 ```{r}
-# Theta1
-wald.test(b = coef(nac.ar2), Sigma = vcov(nac.ar2), Terms = 1)
-# Theta12
-wald.test(b = coef(nac.ar2), Sigma = vcov(nac.ar2), Terms = 2)
-# Theta24
-wald.test(b = coef(nac.ar2), Sigma = vcov(nac.ar2), Terms = 3)
-# Bisiestos
-wald.test(b = coef(nac.ar2), Sigma = vcov(nac.ar2), Terms = 4)
-# D1206
-wald.test(b = coef(nac.ar2), Sigma = vcov(nac.ar2), Terms = 5)
-# D0408
-wald.test(b = coef(nac.ar2), Sigma = vcov(nac.ar2), Terms = 6)
-# D0111
-wald.test(b = coef(nac.ar2), Sigma = vcov(nac.ar2), Terms = 7)
-# D0616
-wald.test(b = coef(nac.ar2), Sigma = vcov(nac.ar2), Terms = 8)
+ancho <- max(nchar(names(coef(nac.ar2)))) + 2
+for(i in 1:length(coef(nac.ar2))) {
+  wt <- wald.test(b = coef(nac.ar2), 
+                  Sigma = vcov(nac.ar2), 
+                  Terms = i)
+  cat("\nCoeficiente: ", format(names(coef(nac.ar2))[i], width = ancho), "valor de p: ",
+      formatC(wt$result$chi2[3], digits = 4, format = "f"))
+}
 ```
 
 ### Validación {-}
@@ -418,13 +413,13 @@ __Incorrelación, Homocedasticidad y Normalidad__
 Veamos ahora si el residuo es ruido blanco.
 
 ```{r}
-ggAcf(error, lag = 36, ylim = c(-0.3, 0.3), 
-      main = "Figura 11. FAC del error del modelo")
 Box.test(error, lag = 2,type = "Ljung-Box")
 Box.test(error, lag = 24,type = "Ljung-Box")
 Box.test(error^2, lag = 2, type = "Ljung-Box")
 Box.test(error^2, lag = 24, type = "Ljung-Box")
 jarque.bera.test(error) 
+ggAcf(error, lag = 36, ylim = c(-0.3, 0.3), 
+      main = "Figura 11. FAC del error del modelo")
 ```
 
 Claramente hay autocorrelaciones significativas, pero en retardos no relevantes (véase figura 11). El error muestra ser homocedástico y seguir una distribución normal.
@@ -433,15 +428,15 @@ Claramente hay autocorrelaciones significativas, pero en retardos no relevantes 
 
 El _modelo teórico_ es $log(nacimientos) \sim ARIMA_{12}(0, 1, 1)(0, 1, 2) + AI$,
 $$(1 - L^{12})(1 - L)\log(nacimientos_t) = (1 + \theta_1 L)(1 + \theta_{12} L^{12} + + \theta_{24} L^{24})\varepsilon_t + AI.$$
-Si sustituimos $(1 - L^{12})\log(nacimientos_t)$ por $TVAnacimientos_t$, la tasa de variación anual de los nacimientos, y desarrollamos queda
-$$TVAnacimientos_t = TVAnacimientos_{t-1} + \theta_1 \varepsilon_{t-1} + \theta_{12} \varepsilon_{t-12} + \theta_{24} \varepsilon_{t-24} + \ldots + \varepsilon_{t}+$$
+Si sustituimos $(1 - L^{12})\log(nacimientos_t)$ por $TVA_{nacimientos_t}$, la tasa de variación anual de los nacimientos, y desarrollamos queda
+$$TVA_{nacimientos_t} = TVA_{nacimientos_{t-1}} + \theta_1 \varepsilon_{t-1} + \theta_{12} \varepsilon_{t-12} + \theta_{24} \varepsilon_{t-24} + \ldots + \varepsilon_{t}+$$
 $$+\gamma_1 \cdot Bisiestos_t+\gamma_2 \cdot d1206_t + \gamma_3 \cdot d0408_t +\gamma_4 \cdot d0111_t+ \gamma_5 \cdot d0616_t.$$
 
 Finalmente, el _modelo estimado_ es,
-$$\widehat{TVAnacimientos}_t = TVAnacimientos_{t-1}  - 0.45\varepsilon_{t-1} - 0.62\varepsilon_{t-12} - 0.16\varepsilon_{t-24} + \ldots + $$
+$$\widehat{TVA}_{nacimientos_{t-1}} = TVA_{nacimientos_{t-1}}  - 0.45\varepsilon_{t-1} - 0.62\varepsilon_{t-12} - 0.16\varepsilon_{t-24} + \ldots + $$
 $$0.037\cdot DiasMes_t - 0.042\cdot d1206_t + 0.057\cdot d0408_t - 0.07\cdot d0111_t + 0.032\cdot d0616_t.$$
   
-* En cada mes, __la tasa de variación anual de los nacimientos es la misma que la del mes pasado__ ($\widehat{TVAnacimientos}_t = TVAnacimientos_{t-1}$). 
+* En cada mes, __la tasa de variación anual de los nacimientos es la misma que la del mes pasado__ ($\widehat{TVA}_{nacimientos_t} = TVA_{nacimientos_{t-1}}$). 
 
 * Además, si la tasa de variación anual del mes previo fue anómala ($\varepsilon_{t-1}$ diferente de cero) o la tasa de variación anual de hace uno o dos años fue anómala ($\varepsilon_{t-12}$ o $\varepsilon_{t-24}$ diferente de cero), corregimos la previsión para compensar (términos en medias móviles).
     
@@ -449,11 +444,11 @@ $$0.037\cdot DiasMes_t - 0.042\cdot d1206_t + 0.057\cdot d0408_t - 0.07\cdot d01
 
 ### Predicción de la serie {-}
 
-Una vez dado por válido el modelo podemos pasar a realizar predicciones para los próximos años. Hay que tener en cuenta que hay cinco variables de intervención, una de ellas un efecto calendario (Bisiestos), para las que debemos indicar qué valores tomarán en el periodo de predicción. Vamos a fijar el horizonte de predicción en cuatro años y mostrar los resultado numérica (solo para el primer año) y gráficamente (figura 12).
+Una vez dado por válido el modelo podemos pasar a realizar predicciones. Hay que tener en cuenta que hay cinco variables de intervención, una de ellas un efecto calendario (Bisiestos), para las que debemos indicar qué valores tomarán en el periodo de predicción. Vamos a fijar el horizonte de predicción en cuatro años y mostrar los resultado numérica (solo para el primer año) y gráficamente (figura 12).
 
 
 ```{r, results = "hide"}
-pbi <- 1*(monthdays(ts(0, start = 2019, end = c(2022, 12), freq = 12)) == 29)
+pbi <- 1*(monthdays(ts(rep(0, 48), start = 2019, freq = 12)) == 29)
 pnac.ar2 <- forecast(nac.ar2, 
                      h = 48,
                      xreg = cbind(pbi, rep(0,48), rep(0,48), rep(0,48), rep(0,48)), 
@@ -500,7 +495,7 @@ accuracy(nac.ar3)
 round(accuracy(nac.ar3), 2)
 ```
 
-Trabajar con Nacimientos medios al día no mejora la calidad de ajuste del modelo respecto del modelo sobre Nacimientos. Esto es así porque el efecto del número de días del mes ya estaba recogido en la variable Bisiestos del modelo sobre Nacimientos. Pensemos que febrero es el único mes que puede tener un número diferente de días. 
+Recuerda que como las unidades de *Nacimientos* y de *Nacimientos diarios* difieren, solo los indicadores relativos MPE y MAPE pueden ser utilizados para comparar ambos modelos. Teniendo esto en cuenta, trabajar con Nacimientos diarios no mejora la calidad de ajuste del modelo respecto del modelo sobre Nacimientos. Esto es así porque el efecto del número de días del mes ya estaba recogido en la variable Bisiestos del modelo sobre Nacimientos. Pensemos que febrero es el único mes que puede tener un número diferente de días según el año. 
 
 Sin embargo, siempre que esté justificado, es conveniente probar si la inclusión en el modelo del número de días del mes o del número de días laborables, o del número de domingos u otros efectos calendario, más allá de los meses de febrero bisiestos, mejora su ajuste y capacidad predictiva. Extenderemos estas ideas en el siguiente ejemplo.
 
@@ -534,7 +529,7 @@ ggAcf(diff(log(chocolate)), lag = 48,
       xlab = "", ylab = "d = 1 - D = 0", main = "")
 ggAcf(diff(log(chocolate), lag = 12), lag = 48, 
       xlab = "", ylab = "d = 0 - D = 1", main = "")
-ggAcf(diff(diff(log(chocolate), lag = 48, lag = 12)), 
+ggAcf(diff(diff(log(chocolate), lag = 12)), lag = 48, 
       xlab = "", ylab = "d = 1 - D = 1", main = "")
 ```
 
@@ -547,6 +542,12 @@ grid.arrange(
   ggAcf(diff(diff(log(chocolate), lag = 12)), lag = 48, xlab = "", ylab = "d =  D = 1", main = ""),
   nrow = 2
 )
+```
+
+Estos resultados son confirmados a través de las funciones `ndiffs` y `nsdiffs`
+```{r}
+ndiffs(log(chocolate))
+nsdiffs(log(chocolate))
 ```
 
 Podemos concluir que $d = 1$ y $D = 1$ o $\log(chocolate_t) \sim I(1)I_{12}(1)$.
@@ -596,15 +597,15 @@ El modelo identificado es $ARIMA_{12}(1,1,1)(0,1,2)$, donde el parámetro $\thet
 
 \
 
-Por último, la función `seas` (también con un poco de ayuda) identifica un proceso $ARIMA_{12}(1,1,1)(1,1,0)$, con un efecto Semana Santa (de ocho días) un efecto día de la semana y un efecto año bisiesto, que se asemejan al efecto días laborables.
+Por último, la función `seas` (también con un poco de ayuda) identifica un proceso similar $ARIMA_{12}(1,1,1)(0,1,1)$, con un efecto Semana Santa, un efecto día de la semana y un efecto año bisiesto, que globalmente se asemejan al efecto días laborables.
 
 ```{r}
-summary(seas(diff(diff(log(chocolate), lag = 48))))
+summary(seas(diff(diff(log(chocolate), lag = 12))))
 ```
 
 ### Estimación  {-}
 
-Vamos a considerar como modelo de partida el identificado con `auto.arima` excluyendo el parámetro no significativo.
+Vamos a considerar como modelo de partida el identificado `seas`, que coincide con `auto.arima` excluyendo el parámetro no significativo.
 
 ```{r}
 choco.ar1 <- Arima(chocolate, order=c(1, 1, 1),
@@ -668,11 +669,12 @@ autoplot(error, series="Error",
 Por último, veamos si todos los coeficientes del modelo son significativos. Aunque uno de ellos (enero 1986) no lo es al 5%, si lo es al 10% así que optamos por dejarlo.
 
 ```{r}
+ancho <- max(nchar(names(coef(choco.ar2)))) + 2
 for(i in 1:length(coef(choco.ar2))) {
   wt <- wald.test(b = coef(choco.ar2), 
                   Sigma = vcov(choco.ar2), 
                   Terms = i)
-  cat("\nCoeficiente: ", names(coef(choco.ar2))[i], "\tvalor de p: ", 
+  cat("\nCoeficiente: ", format(names(coef(choco.ar2))[i], width = ancho), "valor de p: ",
       formatC(wt$result$chi2[3], digits = 4, format = "f"))
 }
 ```
@@ -697,7 +699,6 @@ __Incorrelación, Homocedasticidad y Normalidad__
 Veamos ahora si el residuo es ruido blanco.
 
 ```{r}
-ggAcf(error, lag = 36, main = "Figura 18. FAC del error del modelo")
 Box.test(error, lag = 2,type = "Ljung-Box")
 Box.test(error, lag = 24,type = "Ljung-Box")
 Box.test(error^2, lag = 2, type = "Ljung-Box")
@@ -711,8 +712,8 @@ El error muestra ser incorrelado, homocedástico y seguir una distribución norm
 
 El _modelo teórico_ es $log(chocolate) \sim ARIMA_{12}(1, 1, 1)(0, 1, 1) + AI$,
 $$(1 - \phi_1 L)(1 - L^{12})(1 - L)\log(chocolate_t) = (1 + \theta_1 L)(1 + \theta_{12} L^{12})\varepsilon_t + AI.$$
-Si sustituimos $(1 - L^{12})\log(chocolate_t)$ por $TVAchocolate_t$, desarrollamos el modelo y sustituimos los parámetros por sus estimaciones, queda
-$$\widehat{TVAchocolate}_t = TVAchocolate_{t-1} + 0.31(TVAchocolate_{t-1} - TVAchocolate_{t-2}) $$
+Si sustituimos $(1 - L^{12})\log(chocolate_t)$ por $TVA_{chocolate_t}$, desarrollamos el modelo y sustituimos los parámetros por sus estimaciones, queda
+$$\widehat{TVA}_{chocolate_t} = TVA_{chocolate_{t-1}} + 0.31(TVA_{chocolate_{t-1}} - TVA_{chocolate_{t-2}})$$
 $$- 0.89\varepsilon_{t-1} - 0.68\varepsilon_{t-12} + 0.60\varepsilon_{t-13}$$
 $$+0.036\cdot DiasLaborables - 0.16\cdot d0975 + 0.13 \cdot d0186-0.34 \cdot d0191 + 0.51\cdot d0194.$$
 Por tanto:
@@ -724,7 +725,7 @@ Por tanto:
 
 ### Predicción de la serie {-}
 
-Una vez dado por válido el modelo podemos pasar a realizar predicciones para los próximos años. Hay que tener en cuenta que hay una variable de intervención de efecto calendario (Días laborables), para la que debemos indicar qué valores tomará en el periodo de predicción. Vamos a fijar el horizonte de predicción en cuatro años (1995 a 1998).
+Una vez dado por válido el modelo podemos pasar a realizar predicciones. Hay que tener en cuenta que hay una variable de intervención de efecto calendario (Días laborables), para la que debemos indicar qué valores tomará en el periodo de predicción. Vamos a fijar el horizonte de predicción en cuatro años (1995 a 1998).
 
 ```{r}
 dummy <- ts(rep(0, 48), start = 1995, frequency = 12)
@@ -737,40 +738,16 @@ pchoco.ar2 <- forecast(choco.ar2,
 autoplot(pchoco.ar2, 
          xlab = "",
          ylab = 'Toneladas',
-         main = 'Figura 19. Chocolate (1958-1994) y predicción (1995-1998)') +
+         main = 'Figura 18. Chocolate (1958-1994) y predicción (1995-1998)') +
   scale_x_continuous(breaks= seq(1958, 1998, 4)) 
 ```
 
 \
-
-## Comparación con alisado exponencial
-
-Veamos una comparativa, para los dos ejemplos vistos, entre los resultados obtenidos con ARIMA y con Alisado exponencial
-
-* Nacimientos (log):
-
-  + MAPE ARIMA: $1.6\%$ - ARIMA(0,1,1)(0,1,2) + AI 
-
-  + MAPE ETS  : $1.8\%$ - ETS(A,Ad,A)
-
-* Chocolate (log):
-
-  + MAPE ARIMA:  $7.0\%$ - ARIMA(1,1,1)(0,1,1) + AI
-
-  + MAPE ETS  : $8.1\%$ - ETS(A,A,A)
-
-Los modelos ARIMA al permitir la inclusión de intervención han mejorado los resultados de los modelos de alisado. En el caso de Chocolate, la mejora en la calidad del ajuste es superior al punto porcentual.
-
-\
 \
 
-# Validación cruzada
+# Validación cruzada para Nacimientos
 
 Vamos a aplicar los conceptos vistos de _validación cruzada_ para la serie de Nacimientos. Además, vamos a mejorar ligeramente la rutina vista en el ejemplo del tema 2 para incluir la intervención.
-
-\
-
-## Ejemplo: Nacimientos
 
 Recordemos que la serie va de enero de 2000 hasta diciembre de 2018, es un proceso $ARIMA_{12}(0,1,1)(0,1,2)$ con intervención en los meses de febrero bisiestos y otros meses identificados como atípicos.
 
@@ -841,7 +818,7 @@ errorAlisado
 ggplot() +
   geom_line(aes(x = 1:12, y = errorArima), colour = "Blue") +
   geom_line(aes(x = 1:12, y = errorAlisado), colour = "Red") +
-  ggtitle("Figura 20. Error de predicción (MAPE) según horizonte temporal") +
+  ggtitle("Figura 19. Error de predicción (MAPE) según horizonte temporal") +
   xlab("Horizonte temporal de predicción") +
   ylab("%") +
   scale_x_continuous(breaks= 1:12)
@@ -855,7 +832,7 @@ datos <- data.frame(
 )
 ggplot(datos, aes(x = x, y = y,  colour= factor)) + 
   geom_line() +
-  ggtitle("Figura 20. Error de predicción (MAPE) según horizonte temporal") +
+  ggtitle("Figura 19. Error de predicción (MAPE) según horizonte temporal") +
   xlab("Horizonte temporal de predicción") +
   ylab("%") +
   scale_x_continuous(breaks= 1:12) +
@@ -863,12 +840,40 @@ ggplot(datos, aes(x = x, y = y,  colour= factor)) +
   theme(legend.position=c(0.02,0.98), legend.justification=c(0,1)) 
 ```
 
-La figura 20 revela que:
+La figura 19 revela que:
 
 * Para ambos métodos se observa como el error de predicción aumenta de forma regular según aumenta el horizonte de predicción. 
 * Cuando predecimos de uno a tres meses vista los dos modelos son equivalentes en calidad de predicción, con un error entre el 2% y el 2.4%.
 * Sin embargo, para previsiones a más largo plazo, el método Arima muestra ser mejor, y esta superioridad aumenta con el horizonte temporal.
 * En todo caso, se observa que el error de predicción, incluso a un año vista, se mantiene bajo.
+
+\
+\
+
+# Comparación con alisado exponencial
+
+Veamos una comparativa, para los dos ejemplos vistos, entre los resultados obtenidos con ARIMA y con Alisado exponencial
+
+### Nacimientos (log) {-}
+
+|Método   |Modelo                   |MAPE              |
+|:--------|:------------------------|:-----:|:----------:|:----------:|:-----------:|
+|         |                         |Ajuste |Extra h = 1 |Extra h = 6 |Extra h = 12 |
+| ARIMA   |ARIMA(0,1,1)(0,1,2) + AI | 1.59  | 1.84       | 2.67       | 3.42        |
+| Alisado |ETS(A,Ad,A)              | 1.75  | 1.91       | 2.90       | 3.83        |
+
+Para Nacimientos, la mejora en los indicadores de calidad con ARIMA respecto de Alidado es tan pequeña que no justifica su aplicación. Incluso para previsiones extra-muestrales a 12 meses vista, Alisado sólo es inferior en medio punto porcentual a ARIMA.
+
+### Chocolate (log) {-}
+
+|Método   |Modelo                   |MAPE              |
+|:--------|:------------------------|:-----:|:----------:|:----------:|:-----------:|
+|         |                         |Ajuste |Extra h = 1 |Extra h = 6 |Extra h = 12 |
+| ARIMA   |ARIMA(1,1,1)(0,1,1) + AI | 6.99  | 8.18       | 9.38       | 9.95        |
+| Alisado |ETS(A,A,A)               | 8.15  | 9.13       | 10.46      | 10.15       |
+
+En el caso de Chocolate, la mejora en la calidad del ajuste con ARIMA respecto de Alisado está cercana al punto porcentual en previsiones a unos pocos meses vista. Sin embargo, a doce meses vista ambos métodos ofrecen igual calidad en sus predicciones.
+
 
 \
 \

@@ -2,7 +2,6 @@
 title: "Series Temporales: Procesos Estocásticos"
 subtitle: "Máster de Bioestadística (Modelización Estadística)"
 author: "Iván Arribas (Depto. Análisis Económico. Universitat de València)"
-date: "Curso 2020-21"
 output: 
   html_document:
     theme: cerulean
@@ -73,7 +72,7 @@ Nosotros contamos con una sola realización del proceso estocástico $Y_t$, la s
 2. Estos momentos nos permitirán identificar el PGD.
 3. Una vez identificado, estimaremos el PGD y podremos realizar inferencia (contrastes de hipótesis y predicciones).
 
-Para que esta línea de razonamiento sea válida es necesario que el proceso verifique ciertas condiciones, que sea  __estacionario y ergódico__.
+Para que esta línea de razonamiento sea válida es necesario que el proceso sea  __estacionario y ergódico__.
   
 \
   
@@ -99,9 +98,9 @@ La figura 1 muestra en el panel superior la serie Libros que no es estacionaria 
 
 ```{r, echo=FALSE}
 libros <- read.csv2("./series/libros.csv", header = TRUE)
-libros <- ts(libros["libros"], start = 1993, freq = 1)
+libros <- ts(libros[, 2], start = 1993, freq = 1)
 nacimientos <- read.csv2("./series/nacimientos.csv", header = TRUE)
-nacimientos <- ts(nacimientos["nacimientos"],
+nacimientos <- ts(nacimientos[, 2],
                   start = c(1975, 1),
                   freq = 12)
 
@@ -372,7 +371,7 @@ Si queremos ver los valores numéricos de las autocorrelaciones debemos añadir 
 ggAcf(diff(libros), lag = 10, plot = FALSE)
 ```
 
-La figura 8 muestra la FAC para la serie Nacimientos y algunas de sus transformaciones. Observa el diferente uso del argumento `lag`: en la función `diff` indica el orden de la diferenciación, y en la función `ggAcf` indica el orden máximo de la autocorrelación. La primera columna muestra la FAC para Nacimientos y varias diferenciaciones, mientras que la segunda columna muestra la FAC para el logaritmo de los nacimientos y sus diferenciaciones. Se puede observar que la FAC de una serie y su transformación logarítmica es muy similar. En los paneles de la primera y tercera fila las autocorrelaciones decrecen muy lentamente, indicando que la serie analizada no es estacionaria. En los paneles de la segunda fila las autocorrelaciones de orden estacional (12, 24,...) también decrecen lentamente, indicando que la serie analizada no es ergódica. Solo la doble diferenciación regular y estacional de la serie (original o su logaritmo) muestran un rápido descenso en los coeficiente de autocorrelación (paneles de la última fila), indicando que la serie transformada es estacionaria en media y ergódica.
+La figura 8 muestra la FAC para la serie Nacimientos y algunas de sus transformaciones. Observa el diferente uso del argumento `lag`: en la función `diff` indica el orden de la diferenciación, y en la función `ggAcf` indica el orden máximo de la autocorrelación. La primera columna muestra la FAC para Nacimientos y varias diferenciaciones, mientras que la segunda columna muestra la FAC para el logaritmo de los nacimientos y sus diferenciaciones. Se puede observar que la FAC de una serie y su transformación logarítmica es muy similar. En los paneles de la primera y tercera fila las autocorrelaciones decrecen muy lentamente, indicando que la serie analizada no es estacionaria ni ergódica. En los paneles de la segunda fila las autocorrelaciones de orden estacional (12, 24,...) también decrecen lentamente, indicando que la serie analizada no es ergódica. Solo la doble diferenciación regular y estacional de la serie (original o su logaritmo) muestran un rápido descenso en los coeficiente de autocorrelación (paneles de la última fila), indicando que la serie transformada es estacionaria en media y ergódica.
 
 ```{r, eval = FALSE}
 ggAcf(nacimientos, lag = 48)
@@ -604,6 +603,8 @@ Otra opción es usar la función `ndiffs` que aplica el contraste KPSS reiterada
 ```{r}  
 ndiffs(libros, alpha = 0.05, test = "kpss", type = "trend")
 ```
+
+También existe la función `nsdiffs` que identifica el número de diferenciaciones estacionales adecuado. En este caso se basa de una regla de decisión empírica, sin soporte teórico.
 
 ### Ejemplo con Nacimientos (anual) {-}
 

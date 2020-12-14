@@ -1,7 +1,7 @@
 ---
-title: "Series Temporales: Procesos ARIMA con estacionalidad"
+title: "Defunciones por Enfermedades Cerebrovasculares"
+subtitle: "Procesos ARIMA con estacionalidad"
 author: "Iván Arribas (Depto. Análisis Económico. Universitat de València)"
-date: "Curso 2020-21"
 output: 
   html_document:
     theme: cerulean
@@ -43,17 +43,13 @@ library(seasonal)
 \
 \
 
-# Ejemplo de aplicación: Defunciones por Enfermedades Cerebrovasculares (continuación).
-
-\
-
-## Introducción
+# Introducción
 
 Consideremos de nuevo la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares, Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2018, un total de 39 años o 468 meses
 
-En la descriptiva del ejemplo del tema 1 vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para su análisis por modelos ARIMA vamos a recortar la serie, que empezará el enero de 1988.
+En la descriptiva vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para su análisis por modelos ARIMA vamos a recortar la serie, que empezará el enero de 1988.
 
-Además, en el tema 3 vimos que  para alcanzar la estacionariedad y verificar la hipótesis de ergodicidad era necesario diferenciar la serie tanto en la parte regular como estacional y decidimos usar la transformación logarítmica para linealizar la serie y ganar en interpretabilidad.
+También hemos visto que para alcanzar la estacionariedad y verificar la hipótesis de ergodicidad es necesario diferenciar la serie tanto en la parte regular como estacional y decidimos usar la transformación logarítmica para linealizar la serie y ganar en interpretabilidad.
 
 ```{r}
 DefEnfCer <- read.csv2("./series/Enfermedades cerebrovasculares.csv", header = TRUE)
@@ -62,10 +58,11 @@ DefEnfCer <- window(DefEnfCer, start = 1988)
 ```
 
 \
+\
 
-## Identificación
+# Identificación
 
-Vamos a identificar los valores de $p$, $q$, $P$ y $Q$. Para ello, analizaremos la FAC y la FACP, y solicitaremos con `auto.arima` y `seas` una identificación automática. Con `auto.arima` incluiremos un efecto calendario para los meses de febrero bisiestos y otras variables ficticias para los tres valores atípicos identificados en el tema 2: febrero de 1999, enero de 2005 y febrero de 2012. La descriptiva realizada en el tema 1 revelaba que las muertes por enfermedades cerebrovasculares está poco relacionada con el número de días del mes y más con la estación del año.
+Vamos a identificar los valores de $p$, $q$, $P$ y $Q$. Para ello, analizaremos la FAC y la FACP, y solicitaremos con `auto.arima` y `seas` una identificación automática. Con `auto.arima` incluiremos un efecto calendario para los meses de febrero bisiestos y otras variables ficticias para los tres valores atípicos ya identificados cuando aplicamos Alisado exponencial: febrero de 1999, enero de 2005 y febrero de 2012. La descriptiva realizada revelaba que las muertes por enfermedades cerebrovasculares está poco relacionada con el número de días del mes y más con la estación del año.
 
 ```{r} 
 ggtsdisplay(diff(diff(log(DefEnfCer), lag = 12)), lag = 48,
@@ -95,11 +92,12 @@ summary(seas(DefEnfCer))
 ```
 
 
-Vamos a partir de la identificación obtenida por `seas` (que es similar a la de `auto.arima` eliminando los coeficientes no significativos), incluyendo las tres variables ficticias que afectan un único mes: $log(DefEnfCer) \sim ARIMA_{12}(1,1,1)(1,1,1) + AI$.
+Vamos a partir de la identificación obtenida por `seas` (que es similar a la de `auto.arima` eliminando uno de los coeficientes no significativos), incluyendo las tres variables ficticias que afectan un único mes: $log(DefEnfCer) \sim ARIMA_{12}(1,1,1)(1,1,1) + AI$.
 
 \
+\
 
-## Estimación 
+# Estimación 
 
 La siguiente salida muestra el modelo estimado y la figura 2 permite analizar la presencia de más valores extremos.
 
@@ -142,13 +140,16 @@ DefEnfCerArima2 <- Arima(DefEnfCer,
                          order = c(1, 1, 1),  
                          seasonal = list(order = c(1, 1, 1), period = 12),
                          lambda = 0,
-                         xreg = cbind(d0299, d0105, d0215, d0212, d0501, d0603, d0115, d0389, d0803))
+                         xreg = cbind(d0299, d0105, d0215, d0212, d0501, 
+                                      d0603, d0115, d0389, d0803))
 DefEnfCerArima2
 ``` 
 
-Aparentemente las variables de intervención incluidas son significativas, exceptuando la de marzo de 1989. Este hecho lo contrastaremos más adelante. Por otro lado, ningún coeficiente del proceso Arima indica que este sea no estacionario o no invertible. Puedes obtener gráficamente el inverso de la raíces de los polinomios característicos (que deben caer dentro del círculo unidad) con `plot(DefEnfCerArima2)`.
+Aparentemente las variables de intervención incluidas son significativas, exceptuando la de marzo de 1989. Este hecho lo contrastaremos más adelante. 
 
-Por otro lado, el análisis gráfico del residuo indica que aún hay candidatos a valores atípicos. Aunque ninguno alcanza las tres desviaciones típicas, al menos dos de ellos están muy cerca. Sin embargo, vamos a dar por concluido este proceso.
+Por defecto Arima solo puede estimar modelos que sean estacionarios e invertibles. Para verificarlo en este caso, puedes obtener gráficamente el inverso de la raíces de los polinomios característicos (que deben caer dentro del círculo unidad) con `plot(DefEnfCerArima2)`.
+
+El análisis gráfico del residuo indica que aún hay candidatos a valores atípicos. Aunque ninguno alcanza las tres desviaciones típicas, al menos dos de ellos están muy cerca. Sin embargo, vamos a dar por concluido este proceso.
 
 ```{r} 
 error <- residuals(DefEnfCerArima2)
@@ -167,11 +168,12 @@ autoplot(error, series="Error",
 Por último, veamos si todos los coeficientes del modelo son significativos.
 
 ```{r}
+ancho <- max(nchar(names(coef(DefEnfCerArima2)))) + 2
 for(i in 1:length(coef(DefEnfCerArima2))) {
   wt <- wald.test(b = coef(DefEnfCerArima2), 
                   Sigma = vcov(DefEnfCerArima2), 
                   Terms = i)
-  cat("\nCoeficiente: ", names(coef(DefEnfCerArima2))[i], "\tvalor de p: ", 
+  cat("\nCoeficiente: ", format(names(coef(DefEnfCerArima2))[i], width = ancho), "valor de p: ",
       formatC(wt$result$chi2[3], digits = 4, format = "f"))
 }
 ```
@@ -179,8 +181,9 @@ for(i in 1:length(coef(DefEnfCerArima2))) {
 Aunque el coeficiente del efecto de marzo de 1989 no es significativo al 5%, si los es al 10% así que optamos por dejarlo.
 
 \
+\
 
-## Validación
+# Validación
 
 Analizando los criterios de bondad de ajuste se tiene que: el error medio (ME), igual a `r round(accuracy(DefEnfCerArima2)[1],2)`, es prácticamente cero por lo que no parece que haya sesgo en las predicciones; en media nos equivocamos en `r round(accuracy(DefEnfCerArima2)[2],0)` defunciones (RMSE); y el error porcentual medio es `r round(accuracy(DefEnfCerArima2)[5],1)`%, muy bajo.
 
@@ -194,12 +197,11 @@ round(accuracy(DefEnfCerArima2),2)
 
 \
 
-__Incorrelación, Homocedasticidad y Normalidad__
+### Incorrelación, Homocedasticidad y Normalidad {-}
 
 Veamos ahora si el residuo es ruido blanco.
 
 ```{r}
-ggAcf(error, lag = 36, main = "Figura 4. FAC del error del modelo")
 Box.test(error, lag = 2,type = "Ljung-Box")
 Box.test(error, lag = 24,type = "Ljung-Box")
 Box.test(error^2, lag = 2, type = "Ljung-Box")
@@ -210,8 +212,9 @@ jarque.bera.test(error)
 El error muestra ser incorrelado, homocedástico y seguir una distribución normal. 
 
 \
+\
 
-## Ecuación del modelo identificado
+# Ecuación del modelo identificado
 
 Ahora que ya hemos dado por válido el modelo, veamos cuál es su ecuación. 
 
@@ -220,8 +223,9 @@ $$(1 - \phi_1 L)(1 - \phi_{12}L^{12})(1-L)(1-L^{12})log(DefEnfCer_t) =(1+\theta_
 Debido a la complejidad del modelo, no vamos a desarrollarlo, ni interpretarlo.
 
 \
+\
 
-## Predicción de las defunciones por enfermedad cerebrovascular
+# Predicción de las defunciones por enfermedad cerebrovascular
 
 Una vez dado por válido el modelo, podemos pasar a realizar predicciones para los próximos años. Como la variables de intervención no son efectos calendario sus valores previstos serán cero.
 
@@ -235,13 +239,14 @@ pDefEnfCerArima2 <- forecast(DefEnfCerArima2,
 autoplot(pDefEnfCerArima2, 
          xlab = "",
          ylab = 'Defunciones',
-         main = 'Figura 5. Defunciones (1988-2018) y predicción (2019-2024)') +
+         main = 'Figura 4. Defunciones (1988-2018) y predicción (2019-2024)') +
   scale_x_continuous(breaks= seq(1988, 2024, 4)) 
 ```
 
 \
+\
 
-## Comparación con Alisado Exponencial
+# Comparación con Alisado Exponencial
 
 El método de Alisado exponencial, aplicado sobre el logaritmo de las defunciones identifica un proceso (A,A,A) con $\alpha=0.18$ y $\beta = \gamma = 0$. La raíz del error cuadrático medio (RMSE) es de 159 casos y el error porcentual (MAPE) del 3.7%. Estos valores son algo superiores a los obtenidos con el modelo Arima (133 y 3.2%, respectivamente).
 
@@ -307,7 +312,7 @@ errorAlisado
 ggplot() +
   geom_line(aes(x = 1:12, y = errorArima), colour = "Blue") +
   geom_line(aes(x = 1:12, y = errorAlisado), colour = "Red") +
-  ggtitle("Figura 6. Error de predicción (MAPE) según horizonte temporal") +
+  ggtitle("Figura 5. Error de predicción (MAPE) según horizonte temporal") +
   xlab("Horizonte temporal de predicción") +
   ylab("%") +
   scale_x_continuous(breaks= 1:12)
@@ -321,7 +326,7 @@ datos <- data.frame(
 )
 ggplot(datos, aes(x = x, y = y,  colour= factor)) + 
   geom_line() +
-  ggtitle("Figura 6. Error de predicción (MAPE) según horizonte temporal") +
+  ggtitle("Figura 5. Error de predicción (MAPE) según horizonte temporal") +
   xlab("Horizonte temporal de predicción") +
   ylab("%") +
   scale_x_continuous(breaks= 1:12) +
@@ -329,7 +334,7 @@ ggplot(datos, aes(x = x, y = y,  colour= factor)) +
   theme(legend.position=c(0.02,0.98), legend.justification=c(0,1)) 
 ```
 
-La figura 6 revela que Arima siempre es superior a Alisado en calidad de predicciones, con un error porcentual inferior entre 4 y 8 décimas según el horizonte temporal. Además, en el modelo Arima para horizontes de predicción superiores a 4 meses el error se mantiene prácticamente constante.
+La figura 5 revela que Arima siempre es superior a Alisado en calidad de predicciones, con un error porcentual inferior entre 4 y 8 décimas según el horizonte temporal. Además, en el modelo Arima para horizontes de predicción superiores a 4 meses el error se mantiene prácticamente constante.
 
 \
 \

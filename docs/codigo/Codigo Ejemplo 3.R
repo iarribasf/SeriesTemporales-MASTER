@@ -1,5 +1,5 @@
 #---------------------------------------------------------------
-# Codigo ejemplo tema 3: junio 2020
+# Codigo ejemplo tema 3
 #---------------------------------------------------------------
 
 
@@ -19,11 +19,14 @@ autoplot(DefEnfCer,
          main = "Defunciones causadas por enfermedades cerebrovasculares") +
   scale_x_continuous(breaks= seq(1980, 2018, 2)) 
 
+#- Transformacion logartimica
+(nl <- BoxCox.lambda(DefEnfCer))
+wDefEnfCer <-BoxCox(DefEnfCer, lambda = nl)
+
 #- Vemos diferentes transformaciones
-series <- cbind("Original" =  DefEnfCer,
-                "Dif. regular" = diff(DefEnfCer),
-                "Dif. estacional" = diff(DefEnfCer, lag = 12),
-                "Dif reg. y est." = diff(diff(DefEnfCer, lag = 12)))
+series <- cbind("Original" = DefEnfCer,
+                "Transformación Box-Cox" = wDefEnfCer,
+                "Logaritmo" = log(DefEnfCer))
 autoplot(series, 
          facets = TRUE,
          xlab = "",
@@ -46,6 +49,9 @@ ggAcf(log(DefEnfCer), lag = 48)
 ggAcf(diff(log(DefEnfCer)), lag = 48)
 ggAcf(diff(log(DefEnfCer), lag = 12),lag = 48)
 ggAcf(diff(diff(log(DefEnfCer), lag=12)), lag = 48)
+
+ndiffs(log(DefEnfCer))
+nsdiffs(log(DefEnfCer))
 
 series <- cbind("Original" = DefEnfCer,
                 "Dif reg. y est. de log" = diff(diff(log(DefEnfCer), lag = 12)))

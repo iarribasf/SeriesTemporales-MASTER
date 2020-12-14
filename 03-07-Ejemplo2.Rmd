@@ -1,7 +1,7 @@
 ---
-title: "Series Temporales: Alisado Exponencial"
+title: "Defunciones por Enfermedades Cerebrovasculares"
+subtitle: "Alisado exponencial"
 author: "Iván Arribas (Depto. Análisis Económico. Universitat de València)"
-date: "Curso 2020-21"
 output: 
   html_document:
     theme: cerulean
@@ -40,15 +40,11 @@ library(grid)
 \
 \
 
-# Ejemplo de aplicación: Defunciones por Enfermedades Cerebrovasculares (continuación).
+# Introducción
 
-\
+Consideremos de nuevo la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares, Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2018, un total de 39 años o 468 meses.
 
-## Introducción
-
-Consideremos de nuevo la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares, Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2018, un total de 39 años o 468 meses
-
-En la descriptiva del tema 1 vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para el análisis por técnicas de alisado exponencial vamos a recortar la serie y considerarla solo desde enero de 1988, 31 años o 372 meses.
+En la descriptiva vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para el análisis por técnicas de alisado exponencial vamos a recortar la serie y considerarla solo desde enero de 1988, 31 años o 372 meses.
 
 La serie presenta tendencia decreciente y estacionalidad de orden 12 en un claro esquema multiplicativo. Ya vimos que los determinantes del efecto estacional son la temperatura y el número de días del mes.
 
@@ -68,10 +64,11 @@ autoplot(DefEnfCer,
 ```
 
 \
+\
 
-## Identificación del modelo de ajuste por alisado exponencial e interpretación
+# Ajuste por alisado exponencial e interpretación
 
-Si se estima el modelo sin imponer ninguna restricción `ets` identifica como modelo óptimo ETS(M,A,M).
+Vamos a aplicar la metodología de alisado exponencial a la serie de defunciones. Si se estima el modelo sin imponer ninguna restricción `ets` identifica como modelo óptimo ETS(M,A,M).
 
 ```{r}
 DefEnfCerEts <- ets(DefEnfCer, model = "ZZZ")
@@ -89,7 +86,7 @@ autoplot(DefEnfCerEts,
          main = "Figura 2. Descomposición para defunciones por enfermedades cerebrovasculares")
 ```
 
-La calidad del ajuste es bastante buena, con un MAPE de 3.8% y un RMSE de 159 casos (o 115 si usamos el MAE). Además, según el MASE, el modelo de alisado exponencial supone una mejora del 33% respecto del método ingenuo con estacionalidad (el más sencillo que podríamos aplicar).
+La calidad del ajuste es bastante buena, con un MAPE de 3.8% y un RMSE de 159 casos (o 115 si usamos el MAE). Además, según el MASE, el modelo de alisado exponencial supone una mejora del 33% respecto del método ingenuo con estacionalidad, el más sencillo que podríamos aplicar.
       
 Los últimos valores estimados del nivel y la estacionalidad, que corresponden a diciembre de 2018, nos permiten mostrar gráficamente la componente estacional (figura 3).
 
@@ -117,11 +114,12 @@ ggplot() +
                                 "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")) 
 ```
 
-El nivel de las defunciones por enfermedades cerebrovasculares en diciembre de 2018 (última observación) es de 2,173 casos y la pendiente -3.8 casos, prácticamente nula. La mayor incidencia de las defunciones por enfermedades cerebrovasculares tiene lugar en invierno, en los meses de diciembre a marzo. En concreto, destaca el mes enero con un incremento del 23% (`s12`) en las defunciones por enfermedades cerebrovasculares respecto de la media anual. La incidencia en verano es menor que la media anual, observándose en septiembre un 17% menos de casos (`s4`). El efecto estacional estimado por el método de alisado es muy similar al estimado durante la descriptiva de la serie (véase Tema 1).
+El nivel de las defunciones por enfermedades cerebrovasculares en diciembre de 2018 (última observación) es de 2,173 casos y la pendiente -3.8 casos, prácticamente nula. La mayor incidencia de las defunciones por enfermedades cerebrovasculares tiene lugar en invierno, en los meses de diciembre a marzo. En concreto, destaca el mes enero con un incremento del 23% (`s12`) en las defunciones por enfermedades cerebrovasculares respecto de la media anual. La incidencia en verano es menor que la media anual, observándose en septiembre un 17% menos de casos (`s4`). El efecto estacional estimado por el método de alisado es muy similar al estimado durante la descriptiva de la serie.
 
 \
+\
 
-## Predicción
+# Predicción
 
 Si pedimos los valores de predicción y su intervalo de confianza al 95% para los próximos tres años tenemos (numéricamente sólo se muestra el primer año):
 
@@ -133,7 +131,9 @@ DefEnfCerEtsPre
 ```{r,echo=FALSE}
 DefEnfCerEtsPre <- forecast(DefEnfCerEts, h = 36, level = 95)
 forecast(DefEnfCerEts,h = 12, level = 95)
+```
 
+```{r}
 autoplot(DefEnfCerEtsPre,
          xlab = "",
          ylab = "Casos",
@@ -144,8 +144,9 @@ autoplot(DefEnfCerEtsPre,
 Las predicciones mantiene la tendencia decreciente observada en la serie. (Véase figura 4.)
 
 \
+\
 
-## Análisis del error
+# Análisis del error
 
 La  figura 5 muestra el residuo del modelo, estimado aditivamente.
 
@@ -166,8 +167,9 @@ autoplot(error,
 Se aprecian tres meses, febrero de 1999, enero de 2005 y febrero de 2012 en los que el residuo supera las tres desviaciones típicas porque el número de muertes por enfermedades cerebrovasculares fue muy superior al estimado por el modelo. Además, otros residuos cercanos a las tres desviaciones típicas son susceptibles de ser considerados intervención: enero de 1988, diciembre de 1990 y junio y agosto de 2003. 
 
 \
+\
 
-## Validación
+# Validación
 
 Ya hemos visto que el modelo comete un error próximo al 3.8%. Este valor es la estimación del _error en la previsión intra-muestral y a un periodo vista_. A fin de poder estimar mejor la capacidad predictiva del modelo vamos a estimar _el error de previsión extra-muestral a largo plazo_. Con este fin vamos a reserva tres años o 36 observaciones.
   
@@ -181,7 +183,12 @@ DefEnfCerIntraEtsPre <- forecast(DefEnfCerIntraEts, h = 36)
 accuracy(DefEnfCerIntraEtsPre, DefEnfCerExtra)
 ```
 
-Según los resultados obtenidos, el error porcentual medio en la previsión intra-muestral a un periodo vista es del 3.8%, que en la previsión extra-muestral a largo plazo pasa al 3.4%. Es decir, pasar de estimación intra- a extra-muestral no aumenta el error (de hecho lo disminuye, previsiblemente porque en el periodo extra-muestral el comportamiento de la serie fue muy regular y sin intervención). Por tanto, parece que el modelo resulta muy conveniente para previsiones a más de un periodo vista. 
+Según los resultados obtenidos, el error porcentual medio en la previsión intra-muestral a un periodo vista es del 3.8%, que en la previsión extra-muestral a largo plazo pasa al 3.4%. Es decir, pasar de estimación intra- a extra-muestral no aumenta el error --de hecho lo disminuye, previsiblemente porque en el periodo extra-muestral el comportamiento de la serie fue muy regular y sin intervención. Por tanto, parece que el modelo resulta muy conveniente para previsiones a más de un periodo vista. 
+
+\
+\
+
+# Modelos alternativos
 
 \
 
@@ -211,7 +218,7 @@ Los principales resultados muestran que:
 
 * El modelo de alisado es Holt-Winters aditivo: $log(y_{t+1}) = l_t + b_t + s_{t + 1 - m} + \varepsilon_{t+1}$
 
-* Los criterios de bondad de ajuste son RMSE = 159 y MAPE = 3.7%. Prácticamente iguales a los obtenidos para la serie original.
+* Los criterios de bondad de ajuste RMSE = 159 y MAPE = 3.7% son prácticamente iguales a los obtenidos para la serie original.
 
 * El error de previsión extra-muestral a largo plazo es del 3.2%.
 
@@ -221,7 +228,7 @@ Podemos concluir que trabajar con el logaritmo de la serie no mejora sensiblemen
 
 ## Cambio del criterio de estimación de los parámetros
 
-Veamos los resultados de estimar los parámetros del modelo usando el criterio de minimizar el error cuadrático medio.
+Veamos ahora si mejoramos la calidad de ajuste usando el criterio de minimizar el error cuadrático medio para estimar los parámetros del modelo.
 
 ```{r}
 mDefEnfCerEts<-ets(DefEnfCer,  
@@ -268,6 +275,11 @@ Supongamos que para estimar el modelo se necesita un mínimo de $k$ observacione
   3. Calculamos el error de predicción para las observaciones desde $i+k+1$ hasta $i+k+h$.
   4. Para cada horizonte temporal de predicción se calcula la medida de error deseada.
 
+\
+\
+
+![](./imagenes/RollingWindows.png)
+
 Este procedimiento se denomina __origen de predicción móvil__ (_rolling forecast origin_) o _rolling windows_.
 
 
@@ -275,9 +287,7 @@ Cuando se aplica esta metodología hay que tener en cuenta que los resultados pu
 
 \
 
-## Ejemplo: Defunciones por Enfermedades Cerebrovasculares
-
-Vamos a aplicar la metodología previa a la serie de Defunciones por Enfermedades Cerebrovasculares.
+## Aplicación sobre el módelo identificado
 
 Asumimos que se precisan diez años para hacer una buena estimación, $k=120$, y que el horizonte temporal es un año, $h = 12$ meses. La siguiente rutina permite obtener el MAPE para previsiones con un horizonte temporal desde 1 mes hasta 12 meses.
   
@@ -314,16 +324,27 @@ Sin embargo, para previsiones a más largo plazo el error de predicción decrece
 
 \
 
-## Modelos alternativos
+## Aplicación a modelos alternativos
 
-¿Podemos reducir el error extra-muestral de previsión si cambiamos las opciones por defecto de `ets`o la serie a analizar? La figura 7 muestra el error de previsión extra-muestral según el horizonte de previsión para los siguientes modelos (todos sin amortiguamiento):
+¿Podemos reducir el error extra-muestral de previsión si cambiamos las opciones por defecto de `ets` o la serie a analizar? La figura 7 muestra el error de previsión extra-muestral según el horizonte de previsión para los siguientes modelos (todos sin amortiguamiento):
 
-* Modelo 1: Defunciones al mes, modelo "MAM", estimación por máxima verosimilitud: `ets(x, model = "MAM", damped = FALSE)`
-* Modelo 2: Defunciones al mes, modelo "MAM", estimación por mínimo error en previsiones a 2 periodos vista: `ets(x, model = "MAM", damped = FALSE, opt.crit = "amse", nmse = 2)`
-* Modelo 3: Defunciones al mes (log), modelo "AAA", estimación por máxima verosimilitud, corrección por sesgo: `ets(x, model = "AAA", lambda = 0, biasadj = TRUE, damped = FALSE)`
-* Modelo 4: Defunciones al mes (log), modelo "AAA", estimación por mínimo error en previsiones a 2 periodos vista, corrección por sesgo: `ets(x, model = "AAA", lambda = 0, biasadj = TRUE, damped = FALSE,  opt.crit = "amse", nmse = 2)`
-* Modelo 5: Defunciones medias por día, modelo "MAM", estimación por máxima verosimilitud: `ets(train.set/monthdays(train.set), model = "MAM", damped = FALSE)`
-* Modelo 6: Defunciones medias por día, modelo "MAM", estimación por mínimo error en previsiones a 2 periodos vista: `ets(train.set/monthdays(train.set), model = "MAM", damped = FALSE, opt.crit = "amse", nmse = 2)`
+|**Id**  |**Transformacion** |**Modelo** |**Método estimación** |
+|:-------|:------------------|:----------|:---------------------|
+| 1      |Ninguna            |MAM        |Máxima verosimilitud  |
+| 2      |Ninguna            |MAM        |mínimo error en previsiones a 2 periodos vista  |
+| 3      |Logaritmo          |AAA        |Máxima verosimilitud  |
+| 4      |Logartimo          |AAA        |mínimo error en previsiones a 2 periodos vista  |
+| 5      |Defuncones por día |MAM        |Máxima verosimilitud  |
+| 6      |Defuncones por día |MAM        |mínimo error en previsiones a 2 periodos vista  |
+
+En concreto los comandos utilizados han sido: 
+
+* Modelo 1: `ets(x, model = "MAM", damped = FALSE)`
+* Modelo 2: `ets(x, model = "MAM", damped = FALSE, opt.crit = "amse", nmse = 2)`
+* Modelo 3: `ets(x, model = "AAA", lambda = 0, biasadj = TRUE, damped = FALSE)`
+* Modelo 4: `ets(x, model = "AAA", lambda = 0, biasadj = TRUE, damped = FALSE,  opt.crit = "amse", nmse = 2)`
+* Modelo 5: `ets(x/monthdays(x), model = "MAM", damped = FALSE)`
+* Modelo 6: `ets(x/monthdays(x), model = "MAM", damped = FALSE, opt.crit = "amse", nmse = 2)`
 
 \
 
@@ -404,3 +425,4 @@ Es decir, tanto la estrategia de predecir la serie de defunciones medias por dí
 \
 \
 \
+
