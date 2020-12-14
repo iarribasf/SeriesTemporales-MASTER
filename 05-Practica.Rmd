@@ -18,7 +18,7 @@ Durante todo el módulo realizarás una serie de ejercicios que aplicarán las t
 
 Tu primera tarea es descargarte tu serie temporal. Descárgate [aqui](practica/Descripcion de las series.pdf) el fichero .pdf con la descripción de las series y localiza en él el nombre de tu serie. El este fichero encontrarás también una descripción detallada de la serie que vas a analizar: nombre, definición, unidades, fuente, fechado…
 
-Por otro lado, descárgate [aquí](practica/Series.zip) fichero comprimido con todas las series, descomprímelo y localiza el fichero txt con tu serie.
+Por otro lado, descárgate [aquí](practica/Series.zip) el fichero comprimido con todas las series, descomprímelo y localiza el fichero txt con tu serie.
 
 ______________________
 
