@@ -418,13 +418,6 @@ div.tocify {
     Practica
   </a>
 </li>
-<li>
-  <a href="06-Calendario.html">
-    <span class="fa fa-calendar-alt"></span>
-     
-    Calendario
-  </a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fa fa-download"></span>
@@ -489,7 +482,7 @@ div.tocify {
 </p>
 <ul>
 <li>La <strong>fecha</strong> máxima de entrega de cada trabajo se indicará al finalizar cada tema. Procura no retrasarte. Si el retraso supera la semana, tu nota en la práctica será de cero.</li>
-<li>En Aulavirtual, en la tarea “SERIES: Practica n” debes <strong>subir un fichero .pdf con los resultados</strong> de la práctica n-ésima. Sólo se admite un único fichero en formato .pdf.</li>
+<li>En Aulavirtual, en la tarea “Practica evaluación n” debes <strong>subir un fichero .pdf con los resultados</strong> de la práctica n-ésima. Sólo se admite un único fichero en formato .pdf.</li>
 <li>Piensa que además de los contenidos también su ordenación, estructura, sintaxis, comentarios, etc. son parte de la evaluación.</li>
 <li><strong>Incluye siempre todo el código en R utilizado en el trabajo</strong>. Si utilizas Markdown (o similar), haz que el código sea visible; en otro caso, añádelo como un apéndice al final del documento.</li>
 </ul>
@@ -497,26 +490,13 @@ div.tocify {
 <br />
 </p>
 </div>
-<div id="práctica-1-introducción-a-las-series-temporales" class="section level3">
-<h3>Práctica 1: Introducción a las series temporales</h3>
+<div id="práctica-1-descripción-de-la-serie-temporal" class="section level3">
+<h3>Práctica 1: Descripción de la serie temporal</h3>
 <p><br />
 </p>
-<ul>
-<li><strong>Parte 1:</strong> Descripción de la serie temporal
 <ul>
 <li>Haz una descripción detallada de tu serie (tendencia, estacionalidad, intervención, tipo de esquema…).</li>
 <li>Ayúdate para ello de todos los elementos numéricos y gráficos que hemos visto: gráfica de tu serie original, gráfica de su agregación anual, gráfica localización/dispersión, descomposición…</li>
-</ul></li>
-</ul>
-<p><br />
-</p>
-<ul>
-<li><strong>Parte 2:</strong> Análisis del residuo
-<ul>
-<li>Haz un análisis del residuo obtenido tras la descomposición para determinar si es ruido blanco e identificar posibles intervenciones.</li>
-<li>Ten en cuenta que si has realizado una descomposición multiplicativa de tu serie, el residuo obtenido no es válido para este análisis. Deberás previamente obtener el residuo aditivo.</li>
-<li>Para este análisis haz uso de las técnicas estadísticas o gráficas que conozcas.</li>
-</ul></li>
 </ul>
 <p>Si el análisis realizado así lo aconseja, indica si vas a recortar tu serie para posteriores análisis.</p>
 <p><br />
@@ -528,25 +508,13 @@ div.tocify {
 <p><br />
 </p>
 <ul>
-<li><strong>Ejercicio 1:</strong> Serie con fechado anual
+<li>Ajusta el modelo de alisado más adecuado a tus datos.
 <ul>
-<li>Considera la agregación anual de tu serie temporal (que ya usaste en la primera práctica).</li>
-<li>Ajusta el modelo de alisado más adecuado a tus datos.</li>
 <li>Describe el modelo obtenido.</li>
-<li>Interpreta el valor de los parámetros estimados.</li>
-<li>Obtén los indicadores de la calidad del modelo y coméntalos. Al menos calcula los indicadores de calidad para las previsiones intra-muestrales a un periodo vista y para las previsiones extra-muestrales a varios periodos vista (validación cruzada).</li>
-<li>Muestra los últimos valores estimados de nivel y pendiente y realiza una predicción a mano y con <code>R</code> para los tres siguientes años.</li>
-<li>Realiza un predicción a tres años vista con <code>R</code> y muestra los resultados de la estimación y la predicción gráficamente.</li>
+<li>Obtén los indicadores de la calidad del modelo y coméntalos.</li>
+<li>Realiza un predicción a tres años vista y muestra los resultados de la predicción gráficamente.</li>
 <li>Obtén el residuo e identifica la presencia de valores extremos.</li>
-</ul></li>
-</ul>
-<p><br />
-</p>
-<ul>
-<li><strong>Ejercicio 2:</strong> Serie con el fechado original
-<ul>
-<li>Repite el análisis previo, pero usando esta vez su serie original sin anualizar.</li>
-<li>En este caso, haz la previsión <em>a mano</em> para 12 meses y con <code>R</code> para 36 meses.</li>
+<li>Compara el modelo ajustado por Alisado Exponencial con el método ingenuo con estacionalidad</li>
 </ul></li>
 </ul>
 <p><br />
@@ -557,21 +525,19 @@ div.tocify {
 <h3>Práctica 3: Procesos estocásticos</h3>
 <p><br />
 </p>
-<p>Esta práctica tiene como objetivo transformar tu serie para que sea estacionaria en media y varianza, y ergódica.</p>
+<p>Esta práctica tiene como objetivos (1) analizar la estacionariedad en media y varianza de tu serie y (2) transformarla para obtener una serie estacionaria.</p>
 <ul>
-<li><strong>Ejercicio 1:</strong> Serie con fechado anual
+<li>Considera tu <strong>serie con fechado anual</strong>
 <ul>
-<li>Considera la agregación anual de tu serie temporal.</li>
-<li>Determina si has de diferenciar la serie y si es conveniente la transformación logarítmica para que verifique las hipótesis de estacionariedad y ergodicidad.</li>
-<li>Haz el contraste de raíces unitarias para identificar el orden de integración.</li>
+<li>Obtén su gráfica y la gráfica de su primera diferencia.</li>
+<li>Realiza el contraste de raíces unitarias.</li>
+<li>Transforma la serie anual usando sólo las funciones  y  para obtener otra que sea estacionaria y ergódica.</li>
 </ul></li>
-</ul>
-<p><br />
-</p>
+<li>Considera ahora tu <strong>serie original (sin anualizar)</strong>
 <ul>
-<li><strong>Ejercicio 2:</strong> Serie con el fechado original
-<ul>
-<li>Transforma tu serie original usando sólo las funciones log y diff para obtener otra que sea estacionaria y ergódica.</li>
+<li>Obtén la gráfica de la serie y de su primera diferencia (regular y/o estacional)</li>
+<li>Además, calcula su FAC y la FAC de su primera diferencia (regular y/o estacional).</li>
+<li>Transforma la serie original usando sólo las funciones  y  para obtener otra que sea estacionaria y ergódica</li>
 </ul></li>
 </ul>
 <p><br />
@@ -581,20 +547,12 @@ div.tocify {
 <div id="práctica-4-procesos-arima-sin-estacionalidad" class="section level3">
 <h3>Práctica 4: Procesos ARIMA sin estacionalidad</h3>
 <p>A grandes rasgos el ejercicio consistirá en analizar tu serie temporal sin estacionalidad (agregación anual), siguiendo la metodología de Box y Jenkins. Por tanto, para esta práctica debes considerar solo tu serie con fechado anual.</p>
-<ul>
-<li>Las tareas para realizar son:
-<ul>
-<li>Transformar la serie para que sea estacionaria y ergódica (según determinaste en la práctica 3)</li>
-<li>Identificar la serie, estimarla y validarla</li>
-<li>Realizar predicciones puntuales y por intervalo</li>
-<li>Comparar la calidad del ajuste y de las predicciones del modelo ARIMA con la que obtuviste con el modelo de alisado exponencial de la práctica 2.</li>
-</ul></li>
-</ul>
 <p>A continuación se indican los contenidos mínimos que se deben presentar. Eres libre de elegir el orden de la presentación de los contenidos, así como la información finalmente presentada.</p>
 <ul>
 <li>Identificación del modelo ARIMA:
 <ul>
-<li>Diferenciación, parte estructural, análisis de intervención y valores atípicos.</li>
+<li>Parte de la trasformación de la serie identificada en la práctica previa.</li>
+<li>Identificación de la parte estructural, análisis de intervención y valores atípicos.</li>
 </ul></li>
 <li>Estimación del modelo definitivo
 <ul>
@@ -604,15 +562,15 @@ div.tocify {
 </ul></li>
 <li>Validación completa del modelo
 <ul>
-<li>Significatividad de los coeficientes (contraste de Wald).</li>
-<li>Hipótesis sobre el residuo.</li>
+<li>Significatividad de los coeficientes (contraste de Wald)</li>
+<li>Hipótesis de homocedasticidad e incorrelación.</li>
 <li>Valores extremos.</li>
 <li>Cálculo de la calidad del ajuste y de las predicciones</li>
 </ul></li>
 <li><p>Previsión de la serie (al menos tres años)</p></li>
 <li>Valoración crítica del modelo ARIMA respecto de un modelo de alisado:
 <ul>
-<li>Comparación del modelo estimado para la serie en la práctica 2 y del modelo de esta práctica.</li>
+<li>Comparación del modelo estimado en esta práctica el mejor modelo de alisado</li>
 <li>Comparación de la calidad de los modelos.</li>
 <li>Comparación de las previsiones.</li>
 </ul></li>
@@ -625,34 +583,28 @@ div.tocify {
 <h3>Práctica 5: Procesos ARIMA con estacionalidad</h3>
 <p>Los objetivos de esta práctica son idénticos a los de la práctica previa, pero considerando tu serie original con estacionalidad.</p>
 <ul>
-<li>Las tareas para realizar son:
-<ul>
-<li>Transformar la serie para que sea estacionaria y ergódica (según determinaste en la práctica 3)</li>
-<li>Identificar la serie, estimarla y validarla</li>
-<li>Realizar predicciones puntuales y por intervalo</li>
-<li>Comparar la calidad del ajuste y de las predicciones del modelo ARIMA con la que obtuviste con el modelo de alisado exponencial de la práctica 2.</li>
-</ul></li>
 <li>Identificación del modelo ARIMA:
 <ul>
-<li>Diferenciación, parte estructural, análisis de intervención y valores atípicos.</li>
+<li>Parte de la trasformación de la serie identificada en la práctica 3</li>
+<li>Identificación de la parte estructural, análisis de intervención y valores atípicos.</li>
 </ul></li>
 <li>Estimación del modelo definitivo
 <ul>
 <li>Estimación de los coeficientes del modelo.</li>
 <li>Desarrollo de la ecuación estimada.</li>
-<li>Interpretación de los parámetros y de la ecuación estimada.</li>
+<li>Interpretación de la ecuación estimada.</li>
 </ul></li>
 <li>Validación completa del modelo
 <ul>
 <li>Significatividad de los coeficientes (contraste de Wald).</li>
-<li>Hipótesis sobre el residuo.</li>
+<li>Hipótesis de homocedasticidad e incorrelación.</li>
 <li>Valores extremos.</li>
 <li>Cálculo de la calidad del ajuste y de las predicciones</li>
 </ul></li>
 <li><p>Previsión de la serie (al menos tres años)</p></li>
 <li>Valoración crítica del modelo ARIMA respecto de un modelo de alisado:
 <ul>
-<li>Comparación del modelo estimado para la serie en la práctica 2 y del modelo de esta práctica.</li>
+<li>Comparación del modelo estimado en esta práctica con los modelos de la práctica 2</li>
 <li>Comparación de la calidad de los modelos.</li>
 <li>Comparación de las previsiones.</li>
 </ul></li>
