@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Iván Arribas (Depto. Análisis Económico. Universitat de València)" />
+
+
+<title>Series Temporales: Introducción</title>
+
+<script src="site_libs/header-attrs-2.5/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Series Temporales</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="01-Guia-curso.html">
+    <span class="fa fa-graduation-cap"></span>
+     
+    Guía del curso
+  </a>
+</li>
+<li>
+  <a href="02-Logistica.html">
+    <span class="fa fa-laptop"></span>
+     
+    Logística
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-book"></span>
+     
+    Diapos
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Teoría</li>
+    <li>
+      <a href="03-01-Tema1.html">Tema 1: Introducción</a>
+    </li>
+    <li>
+      <a href="03-02-Tema2.html">Tema 2: Alisado</a>
+    </li>
+    <li>
+      <a href="03-03-Tema3.html">Tema 3: Procesos estocásticos</a>
+    </li>
+    <li>
+      <a href="03-04-Tema4.html">Tema 4: ARIMA</a>
+    </li>
+    <li>
+      <a href="03-05-Tema5.html">Tema 5: SARIMA</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Ejemplo de aplicación</li>
+    <li>
+      <a href="03-06-Ejemplo1.html">Ejemplo Tema 1</a>
+    </li>
+    <li>
+      <a href="03-07-Ejemplo2.html">Ejemplo Tema 2</a>
+    </li>
+    <li>
+      <a href="03-08-Ejemplo3.html">Ejemplo Tema 3</a>
+    </li>
+    <li>
+      <a href="03-09-Ejemplo4.html">Ejemplo Tema 4</a>
+    </li>
+    <li>
+      <a href="03-10-Ejemplo5.html">Ejemplo Tema 5</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Otro ejemplo</li>
+    <li>
+      <a href="03-11-Ejemplo-Pasajeros.html">Ejemplo de Pasajeros</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="04-Recursos-R.html">
+    <span class="fa fa-code"></span>
+     
+    Recursos de R
+  </a>
+</li>
+<li>
+  <a href="05-Practica.html">
+    <span class="fa fa-edit"></span>
+     
+    Practica
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-download"></span>
+     
+    Más
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">R</li>
+    <li>
+      <a href="https://cran.r-project.org">Dónde está R</a>
+    </li>
+    <li>
+      <a href="https://rstudio.com">Donde está RStudio</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Markdown</li>
+    <li>
+      <a href="https://bookdown.org/yihui/rmarkdown/">Markdown</a>
+    </li>
+    <li>
+      <a href="https://rmarkdown.rstudio.com/lesson-1.html">R Markdown</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Otros</li>
+    <li>
+      <a href="https://www.r-bloggers.com">Blog sobre R</a>
+    </li>
+    <li>
+      <a href="https://bookdown.org">Libros online que debes conocer</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Series Temporales: Introducción</h1>
+<h3 class="subtitle">Máster de Bioestadística (Modelización Estadística)</h3>
+<h4 class="author">Iván Arribas (Depto. Análisis Económico. Universitat de València)</h4>
+
+</div>
+
+
+<div id="introducción" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Introducción</h1>
+<blockquote>
+<p>“Hacer previsiones supone realizar la mejor apreciación posible de algún suceso futuro.” Holton y Keating (1996).</p>
+</blockquote>
+<blockquote>
+<p>“Time series are analysed to understand the past and to predict the future.” Metcalfe y Cowpertwait (2009)</p>
+</blockquote>
+<p>Los datos temporales, <strong>series temporales</strong>, se analizan para entender el pasado y predecir el futuro posibilitando a los agentes tomar decisiones adecuadamente informados.</p>
+<ul>
+<li><p>Algunas cabeceras de prensa determinan el número de ejemplares a imprimir cada día analizando la demanda pasada de su diario.</p></li>
+<li><p><a href="https://demanda.ree.es/demanda.html">Red Eléctrica Española</a> predice el consumo eléctrico hora a hora para ajustar la oferta a la demanda.</p></li>
+<li><p>El <a href="http://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&amp;cid=1254736176953&amp;menu=ultiDatos&amp;idp=1254735572981">Instituto Nacional de Estadística</a> (INE) predice la población española para los próximos 50 años.</p></li>
+</ul>
+<p>La predicción de series temporales es una herramienta a la hora de establecer políticas sociales, empresariales…</p>
+<p><br />
+<br />
+</p>
+</div>
+<div id="series-temporales" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Series Temporales</h1>
+<p><br />
+</p>
+<div id="definición" class="section level2" number="2.1">
+<h2 number="2.1"><span class="header-section-number">2.1</span> Definición</h2>
+<p><strong>Una serie temporal es una variable medida secuencialmente en el tiempo a intervalos equi-espaciados</strong>.</p>
+<p>La representaremos por, <span class="math display">\[\{y_t\}_{t=1}^T=\{y_1,y_2,\ldots,y_T\}.\]</span></p>
+<p>La serie aparece indexada por su fechado <span class="math inline">\(t\)</span> y el sub-índice <span class="math inline">\(T\)</span> hará siempre referencia a la fecha del último dato.</p>
+<p>El fechado varía en su frecuencia, que puede ser anual (baja frecuencia), trimestral, mensual, semanal, diario (alta frecuencia) o disponer casi de un continuo de datos.</p>
+<p>En este curso aprenderemos a ajustar modelos a series temporales para su posterior análisis y predicción.</p>
+<p><br />
+</p>
+</div>
+<div id="proceso-generador-de-datos" class="section level2" number="2.2">
+<h2 number="2.2"><span class="header-section-number">2.2</span> Proceso generador de datos</h2>
+<p>El proceso generador de los datos de una serie temporal es en general desconocido, pero se puede aproximar por un modelo estadístico. Estos modelos se pueden clasificar en tres grandes grupos según su naturaleza.</p>
+<p>En ocasiones las series temporales pueden ser modeladas de forma <strong>determinista</strong> ajustando los datos a funciones matemáticas: <span class="math display">\[y_t=f(t)+\varepsilon_t.\]</span></p>
+<p>En los <strong>procesos estocásticos</strong> las observaciones cercanas en el tiempo tienden a estar (cor)relacionadas y se puede aprovechar esta dependencia para entender la serie y predecirla: <span class="math display">\[y_t=f(y_{t-1},y_{t-2},\ldots)+\varepsilon_t.\]</span></p>
+<p>A veces, ambas situaciones se dan simultáneamente: <span class="math display">\[y_t=f(t,y_{t-1},y_{t-2},\ldots)+\varepsilon_t.\]</span></p>
+<p>La figura 1 muestra un ejemplo gráfico de estos tres procesos generadores.</p>
+<p><img src="03-01-Tema1_files/figure-html/procesosGeneradores-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>En este curso se asumirá en todo momento que la serie temporal tiene una componente estocástica.</p>
+<p><br />
+</p>
+</div>
+<div id="lectura-de-datos-y-representación-gráfica" class="section level2" number="2.3">
+<h2 number="2.3"><span class="header-section-number">2.3</span> Lectura de datos y representación gráfica</h2>
+<p>Antes de continuar vamos a importar en <code>R</code> dos de las series que usaremos de ejemplo en este tema: número de títulos (libros y folletos) publicados anualmente en España, los nacimientos mensuales en España y la demanda eléctrica diaria (MWh) en España. Servirán de ejemplo para el análisis de series con diferente fechado, anual, mensual y diario, respectivamente.</p>
+<div id="títulos-publicados-en-españa" class="section level3 unnumbered">
+<h3 class="unnumbered">Títulos publicados en España</h3>
+<p>Libros es una <em>serie anual</em> de 1993 a 2018 (fuente <a href="https://www.ine.es">Instituto Nacional de Estadística</a>). Los datos están disponibles en el fichero <code>libros.csv</code>. La primera columna tiene el año de la serie y la segunda contiene el número de títulos publicados. En la primera fila aparece el nombre de cada columna.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>libros <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">&quot;./series/libros.csv&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>libros <span class="ot">&lt;-</span> <span class="fu">ts</span>(libros[, <span class="dv">2</span>], <span class="at">start =</span> <span class="dv">1993</span>, <span class="at">frequency  =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p>Usamos para leer los datos <code>read.csv2</code>, indicando que la primera línea tiene el nombre de las variables. Esta función asume que el separador decimal es la coma “,” y que el separador entre variables es el punto y coma “;”. Si el separador decimal es el punto “.” y el separador de variables es la coma “,”, debes usar <code>read.csv</code>. En cualquiera de estas funciones, puedes modificar el separador decimal por medio del argumento <code>dec</code>; también puedes usar el argumento <code>sep</code> para indicar el carácter usado como separador de variables.</p>
+<p>La función <code>ts</code>, de la librería <code>stats</code>, convierte un objeto (vector o matriz) a la clase <em>serie temporal</em>.</p>
+<ul>
+<li>Con <code>start</code> indicamos el fechado del primer dato.</li>
+<li>Con <code>frequency</code> indicamos la frecuencia, que en este caso es un dato por año.</li>
+</ul>
+<p>Usa <code>help(ts)</code> para obtener más información y <code>str(libros)</code> para ver qué contiene un objeto <em>serie temporal</em>.</p>
+<p>Podemos dibujar la serie Libros con la función <code>plot</code> o mejor con <code>autoplot</code>. Esta última está en el paquete <code>forecast</code>.</p>
+<p>En general, las funciones gráficas que vamos a usar pertenecen a la libraría <code>forecast</code>, pero en ocasiones las ampliaremos con funciones de la librería <code>ggplot2</code>. Te recomiendo cargar estas dos librerías desde el inicio. En casi todos los casos existe una versión de la función gráfica usada en la librería <code>stats</code>. Además, usaremos las librerías <code>grid</code> y <code>gridExtra</code> para combinar un conjunto de gráficas en una misma figura.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(libros,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">ylab =</span> <span class="st">&quot;Títulos&quot;</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">&quot;Figura 2. Títulos publicados (libros y folletos)&quot;</span>)</span></code></pre></div>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="nacimientos-en-españa" class="section level3 unnumbered">
+<h3 class="unnumbered">Nacimientos en España</h3>
+<p>Nacimientos es una <em>serie mensual</em> de enero de 1975 a diciembre de 2018 (fuente: <a href="http://www.ine.es">Instituto Nacional de Estadística</a>). Los datos están disponibles en el fichero <code>nacimientos.csv</code>. La primera columna tiene la fecha y la segunda la serie propiamente. En la primera fila aparece el nombre de cada columna.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>nacimientos <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">&quot;./series/nacimientos.csv&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>nacimientos <span class="ot">&lt;-</span> <span class="fu">ts</span>(nacimientos[, <span class="dv">2</span>],</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1975</span>, <span class="dv">1</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">frequency =</span> <span class="dv">12</span>)</span></code></pre></div>
+<p>En este caso:</p>
+<ul>
+<li>Con <code>start</code> indicamos que el primer dato es enero de 1975. También sería correcto <code>start = 1975</code>. Si el primer dato fuera, por ejemplo, marzo de 1975, deberíamos poner <code>start = c(1975, 3)</code> o <code>start = 1975 + 2/12</code>.</li>
+<li>Con <code>frequency</code> indicamos que se tienen 12 datos (meses) por año. Si la serie fuera trimestral pondríamos <code>frequency = 4</code>.</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(nacimientos,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">ylab =</span> <span class="st">&quot;Nacimientos&quot;</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">&quot;Figura 3. Nacimientos mensuales&quot;</span>)</span></code></pre></div>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="demanda-eléctrica" class="section level3 unnumbered">
+<h3 class="unnumbered">Demanda eléctrica</h3>
+<p>Electricidad es una <em>serie diaria</em> desde el 1 enero de 2019 hasta el 31 diciembre de 2019 (fuente: <a href="http://www.ree.es">Red Electrica de España</a>). Los datos están disponibles en el fichero <code>Consumo electrico.csv</code>. La primera columna tiene la fecha y la segunda, la seleccionada para el fechado, la serie propiamente. En la primera fila aparece el nombre de cada columna.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>electricidad <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">&quot;./series/Consumo electrico.csv&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>electricidad <span class="ot">&lt;-</span> <span class="fu">ts</span>(electricidad[, <span class="dv">2</span>],</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">frequency =</span> <span class="dv">7</span>)</span></code></pre></div>
+<p>En este caso:</p>
+<ul>
+<li>Con <code>start</code> indicamos que el primer dato es un martes (segundo día de la semana) de la primera semana. Como ves no hay referencia al año. También sería correcto <code>start = 1 + 1/7</code>.</li>
+<li>Con <code>frequency</code> indicamos que se tienen 7 datos (días) por semana. Si la serie fuera de lunes a viernes pondríamos <code>frequency = 5</code>.</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(electricidad,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">ylab =</span> <span class="st">&quot;MWh&quot;</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">&quot;Figura 4. Consumo diario de electricidad&quot;</span>)</span></code></pre></div>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<ul>
+<li><code>start</code>, da el fechado del primer dato</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">start</span>(nacimientos)</span></code></pre></div>
+<pre><code>[1] 1975    1</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">start</span>(electricidad)</span></code></pre></div>
+<pre><code>[1] 1 2</code></pre>
+<ul>
+<li><code>end</code>, da el fechado del último dato</li>
+</ul>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">end</span>(nacimientos)</span></code></pre></div>
+<pre><code>[1] 2018   12</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">end</span>(electricidad)</span></code></pre></div>
+<pre><code>[1] 53  2</code></pre>
+<ul>
+<li><code>frequency</code>, da la frecuencia de los datos</li>
+</ul>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">frequency</span>(nacimientos)</span></code></pre></div>
+<pre><code>[1] 12</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">frequency</span>(electricidad)</span></code></pre></div>
+<pre><code>[1] 7</code></pre>
+<ul>
+<li><code>time</code>, crea un vector con el fechado de una serie. Observa como guarda internamente <code>R</code> el fechado de una serie temporal.</li>
+</ul>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">time</span>(nacimientos), <span class="at">n =</span> <span class="dv">48</span>)  <span class="co">#Mostramos sólo los 4 primeros años</span></span></code></pre></div>
+<pre><code>          Jan      Feb      Mar      Apr      May      Jun      Jul      Aug
+1975 1975.000 1975.083 1975.167 1975.250 1975.333 1975.417 1975.500 1975.583
+1976 1976.000 1976.083 1976.167 1976.250 1976.333 1976.417 1976.500 1976.583
+1977 1977.000 1977.083 1977.167 1977.250 1977.333 1977.417 1977.500 1977.583
+1978 1978.000 1978.083 1978.167 1978.250 1978.333 1978.417 1978.500 1978.583
+          Sep      Oct      Nov      Dec
+1975 1975.667 1975.750 1975.833 1975.917
+1976 1976.667 1976.750 1976.833 1976.917
+1977 1977.667 1977.750 1977.833 1977.917
+1978 1978.667 1978.750 1978.833 1978.917</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">time</span>(electricidad), <span class="at">n =</span> <span class="dv">28</span>)  <span class="co">#Mostramos sólo las 4 primeras semanas</span></span></code></pre></div>
+<pre><code>Time Series:
+Start = c(1, 2) 
+End = c(5, 1) 
+Frequency = 7 
+ [1] 1.142857 1.285714 1.428571 1.571429 1.714286 1.857143 2.000000 2.142857
+ [9] 2.285714 2.428571 2.571429 2.714286 2.857143 3.000000 3.142857 3.285714
+[17] 3.428571 3.571429 3.714286 3.857143 4.000000 4.142857 4.285714 4.428571
+[25] 4.571429 4.714286 4.857143 5.000000</code></pre>
+<ul>
+<li><code>cycle</code>, crea un vector con el periodo estacional de cada dato de la serie. Para una serie mensual son valores de 1 a 12, para una serie diaria serían valores de 1 a 7</li>
+</ul>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">cycle</span>(nacimientos), <span class="at">n =</span> <span class="dv">48</span>) <span class="co">#Mostramos sólo los 4 primeros años</span></span></code></pre></div>
+<pre><code>     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+1975   1   2   3   4   5   6   7   8   9  10  11  12
+1976   1   2   3   4   5   6   7   8   9  10  11  12
+1977   1   2   3   4   5   6   7   8   9  10  11  12
+1978   1   2   3   4   5   6   7   8   9  10  11  12</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">cycle</span>(electricidad), <span class="at">n =</span> <span class="dv">28</span>) <span class="co">#Mostramos sólo las 4 primeras semanas</span></span></code></pre></div>
+<pre><code>Time Series:
+Start = c(1, 2) 
+End = c(5, 1) 
+Frequency = 7 
+ [1] 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1</code></pre>
+<p><br />
+<br />
+</p>
+</div>
+</div>
+</div>
+<div id="componentes-de-una-serie-temporal-y-su-combinación" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Componentes de una serie temporal y su combinación</h1>
+<p><br />
+</p>
+<div id="tendencia-t_t" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Tendencia, <span class="math inline">\(T_t\)</span></h2>
+<p><strong>Definición</strong>: la tendencia de una serie es su comportamiento a largo plazo. Describe los cambios sistemáticos de la serie temporal que no aparentan ser periódicos.</p>
+<p>Respecto a la <strong>dirección del movimiento</strong> la tendencia puede ser:</p>
+<ul>
+<li><em>Creciente</em>: a largo plazo la serie aumenta su valor</li>
+<li><em>Decreciente</em>: a largo plazo la serie disminuye su valor</li>
+<li><em>Estacionaria</em>: a largo plazo la serie mantiene su valor</li>
+</ul>
+<p>Respecto a la <strong>pendiente</strong> la tendencia puede ser:</p>
+<ul>
+<li><em>Lineal</em>: la variación entre periodos es constante</li>
+<li><em>Exponencial</em>: la variación entre periodos es creciente</li>
+<li><em>Logarítmica</em>: la variación entre periodos es decreciente</li>
+</ul>
+<p>Respecto del <strong>proceso generador</strong> de la tendencia, puede ser:</p>
+<ul>
+<li><em>Determinista</em>: <span class="math inline">\(T_t = f(t)\)</span></li>
+<li><em>Estocástica</em>: <span class="math inline">\(T_t = f(T_{t-1}, T_{t-2},\ldots)\)</span></li>
+<li><em>Ambas</em>: <span class="math inline">\(T_t = f(t,T_{t-1}, T_{t-2},\ldots)\)</span></li>
+</ul>
+<p>En la figura 5 se muestran ejemplos de series temporales según dirección del movimiento y pendiente de la tendencia. Recuerda que en la figura 1 se mostraban ejemplos de series temporales según su proceso generador.</p>
+<p><br />
+</p>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>Si la serie temporal es suficientemente larga es posible observar cambios en la dirección del movimiento de la tendencia que definen los <strong>ciclos</strong>.</p>
+<p><br />
+</p>
+</div>
+<div id="ciclo-c_t" class="section level2" number="3.2">
+<h2 number="3.2"><span class="header-section-number">3.2</span> Ciclo, <span class="math inline">\(C_t\)</span></h2>
+<p><strong>Definición</strong>: Son patrones sin periodicidad fija que abarcan varios años.</p>
+<p>Por ejemplo, los ciclos económicos, los cambios climáticos asociados al fenómeno El Niño, o las manchas solares.</p>
+<p><img src="imagenes/ciclo.png" /></p>
+<p><br />
+</p>
+<p>La serie de <strong>Nacimientos</strong> es lo suficientemente larga como para observarse un ciclo completo, que queda identificado por dos cambios de tendencia consecutivos de signo opuesto:</p>
+<ul>
+<li>A finales de la década de los 90 la tendencia decreciente en los nacimientos pasa a creciente por la llegada de inmigrantes con una mayor tasa de natalidad.</li>
+<li>A finales de la primera década del 2000 la tendencia creciente pasa a decreciente porque la crisis provoca el regreso a sus países de origen de muchos de estos inmigrantes.</li>
+</ul>
+<p>De esta forma, observamos un ciclo completo desde 1975 hasta poco antes de 2010 (periodo entre dos cambios de tendencia), y el inicio del siguiente ciclo en el que aún estamos.</p>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-14-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="estacionalidad-s_t" class="section level2" number="3.3">
+<h2 number="3.3"><span class="header-section-number">3.3</span> Estacionalidad, <span class="math inline">\(S_t\)</span></h2>
+<p><strong>Definición</strong>: Son patrones repetitivos de periodicidad fija e inferior al año.</p>
+<p>El <strong>orden de la periodicidad lo denominaremos <span class="math inline">\(m\)</span></strong>, por tanto el patrón estacional se repite cada <span class="math inline">\(m\)</span> periodos. Lógicamente, <span class="math inline">\(m\)</span> toma el valor 12 para datos mensuales, el valor 4 para datos trimestrales, 7 para datos diarios (de lunes a domingo), etc.</p>
+<p>La componente estacional surge por factores climatológicos, institucionales o sociales.</p>
+<p>En ocasiones no es fácil determinar la existencia de estacionalidad o su orden. En este caso, se puede usar el análisis espectral, que no veremos en este curso, para analizar esta componente. La librería <code>forecast</code> dispone de la función <code>findfrequency</code> que devuelve la frecuencia dominante de una serie usando el análisis espectral.</p>
+<p>La serie Nacimientos tiene una estacionalidad de orden 12, causada principalmente por el número de días del mes. Los valles en la figura 8 corresponden a febrero, que por tener 28 días (o 29 en años bisiestos) presenta menor número de nacimientos.</p>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>La figura 9 muestra la demanda eléctrica diariamente para cuatro semanas, desde el lunes 3 de febrero hasta el domingo 2 de marzo. Tiene, por tanto, una estacionalidad de orden 7. En el eje OX aparecen los lunes de cada semana y permiten identificar el domingo como el día de menor demanda, seguido del sábado.</p>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-16-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>Si el fechado de la serie es de muy alta frecuencia, puede ocurrir que se superponga más de una componente estacional. La siguiente serie corresponde a la demanda eléctrica (MW) recogida cada hora para el mes de febrero. El eje OX señala el consumo la primera hora de cada día del mes (desde media noche hasta la una de la madrugada). Se aprecia una estacionalidad diaria de orden <span class="math inline">\(24\)</span>, otra semanal de orden <span class="math inline">\(7 \times 24\)</span> y si mostráramos varios años de consumo también se observaría otra mensual.</p>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-17-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="intervención-i_t" class="section level2" number="3.4">
+<h2 number="3.4"><span class="header-section-number">3.4</span> Intervención, <span class="math inline">\(I_t\)</span></h2>
+<p><strong>Definición</strong>: Es un factor sistemático no periódico o irregular, que vendría determinado por fenómenos ocasionales que provocan observaciones anómalas y valores atípicos en la serie temporal.</p>
+<p>Por su relación con fechas concretas, podemos distinguir dos tipos:</p>
+<ul>
+<li><em>Efectos calendario</em>: festivos en series diarias; Semana Santa, días laborales y febrero bisiesto en series mensuales.</li>
+<li><em>Otros efectos no sujetos a calendario</em>: catástrofes, huelgas, etc.</li>
+</ul>
+<p>En la serie Nacimientos, los meses de febrero bisiestos (puntos rojos) presentan un número de nacimientos mayor que los meses de febrero no bisiestos. Para algunos años este hecho es mas claro (véase figura 11).</p>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-18-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>En la serie diaria Electricidad cuando un día entre semana es festivo, el consumo se reduce notablemente apareciendo un efecto calendario. Si se trata de un día aislado, el efecto es muy fácil de identificar y analizar. Un ejemplo, observable en la figura 12, es el viernes 1 de noviembre de 2019, día de Todos los Santos, identificado con un punto rojo. Se aprecia que el consumo fue muy inferior al observado el viernes precedente y posterior (puntos verdes). Si los festivos abarcan varios días, el efecto sigue siendo perfectamente identificable, pero es más complejo de analizar. Un ejemplo es la última semana de diciembre donde el consumo es muy inferior al observado en las semanas previas debido, por un lado, al efecto del día festivo de Navidad (punto azul) y, por otro lado, al periodo semi-vacacional que estas festividades supone en España.</p>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-19-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Por su naturaleza, podemos distinguir tres tipos básicos de intervención (aunque hay más):</p>
+<ul>
+<li><em>Pulso (Additive Outlier)</em>: En un periodo aislado la serie toma un valor anómalo. Por ejemplo, un día el cajero automático no funciona y la extracción de dinero es nula. Véase figura 13, panel derecho.</li>
+<li><em>Cambio transitorio (Transitory Change)</em>: En un periodo un <em>shock</em> genera un valor anómalo en la serie y el efecto del <em>shock</em> va desapareciendo poco a poco. Por ejemplo, un brote infeccioso aumenta el número de muertes en una población, pero al tomarse medidas sanitarias las muertes vuelven poco a poco al nivel previo al brote. Véase figura 13, panel central.</li>
+<li><em>Cambio permanente (Level Shift)</em>: En un periodo la serie cambia de nivel y permanece de forma permanente en este nuevo nivel. Por ejemplo, enfrente de una tienda abre la competencia, de forma que sus ventas descienden bruscamente de forma permanente. Véase figura 13, panel izquierdo.</li>
+</ul>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-20-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="residuo-r_t" class="section level2" number="3.5">
+<h2 number="3.5"><span class="header-section-number">3.5</span> Residuo, <span class="math inline">\(R_t\)</span></h2>
+<p><strong>Definición</strong>: No presenta un comportamiento sistemático a corto, medio o largo plazo por lo que no se puede predecir de modo alguno. Es la parte de la serie que se debe a puro azar.</p>
+<p>Aunque inicialmente no se hará ningún supuesto sobre el residuo, se espera que sea ruido blanco (media cero, incorrelado y homocedástico), es decir <span class="math inline">\(R_t \sim iid(0, \sigma^2\)</span>).</p>
+<p><br />
+</p>
+</div>
+<div id="esquema-aditivo-y-multiplicativo" class="section level2" number="3.6">
+<h2 number="3.6"><span class="header-section-number">3.6</span> Esquema aditivo y multiplicativo</h2>
+<p>Una serie temporal siempre tiene tendencia y residuo. La presencia de estacionalidad, ciclo e intervención depende de la naturaleza de la serie. Por ejemplo, una serie anual no tendrá nunca estacionalidad y en una serie corta no se podrá observar el ciclo.</p>
+<p><strong>Las componentes de una serie temporal se pueden combinar de múltiples formas.</strong></p>
+<p>En el <strong>esquema aditivo</strong> cada componente suma su efecto sobre las demás, <span class="math inline">\(y_t = T_t + S_t + C_t + I_t + R_t\)</span>. La demanda diaria de electricidad es un ejemplo de este tipo de esquema (figura 14). El gráfico superior muestra la serie en el tiempo e identificamos el esquema aditivo porque la amplitud estacional (para cada semana la diferencia entre el día de más consumo y el de menos consumo) se mantiene constante en el tiempo. En el gráfico inferior cada punto corresponde a una semana donde la coordenada X es el consumo de esa semana y la coordenada Y la desviación típica del consumo para los días de esa semana. Este segundo gráfico revela el esquema aditivo de la serie porque no se observa un patrón creciente en los puntos: más consumo no implica una mayor desviación típica.</p>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-21-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>En el <strong>esquema multiplicativo</strong> cada componente supone un incremento porcentual respecto de las demás, <span class="math inline">\(y_t = T_t \cdot S_t \cdot C_t \cdot I_t \cdot R_t\)</span>. La serie Nacimientos es un ejemplo de esquema multiplicativo: en el gráfico superior de la figura 15, que muestra la serie, se observa que según decrece el número de nacimientos, también decrece la amplitud estacional. Además, en el gráfico inferior se observa un patrón creciente en los puntos, revelando el esquema multiplicativo de la serie.</p>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-22-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Si una serie presenta un esquema multiplicativo, su logaritmo lo presentará aditivo. A lo largo del curso se verán otras razones por las que puede ser aconsejable analizar el logaritmo de una serie temporal.</p>
+<p>En principio, cualquier combinación entre las componentes es posible (véase Tema 5):</p>
+<ul>
+<li><span class="math inline">\(y_t = (T_t + C_t) \cdot S_t + I_t + R_t\)</span></li>
+<li><span class="math inline">\(y_t = (T_t + S_t + C_t + I_t)R_t\)</span></li>
+<li><span class="math inline">\(y_t = T_t \cdot S_t \cdot C_t \cdot I_t + R_t\)</span></li>
+<li>…</li>
+</ul>
+<p><br />
+<br />
+</p>
+</div>
+</div>
+<div id="manipulación-de-una-serie" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Manipulación de una serie</h1>
+<p><br />
+</p>
+<div id="idea-general" class="section level2" number="4.1">
+<h2 number="4.1"><span class="header-section-number">4.1</span> Idea general</h2>
+<p>Podemos <em>manipular</em> una serie temporal con diferentes fines:</p>
+<ul>
+<li><strong>extraer la tendencia</strong> (eliminando la estacionalidad), por ejemplo, pasando de una serie mensual a una anual.</li>
+<li><strong>extraer la estacionalidad</strong> (eliminando la tendencia) de forma sencilla, aunque no muy precisa.</li>
+<li><strong>recortar</strong> una serie para obtener una sub-muestra.</li>
+<li><strong>extraer una subserie</strong> correspondiente a un único periodo estacional. Por ejemplo, los nacimientos en febrero o la extracción de dinero en fin de semana.</li>
+</ul>
+<p>Estas operaciones nos permitirán mejorar nuestra capacidad descriptiva de la serie, identificar mejor el tipo de esquema entre las componentes, facilitar la estimación del proceso generador o ampliar las herramientas de análisis y predicción de una serie temporal.</p>
+<p><br />
+</p>
+</div>
+<div id="extracción-de-la-tendencia" class="section level2" number="4.2">
+<h2 number="4.2"><span class="header-section-number">4.2</span> Extracción de la tendencia</h2>
+<p>Si tenemos una serie con estacionalidad y agregamos la serie, obteniendo un dato por año si la serie es mensual o un dato por semana si es diaria, obtenemos una nueva serie sin estacionalidad, solo con <em>tendencia</em>.</p>
+<p>Dependiendo de la naturaleza de la serie, convendrá agregar sumando los datos (consumo eléctrico, títulos publicados, viajeros transportados, nacimientos) o sacando la media (temperatura, número de parados, ocupación hotelera).</p>
+<p>Veamos como extraer la tendencia de la serie Nacimientos usando la función <code>aggregate</code> con el argumento <code>FUN = sum</code>.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>nacimientosAnual <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(nacimientos, <span class="at">FUN =</span> sum)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(nacimientosAnual<span class="sc">/</span><span class="dv">1000</span>,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">ylab =</span> <span class="st">&quot;Nacimientos (miles)&quot;</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">&quot;Figura 16. Nacimientos por año&quot;</span>)</span></code></pre></div>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Ahora para la demanda de electricidad:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>electricidadSemanal <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(electricidad, <span class="at">FUN =</span> sum)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(electricidadSemanal,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">ylab =</span> <span class="st">&quot;MWh&quot;</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">&quot;Figura 17. Consumo de electricidad por semana&quot;</span>)</span></code></pre></div>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-24-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>La función <code>aggregate</code> aplicada a una serie temporal agrega los datos de cada periodo estacional completo aplicando la función especificada en <code>FUN</code>. Si al inicio o al final de la serie hay un periodo estacional no completo, no se incluirá en la serie agregada.</p>
+<ul>
+<li>Una serie trimestral o mensual la transforma en anual, una serie diaria en semanal.</li>
+<li>La función a usar dependerá de la naturaleza de los datos y del objetivo perseguido (<code>FUN=sum</code>, <code>FUN=mean</code>, <code>FUN=sd</code>…)</li>
+<li>Esta función tiene un uso más amplio en <code>R</code>. Usa la función <code>help</code> para aprenderlo.</li>
+</ul>
+<p><br />
+</p>
+</div>
+<div id="extracción-de-la-estacionalidad" class="section level2" number="4.3">
+<h2 number="4.3"><span class="header-section-number">4.3</span> Extracción de la estacionalidad</h2>
+<p>Tenemos varias alternativas gráficas y numéricas para analizar la estacionalidad de una serie. Veamos un ejemplo para la serie Nacimientos.</p>
+<p>Podemos hacer una gráfico de la serie <em>contra</em> cada periodo estacional. Este gráfico permite identificar el efecto de la estacionalidad en la serie y su evolución en el tiempo. Existen varias opciones para este tipo de gráficos, veremos dos de ellas: gráfico de subseries y gráfico de líneas. Para facilitar la interpretación vamos a trabajar con la serie desde el año 2000 que denominaremos <em>nacimientosb</em>.</p>
+<p>Veamos primero un ejemplo de gráfico de subseries (figura 18) que muestra para cada periodo estacional la subserie de valores de ese periodo y el valor medio en la subserie. Para las series con tendencia y esquema multiplicativo, el valor medio de las subseries (líneas horizontales) puede llevarnos a una interpretación incorrecta de la estacionalidad. (La función <code>monthplot</code> de <code>stats</code> realiza un gráfico similar.)</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>nacimientosb <span class="ot">&lt;-</span> <span class="fu">window</span>(nacimientos, <span class="at">start =</span> <span class="dv">2000</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsubseriesplot</span>(nacimientosb) <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Nacimientos&quot;</span>) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Figura 18. Gráfico estacional de subseries&quot;</span>)</span></code></pre></div>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-25-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>La figura 19 muestra el gráfico de líneas. Si se incluye el argumento <code>polar=TRUE</code>, se obtiene una versión tipo <em>tela de araña</em> de este gráfico.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggseasonplot</span>(nacimientosb, </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">year.labels=</span><span class="cn">TRUE</span>, </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">ylab =</span> <span class="st">&quot;Nacimientos&quot;</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">main =</span> <span class="st">&quot;Figura 19. Gráfico estacional de lineas&quot;</span>)</span></code></pre></div>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-26-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Las gráficas ayudan a describir y entender un poco mejor la componente estacional. Sin embargo, si deseamos estimar dicha componente, debemos proceder de otra forma.</p>
+<p>La siguiente sintaxis usa la función <code>tapply</code> para estimar numéricamente la componente estacional. Básicamente, calcula para cada mes (argumento <code>cycle(nacimientosb)</code>) la media (<code>FUN = mean</code>) del cociente <code>nacimientosb / mean(nacimientosb)</code>.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>componenteEstacional <span class="ot">&lt;-</span> <span class="fu">tapply</span>(nacimientosb<span class="sc">/</span><span class="fu">mean</span>(nacimientosb), </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">cycle</span>(nacimientosb), </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">FUN =</span> mean)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(componenteEstacional, <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>   1    2    3    4    5    6    7    8    9   10   11   12 
+1.00 0.91 1.00 0.97 1.01 0.97 1.03 1.02 1.04 1.05 1.00 1.00 </code></pre>
+<p>Los valores de la tabla previa indican que, por ejemplo, en febrero nacen un 9% menos de niños respecto de la media anual y que en octubre nacen un 5% más que la media anual.</p>
+<p>Los cambios necesarios para estimar la componente estacional bajo un esquema aditivo son mínimos. Veámoslo para la serie Electricidad</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>componenteEstacional <span class="ot">&lt;-</span> <span class="fu">tapply</span>(electricidad <span class="sc">-</span> <span class="fu">mean</span>(electricidad), </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">cycle</span>(electricidad), </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">FUN =</span> mean)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(componenteEstacional, <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>     1      2      3      4      5      6      7 
+ 13.52  27.57  31.19  33.74  27.10 -44.48 -89.17 </code></pre>
+<p>En domingo la demanda de electricidad cae en 89 MWh respecto de la media mensual. De lunes a viernes la demanda eléctrica es mayor que la media semanal.</p>
+<p><br />
+</p>
+</div>
+<div id="extracción-de-una-subserie" class="section level2" number="4.4">
+<h2 number="4.4"><span class="header-section-number">4.4</span> Extracción de una subserie</h2>
+<p><code>R</code> proporciona varias funciones que permiten extraer una sub-muestra de la serie original. Podemos:</p>
+<ul>
+<li>seleccionar una sub-muestra especificando los puntos temporales de inicio y fin.</li>
+<li>seleccionar una sub-muestra seleccionando un periodo estacional determinado.</li>
+<li>quitar fácilmente un conjunto de datos usando índices.</li>
+</ul>
+<p>Veamos algunos ejemplos de extracción con la serie Nacimientos y las funciones <code>window</code> y <code>subset</code>:</p>
+<ul>
+<li><code>window(nacimientos, start = c(2000, 1), end = c(2009, 12))</code> selecciona de la serie original los datos desde enero del 2000 a diciembre de 2009.</li>
+<li><code>window(nacimientos, start = c(2000, 3), freq = TRUE)</code> selecciona de la serie original todos los datos de los meses de marzo desde 2000</li>
+<li><code>subset(nacimientos, start = length(nacimientos) - 48)</code> selecciona de la serie los últimos 4 años.</li>
+<li><code>subset(nacimientos, month  = 5)</code> selecciona de la serie todos los meses de mayo.</li>
+</ul>
+<p>Además, puedes usar las funciones <code>head</code> y <code>tail</code> para extraer las primeras o las últimas observaciones.</p>
+<p><br />
+<br />
+</p>
+</div>
+</div>
+<div id="descomposición-de-una-serie" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Descomposición de una serie</h1>
+<p><br />
+</p>
+<div id="concepto" class="section level2" number="5.1">
+<h2 number="5.1"><span class="header-section-number">5.1</span> Concepto</h2>
+<p>Los métodos que hemos visto para la descripción de la tendencia y la componente estacional son muy sencillos, pero no son ni rigurosos ni precisos. Veamos métodos más adecuados para extraer de una serie sus componentes: tendencia-ciclo, estacionalidad, e intervención-residuo.</p>
+<p>Si la serie es demasiado corta para poder extraer el ciclo, entonces el ciclo queda recogido dentro de la tendencia. Por otro lado, las técnicas de identificación de la intervención son complejas por lo que esta componente queda incorporada al residuo. Por tanto, <strong>asumiremos que una serie tiene sólo Tendencia, Estacionalidad y Residuo</strong>:</p>
+<ul>
+<li>Esquema aditivo <span class="math inline">\(y_t = T_t + C_t + S_t + I_t + R_t = (T_t + C_t) + S_t +(I_t + R_t) = T&#39;_t + S_t + R&#39;_t\)</span></li>
+<li>Esquema multiplicativo <span class="math inline">\(y_t = T_t \cdot C_t \cdot S_t \cdot I_t \cdot R_t = (T_t \cdot C_t) \cdot S_t \cdot (I_t \cdot R_t) = T&#39;_t \cdot S_t \cdot R&#39;_t\)</span></li>
+</ul>
+<p>Veremos a continuación como extraer estas tres componentes a partir de una serie original. Este proceso se denomina descomposición.</p>
+<p>Hay múltiples formas de realizar una descomposición. Aquí veremos dos de ellas, la más sencilla, basada en el concepto de medias móviles (<code>decompose</code>), y otra más versátil y compleja a partir de regresiones locales ponderadas (<code>stl</code>).</p>
+<p>Además, <code>R</code> proporciona el método de descomposición que utiliza el <em>US Census Bureau and Statistics Canada</em>, denominado <strong>X11</strong>, y el método que utiliza el <em>Banco de España</em>, denominado <strong>SEATS</strong> (Seasonal Extraction in ARIMA Time Series), aunque estos métodos solo son válidos para series mensuales y trimestrales.</p>
+<p>En origen los métodos de descomposición no sirven para realizar predicciones, pero actualmente se usan también con este fin (véase las funciones <code>stlm</code> y <code>stlf</code> del paquete <code>forecast</code>).</p>
+<p><br />
+</p>
+</div>
+<div id="descomposición-por-medias-móviles" class="section level2" number="5.2">
+<h2 number="5.2"><span class="header-section-number">5.2</span> Descomposición por medias móviles</h2>
+<div id="ideas-generales" class="section level3 unnumbered">
+<h3 class="unnumbered">Ideas generales</h3>
+<p>La función <code>decompose</code> estima las componentes de tendencia y estacionalidad usando el método de medias móviles. En concreto <code>decompose</code> sigue los siguientes pasos para obtener cada componente:</p>
+<p><strong>Paso 1:</strong> Se estima la tendencia de una serie a partir de una media móvil centrada. Si el orden estacional es par, la media móvil es ponderada de orden <span class="math inline">\(m + 1\)</span>; y si el orden estacional es impar, la media móvil es de orden <span class="math inline">\(m\)</span>. En concreto,</p>
+<ul>
+<li>Si <span class="math inline">\(m=2k\)</span>: <span class="math inline">\(\hat{T}_t = \frac{\frac{1}{2}y_{t-k} + y_{t-k+1} + \ldots + y_t + \ldots + y_{t+k-1} + \frac{1}{2} y_{t+k}}{m}\)</span>,</li>
+<li>Si <span class="math inline">\(m=2k+1\)</span>: <span class="math inline">\(\hat{T}_t = \frac{y_{t-k} + y_{t-k+1} + \ldots + y_t + \ldots + y_{t+k-1} + y_{t+k}}{m}\)</span>.</li>
+</ul>
+<p><strong>Paso 2:</strong> Para un modelo con esquema aditivo calculamos la serie sin tendencia como <span class="math inline">\(y_t - \hat{T}_t\)</span> y para un esquema multiplicativo como <span class="math inline">\(y_t/ \hat{T}_t\)</span>.</p>
+<p><strong>Paso 3:</strong> Para estimar la componente estacional para cada periodo estacional, calculamos el valor medio de la serie sin tendencia (paso 2) de forma independiente para los datos de cada estación. Así, obtenemos un vector con la estimación de las <span class="math inline">\(m\)</span> componentes estacionales.</p>
+<p>Después estos valores se ajustan para que sumen 0 (esquema aditivo) o para que sumen <span class="math inline">\(m\)</span> (esquema multiplicativo). La componente estacional se obtiene repitiendo el vector de <span class="math inline">\(m\)</span> componentes ajustadas hasta alcanzar la longitud de la serie original. Esto da <span class="math inline">\(\hat{S}_t\)</span></p>
+<p><strong>Paso 4:</strong> El residuo se obtiene como <span class="math inline">\(\hat{R}_t = y_t - \hat{T}_t - \hat{S}_t\)</span> (esquema aditivo) o <span class="math inline">\(\hat{R}_t = y_t / (\hat{T}_t \cdot \hat{S}_t)\)</span> (esquema multiplicativo)</p>
+<p><br />
+</p>
+<p>La siguiente tabla muestra un ejemplo de descomposición aditiva por medias móviles para una serie simulada de orden estacional 5.</p>
+<ul>
+<li>La dos primeras columnas indican la estación de cada dato y el valor de la serie, para un total de 25 datos. La columna <em>Ten</em> ha sido obtenida siguiendo el paso 1 como una media móvil de orden 5: <span class="math display">\[Ten_t = (Serie_{t-2} + Serie_{t-1} + Serie_{t} + Serie_{t+1} + Serie_{t+2})/5.\]</span></li>
+<li>La serie sin tendencia, columna <em>Est + Res</em>, se obtiene restando a la columna <em>Serie</em> la columna <em>Ten</em>, tal y como se indica en el paso 2.</li>
+<li>Para el cálculo de la columna <em>Est</em>, que repite de forma periódica la primera estimación de las 5 componentes estacionales, se sigue el paso 3. Para cada estación se promedian los valores de la columna <em>Est + Res</em> correspondientes a dicha estación. La suma de los cinco valores de la componente estacional así obtenidos vale 1.1.</li>
+<li>Para ajustar la componente estacional para que sume 0 a cada valor de la componente estacional se le resta su suma actual, 1.1, dividida por 5, el número de estaciones. El resultado de este ajuste aparece en la columna <em>Est corregida</em> que será la componente estacional final.</li>
+<li>Siguiendo el paso 4, la columna <em>Res</em> se calcula restando a la serie original (columna <em>Serie</em>) la suma de la tendencia y la estacionalidad (columnas <em>Ten</em> y <em>Est corregida</em>).</li>
+</ul>
+<p>Observa que en el proceso de descomposición se han perdido 4 datos para la tendencia y el residuo, dos al inicio de la serie y dos al final.</p>
+<div class="kable-table">
+<table>
+<thead>
+<tr class="header">
+<th align="right">Estacion</th>
+<th align="right">Serie</th>
+<th align="right">Ten</th>
+<th align="right">Est + Res</th>
+<th align="right">Est</th>
+<th align="right">Est corregida</th>
+<th align="right">Res</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">17.00</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">9.14</td>
+<td align="right">9.10</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">6.72</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">-10.89</td>
+<td align="right">-10.93</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">5.08</td>
+<td align="right">20.62</td>
+<td align="right">-15.54</td>
+<td align="right">-10.06</td>
+<td align="right">-10.10</td>
+<td align="right">-5.44</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">8.79</td>
+<td align="right">27.89</td>
+<td align="right">-19.10</td>
+<td align="right">-9.46</td>
+<td align="right">-9.50</td>
+<td align="right">-9.60</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">65.53</td>
+<td align="right">28.00</td>
+<td align="right">37.53</td>
+<td align="right">22.37</td>
+<td align="right">22.33</td>
+<td align="right">15.20</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">53.31</td>
+<td align="right">28.58</td>
+<td align="right">24.73</td>
+<td align="right">9.14</td>
+<td align="right">9.10</td>
+<td align="right">15.63</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
+<td align="right">7.28</td>
+<td align="right">29.79</td>
+<td align="right">-22.51</td>
+<td align="right">-10.89</td>
+<td align="right">-10.93</td>
+<td align="right">-11.58</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td align="right">8.00</td>
+<td align="right">25.62</td>
+<td align="right">-17.62</td>
+<td align="right">-10.06</td>
+<td align="right">-10.10</td>
+<td align="right">-7.52</td>
+</tr>
+<tr class="odd">
+<td align="right">4</td>
+<td align="right">14.84</td>
+<td align="right">19.13</td>
+<td align="right">-4.29</td>
+<td align="right">-9.46</td>
+<td align="right">-9.50</td>
+<td align="right">5.21</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
+<td align="right">44.67</td>
+<td align="right">20.08</td>
+<td align="right">24.59</td>
+<td align="right">22.37</td>
+<td align="right">22.33</td>
+<td align="right">2.26</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">20.85</td>
+<td align="right">21.78</td>
+<td align="right">-0.93</td>
+<td align="right">9.14</td>
+<td align="right">9.10</td>
+<td align="right">-10.03</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">12.02</td>
+<td align="right">21.64</td>
+<td align="right">-9.62</td>
+<td align="right">-10.89</td>
+<td align="right">-10.93</td>
+<td align="right">1.31</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">16.51</td>
+<td align="right">18.97</td>
+<td align="right">-2.46</td>
+<td align="right">-10.06</td>
+<td align="right">-10.10</td>
+<td align="right">7.64</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">14.14</td>
+<td align="right">22.07</td>
+<td align="right">-7.93</td>
+<td align="right">-9.46</td>
+<td align="right">-9.50</td>
+<td align="right">1.57</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">31.31</td>
+<td align="right">23.08</td>
+<td align="right">8.23</td>
+<td align="right">22.37</td>
+<td align="right">22.33</td>
+<td align="right">-14.10</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">36.37</td>
+<td align="right">24.68</td>
+<td align="right">11.69</td>
+<td align="right">9.14</td>
+<td align="right">9.10</td>
+<td align="right">2.59</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
+<td align="right">17.06</td>
+<td align="right">26.66</td>
+<td align="right">-9.60</td>
+<td align="right">-10.89</td>
+<td align="right">-10.93</td>
+<td align="right">1.33</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td align="right">24.53</td>
+<td align="right">30.92</td>
+<td align="right">-6.39</td>
+<td align="right">-10.06</td>
+<td align="right">-10.10</td>
+<td align="right">3.71</td>
+</tr>
+<tr class="odd">
+<td align="right">4</td>
+<td align="right">24.02</td>
+<td align="right">30.56</td>
+<td align="right">-6.54</td>
+<td align="right">-9.46</td>
+<td align="right">-9.50</td>
+<td align="right">2.96</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
+<td align="right">52.62</td>
+<td align="right">33.48</td>
+<td align="right">19.14</td>
+<td align="right">22.37</td>
+<td align="right">22.33</td>
+<td align="right">-3.19</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">34.59</td>
+<td align="right">33.51</td>
+<td align="right">1.08</td>
+<td align="right">9.14</td>
+<td align="right">9.10</td>
+<td align="right">-8.02</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">31.66</td>
+<td align="right">33.51</td>
+<td align="right">-1.85</td>
+<td align="right">-10.89</td>
+<td align="right">-10.93</td>
+<td align="right">9.08</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">24.65</td>
+<td align="right">32.95</td>
+<td align="right">-8.30</td>
+<td align="right">-10.06</td>
+<td align="right">-10.10</td>
+<td align="right">1.80</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">24.01</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">-9.46</td>
+<td align="right">-9.50</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">49.86</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">22.37</td>
+<td align="right">22.33</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><br />
+</p>
+<p>Los principales <strong>inconvenientes de este método</strong> de descomposición son que se perderán datos al inicio y final de la serie –por ejemplo, si la serie es mensual se perderán seis datos al inicio y seis al final–, y que asume que la componente estacional no ha variado en el tiempo. Sin embargo, sabemos que para muchas series sociales y de consumo la componente estacional se ha suavizando con el tiempo.</p>
+<p>Por el contrario, una se las <strong>ventajas de este método</strong>, además de su sencillez de cálculo, es que se puede usar tanto para esquemas aditivos (<code>type="addi"</code>) como multiplicativos (<code>type="multi"</code>).</p>
+<p>La función <code>decompose</code> genera un objeto con las siguientes componentes:</p>
+<ul>
+<li><code>$x</code> para la serie original,</li>
+<li><code>$trend</code> para la tendencia,</li>
+<li><code>$seasonal</code> para la estacionalidad,</li>
+<li><code>$random</code> para el residuo, y</li>
+<li><code>$figure</code> que contiene las estimaciones de los <em>m</em> efectos estacionales ajustados. Es una extracción para un único año o semana de <code>$seasonal</code>.</li>
+</ul>
+<p>Siempre que generes nuevos objetos en <code>R</code> a partir de funciones te recomiendo que con <code>names</code> y <code>str</code> mires que hay en su interior.</p>
+<p>En los métodos de descomposición que vamos a ver, para obtener las componentes individualmente puedes usar la función <code>seasonal</code> para la componente estacional, <code>trendcycle</code> para el componente de tendencia, y <code>remainder</code> para el residuo.</p>
+</div>
+<div id="ejemplo-de-esquema-aditivo" class="section level3 unnumbered">
+<h3 class="unnumbered">Ejemplo de esquema aditivo</h3>
+<p>Vamos a descomponer la serie Electricidad asumiendo un esquema aditivo (<code>type = "addi</code>).</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>eleDesAdi <span class="ot">&lt;-</span> <span class="fu">decompose</span>(electricidad, <span class="at">type =</span> <span class="st">&quot;addi&quot;</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(eleDesAdi,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">&quot;Figura 20. Descomposición aditiva de Electricidad por medias móviles&quot;</span>)</span></code></pre></div>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-30-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Es fácil verificar que si se suma para cada fecha la tendencia, la estacionalidad y el residuo se obtiene exactamente el valor de la serie:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> <span class="fu">trendcycle</span>(eleDesAdi) <span class="sc">+</span> <span class="fu">seasonal</span>(eleDesAdi) <span class="sc">+</span> <span class="fu">remainder</span>(eleDesAdi)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(electricidad <span class="sc">-</span> tmp)</span></code></pre></div>
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+      0       0       0       0       0       0       6 </code></pre>
+<p>A continuación, tienes un ejemplo del manejo de las componentes extraídas para hacer una gráfica.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(electricidad, <span class="at">series=</span><span class="st">&quot;Demanda eléctrica&quot;</span>,</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">ylab =</span> <span class="st">&quot;MWh&quot;</span>,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">&quot;Figura 21. Demanda eléctrica: serie y tendencia&quot;</span>) <span class="sc">+</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">trendcycle</span>(eleDesAdi), <span class="at">series=</span><span class="st">&quot;Tendencia&quot;</span>) <span class="sc">+</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">&quot;Demanda eléctrica&quot;</span><span class="ot">=</span><span class="st">&quot;black&quot;</span>,<span class="st">&quot;Tendencia&quot;</span><span class="ot">=</span><span class="st">&quot;red&quot;</span>),</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">breaks=</span><span class="fu">c</span>(<span class="st">&quot;Demanda eléctrica&quot;</span>,<span class="st">&quot;Tendencia&quot;</span>))</span></code></pre></div>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-32-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>También podemos ver las componentes estacionales y verificar que suman 0. Ojo, como la serie empieza un martes, la primera componente que se muestra es la del martes y la última la del lunes.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>eleDesAdi<span class="sc">$</span>figure</span></code></pre></div>
+<pre><code>[1]  31.68965  30.79475  32.66500  26.84461 -44.91714 -90.44703  13.37017</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(eleDesAdi<span class="sc">$</span>figure)</span></code></pre></div>
+<pre><code>[1] 0.000000000000005329071</code></pre>
+<p>Por último, podemos realizar una gráfica de la componente estacional.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>compEstacional <span class="ot">&lt;-</span> eleDesAdi<span class="sc">$</span>figure[<span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)]</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">y =</span> compEstacional)) <span class="sc">+</span> </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">colour =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Figura 22. Componente estacional de Electricidad (esquema aditivo)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Componente estacional&quot;</span>) <span class="sc">+</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>, </span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Lunes&quot;</span>, <span class="st">&quot;Martes&quot;</span>, <span class="st">&quot;Miércoles&quot;</span>, <span class="st">&quot;Jueves&quot;</span>, <span class="st">&quot;Viernes&quot;</span>, <span class="st">&quot;Sábado&quot;</span>, <span class="st">&quot;Domingo&quot;</span>)) </span></code></pre></div>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-34-1.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ejemplo-de-esquema-multiplicativo" class="section level3 unnumbered">
+<h3 class="unnumbered">Ejemplo de Esquema Multiplicativo</h3>
+<p>Veamos ahora la descomposición de Nacimientos bajo un esquema multiplicativo (<code>type = "mult"</code>).</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>nacDesMul <span class="ot">&lt;-</span> <span class="fu">decompose</span>(nacimientos, <span class="at">type =</span> <span class="st">&quot;mult&quot;</span>)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(nacDesMul,</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">&quot;Figura 23. Descomposición multiplicativa de Nacimientos por medias móviles&quot;</span>)</span></code></pre></div>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-35-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Observa que por tratarse de un esquema multiplicativo en la figura 23 la componente estacional se mueve alrededor del valor 1 y debe interpretarse como una variación porcentual. Igualmente, el residuo también gira en torno al valor 1.</p>
+<p>Las componentes estacionales se deben interpretar como incrementos porcentuales: en febrero nacen un 9.1% menos de niños y en octubre un 3.3% más, respecto de la media anual. Además, la suma de las componentes estacionales será 12.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>nacDesMul<span class="sc">$</span>figure</span></code></pre></div>
+<pre><code> [1] 0.9978881 0.9091776 1.0070957 0.9847725 1.0352649 0.9828337 1.0347578
+ [8] 1.0153617 1.0303753 1.0325430 0.9774910 0.9924389</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(nacDesMul<span class="sc">$</span>figure)</span></code></pre></div>
+<pre><code>[1] 12</code></pre>
+<p><br />
+</p>
+</div>
+</div>
+<div id="descomposición-por-regresiones-locales-ponderadas" class="section level2" number="5.3">
+<h2 number="5.3"><span class="header-section-number">5.3</span> Descomposición por regresiones locales ponderadas</h2>
+<div id="ideas-generales-1" class="section level3 unnumbered">
+<h3 class="unnumbered">Ideas generales</h3>
+<p>La función <code>stl</code> estima las componentes de tendencia y estacionalidad a partir de regresiones locales ponderadas (técnica conocida como <em>loess</em>)</p>
+<p>Sus <strong>ventajas</strong> son:</p>
+<ul>
+<li>No se perderán datos al inicio o al final de la serie.</li>
+<li>Asume que tanto la tendencia como la estacionalidad pueden cambiar con el tiempo y posibilita controlar este cambio a partir de parámetros.</li>
+<li>Es bastante robusta frente a valores atípicos.</li>
+</ul>
+<p>Su <strong>principal desventaja</strong> es que esta técnica de descomposición solo es válida para esquemas aditivos. Es posible obtener con <code>stl</code> una descomposición multiplicativa descomponiendo primero el logaritmo de la serie, para después calcular la exponencial de las componentes.</p>
+<p>La función <code>stl</code> genera un objeto con la componente <code>$time.series</code> que contiene en columna tres series temporales: <em>seasonal</em>, <em>trend</em> y <em>remainder</em> (de nuevo usa <code>names</code> y <code>str</code> para aprender más).</p>
+<p>Los dos parámetros principales que deben elegirse cuando se utiliza <code>stl</code> son la ventana de tendencia (<code>t.window</code>) y la ventana estacional (<code>s.window</code>). Estos parámetros controlan la rapidez con la que pueden cambiar los componentes de tendencia y estacional con el tiempo. Valores pequeños permiten cambios más rápidos, valores grandes implican que no hay cambios. Ambos parámetros deben ser números impares:</p>
+<ul>
+<li><code>t.window</code> es el número de observaciones consecutivas que se deben utilizar al estimar la tendencia. Consulta la ayuda para ver el valor por defecto.</li>
+<li><code>s.window</code> está relacionado con el número observaciones que se deben utilizar al estimar cada valor de la componente estacional. No hay ningún valor por defecto para este parámetro. Establecerlo como <code>periodic</code> equivale a obligar a que la componente estacional sea periódica (es decir, idéntica a lo largo de los años). Si es un valor numérico, debe ser impar y mayor o igual a 7.</li>
+</ul>
+</div>
+<div id="ejemplo" class="section level3 unnumbered">
+<h3 class="unnumbered">Ejemplo</h3>
+<p>Veamos un ejemplo de su uso para la serie Electricidad. Se ha usado el valor por defecto para <code>t.window</code> y se ha indicado que la estacionalidad es constante en el tiempo (<code>s.window = "periodic"</code>). Además, se ha especificado que se tenga en cuenta la posible existencia de valores atípicos (<code>robust = TRUE</code>).</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>eleStl <span class="ot">&lt;-</span> <span class="fu">stl</span>(electricidad, </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">s.window =</span> <span class="st">&quot;periodic&quot;</span>,</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">robust =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(eleStl<span class="sc">$</span>time.series)</span></code></pre></div>
+<pre><code>Time Series:
+Start = c(1, 2) 
+End = c(1, 7) 
+Frequency = 7 
+          seasonal    trend   remainder
+1.142857  31.52922 695.4935 -172.943428
+1.285714  32.91126 705.3769  -32.087144
+1.428571  33.82855 715.2603    1.201985
+1.571429  27.42875 725.4750    2.356252
+1.714286 -46.36282 735.6897   -5.586904
+1.857143 -93.51146 745.6214  -23.541438</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(eleStl,</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">&quot;Figura 24. Descomposición de Electricvidad por regresores locales ponderados&quot;</span>)</span></code></pre></div>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-38-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Podemos ver numéricamente las componentes estacionales, que de nuevo deben sumar cero.</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">seasonal</span>(eleStl), <span class="dv">7</span>)</span></code></pre></div>
+<pre><code>Time Series:
+Start = c(1, 2) 
+End = c(2, 1) 
+Frequency = 7 
+[1]  31.52922  32.91126  33.82855  27.42875 -46.36282 -93.51146  14.17651</code></pre>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">head</span>(<span class="fu">seasonal</span>(eleStl), <span class="dv">7</span>))</span></code></pre></div>
+<pre><code>[1] -0.0000001041102</code></pre>
+<p><br />
+</p>
+<p>Para Electricidad hemos obtenido tres estimaciones de la componente estacional: la primera obtenida con <code>tapply</code>, la segunda obtenida con <code>decompose</code> y la tercera con <code>stl</code>. Se puede observar que las tres estimaciones son muy similares, pero no coincidentes, y aunque los métodos de descomposición son preferibles a <code>tapply</code>, ninguna estimación es <em>a priori</em> mejor que otra.</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tapply</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">as.numeric</span>(componenteEstacional), <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>[1]  13.52  27.57  31.19  33.74  27.10 -44.48 -89.17</code></pre>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># decompose</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">seasonal</span>(eleDesAdi)[<span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)], <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>[1]  13.37  31.69  30.79  32.66  26.84 -44.92 -90.45</code></pre>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># stl</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">seasonal</span>(eleStl)[<span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)], <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>[1]  14.18  31.53  32.91  33.83  27.43 -46.36 -93.51</code></pre>
+<p><br />
+</p>
+<p>Si en lugar de <code>periodic</code>, fijamos el parámetro <code>s.window</code> a, por ejemplo, 11 (siempre un valor impar), estaremos permitiendo que la estacionalidad cambien en el tiempo. La figura 25 muestra la componente estacional estimada previamente (bajo el supuesto de componente estacional constante) y la que se obtiene con el argumento <code>s.window = 11</code>. Para el periodo mostrado se observa que la amplitud estacional en la componente no constante ha variando con el tiempo. Cuanto mayor es el valor (impar) de <code>s.window</code> más constante en el tiempo es la componente estacional.</p>
+<p><img src="03-01-Tema1_files/figure-html/unnamed-chunk-41-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+<br />
+</p>
+</div>
+</div>
+</div>
+<div id="resumen-de-los-paquetes-y-funciones-utilizadas" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> Resumen de los paquetes y funciones utilizadas</h1>
+<table>
+<colgroup>
+<col width="17%" />
+<col width="21%" />
+<col width="61%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Función</th>
+<th align="left">Paquete</th>
+<th align="left">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ts</td>
+<td align="left">stats</td>
+<td align="left">produce un objeto de clase serie temporal</td>
+</tr>
+<tr class="even">
+<td align="left">window</td>
+<td align="left">stats</td>
+<td align="left">extrae un subconjunto de datos de una serie temporal</td>
+</tr>
+<tr class="odd">
+<td align="left">subset</td>
+<td align="left">base</td>
+<td align="left">extrae un subconjunto de datos posibilitando el uso de índices</td>
+</tr>
+<tr class="even">
+<td align="left">aggregate</td>
+<td align="left">stats</td>
+<td align="left">crea una serie agregada</td>
+</tr>
+<tr class="odd">
+<td align="left">start</td>
+<td align="left">forecast</td>
+<td align="left">da el fechado del primer dato</td>
+</tr>
+<tr class="even">
+<td align="left">end</td>
+<td align="left">forecast</td>
+<td align="left">da el fechado del último dato</td>
+</tr>
+<tr class="odd">
+<td align="left">frequency</td>
+<td align="left">forecast</td>
+<td align="left">da la frecuencia de los datos</td>
+</tr>
+<tr class="even">
+<td align="left">time</td>
+<td align="left">forecast</td>
+<td align="left">extrae el fechado de una serie temporal</td>
+</tr>
+<tr class="odd">
+<td align="left">cycle</td>
+<td align="left">forecast</td>
+<td align="left">devuelve la estación de cada valor de la serie</td>
+</tr>
+<tr class="even">
+<td align="left">decompose</td>
+<td align="left">forecast</td>
+<td align="left">descompone la serie usando medias móviles</td>
+</tr>
+<tr class="odd">
+<td align="left">stl</td>
+<td align="left">forecast</td>
+<td align="left">descompone la serie usando alisado por regresiones locales ponderadas</td>
+</tr>
+<tr class="even">
+<td align="left">autoplot</td>
+<td align="left">forecast</td>
+<td align="left">dibuja gráficos de series temporales de forma sencilla</td>
+</tr>
+<tr class="odd">
+<td align="left">ggsubseriesplot</td>
+<td align="left">forecast</td>
+<td align="left">dibuja un gráfico donde cada componente estacional es dibujada como una subserie separada</td>
+</tr>
+<tr class="even">
+<td align="left">ggseasonplot</td>
+<td align="left">forecast</td>
+<td align="left">dibuja un gráfico donde cada año (o equivalente) es dibujado como una serie separada contra el periodo estacional</td>
+</tr>
+<tr class="odd">
+<td align="left">autolayer</td>
+<td align="left">forecast</td>
+<td align="left">añade una serie temporal a un gráfico ya creado</td>
+</tr>
+</tbody>
+</table>
+<p>Todas las funciones gráficas del paquete <code>forecast</code> requieren tener instalado en R la librería <code>ggplot2</code>.</p>
+<p><br />
+<br />
+</p>
+</div>
+<div id="referencias" class="section level1" number="7">
+<h1 number="7"><span class="header-section-number">7</span> Referencias</h1>
+<ul>
+<li>Holton, J, y Keating, B. (1996). <em>Previsiones en los negocios</em>. Ed. ERWIN, Madrid</li>
+<li>Metcalfe, A.W. y Cowpertwait, P.S.P. (2009). <em>Introductory Time Series with R</em>. Ed. Springer, New York, NY. <a href="doi:10.1007/978-0-387-88698-5" class="uri">doi:10.1007/978-0-387-88698-5</a></li>
+</ul>
+<p><br />
+<br />
+<br />
+<br />
+</p>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiU2VyaWVzIFRlbXBvcmFsZXM6IEludHJvZHVjY2nDs24iCnN1YnRpdGxlOiAiTcOhc3RlciBkZSBCaW9lc3RhZMOtc3RpY2EgKE1vZGVsaXphY2nDs24gRXN0YWTDrXN0aWNhKSIKYXV0aG9yOiAiSXbDoW4gQXJyaWJhcyAoRGVwdG8uIEFuw6FsaXNpcyBFY29uw7NtaWNvLiBVbml2ZXJzaXRhdCBkZSBWYWzDqG5jaWEpIgpvdXRwdXQ6CiAgaHRtbF9kb2N1bWVudDoKICAgIGNvZGVfZG93bmxvYWQ6IHllcwogICAgZGZfcHJpbnQ6IGthYmxlCiAgICBmaWdfY2FwdGlvbjogbm8KICAgIGhpZ2hsaWdodDogcHlnbWVudHMKICAgIG51bWJlcl9zZWN0aW9uczogeWVzCiAgICBzZWxmX2NvbnRhaW5lZDogeWVzCiAgICB0aGVtZTogY2VydWxlYW4KICAgIHRvYzogeWVzCiAgICB0b2NfZGVwdGg6IDIKICAgIHRvY19mbG9hdDoKICAgICAgY29sbGFwc2VkOiB5ZXMKLS0tCgpgYGB7ciBjaHVua19zZXR1cCwgZWNobyA9IEZBTFNFfQprbml0cjo6b3B0c19jaHVuayRzZXQod2FybmluZyA9IEZBTFNFLCAKICAgICAgICAgICAgICAgICAgICAgIG1lc3NhZ2UgPSBGQUxTRSwgCiAgICAgICAgICAgICAgICAgICAgICBjb21tZW50ID0gIiIsCiAgICAgICAgICAgICAgICAgICAgICBmaWcuYWxpZ24gPSAiY2VudGVyIiwgCiAgICAgICAgICAgICAgICAgICAgICBmaWcuc2hvdyA9ICJob2xkIiwKICAgICAgICAgICAgICAgICAgICAgIGZpZy5oZWlnaHQgPSA0LAogICAgICAgICAgICAgICAgICAgICAgZmlnLndpZHRoID0gOCwKICAgICAgICAgICAgICAgICAgICAgIG91dC53aWR0aCA9ICI4MCUiKSAKYGBgCgpgYGB7ciBvcHRpb25zX3NldHVwLCBlY2hvID0gRkFMU0V9Cm9wdGlvbnMoc2NpcGVuID0gOTk5KSAjLSBwYXJhIHF1aXRhciBsYSBub3RhY2lvbiBjaWVudGlmaWNhCmBgYAoKYGBge3IgbGlicmVyaWFzLCBlY2hvID0gRkFMU0V9CmxpYnJhcnkoZm9yZWNhc3QpCmxpYnJhcnkoZ2dwbG90Mik7IHRoZW1lX3NldCh0aGVtZV9idygpKQpsaWJyYXJ5KGdyaWRFeHRyYSkKbGlicmFyeShncmlkKQpgYGAKCiMgSW50cm9kdWNjacOzbgoKPiJIYWNlciBwcmV2aXNpb25lcyBzdXBvbmUgcmVhbGl6YXIgbGEgbWVqb3IgYXByZWNpYWNpw7NuIHBvc2libGUgZGUgYWxnw7puIHN1Y2VzbyBmdXR1cm8uIiBIb2x0b24geSBLZWF0aW5nICgxOTk2KS4KCj4iVGltZSBzZXJpZXMgYXJlIGFuYWx5c2VkIHRvIHVuZGVyc3RhbmQgdGhlIHBhc3QgYW5kIHRvIHByZWRpY3QgdGhlIGZ1dHVyZS4iIE1ldGNhbGZlIHkgQ293cGVydHdhaXQgKDIwMDkpCgpMb3MgZGF0b3MgdGVtcG9yYWxlcywgX19zZXJpZXMgdGVtcG9yYWxlc19fLCBzZSBhbmFsaXphbiBwYXJhIGVudGVuZGVyIGVsIHBhc2FkbyB5IHByZWRlY2lyIGVsIGZ1dHVybyBwb3NpYmlsaXRhbmRvIGEgbG9zIGFnZW50ZXMgdG9tYXIgZGVjaXNpb25lcyBhZGVjdWFkYW1lbnRlIGluZm9ybWFkb3MuCgoqIEFsZ3VuYXMgY2FiZWNlcmFzIGRlIHByZW5zYSBkZXRlcm1pbmFuIGVsIG7Dum1lcm8gZGUgZWplbXBsYXJlcyBhIGltcHJpbWlyIGNhZGEgZMOtYSBhbmFsaXphbmRvIGxhIGRlbWFuZGEgcGFzYWRhIGRlIHN1IGRpYXJpby4KCiogW1JlZCBFbMOpY3RyaWNhIEVzcGHDsW9sYV0oaHR0cHM6Ly9kZW1hbmRhLnJlZS5lcy9kZW1hbmRhLmh0bWwpIHByZWRpY2UgZWwgY29uc3VtbyBlbMOpY3RyaWNvIGhvcmEgYSBob3JhIHBhcmEgYWp1c3RhciBsYSBvZmVydGEgYSBsYSBkZW1hbmRhLgoKKiBFbCBbSW5zdGl0dXRvIE5hY2lvbmFsIGRlIEVzdGFkw61zdGljYV0oaHR0cDovL3d3dy5pbmUuZXMvZHluZ3MvSU5FYmFzZS9lcy9vcGVyYWNpb24uaHRtP2M9RXN0YWRpc3RpY2FfQyZjaWQ9MTI1NDczNjE3Njk1MyZtZW51PXVsdGlEYXRvcyZpZHA9MTI1NDczNTU3Mjk4MSkgKElORSkgcHJlZGljZSBsYSBwb2JsYWNpw7NuIGVzcGHDsW9sYSBwYXJhIGxvcyBwcsOzeGltb3MgNTAgYcOxb3MuIAoKTGEgcHJlZGljY2nDs24gZGUgc2VyaWVzIHRlbXBvcmFsZXMgZXMgdW5hIGhlcnJhbWllbnRhIGEgbGEgaG9yYSBkZSBlc3RhYmxlY2VyIHBvbMOtdGljYXMgc29jaWFsZXMsIGVtcHJlc2FyaWFsZXMuLi4KClwKXAoKIyBTZXJpZXMgVGVtcG9yYWxlcwoKXAoKIyMgRGVmaW5pY2nDs24KCl9fVW5hIHNlcmllIHRlbXBvcmFsIGVzIHVuYSB2YXJpYWJsZSBtZWRpZGEgc2VjdWVuY2lhbG1lbnRlIGVuIGVsIHRpZW1wbyBhIGludGVydmFsb3MgZXF1aS1lc3BhY2lhZG9zX18uCgpMYSByZXByZXNlbnRhcmVtb3MgcG9yLAogICQkXHt5X3RcfV97dD0xfV5UPVx7eV8xLHlfMixcbGRvdHMseV9UXH0uJCQKCkxhIHNlcmllIGFwYXJlY2UgaW5kZXhhZGEgcG9yIHN1IGZlY2hhZG8gJHQkIHkgZWwgc3ViLcOtbmRpY2UgJFQkIGhhcsOhIHNpZW1wcmUgcmVmZXJlbmNpYSBhIGxhIGZlY2hhIGRlbCDDumx0aW1vIGRhdG8uCgpFbCBmZWNoYWRvIHZhcsOtYSBlbiBzdSBmcmVjdWVuY2lhLCBxdWUgcHVlZGUgc2VyIGFudWFsIChiYWphIGZyZWN1ZW5jaWEpLCB0cmltZXN0cmFsLCBtZW5zdWFsLCBzZW1hbmFsLCBkaWFyaW8gKGFsdGEgZnJlY3VlbmNpYSkgbyBkaXNwb25lciBjYXNpIGRlIHVuIGNvbnRpbnVvIGRlIGRhdG9zLgoKRW4gZXN0ZSBjdXJzbyBhcHJlbmRlcmVtb3MgYSBhanVzdGFyIG1vZGVsb3MgYSBzZXJpZXMgdGVtcG9yYWxlcyBwYXJhIHN1IHBvc3RlcmlvciBhbsOhbGlzaXMgeSBwcmVkaWNjacOzbi4KClwKCiMjIFByb2Nlc28gZ2VuZXJhZG9yIGRlIGRhdG9zCgpFbCBwcm9jZXNvIGdlbmVyYWRvciBkZSBsb3MgZGF0b3MgZGUgdW5hIHNlcmllIHRlbXBvcmFsIGVzIGVuIGdlbmVyYWwgZGVzY29ub2NpZG8sIHBlcm8gc2UgcHVlZGUgYXByb3hpbWFyIHBvciB1biBtb2RlbG8gZXN0YWTDrXN0aWNvLiBFc3RvcyBtb2RlbG9zIHNlIHB1ZWRlbiBjbGFzaWZpY2FyIGVuIHRyZXMgZ3JhbmRlcyBncnVwb3Mgc2Vnw7puIHN1IG5hdHVyYWxlemEuCgpFbiBvY2FzaW9uZXMgbGFzIHNlcmllcyB0ZW1wb3JhbGVzIHB1ZWRlbiBzZXIgbW9kZWxhZGFzIGRlIGZvcm1hIF9fZGV0ZXJtaW5pc3RhX18gYWp1c3RhbmRvIGxvcyBkYXRvcyBhIGZ1bmNpb25lcyBtYXRlbcOhdGljYXM6ICQkeV90PWYodCkrXHZhcmVwc2lsb25fdC4kJAoKRW4gbG9zIF9fcHJvY2Vzb3MgZXN0b2PDoXN0aWNvc19fIGxhcyBvYnNlcnZhY2lvbmVzIGNlcmNhbmFzIGVuIGVsIHRpZW1wbyB0aWVuZGVuIGEgZXN0YXIgKGNvcilyZWxhY2lvbmFkYXMgeSBzZSBwdWVkZSBhcHJvdmVjaGFyIGVzdGEgZGVwZW5kZW5jaWEgcGFyYSBlbnRlbmRlciBsYSBzZXJpZSB5IHByZWRlY2lybGE6IAokJHlfdD1mKHlfe3QtMX0seV97dC0yfSxcbGRvdHMpK1x2YXJlcHNpbG9uX3QuJCQKCkEgdmVjZXMsIGFtYmFzIHNpdHVhY2lvbmVzIHNlIGRhbiBzaW11bHTDoW5lYW1lbnRlOgokJHlfdD1mKHQseV97dC0xfSx5X3t0LTJ9LFxsZG90cykrXHZhcmVwc2lsb25fdC4kJAoKTGEgZmlndXJhIDEgbXVlc3RyYSB1biBlamVtcGxvIGdyw6FmaWNvIGRlIGVzdG9zIHRyZXMgcHJvY2Vzb3MgZ2VuZXJhZG9yZXMuCgpgYGB7ciBwcm9jZXNvc0dlbmVyYWRvcmVzLCBlY2hvID0gRkFMU0V9CnNldC5zZWVkKDEyMzQ1NikKdHJlbmQgPC0gMTo1MDAKZSA8LSBybm9ybSg1MDApCnJ3IDwtIGN1bXN1bShlKQpydyA8LSAocncgLSBtaW4ocncpKSAqIDI1MCAvIChtYXgocncpIC0gbWluKHJ3KSkKcncuZGUgPC0gMC41ICogdHJlbmQgKyAyICogY3Vtc3VtKGUpCmR0IDwtIDAuMSAqIGUgKyAwLjUgKiB0cmVuZAoKZHQgPC0gdHMoZHQsIHN0YXJ0ID0gMSwgZnJlcSA9IDEpCnJ3IDwtIHRzKHJ3LCBzdGFydCA9IDEsIGZyZXEgPSAxKQpydy5kZSA8LSB0cyhydy5kZSwgc3RhcnQgPSAxLCBmcmVxID0gMSkKCmF1dG9wbG90KGR0LCBzZXJpZXM9IkRldGVybWluaXN0YSIsCiAgICAgICAgIHhsYWIgPSAiIiwKICAgICAgICAgeWxhYiA9ICIiLAogICAgICAgICBtYWluID0gIkZpZ3VyYSAxOiBFamVtcGxvcyBkZSBwcm9jZXNvcyBnZW5lcmFkb3JlcyIpICsKICBhdXRvbGF5ZXIocncsIHNlcmllcyA9ICJFc3RvY8Ohc3RpY28iKSArCiAgYXV0b2xheWVyKHJ3LmRlLCBzZXJpZXMgPSAiQW1ib3MiKSArCiAgc2NhbGVfY29sb3VyX21hbnVhbCh2YWx1ZXM9YygiRGV0ZXJtaW5pc3RhIj0iYmx1ZSIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiRXN0b2PDoXN0aWNvIj0ib2xpdmVkcmFiIiwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiQW1ib3MiID0gImJyb3duIiksCiAgICAgICAgICAgICAgICAgICAgICBicmVha3M9YygiRGV0ZXJtaW5pc3RhIiwiRXN0b2PDoXN0aWNvIiwgIkFtYm9zIikpICsKICBndWlkZXMoY29sb3VyID0gZ3VpZGVfbGVnZW5kKHRpdGxlID0gIlByb2Nlc29zIGdlbmVyYWRvcmVzIikpICsgCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz1OVUxMKSArIAogIHNjYWxlX3lfY29udGludW91cyhicmVha3M9TlVMTCkgKyAKICB0aGVtZShsZWdlbmQucG9zaXRpb249YygwLjk4LDAuMDIpLCBsZWdlbmQuanVzdGlmaWNhdGlvbj1jKDEsMCkpCmBgYAoKRW4gZXN0ZSBjdXJzbyBzZSBhc3VtaXLDoSBlbiB0b2RvIG1vbWVudG8gcXVlIGxhIHNlcmllIHRlbXBvcmFsIHRpZW5lIHVuYSBjb21wb25lbnRlIGVzdG9jw6FzdGljYS4gCgpcCgojIyBMZWN0dXJhIGRlIGRhdG9zIHkgcmVwcmVzZW50YWNpw7NuIGdyw6FmaWNhCgpBbnRlcyBkZSBjb250aW51YXIgdmFtb3MgYSBpbXBvcnRhciBlbiBgUmAgZG9zIGRlIGxhcyBzZXJpZXMgcXVlIHVzYXJlbW9zIGRlIGVqZW1wbG8gZW4gZXN0ZSB0ZW1hOiBuw7ptZXJvIGRlIHTDrXR1bG9zIChsaWJyb3MgeSBmb2xsZXRvcykgcHVibGljYWRvcyBhbnVhbG1lbnRlIGVuIEVzcGHDsWEsIGxvcyBuYWNpbWllbnRvcyBtZW5zdWFsZXMgZW4gRXNwYcOxYSB5IGxhIGRlbWFuZGEgZWzDqWN0cmljYSBkaWFyaWEgKE1XaCkgZW4gRXNwYcOxYS4gU2Vydmlyw6FuIGRlIGVqZW1wbG8gcGFyYSBlbCBhbsOhbGlzaXMgZGUgc2VyaWVzIGNvbiBkaWZlcmVudGUgZmVjaGFkbywgYW51YWwsIG1lbnN1YWwgeSBkaWFyaW8sIHJlc3BlY3RpdmFtZW50ZS4KCiMjIyBUw610dWxvcyBwdWJsaWNhZG9zIGVuIEVzcGHDsWEgey19CgpMaWJyb3MgZXMgdW5hIF9zZXJpZSBhbnVhbF8gZGUgMTk5MyBhIDIwMTggKGZ1ZW50ZSBbSW5zdGl0dXRvIE5hY2lvbmFsIGRlIEVzdGFkw61zdGljYV0oaHR0cHM6Ly93d3cuaW5lLmVzKSkuIExvcyBkYXRvcyBlc3TDoW4gZGlzcG9uaWJsZXMgZW4gZWwgZmljaGVybyBgbGlicm9zLmNzdmAuIExhIHByaW1lcmEgY29sdW1uYSB0aWVuZSBlbCBhw7FvIGRlIGxhIHNlcmllIHkgbGEgc2VndW5kYSBjb250aWVuZSBlbCBuw7ptZXJvIGRlIHTDrXR1bG9zIHB1YmxpY2Fkb3MuIEVuIGxhIHByaW1lcmEgZmlsYSBhcGFyZWNlIGVsIG5vbWJyZSBkZSBjYWRhIGNvbHVtbmEuCiAgICAKYGBge3J9CmxpYnJvcyA8LSByZWFkLmNzdjIoIi4vc2VyaWVzL2xpYnJvcy5jc3YiLCBoZWFkZXIgPSBUUlVFKQpsaWJyb3MgPC0gdHMobGlicm9zWywgMl0sIHN0YXJ0ID0gMTk5MywgZnJlcXVlbmN5ICA9IDEpCmBgYAoKVXNhbW9zIHBhcmEgbGVlciBsb3MgZGF0b3MgYHJlYWQuY3N2MmAsIGluZGljYW5kbyBxdWUgbGEgcHJpbWVyYSBsw61uZWEgdGllbmUgZWwgbm9tYnJlIGRlIGxhcyB2YXJpYWJsZXMuIEVzdGEgZnVuY2nDs24gYXN1bWUgcXVlIGVsIHNlcGFyYWRvciBkZWNpbWFsIGVzIGxhIGNvbWEgIiwiIHkgcXVlIGVsIHNlcGFyYWRvciBlbnRyZSB2YXJpYWJsZXMgZXMgZWwgcHVudG8geSBjb21hICI7Ii4gU2kgZWwgc2VwYXJhZG9yIGRlY2ltYWwgZXMgZWwgcHVudG8gIi4iIHkgZWwgc2VwYXJhZG9yIGRlIHZhcmlhYmxlcyBlcyBsYSBjb21hICIsIiwgZGViZXMgdXNhciBgcmVhZC5jc3ZgLiBFbiBjdWFscXVpZXJhIGRlIGVzdGFzIGZ1bmNpb25lcywgcHVlZGVzIG1vZGlmaWNhciBlbCBzZXBhcmFkb3IgZGVjaW1hbCBwb3IgbWVkaW8gZGVsIGFyZ3VtZW50byBgZGVjYDsgdGFtYmnDqW4gcHVlZGVzIHVzYXIgZWwgYXJndW1lbnRvIGBzZXBgIHBhcmEgaW5kaWNhciBlbCBjYXLDoWN0ZXIgdXNhZG8gY29tbyBzZXBhcmFkb3IgZGUgdmFyaWFibGVzLgoKTGEgZnVuY2nDs24gYHRzYCwgZGUgbGEgbGlicmVyw61hIGBzdGF0c2AsIGNvbnZpZXJ0ZSB1biBvYmpldG8gKHZlY3RvciBvIG1hdHJpeikgYSBsYSBjbGFzZSBfc2VyaWUgdGVtcG9yYWxfLgoKKiBDb24gYHN0YXJ0YCBpbmRpY2Ftb3MgZWwgZmVjaGFkbyBkZWwgcHJpbWVyIGRhdG8uCiogQ29uIGBmcmVxdWVuY3lgIGluZGljYW1vcyBsYSBmcmVjdWVuY2lhLCBxdWUgZW4gZXN0ZSBjYXNvIGVzIHVuIGRhdG8gcG9yIGHDsW8uCgpVc2EgYGhlbHAodHMpYCBwYXJhIG9idGVuZXIgbcOhcyBpbmZvcm1hY2nDs24geSBgc3RyKGxpYnJvcylgIHBhcmEgdmVyIHF1w6kgY29udGllbmUgdW4gb2JqZXRvIF9zZXJpZSB0ZW1wb3JhbF8uCgpQb2RlbW9zIGRpYnVqYXIgbGEgc2VyaWUgTGlicm9zIGNvbiBsYSBmdW5jacOzbiBgcGxvdGAgbyBtZWpvciBjb24gYGF1dG9wbG90YC4gRXN0YSDDumx0aW1hIGVzdMOhIGVuIGVsIHBhcXVldGUgYGZvcmVjYXN0YC4KCkVuIGdlbmVyYWwsIGxhcyBmdW5jaW9uZXMgZ3LDoWZpY2FzIHF1ZSB2YW1vcyBhIHVzYXIgcGVydGVuZWNlbiBhIGxhIGxpYnJhcsOtYSBgZm9yZWNhc3RgLCBwZXJvIGVuIG9jYXNpb25lcyBsYXMgYW1wbGlhcmVtb3MgY29uIGZ1bmNpb25lcyBkZSBsYSBsaWJyZXLDrWEgYGdncGxvdDJgLiBUZSByZWNvbWllbmRvIGNhcmdhciBlc3RhcyBkb3MgbGlicmVyw61hcyBkZXNkZSBlbCBpbmljaW8uIEVuIGNhc2kgdG9kb3MgbG9zIGNhc29zIGV4aXN0ZSB1bmEgdmVyc2nDs24gZGUgbGEgZnVuY2nDs24gZ3LDoWZpY2EgdXNhZGEgZW4gbGEgbGlicmVyw61hIGBzdGF0c2AuIEFkZW3DoXMsIHVzYXJlbW9zIGxhcyBsaWJyZXLDrWFzIGBncmlkYCB5IGBncmlkRXh0cmFgIHBhcmEgY29tYmluYXIgdW4gY29uanVudG8gZGUgZ3LDoWZpY2FzIGVuIHVuYSBtaXNtYSBmaWd1cmEuIAoKYGBge3IsIGV2YWwgPSBGQUxTRX0KbGlicmFyeShmb3JlY2FzdCkKbGlicmFyeShnZ3Bsb3QyKQpsaWJyYXJ5KGdyaWRFeHRyYSkKbGlicmFyeShncmlkKQpgYGAKCmBgYHtyfQphdXRvcGxvdChsaWJyb3MsCiAgICAgICAgIHhsYWIgPSAiIiwKICAgICAgICAgeWxhYiA9ICJUw610dWxvcyIsCiAgICAgICAgIG1haW4gPSAiRmlndXJhIDIuIFTDrXR1bG9zIHB1YmxpY2Fkb3MgKGxpYnJvcyB5IGZvbGxldG9zKSIpCmBgYAoKCiMjIyBOYWNpbWllbnRvcyBlbiBFc3Bhw7FhIHstfQoKTmFjaW1pZW50b3MgZXMgdW5hIF9zZXJpZSBtZW5zdWFsXyBkZSBlbmVybyBkZSAxOTc1IGEgZGljaWVtYnJlIGRlIDIwMTggKGZ1ZW50ZTogW0luc3RpdHV0byBOYWNpb25hbCBkZSBFc3RhZMOtc3RpY2FdKGh0dHA6Ly93d3cuaW5lLmVzKSkuIExvcyBkYXRvcyBlc3TDoW4gZGlzcG9uaWJsZXMgZW4gZWwgZmljaGVybyBgbmFjaW1pZW50b3MuY3N2YC4gTGEgcHJpbWVyYSBjb2x1bW5hIHRpZW5lIGxhIGZlY2hhIHkgbGEgc2VndW5kYSBsYSBzZXJpZSBwcm9waWFtZW50ZS4gRW4gbGEgcHJpbWVyYSBmaWxhIGFwYXJlY2UgZWwgbm9tYnJlIGRlIGNhZGEgY29sdW1uYS4KCgpgYGB7cn0KbmFjaW1pZW50b3MgPC0gcmVhZC5jc3YyKCIuL3Nlcmllcy9uYWNpbWllbnRvcy5jc3YiLCBoZWFkZXIgPSBUUlVFKQpuYWNpbWllbnRvcyA8LSB0cyhuYWNpbWllbnRvc1ssIDJdLAogICAgICAgICAgICAgICAgICBzdGFydCA9IGMoMTk3NSwgMSksCiAgICAgICAgICAgICAgICAgIGZyZXF1ZW5jeSA9IDEyKQpgYGAKCkVuIGVzdGUgY2FzbzoKCiogQ29uIGBzdGFydGAgaW5kaWNhbW9zIHF1ZSBlbCBwcmltZXIgZGF0byBlcyBlbmVybyBkZSAxOTc1LiBUYW1iacOpbiBzZXLDrWEgY29ycmVjdG8gYHN0YXJ0ID0gMTk3NWAuIFNpIGVsIHByaW1lciBkYXRvIGZ1ZXJhLCBwb3IgZWplbXBsbywgbWFyem8gZGUgMTk3NSwgZGViZXLDrWFtb3MgcG9uZXIgYHN0YXJ0ID0gYygxOTc1LCAzKWAgbyBgc3RhcnQgPSAxOTc1ICsgMi8xMmAuCiogQ29uIGBmcmVxdWVuY3lgIGluZGljYW1vcyBxdWUgc2UgdGllbmVuIDEyIGRhdG9zIChtZXNlcykgcG9yIGHDsW8uIFNpIGxhIHNlcmllIGZ1ZXJhIHRyaW1lc3RyYWwgcG9uZHLDrWFtb3MgYGZyZXF1ZW5jeSA9IDRgLgoKYGBge3J9CmF1dG9wbG90KG5hY2ltaWVudG9zLAogICAgICAgICB4bGFiID0gIiIsCiAgICAgICAgIHlsYWIgPSAiTmFjaW1pZW50b3MiLAogICAgICAgICBtYWluID0gIkZpZ3VyYSAzLiBOYWNpbWllbnRvcyBtZW5zdWFsZXMiKQpgYGAKCgpcCgojIyMgRGVtYW5kYSBlbMOpY3RyaWNhIHstfQoKRWxlY3RyaWNpZGFkIGVzIHVuYSBfc2VyaWUgZGlhcmlhXyBkZXNkZSBlbCAxIGVuZXJvIGRlIDIwMTkgaGFzdGEgZWwgMzEgZGljaWVtYnJlIGRlIDIwMTkgKGZ1ZW50ZTogW1JlZCBFbGVjdHJpY2EgZGUgRXNwYcOxYV0oaHR0cDovL3d3dy5yZWUuZXMpKS4gTG9zIGRhdG9zIGVzdMOhbiBkaXNwb25pYmxlcyBlbiBlbCBmaWNoZXJvIGBDb25zdW1vIGVsZWN0cmljby5jc3ZgLiBMYSBwcmltZXJhIGNvbHVtbmEgdGllbmUgbGEgZmVjaGEgeSBsYSBzZWd1bmRhLCBsYSBzZWxlY2Npb25hZGEgcGFyYSBlbCBmZWNoYWRvLCBsYSBzZXJpZSBwcm9waWFtZW50ZS4gRW4gbGEgcHJpbWVyYSBmaWxhIGFwYXJlY2UgZWwgbm9tYnJlIGRlIGNhZGEgY29sdW1uYS4KCgpgYGB7cn0KZWxlY3RyaWNpZGFkIDwtIHJlYWQuY3N2MigiLi9zZXJpZXMvQ29uc3VtbyBlbGVjdHJpY28uY3N2IiwgaGVhZGVyID0gVFJVRSkKZWxlY3RyaWNpZGFkIDwtIHRzKGVsZWN0cmljaWRhZFssIDJdLAogICAgICAgICAgICAgICAgICBzdGFydCA9IGMoMSwgMiksCiAgICAgICAgICAgICAgICAgIGZyZXF1ZW5jeSA9IDcpCmBgYAoKRW4gZXN0ZSBjYXNvOgoKKiBDb24gYHN0YXJ0YCBpbmRpY2Ftb3MgcXVlIGVsIHByaW1lciBkYXRvIGVzIHVuIG1hcnRlcyAoc2VndW5kbyBkw61hIGRlIGxhIHNlbWFuYSkgZGUgbGEgcHJpbWVyYSBzZW1hbmEuIENvbW8gdmVzIG5vIGhheSByZWZlcmVuY2lhIGFsIGHDsW8uIFRhbWJpw6luIHNlcsOtYSBjb3JyZWN0byBgc3RhcnQgPSAxICsgMS83YC4KKiBDb24gYGZyZXF1ZW5jeWAgaW5kaWNhbW9zIHF1ZSBzZSB0aWVuZW4gNyBkYXRvcyAoZMOtYXMpIHBvciBzZW1hbmEuIFNpIGxhIHNlcmllIGZ1ZXJhIGRlIGx1bmVzIGEgdmllcm5lcyBwb25kcsOtYW1vcyBgZnJlcXVlbmN5ID0gNWAuCgpgYGB7cn0KYXV0b3Bsb3QoZWxlY3RyaWNpZGFkLAogICAgICAgICB4bGFiID0gIiIsCiAgICAgICAgIHlsYWIgPSAiTVdoIiwKICAgICAgICAgbWFpbiA9ICJGaWd1cmEgNC4gQ29uc3VtbyBkaWFyaW8gZGUgZWxlY3RyaWNpZGFkIikKYGBgCgpcCgoqIGBzdGFydGAsIGRhIGVsIGZlY2hhZG8gZGVsIHByaW1lciBkYXRvCmBgYHtyfQpzdGFydChuYWNpbWllbnRvcykKc3RhcnQoZWxlY3RyaWNpZGFkKQpgYGAKCiogYGVuZGAsIGRhIGVsIGZlY2hhZG8gZGVsIMO6bHRpbW8gZGF0bwpgYGB7cn0KZW5kKG5hY2ltaWVudG9zKQplbmQoZWxlY3RyaWNpZGFkKQpgYGAKCiogYGZyZXF1ZW5jeWAsIGRhIGxhIGZyZWN1ZW5jaWEgZGUgbG9zIGRhdG9zCmBgYHtyfQpmcmVxdWVuY3kobmFjaW1pZW50b3MpCmZyZXF1ZW5jeShlbGVjdHJpY2lkYWQpCmBgYAoKKiBgdGltZWAsIGNyZWEgdW4gdmVjdG9yIGNvbiBlbCBmZWNoYWRvIGRlIHVuYSBzZXJpZS4gT2JzZXJ2YSBjb21vIGd1YXJkYSBpbnRlcm5hbWVudGUgYFJgIGVsIGZlY2hhZG8gZGUgdW5hIHNlcmllIHRlbXBvcmFsLgpgYGB7cn0KaGVhZCh0aW1lKG5hY2ltaWVudG9zKSwgbiA9IDQ4KSAgI01vc3RyYW1vcyBzw7NsbyBsb3MgNCBwcmltZXJvcyBhw7FvcwpoZWFkKHRpbWUoZWxlY3RyaWNpZGFkKSwgbiA9IDI4KSAgI01vc3RyYW1vcyBzw7NsbyBsYXMgNCBwcmltZXJhcyBzZW1hbmFzCmBgYAoKKiBgY3ljbGVgLCBjcmVhIHVuIHZlY3RvciBjb24gZWwgcGVyaW9kbyBlc3RhY2lvbmFsIGRlIGNhZGEgZGF0byBkZSBsYSBzZXJpZS4gUGFyYSB1bmEgc2VyaWUgbWVuc3VhbCBzb24gdmFsb3JlcyBkZSAxIGEgMTIsIHBhcmEgdW5hIHNlcmllIGRpYXJpYSBzZXLDrWFuIHZhbG9yZXMgZGUgMSBhIDcKYGBge3J9CmhlYWQoY3ljbGUobmFjaW1pZW50b3MpLCBuID0gNDgpICNNb3N0cmFtb3Mgc8OzbG8gbG9zIDQgcHJpbWVyb3MgYcOxb3MKaGVhZChjeWNsZShlbGVjdHJpY2lkYWQpLCBuID0gMjgpICNNb3N0cmFtb3Mgc8OzbG8gbGFzIDQgcHJpbWVyYXMgc2VtYW5hcwpgYGAKCgpcClwKCiMgQ29tcG9uZW50ZXMgZGUgdW5hIHNlcmllIHRlbXBvcmFsIHkgc3UgY29tYmluYWNpw7NuCgpcCgojIyBUZW5kZW5jaWEsICRUX3QkCiAgCl9fRGVmaW5pY2nDs25fXzogbGEgdGVuZGVuY2lhIGRlIHVuYSBzZXJpZSBlcyBzdSBjb21wb3J0YW1pZW50byBhIGxhcmdvIHBsYXpvLiBEZXNjcmliZSBsb3MgY2FtYmlvcyBzaXN0ZW3DoXRpY29zIGRlIGxhIHNlcmllIHRlbXBvcmFsIHF1ZSBubyBhcGFyZW50YW4gc2VyIHBlcmnDs2RpY29zLgoKUmVzcGVjdG8gYSBsYSBfX2RpcmVjY2nDs24gZGVsIG1vdmltaWVudG9fXyBsYSB0ZW5kZW5jaWEgcHVlZGUgc2VyOgogCiogX0NyZWNpZW50ZV86IGEgbGFyZ28gcGxhem8gbGEgc2VyaWUgYXVtZW50YSBzdSB2YWxvcgoqIF9EZWNyZWNpZW50ZV86IGEgbGFyZ28gcGxhem8gbGEgc2VyaWUgZGlzbWludXllIHN1IHZhbG9yCiogX0VzdGFjaW9uYXJpYV86IGEgbGFyZ28gcGxhem8gbGEgc2VyaWUgbWFudGllbmUgc3UgdmFsb3IKClJlc3BlY3RvIGEgbGEgX19wZW5kaWVudGVfXyBsYSB0ZW5kZW5jaWEgcHVlZGUgc2VyOgoKKiBfTGluZWFsXzogbGEgdmFyaWFjacOzbiBlbnRyZSBwZXJpb2RvcyBlcyBjb25zdGFudGUKKiBfRXhwb25lbmNpYWxfOiBsYSB2YXJpYWNpw7NuIGVudHJlIHBlcmlvZG9zIGVzIGNyZWNpZW50ZQoqIF9Mb2dhcsOtdG1pY2FfOiBsYSB2YXJpYWNpw7NuIGVudHJlIHBlcmlvZG9zIGVzIGRlY3JlY2llbnRlCgpSZXNwZWN0byBkZWwgX19wcm9jZXNvIGdlbmVyYWRvcl9fIGRlIGxhIHRlbmRlbmNpYSwgcHVlZGUgc2VyOgoKKiBfRGV0ZXJtaW5pc3RhXzogJFRfdCA9IGYodCkkCiogX0VzdG9jw6FzdGljYV86ICRUX3QgPSBmKFRfe3QtMX0sIFRfe3QtMn0sXGxkb3RzKSQKKiBfQW1iYXNfOiAkVF90ID0gZih0LFRfe3QtMX0sIFRfe3QtMn0sXGxkb3RzKSQKICAKRW4gbGEgZmlndXJhIDUgc2UgbXVlc3RyYW4gZWplbXBsb3MgZGUgc2VyaWVzIHRlbXBvcmFsZXMgc2Vnw7puIGRpcmVjY2nDs24gZGVsIG1vdmltaWVudG8geSBwZW5kaWVudGUgZGUgbGEgdGVuZGVuY2lhLiBSZWN1ZXJkYSBxdWUgZW4gbGEgZmlndXJhIDEgc2UgbW9zdHJhYmFuIGVqZW1wbG9zIGRlIHNlcmllcyB0ZW1wb3JhbGVzIHNlZ8O6biBzdSBwcm9jZXNvIGdlbmVyYWRvci4KClwKICAKYGBge3IsIGVjaG89RkFMU0V9CnNldC5zZWVkKDEyMzQ1NikKeDA8LTAuMSpybm9ybSgxMDAsc2Q9MC4xKQp4MTwtc2VxKDEsNSxsZW5ndGg9IDEwMCk7IHR0IDwtIHgxOyB4MSA8LSAxMCooeDEgLSBtaW4oeDEpKS8obWF4KHgxKSAtIG1pbih4MSkpIC0gNQp4MjwtZXhwKHR0KTsgeDIgPC0gMTAqKHgyIC0gbWluKHgyKSkvKG1heCh4MikgLSBtaW4oeDIpKSAtIDUKeDM8LWxvZyh0dCk7IHgzIDwtIDEwKih4MyAtIG1pbih4MykpLyhtYXgoeDMpIC0gbWluKHgzKSkgLSA1Cng0PC1zZXEoNSwxLGxlbmd0aD0gMTAwKTsgdHQgPC0geDQ7IHg0IDwtIDEwKih4NCAtIG1pbih4NCkpLyhtYXgoeDQpIC0gbWluKHg0KSkgLSA1Cng1PC1sb2codHQpOyB4NSA8LSAxMCooeDUgLSBtaW4oeDUpKS8obWF4KHg1KSAtIG1pbih4NSkpIC0gNQp4NjwtZXhwKHR0KTsgeDYgPC0gMTAqKHg2IC0gbWluKHg2KSkvKG1heCh4NikgLSBtaW4oeDYpKSAtIDUKCnAwIDwtIGdncGxvdChkYXRhLmZyYW1lKHQ9MToxMDAsIHg9eDApLCBhZXMoeD10LCB5PXgsIGNvbG91cnM9ICJibGFjayIpKSArIGdlb21fbGluZSgpICsgeGxhYigiIikgKyB5bGFiKCIiKSArCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz1OVUxMKSArIHNjYWxlX3lfY29udGludW91cyhicmVha3M9TlVMTCwgbGltaXRzID0gYygtNSwgNSkpICsKICBnZ3RpdGxlKCJFc3RhY2lvbmFyaWEiKSArIGd1aWRlcyhjb2xvdXI9RkFMU0UpCnAxIDwtIGdncGxvdChkYXRhLmZyYW1lKHQ9MToxMDAsIHg9eDEpLCBhZXMoeD10LCB5PXgsIGNvbG91cnM9ICJibGFjayIpKSArIGdlb21fbGluZSgpICsgeGxhYigiIikgKyB5bGFiKCIiKSArCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz1OVUxMKSArIHNjYWxlX3lfY29udGludW91cyhicmVha3M9TlVMTCkgKwogIGdndGl0bGUoIkNyZWNpZW50ZSBsaW5lYWwiKSArIGd1aWRlcyhjb2xvdXI9RkFMU0UpCnAyIDwtIGdncGxvdChkYXRhLmZyYW1lKHQ9MToxMDAsIHg9eDIpLCBhZXMoeD10LCB5PXgsIGNvbG91cnM9ICJibGFjayIpKSArIGdlb21fbGluZSgpICsgeGxhYigiIikgKyB5bGFiKCIiKSArCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz1OVUxMKSArIHNjYWxlX3lfY29udGludW91cyhicmVha3M9TlVMTCkgKwogIGdndGl0bGUoIkNyZWNpZW50ZSBleHBvbmVuY2lhbCIpICsgZ3VpZGVzKGNvbG91cj1GQUxTRSkKcDMgPC0gZ2dwbG90KGRhdGEuZnJhbWUodD0xOjEwMCwgeD14MyksIGFlcyh4PXQsIHk9eCwgY29sb3Vycz0gImJsYWNrIikpICsgZ2VvbV9saW5lKCkgKyB4bGFiKCIiKSArIHlsYWIoIiIpICsKICBzY2FsZV94X2NvbnRpbnVvdXMoYnJlYWtzPU5VTEwpICsgc2NhbGVfeV9jb250aW51b3VzKGJyZWFrcz1OVUxMKSArCiAgZ2d0aXRsZSgiQ3JlY2llbnRlIGxvZ2Fyw610bWljYSIpICsgZ3VpZGVzKGNvbG91cj1GQUxTRSkKcDQgPC0gZ2dwbG90KGRhdGEuZnJhbWUodD0xOjEwMCwgeD14NCksIGFlcyh4PXQsIHk9eCwgY29sb3Vycz0gImJsYWNrIikpICsgZ2VvbV9saW5lKCkgKyB4bGFiKCIiKSArIHlsYWIoIiIpICsKICBzY2FsZV94X2NvbnRpbnVvdXMoYnJlYWtzPU5VTEwpICsgc2NhbGVfeV9jb250aW51b3VzKGJyZWFrcz1OVUxMKSArCiAgZ2d0aXRsZSgiRGVjcmVjaWVudGUgbGluZWFsIikgKyBndWlkZXMoY29sb3VyPUZBTFNFKQpwNSA8LSBnZ3Bsb3QoZGF0YS5mcmFtZSh0PTE6MTAwLCB4PXg1KSwgYWVzKHg9dCwgeT14LCBjb2xvdXJzPSAiYmxhY2siKSkgKyBnZW9tX2xpbmUoKSArIHhsYWIoIiIpICsgeWxhYigiIikgKwogIHNjYWxlX3hfY29udGludW91cyhicmVha3M9TlVMTCkgKyBzY2FsZV95X2NvbnRpbnVvdXMoYnJlYWtzPU5VTEwpICsKICBnZ3RpdGxlKCJEZWNyZWNpZW50ZSBleHBvbmVuY2lhbCIpICsgZ3VpZGVzKGNvbG91cj1GQUxTRSkKcDYgPC0gZ2dwbG90KGRhdGEuZnJhbWUodD0xOjEwMCwgeD14NiksIGFlcyh4PXQsIHk9eCwgY29sb3Vycz0gImJsYWNrIikpICsgZ2VvbV9saW5lKCkgKyB4bGFiKCIiKSArIHlsYWIoIiIpICsKICBzY2FsZV94X2NvbnRpbnVvdXMoYnJlYWtzPU5VTEwpICsgc2NhbGVfeV9jb250aW51b3VzKGJyZWFrcz1OVUxMKSArCiAgZ2d0aXRsZSgiRGVjcmVjaWVudGUgbG9nYXLDrXRtaWNhIikgKyBndWlkZXMoY29sb3VyPUZBTFNFKQoKZ3JpZC5hcnJhbmdlKAogIGdyb2JzID0gbGlzdChwMCwgcDEsIHAyLCBwMywgcDQsIHA1LCBwNiksCiAgbGF5b3V0X21hdHJpeCA9IHJiaW5kKGMoMSwxLDEpLAogICAgICAgICAgICAgICAgICAgICAgICBjKDIsMyw0KSwKICAgICAgICAgICAgICAgICAgICAgICAgYyg1LDYsNykpLAogIHRvcCA9IHRleHRHcm9iKCJGaWd1cmEgNS4gRWplbXBsb3MgZGUgdGVuZGVuY2lhIiwgaGp1c3QgPSAxLjUpCikKYGBgCgpcCgpTaSBsYSBzZXJpZSB0ZW1wb3JhbCBlcyBzdWZpY2llbnRlbWVudGUgbGFyZ2EgZXMgcG9zaWJsZSBvYnNlcnZhciBjYW1iaW9zIGVuIGxhIGRpcmVjY2nDs24gZGVsIG1vdmltaWVudG8gZGUgbGEgdGVuZGVuY2lhIHF1ZSBkZWZpbmVuIGxvcyBfX2NpY2xvc19fLgoKXAoKIyMgQ2ljbG8sICRDX3QkCgpfX0RlZmluaWNpw7NuX186IFNvbiBwYXRyb25lcyBzaW4gcGVyaW9kaWNpZGFkIGZpamEgcXVlIGFiYXJjYW4gdmFyaW9zIGHDsW9zLiAKClBvciBlamVtcGxvLCBsb3MgY2ljbG9zIGVjb27Ds21pY29zLCBsb3MgY2FtYmlvcyBjbGltw6F0aWNvcyBhc29jaWFkb3MgYWwgZmVuw7NtZW5vIEVsIE5pw7FvLCBvIGxhcyBtYW5jaGFzIHNvbGFyZXMuCgohW10oLi9pbWFnZW5lcy9jaWNsby5wbmcpCgpcCgpMYSBzZXJpZSBkZSBfX05hY2ltaWVudG9zX18gZXMgbG8gc3VmaWNpZW50ZW1lbnRlIGxhcmdhIGNvbW8gcGFyYSBvYnNlcnZhcnNlIHVuIGNpY2xvIGNvbXBsZXRvLCBxdWUgcXVlZGEgaWRlbnRpZmljYWRvIHBvciBkb3MgY2FtYmlvcyBkZSB0ZW5kZW5jaWEgY29uc2VjdXRpdm9zIGRlIHNpZ25vIG9wdWVzdG86CgoqIEEgZmluYWxlcyBkZSBsYSBkw6ljYWRhIGRlIGxvcyA5MCBsYSB0ZW5kZW5jaWEgZGVjcmVjaWVudGUgZW4gbG9zIG5hY2ltaWVudG9zIHBhc2EgYSBjcmVjaWVudGUgcG9yIGxhIGxsZWdhZGEgZGUgaW5taWdyYW50ZXMgY29uIHVuYSBtYXlvciB0YXNhIGRlIG5hdGFsaWRhZC4KKiBBIGZpbmFsZXMgZGUgbGEgcHJpbWVyYSBkw6ljYWRhIGRlbCAyMDAwIGxhIHRlbmRlbmNpYSBjcmVjaWVudGUgcGFzYSBhIGRlY3JlY2llbnRlIHBvcnF1ZSBsYSBjcmlzaXMgcHJvdm9jYSBlbCByZWdyZXNvIGEgc3VzIHBhw61zZXMgZGUgb3JpZ2VuIGRlIG11Y2hvcyBkZSBlc3RvcyBpbm1pZ3JhbnRlcy4KCkRlIGVzdGEgZm9ybWEsIG9ic2VydmFtb3MgdW4gY2ljbG8gY29tcGxldG8gZGVzZGUgMTk3NSBoYXN0YSBwb2NvIGFudGVzIGRlIDIwMTAgKHBlcmlvZG8gZW50cmUgZG9zIGNhbWJpb3MgZGUgdGVuZGVuY2lhKSwgeSBlbCBpbmljaW8gZGVsIHNpZ3VpZW50ZSBjaWNsbyBlbiBlbCBxdWUgYcO6biBlc3RhbW9zLgogCmBgYHtyLCBlY2hvPUZBTFNFLCBmaWcuaGVpZ2h0PTN9CmF1dG9wbG90KG5hY2ltaWVudG9zLAogICAgICAgICB4bGFiID0gIiIsCiAgICAgICAgIHlsYWIgPSAiTmFjaW1pZW50b3MiLAogICAgICAgICBtYWluID0gIkZpZ3VyYSA3LiBDaWNsb3MgZW4gbGEgc2VyaWUgTmFjaW1pZW50b3MiKSArCiAgZ2VvbV92bGluZSh4aW50ZXJjZXB0PWMoMTk5NiwgMjAwOC41KSwgbGluZXR5cGUgPSAiZGFzaGVkIikgKyAKICBhbm5vdGF0ZSgidGV4dCIsIHg9MTk4NSwgeT01ODAwMCwgbGFiZWw9IlRlbmRlbmNpYSBEZWNyZWNpZW50ZSIpICsKICBhbm5vdGF0ZSgidGV4dCIsIHg9MjAwMiwgeT01ODAwMCwgbGFiZWw9IlRlbmRlbmNpYSBDcmVjaWVudGUiKSArCiAgYW5ub3RhdGUoInRleHQiLCB4PTIwMTQsIHk9NTgwMDAsIGxhYmVsPSJUZW5kZW5jaWEgRGVjcmVjaWVudGUiKQpgYGAKClwKCiMjIEVzdGFjaW9uYWxpZGFkLCAkU190JAoKX19EZWZpbmljacOzbl9fOiBTb24gcGF0cm9uZXMgcmVwZXRpdGl2b3MgZGUgcGVyaW9kaWNpZGFkIGZpamEgZSBpbmZlcmlvciBhbCBhw7FvLiAKCkVsIF9fb3JkZW4gZGUgbGEgcGVyaW9kaWNpZGFkIGxvIGRlbm9taW5hcmVtb3MgJG0kX18sIHBvciB0YW50byBlbCBwYXRyw7NuIGVzdGFjaW9uYWwgc2UgcmVwaXRlIGNhZGEgJG0kIHBlcmlvZG9zLiBMw7NnaWNhbWVudGUsICRtJCB0b21hIGVsIHZhbG9yIDEyIHBhcmEgZGF0b3MgbWVuc3VhbGVzLCBlbCB2YWxvciA0IHBhcmEgZGF0b3MgdHJpbWVzdHJhbGVzLCA3IHBhcmEgZGF0b3MgZGlhcmlvcyAoZGUgbHVuZXMgYSBkb21pbmdvKSwgZXRjLgoKTGEgY29tcG9uZW50ZSBlc3RhY2lvbmFsIHN1cmdlIHBvciBmYWN0b3JlcyBjbGltYXRvbMOzZ2ljb3MsIGluc3RpdHVjaW9uYWxlcyBvIHNvY2lhbGVzLgoKRW4gb2Nhc2lvbmVzIG5vIGVzIGbDoWNpbCBkZXRlcm1pbmFyIGxhIGV4aXN0ZW5jaWEgZGUgZXN0YWNpb25hbGlkYWQgbyBzdSBvcmRlbi4gRW4gZXN0ZSBjYXNvLCBzZSBwdWVkZSB1c2FyIGVsIGFuw6FsaXNpcyBlc3BlY3RyYWwsIHF1ZSBubyB2ZXJlbW9zIGVuIGVzdGUgY3Vyc28sIHBhcmEgYW5hbGl6YXIgZXN0YSBjb21wb25lbnRlLiBMYSBsaWJyZXLDrWEgYGZvcmVjYXN0YCBkaXNwb25lIGRlIGxhIGZ1bmNpw7NuIGBmaW5kZnJlcXVlbmN5YCBxdWUgZGV2dWVsdmUgbGEgZnJlY3VlbmNpYSBkb21pbmFudGUgZGUgdW5hIHNlcmllIHVzYW5kbyBlbCBhbsOhbGlzaXMgZXNwZWN0cmFsLgoKTGEgc2VyaWUgTmFjaW1pZW50b3MgdGllbmUgdW5hIGVzdGFjaW9uYWxpZGFkIGRlIG9yZGVuIDEyLCBjYXVzYWRhIHByaW5jaXBhbG1lbnRlIHBvciBlbCBuw7ptZXJvIGRlIGTDrWFzIGRlbCBtZXMuIExvcyB2YWxsZXMgZW4gbGEgZmlndXJhIDggY29ycmVzcG9uZGVuIGEgZmVicmVybywgcXVlIHBvciB0ZW5lciAyOCBkw61hcyAobyAyOSBlbiBhw7FvcyBiaXNpZXN0b3MpIHByZXNlbnRhICBtZW5vciBuw7ptZXJvIGRlIG5hY2ltaWVudG9zLgoKYGBge3IsZWNobz1GQUxTRX0KbmFjaW1pZW50b3NiPC13aW5kb3cobmFjaW1pZW50b3MsIHN0YXJ0ID0gMjAwMCkKYXV0b3Bsb3QobmFjaW1pZW50b3NiLAogICAgICAgICB4bGFiID0gIiIsCiAgICAgICAgIHlsYWIgPSAiTmFjaW1pZW50b3MiLAogICAgICAgICBtYWluID0gIkZpZ3VyYSA4LiBOYWNpbWllbnRvcyIpIApgYGAKClwKCkxhIGZpZ3VyYSA5IG11ZXN0cmEgbGEgZGVtYW5kYSBlbMOpY3RyaWNhIGRpYXJpYW1lbnRlIHBhcmEgY3VhdHJvIHNlbWFuYXMsIGRlc2RlIGVsIGx1bmVzIDMgZGUgZmVicmVybyBoYXN0YSBlbCBkb21pbmdvIDIgZGUgbWFyem8uIFRpZW5lLCBwb3IgdGFudG8sIHVuYSBlc3RhY2lvbmFsaWRhZCBkZSBvcmRlbiA3LiBFbiBlbCBlamUgT1ggYXBhcmVjZW4gbG9zIGx1bmVzIGRlIGNhZGEgc2VtYW5hIHkgcGVybWl0ZW4gaWRlbnRpZmljYXIgZWwgZG9taW5nbyBjb21vIGVsIGTDrWEgZGUgbWVub3IgZGVtYW5kYSwgc2VndWlkbyBkZWwgc8OhYmFkby4KCmBgYHtyLCBlY2hvPUZBTFNFfQplbGVjdHJpY2lkYWRiIDwtIHdpbmRvdyhlbGVjdHJpY2lkYWQsIHN0YXJ0ID0gYyg2LCAxKSwgZW5kID0gYyg5LCA3KSkKYXV0b3Bsb3QoZWxlY3RyaWNpZGFkYiwKICAgICAgICAgeGxhYiA9ICIiLAogICAgICAgICB5bGFiID0gIk1XaCIsCiAgICAgICAgIG1haW4gPSAiRmlndXJhIDkuIENvbnN1bW8gZGlhcmlvIGRlIGVsZWN0cmljaWRhZCIpICsgCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz0gNjo5LCBsYWJlbHMgPSA2OjkpIApgYGAKClwKClNpIGVsIGZlY2hhZG8gZGUgbGEgc2VyaWUgZXMgZGUgbXV5IGFsdGEgZnJlY3VlbmNpYSwgcHVlZGUgb2N1cnJpciBxdWUgc2Ugc3VwZXJwb25nYSBtw6FzIGRlIHVuYSBjb21wb25lbnRlIGVzdGFjaW9uYWwuIExhIHNpZ3VpZW50ZSBzZXJpZSBjb3JyZXNwb25kZSBhIGxhIGRlbWFuZGEgZWzDqWN0cmljYSAoTVcpIHJlY29naWRhIGNhZGEgaG9yYSBwYXJhIGVsIG1lcyBkZSBmZWJyZXJvLiBFbCBlamUgT1ggc2XDsWFsYSBlbCBjb25zdW1vIGxhIHByaW1lcmEgaG9yYSBkZSBjYWRhIGTDrWEgZGVsIG1lcyAoZGVzZGUgbWVkaWEgbm9jaGUgaGFzdGEgbGEgdW5hIGRlIGxhIG1hZHJ1Z2FkYSkuIFNlIGFwcmVjaWEgdW5hIGVzdGFjaW9uYWxpZGFkIGRpYXJpYSBkZSBvcmRlbiAkMjQkLCBvdHJhIHNlbWFuYWwgZGUgb3JkZW4gJDcgXHRpbWVzIDI0JCB5IHNpIG1vc3Ryw6FyYW1vcyB2YXJpb3MgYcOxb3MgZGUgY29uc3VtbyB0YW1iacOpbiBzZSBvYnNlcnZhcsOtYSBvdHJhIG1lbnN1YWwuCgpgYGB7ciwgZWNobz1GQUxTRX0KZWxlY3RyaWNpZGFkaCA8LSByZWFkLmNzdjIoIi4vc2VyaWVzL0NvbnN1bW8gcG9yIGhvcmEuY3N2IiwgaGVhZGVyID0gVFJVRSkKZWxlY3RyaWNpZGFkaCA8LSB0cyhlbGVjdHJpY2lkYWRoWywgMl0sCiAgICAgICAgICAgICAgICAgIHN0YXJ0ID0gMSwKICAgICAgICAgICAgICAgICAgZnJlcXVlbmN5ID0gMSkKZWxlY3RyaWNpZGFkaGIgPC0gd2luZG93KGVsZWN0cmljaWRhZGgsIHN0YXJ0ID0gNzQ1LCBlbmQgPSAxNDE2KQoKYXV0b3Bsb3QoZWxlY3RyaWNpZGFkaGIsCiAgICAgICAgIHhsYWIgPSAiIiwKICAgICAgICAgeWxhYiA9ICJNVyIsCiAgICAgICAgIG1haW4gPSAiRmlndXJhIDEwLiBDb25zdW1vIHBvciBob3JhIGRlIGVsZWN0cmljaWRhZCIpICArIAogIHNjYWxlX3hfY29udGludW91cyhicmVha3MgPSBzZXEoNzQ1LDE0MTYsMjQpLCBsYWJlbHMgPSAxOjI4KSAKYGBgCgoKXAoKIyMgSW50ZXJ2ZW5jacOzbiwgJElfdCQKCl9fRGVmaW5pY2nDs25fXzogRXMgdW4gZmFjdG9yIHNpc3RlbcOhdGljbyBubyBwZXJpw7NkaWNvIG8gaXJyZWd1bGFyLCBxdWUgdmVuZHLDrWEgZGV0ZXJtaW5hZG8gcG9yIGZlbsOzbWVub3Mgb2Nhc2lvbmFsZXMgcXVlIHByb3ZvY2FuIG9ic2VydmFjaW9uZXMgYW7Ds21hbGFzIHkgdmFsb3JlcyBhdMOtcGljb3MgZW4gbGEgc2VyaWUgdGVtcG9yYWwuCgpQb3Igc3UgcmVsYWNpw7NuIGNvbiBmZWNoYXMgY29uY3JldGFzLCBwb2RlbW9zIGRpc3Rpbmd1aXIgZG9zIHRpcG9zOgoKKiBfRWZlY3RvcyBjYWxlbmRhcmlvXzogZmVzdGl2b3MgZW4gc2VyaWVzIGRpYXJpYXM7IFNlbWFuYSBTYW50YSwgZMOtYXMgbGFib3JhbGVzIHkgZmVicmVybyBiaXNpZXN0byBlbiBzZXJpZXMgbWVuc3VhbGVzLgoqIF9PdHJvcyBlZmVjdG9zIG5vIHN1amV0b3MgYSBjYWxlbmRhcmlvXzogY2F0w6FzdHJvZmVzLCBodWVsZ2FzLCBldGMuCgpFbiBsYSBzZXJpZSBOYWNpbWllbnRvcywgbG9zIG1lc2VzIGRlIGZlYnJlcm8gYmlzaWVzdG9zIChwdW50b3Mgcm9qb3MpIHByZXNlbnRhbiB1biBuw7ptZXJvIGRlIG5hY2ltaWVudG9zIG1heW9yIHF1ZSBsb3MgbWVzZXMgZGUgZmVicmVybyBubyBiaXNpZXN0b3MuIFBhcmEgYWxndW5vcyBhw7FvcyBlc3RlIGhlY2hvIGVzIG1hcyBjbGFybyAodsOpYXNlIGZpZ3VyYSAxMSkuCgpgYGB7cixlY2hvPUZBTFNFfQphdXRvcGxvdChuYWNpbWllbnRvc2IsCiAgICAgICAgIHhsYWIgPSAiIiwKICAgICAgICAgeWxhYiA9ICJOYWNpbWllbnRvcyIsCiAgICAgICAgIG1haW4gPSAiRmlndXJhIDExLiBOYWNpbWllbnRvcyIpICsKICBnZW9tX3BvaW50KGFlcyh4ID0gMjAwMCsxLzEyLCB5ID0gbmFjaW1pZW50b3NiWzIgKyAwKjQ4XSwgY29sb3VyID0gInJlZCIpKSArIAogIGdlb21fcG9pbnQoYWVzKHggPSAyMDA0KzEvMTIsIHkgPSBuYWNpbWllbnRvc2JbMiArIDEqNDhdLCBjb2xvdXIgPSAicmVkIikpICsgCiAgZ2VvbV9wb2ludChhZXMoeCA9IDIwMDgrMS8xMiwgeSA9IG5hY2ltaWVudG9zYlsyICsgMio0OF0sIGNvbG91ciA9ICJyZWQiKSkgKyAKICBnZW9tX3BvaW50KGFlcyh4ID0gMjAxMisxLzEyLCB5ID0gbmFjaW1pZW50b3NiWzIgKyAzKjQ4XSwgY29sb3VyID0gInJlZCIpKSArIAogIGdlb21fcG9pbnQoYWVzKHggPSAyMDE2KzEvMTIsIHkgPSBuYWNpbWllbnRvc2JbMiArIDQqNDhdLCBjb2xvdXIgPSAicmVkIikpICsKICBndWlkZXMoY29sb3VyPUZBTFNFKQpgYGAKCkVuIGxhIHNlcmllIGRpYXJpYSBFbGVjdHJpY2lkYWQgY3VhbmRvIHVuIGTDrWEgZW50cmUgc2VtYW5hIGVzIGZlc3Rpdm8sIGVsIGNvbnN1bW8gc2UgcmVkdWNlIG5vdGFibGVtZW50ZSBhcGFyZWNpZW5kbyB1biBlZmVjdG8gY2FsZW5kYXJpby4gU2kgc2UgdHJhdGEgZGUgdW4gZMOtYSBhaXNsYWRvLCBlbCBlZmVjdG8gZXMgbXV5IGbDoWNpbCBkZSBpZGVudGlmaWNhciB5IGFuYWxpemFyLiBVbiBlamVtcGxvLCBvYnNlcnZhYmxlIGVuIGxhIGZpZ3VyYSAxMiwgZXMgZWwgdmllcm5lcyAxIGRlIG5vdmllbWJyZSBkZSAyMDE5LCBkw61hIGRlIFRvZG9zIGxvcyBTYW50b3MsIGlkZW50aWZpY2FkbyBjb24gdW4gcHVudG8gcm9qby4gU2UgYXByZWNpYSBxdWUgZWwgY29uc3VtbyBmdWUgbXV5IGluZmVyaW9yIGFsIG9ic2VydmFkbyBlbCB2aWVybmVzIHByZWNlZGVudGUgeSBwb3N0ZXJpb3IgKHB1bnRvcyB2ZXJkZXMpLiBTaSBsb3MgZmVzdGl2b3MgYWJhcmNhbiB2YXJpb3MgZMOtYXMsIGVsIGVmZWN0byBzaWd1ZSBzaWVuZG8gcGVyZmVjdGFtZW50ZSBpZGVudGlmaWNhYmxlLCBwZXJvIGVzIG3DoXMgY29tcGxlam8gZGUgYW5hbGl6YXIuIFVuIGVqZW1wbG8gZXMgbGEgw7psdGltYSBzZW1hbmEgZGUgZGljaWVtYnJlIGRvbmRlIGVsIGNvbnN1bW8gZXMgbXV5IGluZmVyaW9yIGFsIG9ic2VydmFkbyBlbiBsYXMgc2VtYW5hcyBwcmV2aWFzIGRlYmlkbywgcG9yIHVuIGxhZG8sIGFsIGVmZWN0byBkZWwgZMOtYSBmZXN0aXZvIGRlIE5hdmlkYWQgKHB1bnRvIGF6dWwpIHksIHBvciBvdHJvIGxhZG8sIGFsIHBlcmlvZG8gc2VtaS12YWNhY2lvbmFsIHF1ZSBlc3RhcyBmZXN0aXZpZGFkZXMgc3Vwb25lIGVuIEVzcGHDsWEuCgpgYGB7ciwgZWNobyA9IEZBTFNFfQplbGVjdHJpY2lkYWRiIDwtIHdpbmRvdyhlbGVjdHJpY2lkYWQsIHN0YXJ0ID0gYyg0MywgMSkpCmF1dG9wbG90KGVsZWN0cmljaWRhZGIsCiAgICAgICAgIHhsYWIgPSAiIiwKICAgICAgICAgeWxhYiA9ICJNV2giLAogICAgICAgICBtYWluID0gIkZpZ3VyYSAxMi4gQ29uc3VtbyBkaWFyaW8gZGUgZWxlY3RyaWNpZGFkIikgKyAKICBzY2FsZV94X2NvbnRpbnVvdXMoYnJlYWtzPSA0Mzo1MywgbGFiZWxzID0gYygiMjEvMTAiLCAiMjgvMTAiLCAiNC8xMSIsICIxMS8xMSIsICIxOC8xMSIsICIyNS8xMSIsIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICIyLzEyIiwgIjkvMTIiLCAiMTYvMTIiLCAiMjMvMTIiLCAiMzAvMTIiKSkgKyAKICBnZW9tX3BvaW50KGFlcyh4ID0gNDQrNC83LCB5ID0gZWxlY3RyaWNpZGFkYlsxMl0sIGNvbG91ciA9ICJyZWQiKSkgICsKICBnZW9tX3BvaW50KGFlcyh4ID0gNDMrNC83LCB5ID0gZWxlY3RyaWNpZGFkYls1XSwgY29sb3VyID0gImdyZWVuIikpICsKICBnZW9tX3BvaW50KGFlcyh4ID0gNDUrNC83LCB5ID0gZWxlY3RyaWNpZGFkYlsxOV0sIGNvbG91ciA9ICJncmVlbiIpKSArCiAgZ2VvbV9wb2ludChhZXMoeCA9IDUyKzIvNywgeSA9IGVsZWN0cmljaWRhZGJbNjZdLCBjb2xvdXIgPSAiYmx1ZSIpKSArCiAgc2NhbGVfY29sb3VyX21hbnVhbCh2YWx1ZXM9YygiYmx1ZSIsICJncmVlbiIsICJyZWQiKSkgKyAKICBndWlkZXMoY29sb3VyPUZBTFNFKQpgYGAKClBvciBzdSBuYXR1cmFsZXphLCBwb2RlbW9zIGRpc3Rpbmd1aXIgdHJlcyB0aXBvcyBiw6FzaWNvcyBkZSBpbnRlcnZlbmNpw7NuIChhdW5xdWUgaGF5IG3DoXMpOgoKKiBfUHVsc28gKEFkZGl0aXZlIE91dGxpZXIpXzogRW4gdW4gcGVyaW9kbyBhaXNsYWRvIGxhIHNlcmllIHRvbWEgdW4gdmFsb3IgYW7Ds21hbG8uIFBvciBlamVtcGxvLCB1biBkw61hIGVsIGNhamVybyBhdXRvbcOhdGljbyBubyBmdW5jaW9uYSB5IGxhIGV4dHJhY2Npw7NuIGRlIGRpbmVybyBlcyBudWxhLiBWw6lhc2UgZmlndXJhIDEzLCBwYW5lbCBkZXJlY2hvLgoqIF9DYW1iaW8gdHJhbnNpdG9yaW8gKFRyYW5zaXRvcnkgQ2hhbmdlKV86IEVuIHVuIHBlcmlvZG8gdW4gX3Nob2NrXyBnZW5lcmEgdW4gdmFsb3IgYW7Ds21hbG8gZW4gbGEgc2VyaWUgeSBlbCBlZmVjdG8gZGVsIF9zaG9ja18gdmEgZGVzYXBhcmVjaWVuZG8gcG9jbyBhIHBvY28uIFBvciBlamVtcGxvLCB1biBicm90ZSBpbmZlY2Npb3NvIGF1bWVudGEgZWwgbsO6bWVybyBkZSBtdWVydGVzIGVuIHVuYSBwb2JsYWNpw7NuLCBwZXJvIGFsIHRvbWFyc2UgbWVkaWRhcyBzYW5pdGFyaWFzIGxhcyBtdWVydGVzIHZ1ZWx2ZW4gcG9jbyBhIHBvY28gYWwgbml2ZWwgcHJldmlvIGFsIGJyb3RlLiBWw6lhc2UgZmlndXJhIDEzLCBwYW5lbCBjZW50cmFsLgoqIF9DYW1iaW8gcGVybWFuZW50ZSAoTGV2ZWwgU2hpZnQpXzogRW4gdW4gcGVyaW9kbyBsYSBzZXJpZSBjYW1iaWEgZGUgbml2ZWwgeSBwZXJtYW5lY2UgZGUgZm9ybWEgcGVybWFuZW50ZSBlbiBlc3RlIG51ZXZvIG5pdmVsLiBQb3IgZWplbXBsbywgZW5mcmVudGUgZGUgdW5hIHRpZW5kYSBhYnJlIGxhIGNvbXBldGVuY2lhLCBkZSBmb3JtYSBxdWUgc3VzIHZlbnRhcyBkZXNjaWVuZGVuIGJydXNjYW1lbnRlIGRlIGZvcm1hIHBlcm1hbmVudGUuIFbDqWFzZSBmaWd1cmEgMTMsIHBhbmVsIGl6cXVpZXJkby4KICAgIApgYGB7cixlY2hvPUZBTFNFLCB3YXJuaW5nPUZBTFNFLCBtZXNzYWdlPUZBTFNFLCBmaWcuaGVpZ2h0PTN9CkFPIDwtIHJlcCgwLCAxMDApClRDIDwtIHJlcCgwLCAxMDApCkxTIDwtIHJlcCgwLCAxMDApCkFPWzIwXSA8LSAxMApUQ1syMDoxMDBdIDwtIDEwKjAuN14oMDo4MCkgCkxTWzIwOjEwMF0gPC0gMTAKCmRhdG9zIDwtIGRhdGEuZnJhbWUoCiAgeCA9IHJlcCgxOjEwMCwgMyksCiAgeSA9IGMoQU8sIFRDLCBMUyksCiAgYyA9IHJlcChjKCJQdWxzbyIsICJDYW1iaW8gVHJhbnNpdG9yaW8gIiwgIkNhbWJpbyBwZXJtYW5lbnRlIiksIGVhY2ggPSAxMDApCikKCmdncGxvdChkYXRvcywgYWVzKHg9eCwgeT15KSkgKyAKICB4bGFiKCIiKSArIHlsYWIoIiIpICsKICBnZW9tX2xpbmUoKSArIAogIGZhY2V0X2dyaWQoLiB+IGMpICsgCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz1OVUxMKSArIAogIHNjYWxlX3lfY29udGludW91cyhicmVha3M9TlVMTCkgKwogIGdndGl0bGUoIkZpZ3VyYSAxMy4gRWplbXBsb3MgZGUgaW50ZXJ2ZW5jacOzbiIpCmBgYAoKXAoKIyMgUmVzaWR1bywgJFJfdCQKCl9fRGVmaW5pY2nDs25fXzogTm8gcHJlc2VudGEgdW4gY29tcG9ydGFtaWVudG8gc2lzdGVtw6F0aWNvIGEgY29ydG8sIG1lZGlvIG8gbGFyZ28gcGxhem8gcG9yIGxvIHF1ZSBubyBzZSBwdWVkZSBwcmVkZWNpciBkZSBtb2RvIGFsZ3Vuby4gRXMgbGEgcGFydGUgZGUgbGEgc2VyaWUgcXVlIHNlIGRlYmUgYSBwdXJvIGF6YXIuCgpBdW5xdWUgaW5pY2lhbG1lbnRlIG5vIHNlIGhhcsOhIG5pbmfDum4gc3VwdWVzdG8gc29icmUgZWwgcmVzaWR1bywgc2UgZXNwZXJhIHF1ZSBzZWEgcnVpZG8gYmxhbmNvIChtZWRpYSBjZXJvLCBpbmNvcnJlbGFkbyB5IGhvbW9jZWTDoXN0aWNvKSwgZXMgZGVjaXIgJFJfdCBcc2ltIGlpZCgwLCBcc2lnbWFeMiQpLgoKXAoKIyMgRXNxdWVtYSBhZGl0aXZvIHkgbXVsdGlwbGljYXRpdm8KClVuYSBzZXJpZSB0ZW1wb3JhbCBzaWVtcHJlIHRpZW5lIHRlbmRlbmNpYSB5IHJlc2lkdW8uIExhIHByZXNlbmNpYSBkZSBlc3RhY2lvbmFsaWRhZCwgY2ljbG8gZSBpbnRlcnZlbmNpw7NuIGRlcGVuZGUgZGUgbGEgbmF0dXJhbGV6YSBkZSBsYSBzZXJpZS4gUG9yIGVqZW1wbG8sIHVuYSBzZXJpZSBhbnVhbCBubyB0ZW5kcsOhIG51bmNhIGVzdGFjaW9uYWxpZGFkIHkgZW4gdW5hIHNlcmllIGNvcnRhIG5vIHNlIHBvZHLDoSBvYnNlcnZhciBlbCBjaWNsby4KCl9fTGFzIGNvbXBvbmVudGVzIGRlIHVuYSBzZXJpZSB0ZW1wb3JhbCBzZSBwdWVkZW4gY29tYmluYXIgZGUgbcO6bHRpcGxlcyBmb3JtYXMuX18KCkVuIGVsIF9fZXNxdWVtYSBhZGl0aXZvX18gY2FkYSBjb21wb25lbnRlIHN1bWEgc3UgZWZlY3RvIHNvYnJlIGxhcyBkZW3DoXMsICR5X3QgPSBUX3QgKyBTX3QgKyBDX3QgKyBJX3QgKyBSX3QkLiBMYSBkZW1hbmRhIGRpYXJpYSBkZSBlbGVjdHJpY2lkYWQgZXMgdW4gZWplbXBsbyBkZSBlc3RlIHRpcG8gZGUgZXNxdWVtYSAoZmlndXJhIDE0KS4gRWwgZ3LDoWZpY28gc3VwZXJpb3IgbXVlc3RyYSBsYSBzZXJpZSBlbiBlbCB0aWVtcG8gZSBpZGVudGlmaWNhbW9zIGVsIGVzcXVlbWEgYWRpdGl2byBwb3JxdWUgbGEgYW1wbGl0dWQgZXN0YWNpb25hbCAocGFyYSBjYWRhIHNlbWFuYSBsYSBkaWZlcmVuY2lhIGVudHJlIGVsIGTDrWEgZGUgbcOhcyBjb25zdW1vIHkgZWwgZGUgbWVub3MgY29uc3Vtbykgc2UgbWFudGllbmUgY29uc3RhbnRlIGVuIGVsIHRpZW1wby4gRW4gZWwgZ3LDoWZpY28gaW5mZXJpb3IgY2FkYSBwdW50byBjb3JyZXNwb25kZSBhIHVuYSBzZW1hbmEgZG9uZGUgbGEgY29vcmRlbmFkYSBYIGVzIGVsIGNvbnN1bW8gZGUgZXNhIHNlbWFuYSB5IGxhIGNvb3JkZW5hZGEgWSBsYSBkZXN2aWFjacOzbiB0w61waWNhIGRlbCBjb25zdW1vIHBhcmEgbG9zIGTDrWFzIGRlIGVzYSBzZW1hbmEuIEVzdGUgc2VndW5kbyBncsOhZmljbyByZXZlbGEgZWwgZXNxdWVtYSBhZGl0aXZvIGRlIGxhIHNlcmllIHBvcnF1ZSBubyBzZSBvYnNlcnZhIHVuIHBhdHLDs24gY3JlY2llbnRlIGVuIGxvcyBwdW50b3M6IG3DoXMgY29uc3VtbyBubyBpbXBsaWNhIHVuYSBtYXlvciBkZXN2aWFjacOzbiB0w61waWNhLgoKYGBge3IsZWNobz1GQUxTRSwgZmlnLmhlaWdodCA9IDZ9CnAxIDwtIGF1dG9wbG90KGVsZWN0cmljaWRhZCwKICAgICAgICAgICAgICAgeGxhYiA9ICIiLAogICAgICAgICAgICAgICB5bGFiID0gIk1XaCIpCgpDYXNvc1NlbWFuYSA9IGFnZ3JlZ2F0ZShlbGVjdHJpY2lkYWQsIEZVTiA9IHN1bSkKRGVzdmlhY2lvblNlbWFuYSA9IGFnZ3JlZ2F0ZShlbGVjdHJpY2lkYWQsIEZVTiA9IHNkKQoKcDIgPC0gZ2dwbG90KCkgKwogIGdlb21fcG9pbnQoYWVzKHggPSBDYXNvc1NlbWFuYSwgeSA9IERlc3ZpYWNpb25TZW1hbmEpLCBzaXplID0gMikgKwogIHhsYWIoIkNvbnN1bW8gc2VtYW5hbCIpICsgCiAgeWxhYigiRGVzLiBUaXAuIGludHJhLXNlbWFuYWwiKQoKZ3JpZC5hcnJhbmdlKAogIGdyb2JzID0gbGlzdChwMSwgcDIpLAogIG5yb3cgPSAyLAogIHRvcCA9IHRleHRHcm9iKCJGaWd1cmEgMTQuIEVqZW1wbG8gZGUgZXNxdWVtYSBhZGl0aXZvIikpCmBgYAoKRW4gZWwgX19lc3F1ZW1hIG11bHRpcGxpY2F0aXZvX18gY2FkYSBjb21wb25lbnRlIHN1cG9uZSB1biBpbmNyZW1lbnRvIHBvcmNlbnR1YWwgcmVzcGVjdG8gZGUgbGFzIGRlbcOhcywgJHlfdCA9IFRfdCBcY2RvdCBTX3QgXGNkb3QgQ190IFxjZG90IElfdCBcY2RvdCBSX3QkLiBMYSBzZXJpZSBOYWNpbWllbnRvcyBlcyB1biBlamVtcGxvIGRlIGVzcXVlbWEgbXVsdGlwbGljYXRpdm86IGVuIGVsIGdyw6FmaWNvIHN1cGVyaW9yIGRlIGxhIGZpZ3VyYSAxNSwgcXVlIG11ZXN0cmEgbGEgc2VyaWUsIHNlIG9ic2VydmEgcXVlIHNlZ8O6biBkZWNyZWNlIGVsIG7Dum1lcm8gZGUgbmFjaW1pZW50b3MsIHRhbWJpw6luIGRlY3JlY2UgbGEgYW1wbGl0dWQgZXN0YWNpb25hbC4gQWRlbcOhcywgZW4gZWwgZ3LDoWZpY28gaW5mZXJpb3Igc2Ugb2JzZXJ2YSB1biBwYXRyw7NuIGNyZWNpZW50ZSBlbiBsb3MgcHVudG9zLCByZXZlbGFuZG8gZWwgZXNxdWVtYSBtdWx0aXBsaWNhdGl2byBkZSBsYSBzZXJpZS4KCgpgYGB7cixlY2hvPUZBTFNFLCBmaWcuaGVpZ2h0PTZ9Cm5hY2ltaWVudG9zYiA8LSB3aW5kb3cobmFjaW1pZW50b3MsIGVuZD1jKDE5OTAsMTIpKQpwMSA8LSBhdXRvcGxvdChuYWNpbWllbnRvc2IsCiAgICAgICAgICAgICAgIHhsYWIgPSAiIiwgCiAgICAgICAgICAgICAgIHlsYWIgPSAiTmFjaW1pZW50b3MiKQoKQ2Fzb3NBbm8gPSBhZ2dyZWdhdGUobmFjaW1pZW50b3NiLCBGVU4gPSBzdW0pCkRlc3ZpYWNpb25Bbm8gPSBhZ2dyZWdhdGUobmFjaW1pZW50b3NiLCBGVU4gPSBzZCkKCnAyIDwtIGdncGxvdCgpICsKICBnZW9tX3BvaW50KGFlcyh4ID0gQ2Fzb3NBbm8sIHkgPSBEZXN2aWFjaW9uQW5vKSwgc2l6ZSA9IDIpICsKICB4bGFiKCJOYWNpbWllbnRvcyBhbnVhbGVzIikgKyAKICB5bGFiKCJEZXMuIFRpcC4gaW50cmEtYW51YWwiKQoKZ3JpZC5hcnJhbmdlKAogIGdyb2JzID0gbGlzdChwMSwgcDIpLAogIG5yb3cgPSAyLAogIHRvcCA9IHRleHRHcm9iKCJGaWd1cmEgMTUuIEVqZW1wbG8gZGUgZXNxdWVtYSBtdWx0aXBsaWNhdGl2byIpKQpgYGAKClNpIHVuYSBzZXJpZSBwcmVzZW50YSB1biBlc3F1ZW1hIG11bHRpcGxpY2F0aXZvLCBzdSBsb2dhcml0bW8gbG8gcHJlc2VudGFyw6EgYWRpdGl2by4gQSBsbyBsYXJnbyBkZWwgY3Vyc28gc2UgdmVyw6FuIG90cmFzIHJhem9uZXMgcG9yIGxhcyBxdWUgcHVlZGUgc2VyIGFjb25zZWphYmxlIGFuYWxpemFyIGVsIGxvZ2FyaXRtbyBkZSB1bmEgc2VyaWUgdGVtcG9yYWwuCgpFbiBwcmluY2lwaW8sIGN1YWxxdWllciBjb21iaW5hY2nDs24gZW50cmUgbGFzIGNvbXBvbmVudGVzIGVzIHBvc2libGUgKHbDqWFzZSBUZW1hIDUpOgoKKiAkeV90ID0gKFRfdCArIENfdCkgXGNkb3QgU190ICArIElfdCArIFJfdCQKKiAkeV90ID0gKFRfdCArIFNfdCArIENfdCArIElfdClSX3QkCiogJHlfdCA9IFRfdCBcY2RvdCBTX3QgXGNkb3QgQ190IFxjZG90IElfdCArIFJfdCQKKiAuLi4KClwKXAoKIyBNYW5pcHVsYWNpw7NuIGRlIHVuYSBzZXJpZSAKClwKCiMjIElkZWEgZ2VuZXJhbCAKICAKUG9kZW1vcyBfbWFuaXB1bGFyXyB1bmEgc2VyaWUgdGVtcG9yYWwgY29uIGRpZmVyZW50ZXMgZmluZXM6IAogIAoqIF9fZXh0cmFlciBsYSB0ZW5kZW5jaWFfXyAoZWxpbWluYW5kbyBsYSBlc3RhY2lvbmFsaWRhZCksIHBvciBlamVtcGxvLCBwYXNhbmRvIGRlIHVuYSBzZXJpZSBtZW5zdWFsIGEgdW5hIGFudWFsLgoqIF9fZXh0cmFlciBsYSBlc3RhY2lvbmFsaWRhZF9fIChlbGltaW5hbmRvIGxhIHRlbmRlbmNpYSkgZGUgZm9ybWEgc2VuY2lsbGEsIGF1bnF1ZSBubyBtdXkgcHJlY2lzYS4KKiBfX3JlY29ydGFyX18gdW5hIHNlcmllIHBhcmEgb2J0ZW5lciB1bmEgc3ViLW11ZXN0cmEuCiogX19leHRyYWVyIHVuYSBzdWJzZXJpZV9fIGNvcnJlc3BvbmRpZW50ZSBhIHVuIMO6bmljbyBwZXJpb2RvIGVzdGFjaW9uYWwuIFBvciBlamVtcGxvLCBsb3MgbmFjaW1pZW50b3MgZW4gZmVicmVybyBvIGxhIGV4dHJhY2Npw7NuIGRlIGRpbmVybyBlbiBmaW4gZGUgc2VtYW5hLgoKRXN0YXMgb3BlcmFjaW9uZXMgbm9zIHBlcm1pdGlyw6FuIG1lam9yYXIgbnVlc3RyYSBjYXBhY2lkYWQgZGVzY3JpcHRpdmEgZGUgbGEgc2VyaWUsIGlkZW50aWZpY2FyIG1lam9yIGVsIHRpcG8gZGUgZXNxdWVtYSBlbnRyZSBsYXMgY29tcG9uZW50ZXMsIGZhY2lsaXRhciBsYSBlc3RpbWFjacOzbiBkZWwgcHJvY2VzbyBnZW5lcmFkb3IgbyBhbXBsaWFyIGxhcyBoZXJyYW1pZW50YXMgZGUgYW7DoWxpc2lzIHkgcHJlZGljY2nDs24gZGUgdW5hIHNlcmllIHRlbXBvcmFsLgoKXAoKIyMgRXh0cmFjY2nDs24gZGUgbGEgdGVuZGVuY2lhCgpTaSB0ZW5lbW9zIHVuYSBzZXJpZSBjb24gZXN0YWNpb25hbGlkYWQgeSBhZ3JlZ2Ftb3MgbGEgc2VyaWUsIG9idGVuaWVuZG8gdW4gZGF0byBwb3IgYcOxbyBzaSBsYSBzZXJpZSBlcyBtZW5zdWFsIG8gdW4gZGF0byBwb3Igc2VtYW5hIHNpIGVzIGRpYXJpYSwgb2J0ZW5lbW9zIHVuYSBudWV2YSBzZXJpZSBzaW4gZXN0YWNpb25hbGlkYWQsIHNvbG8gY29uIF90ZW5kZW5jaWFfLiAKCkRlcGVuZGllbmRvIGRlIGxhIG5hdHVyYWxlemEgZGUgbGEgc2VyaWUsIGNvbnZlbmRyw6EgYWdyZWdhciBzdW1hbmRvIGxvcyBkYXRvcyAoY29uc3VtbyBlbMOpY3RyaWNvLCB0w610dWxvcyBwdWJsaWNhZG9zLCB2aWFqZXJvcyB0cmFuc3BvcnRhZG9zLCBuYWNpbWllbnRvcykgbyBzYWNhbmRvIGxhIG1lZGlhICh0ZW1wZXJhdHVyYSwgbsO6bWVybyBkZSBwYXJhZG9zLCBvY3VwYWNpw7NuIGhvdGVsZXJhKS4KClZlYW1vcyBjb21vIGV4dHJhZXIgbGEgdGVuZGVuY2lhIGRlIGxhIHNlcmllIE5hY2ltaWVudG9zIHVzYW5kbyBsYSBmdW5jacOzbiBgYWdncmVnYXRlYCBjb24gZWwgYXJndW1lbnRvIGBGVU4gPSBzdW1gLgoKYGBge3J9Cm5hY2ltaWVudG9zQW51YWwgPC0gYWdncmVnYXRlKG5hY2ltaWVudG9zLCBGVU4gPSBzdW0pCmF1dG9wbG90KG5hY2ltaWVudG9zQW51YWwvMTAwMCwKICAgICAgICAgeGxhYiA9ICIiLAogICAgICAgICB5bGFiID0gIk5hY2ltaWVudG9zIChtaWxlcykiLAogICAgICAgICBtYWluID0gIkZpZ3VyYSAxNi4gTmFjaW1pZW50b3MgcG9yIGHDsW8iKQpgYGAKCkFob3JhIHBhcmEgbGEgZGVtYW5kYSBkZSBlbGVjdHJpY2lkYWQ6CiAgCmBgYHtyfQplbGVjdHJpY2lkYWRTZW1hbmFsIDwtIGFnZ3JlZ2F0ZShlbGVjdHJpY2lkYWQsIEZVTiA9IHN1bSkKYXV0b3Bsb3QoZWxlY3RyaWNpZGFkU2VtYW5hbCwKICAgICAgICAgeGxhYiA9ICIiLAogICAgICAgICB5bGFiID0gIk1XaCIsCiAgICAgICAgIG1haW4gPSAiRmlndXJhIDE3LiBDb25zdW1vIGRlIGVsZWN0cmljaWRhZCBwb3Igc2VtYW5hIikKYGBgCgpMYSBmdW5jacOzbiBgYWdncmVnYXRlYCBhcGxpY2FkYSBhIHVuYSBzZXJpZSB0ZW1wb3JhbCBhZ3JlZ2EgbG9zIGRhdG9zIGRlIGNhZGEgcGVyaW9kbyBlc3RhY2lvbmFsIGNvbXBsZXRvIGFwbGljYW5kbyBsYSBmdW5jacOzbiBlc3BlY2lmaWNhZGEgZW4gYEZVTmAuIFNpIGFsIGluaWNpbyBvIGFsIGZpbmFsIGRlIGxhIHNlcmllIGhheSB1biBwZXJpb2RvIGVzdGFjaW9uYWwgbm8gY29tcGxldG8sIG5vIHNlIGluY2x1aXLDoSBlbiBsYSBzZXJpZSBhZ3JlZ2FkYS4KCiogVW5hIHNlcmllIHRyaW1lc3RyYWwgbyBtZW5zdWFsIGxhIHRyYW5zZm9ybWEgZW4gYW51YWwsIHVuYSBzZXJpZSBkaWFyaWEgZW4gc2VtYW5hbC4KKiBMYSBmdW5jacOzbiBhIHVzYXIgZGVwZW5kZXLDoSBkZSBsYSBuYXR1cmFsZXphIGRlIGxvcyBkYXRvcyB5IGRlbCBvYmpldGl2byBwZXJzZWd1aWRvIChgRlVOPXN1bWAsIGBGVU49bWVhbmAsIGBGVU49c2RgLi4uKQoqIEVzdGEgZnVuY2nDs24gdGllbmUgdW4gdXNvIG3DoXMgYW1wbGlvIGVuIGBSYC4gVXNhIGxhIGZ1bmNpw7NuIGBoZWxwYCBwYXJhIGFwcmVuZGVybG8uIAoKXAoKIyMgRXh0cmFjY2nDs24gZGUgbGEgZXN0YWNpb25hbGlkYWQKClRlbmVtb3MgdmFyaWFzIGFsdGVybmF0aXZhcyBncsOhZmljYXMgeSBudW3DqXJpY2FzIHBhcmEgYW5hbGl6YXIgbGEgZXN0YWNpb25hbGlkYWQgZGUgdW5hIHNlcmllLiBWZWFtb3MgdW4gZWplbXBsbyBwYXJhIGxhIHNlcmllIE5hY2ltaWVudG9zLiAKClBvZGVtb3MgaGFjZXIgdW5hIGdyw6FmaWNvIGRlIGxhIHNlcmllIF9jb250cmFfIGNhZGEgcGVyaW9kbyBlc3RhY2lvbmFsLiBFc3RlIGdyw6FmaWNvIHBlcm1pdGUgaWRlbnRpZmljYXIgZWwgZWZlY3RvIGRlIGxhIGVzdGFjaW9uYWxpZGFkIGVuIGxhIHNlcmllIHkgc3UgZXZvbHVjacOzbiBlbiBlbCB0aWVtcG8uIEV4aXN0ZW4gdmFyaWFzIG9wY2lvbmVzIHBhcmEgZXN0ZSB0aXBvIGRlIGdyw6FmaWNvcywgdmVyZW1vcyBkb3MgZGUgZWxsYXM6IGdyw6FmaWNvIGRlIHN1YnNlcmllcyB5IGdyw6FmaWNvIGRlIGzDrW5lYXMuIFBhcmEgZmFjaWxpdGFyIGxhIGludGVycHJldGFjacOzbiB2YW1vcyBhIHRyYWJhamFyIGNvbiBsYSBzZXJpZSBkZXNkZSBlbCBhw7FvIDIwMDAgcXVlIGRlbm9taW5hcmVtb3MgX25hY2ltaWVudG9zYl8uCgpWZWFtb3MgcHJpbWVybyB1biBlamVtcGxvIGRlIGdyw6FmaWNvIGRlIHN1YnNlcmllcyAoZmlndXJhIDE4KSBxdWUgbXVlc3RyYSBwYXJhIGNhZGEgcGVyaW9kbyBlc3RhY2lvbmFsIGxhIHN1YnNlcmllIGRlIHZhbG9yZXMgZGUgZXNlIHBlcmlvZG8geSBlbCB2YWxvciBtZWRpbyBlbiBsYSBzdWJzZXJpZS4gUGFyYSBsYXMgc2VyaWVzIGNvbiB0ZW5kZW5jaWEgeSBlc3F1ZW1hIG11bHRpcGxpY2F0aXZvLCBlbCB2YWxvciBtZWRpbyBkZSBsYXMgc3Vic2VyaWVzIChsw61uZWFzIGhvcml6b250YWxlcykgcHVlZGUgbGxldmFybm9zIGEgdW5hIGludGVycHJldGFjacOzbiBpbmNvcnJlY3RhIGRlIGxhIGVzdGFjaW9uYWxpZGFkLiAoTGEgZnVuY2nDs24gYG1vbnRocGxvdGAgZGUgYHN0YXRzYCByZWFsaXphIHVuIGdyw6FmaWNvIHNpbWlsYXIuKQoKYGBge3J9Cm5hY2ltaWVudG9zYiA8LSB3aW5kb3cobmFjaW1pZW50b3MsIHN0YXJ0ID0gMjAwMCkKZ2dzdWJzZXJpZXNwbG90KG5hY2ltaWVudG9zYikgKwogIHlsYWIoIk5hY2ltaWVudG9zIikgKwogIHhsYWIoIiIpICsKICBnZ3RpdGxlKCJGaWd1cmEgMTguIEdyw6FmaWNvIGVzdGFjaW9uYWwgZGUgc3Vic2VyaWVzIikKYGBgCgpMYSBmaWd1cmEgMTkgbXVlc3RyYSBlbCBncsOhZmljbyBkZSBsw61uZWFzLiBTaSBzZSBpbmNsdXllIGVsIGFyZ3VtZW50byBgcG9sYXI9VFJVRWAsIHNlIG9idGllbmUgdW5hIHZlcnNpw7NuIHRpcG8gKnRlbGEgZGUgYXJhw7FhKiBkZSBlc3RlIGdyw6FmaWNvLgoKYGBge3J9Cmdnc2Vhc29ucGxvdChuYWNpbWllbnRvc2IsIAogICAgICAgICAgICAgeWVhci5sYWJlbHM9VFJVRSwgCiAgICAgICAgICAgICB4bGFiID0gIiIsCiAgICAgICAgICAgICB5bGFiID0gIk5hY2ltaWVudG9zIiwKICAgICAgICAgICAgIG1haW4gPSAiRmlndXJhIDE5LiBHcsOhZmljbyBlc3RhY2lvbmFsIGRlIGxpbmVhcyIpCmBgYAoKCkxhcyBncsOhZmljYXMgYXl1ZGFuIGEgZGVzY3JpYmlyIHkgZW50ZW5kZXIgdW4gcG9jbyBtZWpvciBsYSBjb21wb25lbnRlIGVzdGFjaW9uYWwuIFNpbiBlbWJhcmdvLCBzaSBkZXNlYW1vcyBlc3RpbWFyIGRpY2hhIGNvbXBvbmVudGUsIGRlYmVtb3MgcHJvY2VkZXIgZGUgb3RyYSBmb3JtYS4KCkxhIHNpZ3VpZW50ZSBzaW50YXhpcyB1c2EgbGEgZnVuY2nDs24gYHRhcHBseWAgcGFyYSBlc3RpbWFyIG51bcOpcmljYW1lbnRlIGxhIGNvbXBvbmVudGUgZXN0YWNpb25hbC4gQsOhc2ljYW1lbnRlLCBjYWxjdWxhIHBhcmEgY2FkYSBtZXMgKGFyZ3VtZW50byBgY3ljbGUobmFjaW1pZW50b3NiKWApIGxhIG1lZGlhIChgRlVOID0gbWVhbmApIGRlbCBjb2NpZW50ZSBgbmFjaW1pZW50b3NiIC8gbWVhbihuYWNpbWllbnRvc2IpYC4KCmBgYHtyfQpjb21wb25lbnRlRXN0YWNpb25hbCA8LSB0YXBwbHkobmFjaW1pZW50b3NiL21lYW4obmFjaW1pZW50b3NiKSwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjeWNsZShuYWNpbWllbnRvc2IpLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEZVTiA9IG1lYW4pCnJvdW5kKGNvbXBvbmVudGVFc3RhY2lvbmFsLCAyKQpgYGAKCkxvcyB2YWxvcmVzIGRlIGxhIHRhYmxhIHByZXZpYSBpbmRpY2FuIHF1ZSwgcG9yIGVqZW1wbG8sIGVuIGZlYnJlcm8gbmFjZW4gdW4gOSUgbWVub3MgZGUgbmnDsW9zIHJlc3BlY3RvIGRlIGxhIG1lZGlhIGFudWFsIHkgcXVlIGVuIG9jdHVicmUgbmFjZW4gdW4gNSUgbcOhcyBxdWUgbGEgbWVkaWEgYW51YWwuCgpMb3MgY2FtYmlvcyBuZWNlc2FyaW9zIHBhcmEgZXN0aW1hciBsYSBjb21wb25lbnRlIGVzdGFjaW9uYWwgYmFqbyB1biBlc3F1ZW1hIGFkaXRpdm8gc29uIG3DrW5pbW9zLiBWZcOhbW9zbG8gcGFyYSBsYSBzZXJpZSBFbGVjdHJpY2lkYWQKCmBgYHtyfQpjb21wb25lbnRlRXN0YWNpb25hbCA8LSB0YXBwbHkoZWxlY3RyaWNpZGFkIC0gbWVhbihlbGVjdHJpY2lkYWQpLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGN5Y2xlKGVsZWN0cmljaWRhZCksIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRlVOID0gbWVhbikKcm91bmQoY29tcG9uZW50ZUVzdGFjaW9uYWwsIDIpCmBgYAoKRW4gZG9taW5nbyBsYSBkZW1hbmRhIGRlIGVsZWN0cmljaWRhZCBjYWUgZW4gODkgTVdoIHJlc3BlY3RvIGRlIGxhIG1lZGlhIG1lbnN1YWwuIERlIGx1bmVzIGEgdmllcm5lcyBsYSBkZW1hbmRhIGVsw6ljdHJpY2EgZXMgbWF5b3IgcXVlIGxhIG1lZGlhIHNlbWFuYWwuCgpcCgojIyBFeHRyYWNjacOzbiBkZSB1bmEgc3Vic2VyaWUKCmBSYCBwcm9wb3JjaW9uYSB2YXJpYXMgZnVuY2lvbmVzIHF1ZSBwZXJtaXRlbiBleHRyYWVyIHVuYSBzdWItbXVlc3RyYSBkZSBsYSBzZXJpZSBvcmlnaW5hbC4gUG9kZW1vczoKIAogKiBzZWxlY2Npb25hciB1bmEgc3ViLW11ZXN0cmEgZXNwZWNpZmljYW5kbyBsb3MgcHVudG9zIHRlbXBvcmFsZXMgZGUgaW5pY2lvIHkgZmluLgogKiBzZWxlY2Npb25hciB1bmEgc3ViLW11ZXN0cmEgc2VsZWNjaW9uYW5kbyB1biBwZXJpb2RvIGVzdGFjaW9uYWwgZGV0ZXJtaW5hZG8uCiAqIHF1aXRhciBmw6FjaWxtZW50ZSB1biBjb25qdW50byBkZSBkYXRvcyB1c2FuZG8gw61uZGljZXMuCgpWZWFtb3MgYWxndW5vcyBlamVtcGxvcyBkZSBleHRyYWNjacOzbiBjb24gbGEgc2VyaWUgTmFjaW1pZW50b3MgeSBsYXMgZnVuY2lvbmVzIGB3aW5kb3dgIHkgYHN1YnNldGA6CiAgCiogYHdpbmRvdyhuYWNpbWllbnRvcywgc3RhcnQgPSBjKDIwMDAsIDEpLCBlbmQgPSBjKDIwMDksIDEyKSlgIHNlbGVjY2lvbmEgZGUgbGEgc2VyaWUgb3JpZ2luYWwgbG9zIGRhdG9zIGRlc2RlIGVuZXJvIGRlbCAyMDAwIGEgZGljaWVtYnJlIGRlIDIwMDkuCiogYHdpbmRvdyhuYWNpbWllbnRvcywgc3RhcnQgPSBjKDIwMDAsIDMpLCBmcmVxID0gVFJVRSlgIHNlbGVjY2lvbmEgZGUgbGEgc2VyaWUgb3JpZ2luYWwgdG9kb3MgbG9zIGRhdG9zIGRlIGxvcyBtZXNlcyBkZSBtYXJ6byBkZXNkZSAyMDAwCiogYHN1YnNldChuYWNpbWllbnRvcywgc3RhcnQgPSBsZW5ndGgobmFjaW1pZW50b3MpIC0gNDgpYCBzZWxlY2Npb25hIGRlIGxhIHNlcmllIGxvcyDDumx0aW1vcyA0IGHDsW9zLgoqIGBzdWJzZXQobmFjaW1pZW50b3MsIG1vbnRoICA9IDUpYCBzZWxlY2Npb25hIGRlIGxhIHNlcmllIHRvZG9zIGxvcyBtZXNlcyBkZSBtYXlvLgoKQWRlbcOhcywgcHVlZGVzIHVzYXIgbGFzIGZ1bmNpb25lcyBgaGVhZGAgeSBgdGFpbGAgcGFyYSBleHRyYWVyIGxhcyBwcmltZXJhcyBvIGxhcyDDumx0aW1hcyBvYnNlcnZhY2lvbmVzLgoKXApcCgojIERlc2NvbXBvc2ljacOzbiBkZSB1bmEgc2VyaWUKClwKCiMjIENvbmNlcHRvCgpMb3MgbcOpdG9kb3MgcXVlIGhlbW9zIHZpc3RvIHBhcmEgbGEgZGVzY3JpcGNpw7NuIGRlIGxhIHRlbmRlbmNpYSB5IGxhIGNvbXBvbmVudGUgZXN0YWNpb25hbCBzb24gbXV5IHNlbmNpbGxvcywgcGVybyBubyBzb24gbmkgcmlndXJvc29zIG5pIHByZWNpc29zLiBWZWFtb3MgbcOpdG9kb3MgbcOhcyBhZGVjdWFkb3MgcGFyYSBleHRyYWVyIGRlIHVuYSBzZXJpZSBzdXMgY29tcG9uZW50ZXM6IHRlbmRlbmNpYS1jaWNsbywgZXN0YWNpb25hbGlkYWQsIGUgaW50ZXJ2ZW5jacOzbi1yZXNpZHVvLiAKClNpIGxhIHNlcmllIGVzIGRlbWFzaWFkbyBjb3J0YSBwYXJhIHBvZGVyIGV4dHJhZXIgZWwgY2ljbG8sIGVudG9uY2VzIGVsIGNpY2xvIHF1ZWRhIHJlY29naWRvIGRlbnRybyBkZSBsYSB0ZW5kZW5jaWEuIFBvciBvdHJvIGxhZG8sIGxhcyB0w6ljbmljYXMgZGUgaWRlbnRpZmljYWNpw7NuIGRlIGxhIGludGVydmVuY2nDs24gc29uIGNvbXBsZWphcyBwb3IgbG8gcXVlIGVzdGEgY29tcG9uZW50ZSBxdWVkYSBpbmNvcnBvcmFkYSBhbCByZXNpZHVvLiBQb3IgdGFudG8sIF9fYXN1bWlyZW1vcyBxdWUgdW5hIHNlcmllIHRpZW5lIHPDs2xvIFRlbmRlbmNpYSwgRXN0YWNpb25hbGlkYWQgeSBSZXNpZHVvX186CgoqIEVzcXVlbWEgYWRpdGl2byAkeV90ID0gVF90ICsgQ190ICsgU190ICsgSV90ICsgUl90ID0gKFRfdCArIENfdCkgKyBTX3QgKyhJX3QgKyBSX3QpID0gVCdfdCArIFNfdCArIFInX3QkCiogRXNxdWVtYSBtdWx0aXBsaWNhdGl2byAkeV90ID0gVF90IFxjZG90IENfdCBcY2RvdCBTX3QgXGNkb3QgSV90IFxjZG90IFJfdCA9IChUX3QgXGNkb3QgQ190KSBcY2RvdCBTX3QgXGNkb3QgKElfdCBcY2RvdCBSX3QpID0gVCdfdCBcY2RvdCBTX3QgXGNkb3QgUidfdCQKClZlcmVtb3MgYSBjb250aW51YWNpw7NuIGNvbW8gZXh0cmFlciBlc3RhcyB0cmVzIGNvbXBvbmVudGVzIGEgcGFydGlyIGRlIHVuYSBzZXJpZSBvcmlnaW5hbC4gRXN0ZSBwcm9jZXNvIHNlIGRlbm9taW5hIGRlc2NvbXBvc2ljacOzbi4KCkhheSBtw7psdGlwbGVzIGZvcm1hcyBkZSByZWFsaXphciB1bmEgZGVzY29tcG9zaWNpw7NuLiBBcXXDrSB2ZXJlbW9zIGRvcyBkZSBlbGxhcywgbGEgbcOhcyBzZW5jaWxsYSwgYmFzYWRhIGVuIGVsIGNvbmNlcHRvIGRlIG1lZGlhcyBtw7N2aWxlcyAoYGRlY29tcG9zZWApLCB5IG90cmEgbcOhcyB2ZXJzw6F0aWwgeSBjb21wbGVqYSBhIHBhcnRpciBkZSByZWdyZXNpb25lcyBsb2NhbGVzIHBvbmRlcmFkYXMgKGBzdGxgKS4KCkFkZW3DoXMsIGBSYCBwcm9wb3JjaW9uYSBlbCBtw6l0b2RvIGRlIGRlc2NvbXBvc2ljacOzbiBxdWUgdXRpbGl6YSBlbCBfVVMgQ2Vuc3VzIEJ1cmVhdSBhbmQgU3RhdGlzdGljcyBDYW5hZGFfLCBkZW5vbWluYWRvIF9fWDExX18sIHkgZWwgbcOpdG9kbyBxdWUgdXRpbGl6YSBlbCBfQmFuY28gZGUgRXNwYcOxYV8sIGRlbm9taW5hZG8gX19TRUFUU19fIChTZWFzb25hbCBFeHRyYWN0aW9uIGluIEFSSU1BIFRpbWUgU2VyaWVzKSwgYXVucXVlIGVzdG9zIG3DqXRvZG9zIHNvbG8gc29uIHbDoWxpZG9zIHBhcmEgc2VyaWVzIG1lbnN1YWxlcyB5IHRyaW1lc3RyYWxlcy4KCkVuIG9yaWdlbiBsb3MgbcOpdG9kb3MgZGUgZGVzY29tcG9zaWNpw7NuIG5vIHNpcnZlbiBwYXJhIHJlYWxpemFyIHByZWRpY2Npb25lcywgcGVybyBhY3R1YWxtZW50ZSBzZSB1c2FuIHRhbWJpw6luIGNvbiBlc3RlIGZpbiAodsOpYXNlIGxhcyBmdW5jaW9uZXMgYHN0bG1gIHkgYHN0bGZgIGRlbCBwYXF1ZXRlIGBmb3JlY2FzdGApLgoKXAoKIyMgRGVzY29tcG9zaWNpw7NuIHBvciBtZWRpYXMgbcOzdmlsZXMKCiMjIyBJZGVhcyBnZW5lcmFsZXMgey19CgpMYSBmdW5jacOzbiBgZGVjb21wb3NlYCBlc3RpbWEgbGFzIGNvbXBvbmVudGVzIGRlIHRlbmRlbmNpYSB5IGVzdGFjaW9uYWxpZGFkIHVzYW5kbyBlbCBtw6l0b2RvIGRlIG1lZGlhcyBtw7N2aWxlcy4gRW4gY29uY3JldG8gYGRlY29tcG9zZWAgc2lndWUgbG9zIHNpZ3VpZW50ZXMgcGFzb3MgcGFyYSBvYnRlbmVyIGNhZGEgY29tcG9uZW50ZToKCl9fUGFzbyAxOl9fIFNlIGVzdGltYSBsYSB0ZW5kZW5jaWEgZGUgdW5hIHNlcmllIGEgcGFydGlyIGRlIHVuYSBtZWRpYSBtw7N2aWwgY2VudHJhZGEuIFNpIGVsIG9yZGVuIGVzdGFjaW9uYWwgZXMgcGFyLCBsYSBtZWRpYSBtw7N2aWwgZXMgcG9uZGVyYWRhIGRlIG9yZGVuICRtICsgMSQ7IHkgc2kgZWwgb3JkZW4gZXN0YWNpb25hbCBlcyBpbXBhciwgbGEgbWVkaWEgbcOzdmlsIGVzIGRlIG9yZGVuICRtJC4gRW4gY29uY3JldG8sCgoqIFNpICRtPTJrJDogJFxoYXR7VH1fdCA9IFxmcmFje1xmcmFjezF9ezJ9eV97dC1rfSArIHlfe3QtaysxfSArIFxsZG90cyArIHlfdCArIFxsZG90cyArICB5X3t0K2stMX0gKyBcZnJhY3sxfXsyfSB5X3t0K2t9fXttfSQsCiogU2kgJG09MmsrMSQ6ICRcaGF0e1R9X3QgPSBcZnJhY3t5X3t0LWt9ICsgeV97dC1rKzF9ICsgXGxkb3RzICsgeV90ICsgXGxkb3RzICsgIHlfe3Qray0xfSArIHlfe3Qra319e219JC4KCl9fUGFzbyAyOl9fIFBhcmEgdW4gbW9kZWxvIGNvbiBlc3F1ZW1hIGFkaXRpdm8gY2FsY3VsYW1vcyBsYSBzZXJpZSBzaW4gdGVuZGVuY2lhIGNvbW8gJHlfdCAtIFxoYXR7VH1fdCQgeSBwYXJhIHVuIGVzcXVlbWEgbXVsdGlwbGljYXRpdm8gY29tbyAkeV90LyBcaGF0e1R9X3QkLgoKX19QYXNvIDM6X18gUGFyYSBlc3RpbWFyIGxhIGNvbXBvbmVudGUgZXN0YWNpb25hbCBwYXJhIGNhZGEgcGVyaW9kbyBlc3RhY2lvbmFsLCBjYWxjdWxhbW9zIGVsIHZhbG9yIG1lZGlvIGRlIGxhIHNlcmllIHNpbiB0ZW5kZW5jaWEgKHBhc28gMikgZGUgZm9ybWEgaW5kZXBlbmRpZW50ZSBwYXJhIGxvcyBkYXRvcyBkZSBjYWRhIGVzdGFjacOzbi4gQXPDrSwgb2J0ZW5lbW9zIHVuIHZlY3RvciBjb24gbGEgZXN0aW1hY2nDs24gZGUgbGFzICRtJCBjb21wb25lbnRlcyBlc3RhY2lvbmFsZXMuIAoKRGVzcHXDqXMgZXN0b3MgdmFsb3JlcyBzZSBhanVzdGFuIHBhcmEgcXVlIHN1bWVuIDAgKGVzcXVlbWEgYWRpdGl2bykgbyBwYXJhIHF1ZSBzdW1lbiAkbSQgKGVzcXVlbWEgbXVsdGlwbGljYXRpdm8pLiBMYSBjb21wb25lbnRlIGVzdGFjaW9uYWwgc2Ugb2J0aWVuZSByZXBpdGllbmRvIGVsIHZlY3RvciBkZSAkbSQgY29tcG9uZW50ZXMgYWp1c3RhZGFzIGhhc3RhIGFsY2FuemFyIGxhIGxvbmdpdHVkIGRlIGxhIHNlcmllIG9yaWdpbmFsLiBFc3RvIGRhICRcaGF0e1N9X3QkCgpfX1Bhc28gNDpfXyBFbCByZXNpZHVvIHNlIG9idGllbmUgY29tbyAkXGhhdHtSfV90ID0geV90IC0gXGhhdHtUfV90IC0gXGhhdHtTfV90JCAoZXNxdWVtYSBhZGl0aXZvKSBvICRcaGF0e1J9X3QgPSB5X3QgLyAoXGhhdHtUfV90IFxjZG90IFxoYXR7U31fdCkkIChlc3F1ZW1hIG11bHRpcGxpY2F0aXZvKQoKXAoKTGEgc2lndWllbnRlIHRhYmxhIG11ZXN0cmEgdW4gZWplbXBsbyBkZSBkZXNjb21wb3NpY2nDs24gYWRpdGl2YSBwb3IgbWVkaWFzIG3Ds3ZpbGVzIHBhcmEgdW5hIHNlcmllIHNpbXVsYWRhIGRlIG9yZGVuIGVzdGFjaW9uYWwgNS4gCgoqIExhIGRvcyBwcmltZXJhcyBjb2x1bW5hcyBpbmRpY2FuIGxhIGVzdGFjacOzbiBkZSBjYWRhIGRhdG8geSBlbCB2YWxvciBkZSBsYSBzZXJpZSwgcGFyYSB1biB0b3RhbCBkZSAyNSBkYXRvcy4gTGEgY29sdW1uYSBfVGVuXyBoYSBzaWRvIG9idGVuaWRhIHNpZ3VpZW5kbyBlbCBwYXNvIDEgY29tbyB1bmEgbWVkaWEgbcOzdmlsIGRlIG9yZGVuIDU6IAokJFRlbl90ID0gKFNlcmllX3t0LTJ9ICsgU2VyaWVfe3QtMX0gKyBTZXJpZV97dH0gKyBTZXJpZV97dCsxfSArIFNlcmllX3t0KzJ9KS81LiQkIAoqIExhIHNlcmllIHNpbiB0ZW5kZW5jaWEsIGNvbHVtbmEgX0VzdCArIFJlc18sIHNlIG9idGllbmUgcmVzdGFuZG8gYSBsYSBjb2x1bW5hIF9TZXJpZV8gbGEgY29sdW1uYSBfVGVuXywgdGFsIHkgY29tbyBzZSBpbmRpY2EgZW4gZWwgcGFzbyAyLiAKKiBQYXJhIGVsIGPDoWxjdWxvIGRlIGxhIGNvbHVtbmEgX0VzdF8sIHF1ZSByZXBpdGUgZGUgZm9ybWEgcGVyacOzZGljYSBsYSBwcmltZXJhIGVzdGltYWNpw7NuIGRlIGxhcyA1IGNvbXBvbmVudGVzIGVzdGFjaW9uYWxlcywgc2Ugc2lndWUgZWwgcGFzbyAzLiBQYXJhIGNhZGEgZXN0YWNpw7NuIHNlIHByb21lZGlhbiBsb3MgdmFsb3JlcyBkZSBsYSBjb2x1bW5hIF9Fc3QgKyBSZXNfIGNvcnJlc3BvbmRpZW50ZXMgYSBkaWNoYSBlc3RhY2nDs24uIExhIHN1bWEgZGUgbG9zIGNpbmNvIHZhbG9yZXMgZGUgbGEgY29tcG9uZW50ZSBlc3RhY2lvbmFsIGFzw60gb2J0ZW5pZG9zIHZhbGUgMS4xLiAKKiBQYXJhIGFqdXN0YXIgbGEgY29tcG9uZW50ZSBlc3RhY2lvbmFsIHBhcmEgcXVlIHN1bWUgMCBhIGNhZGEgdmFsb3IgZGUgbGEgY29tcG9uZW50ZSBlc3RhY2lvbmFsIHNlIGxlIHJlc3RhIHN1IHN1bWEgYWN0dWFsLCAxLjEsIGRpdmlkaWRhIHBvciA1LCBlbCBuw7ptZXJvIGRlIGVzdGFjaW9uZXMuIEVsIHJlc3VsdGFkbyBkZSBlc3RlIGFqdXN0ZSBhcGFyZWNlIGVuIGxhIGNvbHVtbmEgX0VzdCBjb3JyZWdpZGFfIHF1ZSBzZXLDoSBsYSBjb21wb25lbnRlIGVzdGFjaW9uYWwgZmluYWwuIAoqIFNpZ3VpZW5kbyBlbCBwYXNvIDQsIGxhIGNvbHVtbmEgX1Jlc18gc2UgY2FsY3VsYSByZXN0YW5kbyBhIGxhIHNlcmllIG9yaWdpbmFsIChjb2x1bW5hIF9TZXJpZV8pIGxhIHN1bWEgZGUgbGEgdGVuZGVuY2lhIHkgbGEgZXN0YWNpb25hbGlkYWQgKGNvbHVtbmFzIF9UZW5fIHkgX0VzdCBjb3JyZWdpZGFfKS4gCgpPYnNlcnZhIHF1ZSBlbiBlbCBwcm9jZXNvIGRlIGRlc2NvbXBvc2ljacOzbiBzZSBoYW4gcGVyZGlkbyA0IGRhdG9zIHBhcmEgbGEgdGVuZGVuY2lhIHkgZWwgcmVzaWR1bywgZG9zIGFsIGluaWNpbyBkZSBsYSBzZXJpZSB5IGRvcyBhbCBmaW5hbC4KCmBgYHtyLCBlY2hvID0gRkFMU0V9CnNldC5zZWVkKDMyNDUzNSkKbGlicmFyeSh0aWR5dmVyc2UpCmRhdG9zIDwtIGRhdGEuZnJhbWUoCiAgRXN0YWNpb24gPSByZXAoMTo1ICw1KSwKICBTZXJpZSA9IHJvdW5kKDUqKHJlcCgxOjUgLDUpIC0gMyArIHJub3JtKDI1KSleMiArIDE6MjUsIDIpCikKCmRhdG9zIDwtIGRhdG9zICU+JQogIG11dGF0ZSgKICAgIFRlbiA9IHJvdW5kKG1hKFNlcmllLCA1KSwgMiksCiAgICAiRXN0ICsgUmVzIiA9IFNlcmllIC0gVGVuCiAgKQoKdG1wIDwtIGFnZ3JlZ2F0ZShhcy5udW1lcmljKGRhdG9zJGBFc3QgKyBSZXNgKSwgCiAgICAgICAgICAgICAgICAgZGF0b3NbIkVzdGFjaW9uIl0sIAogICAgICAgICAgICAgICAgIEZVTiA9IGZ1bmN0aW9uKHgpIHJvdW5kKG1lYW4oeCwgbmEucm0gPSBUUlVFKSwyKSkKbmFtZXModG1wKVsyXSA8LSAiRXN0Igp0bXAkYEVzdCBjb3JyZWdpZGFgIDwtIHJvdW5kKHRtcCRFc3QgLSBtZWFuKHRtcCRFc3QpLzUsIDIpCgpkYXRvcyA8LSBkYXRvcyAlPiUgCiAgbGVmdF9qb2luKHRtcCkgJT4lCiAgbXV0YXRlKFJlcyA9IFNlcmllIC0gVGVuIC0gYEVzdCBjb3JyZWdpZGFgKQpkYXRvcwpgYGAKClwKCkxvcyBwcmluY2lwYWxlcyAqKmluY29udmVuaWVudGVzIGRlIGVzdGUgbcOpdG9kbyoqIGRlIGRlc2NvbXBvc2ljacOzbiBzb24gcXVlIHNlIHBlcmRlcsOhbiBkYXRvcyBhbCBpbmljaW8geSBmaW5hbCBkZSBsYSBzZXJpZSAtLXBvciBlamVtcGxvLCBzaSBsYSBzZXJpZSBlcyBtZW5zdWFsIHNlIHBlcmRlcsOhbiBzZWlzIGRhdG9zIGFsIGluaWNpbyB5IHNlaXMgYWwgZmluYWwtLSwgeSBxdWUgYXN1bWUgcXVlIGxhIGNvbXBvbmVudGUgZXN0YWNpb25hbCBubyBoYSB2YXJpYWRvIGVuIGVsIHRpZW1wby4gU2luIGVtYmFyZ28sIHNhYmVtb3MgcXVlIHBhcmEgbXVjaGFzIHNlcmllcyBzb2NpYWxlcyB5IGRlIGNvbnN1bW8gbGEgY29tcG9uZW50ZSBlc3RhY2lvbmFsIHNlIGhhIHN1YXZpemFuZG8gY29uIGVsIHRpZW1wby4KClBvciBlbCBjb250cmFyaW8sIHVuYSBzZSBsYXMgKip2ZW50YWphcyBkZSBlc3RlIG3DqXRvZG8qKiwgYWRlbcOhcyBkZSBzdSBzZW5jaWxsZXogZGUgY8OhbGN1bG8sIGVzIHF1ZSBzZSBwdWVkZSB1c2FyIHRhbnRvIHBhcmEgZXNxdWVtYXMgYWRpdGl2b3MgKGB0eXBlPSJhZGRpImApIGNvbW8gbXVsdGlwbGljYXRpdm9zIChgdHlwZT0ibXVsdGkiYCkuCgpMYSBmdW5jacOzbiBgZGVjb21wb3NlYCBnZW5lcmEgdW4gb2JqZXRvIGNvbiBsYXMgc2lndWllbnRlcyBjb21wb25lbnRlczoKCiogYCR4YCBwYXJhIGxhIHNlcmllIG9yaWdpbmFsLCAKKiBgJHRyZW5kYCBwYXJhIGxhIHRlbmRlbmNpYSwgCiogYCRzZWFzb25hbGAgcGFyYSBsYSBlc3RhY2lvbmFsaWRhZCwKKiBgJHJhbmRvbWAgcGFyYSBlbCByZXNpZHVvLCB5CiogYCRmaWd1cmVgIHF1ZSBjb250aWVuZSBsYXMgZXN0aW1hY2lvbmVzIGRlIGxvcyBfbV8gZWZlY3RvcyBlc3RhY2lvbmFsZXMgYWp1c3RhZG9zLiBFcyB1bmEgZXh0cmFjY2nDs24gcGFyYSB1biDDum5pY28gYcOxbyBvIHNlbWFuYSBkZSBgJHNlYXNvbmFsYC4KClNpZW1wcmUgcXVlIGdlbmVyZXMgbnVldm9zIG9iamV0b3MgZW4gYFJgIGEgcGFydGlyIGRlIGZ1bmNpb25lcyB0ZSByZWNvbWllbmRvIHF1ZSBjb24gYG5hbWVzYCB5IGBzdHJgIG1pcmVzIHF1ZSBoYXkgZW4gc3UgaW50ZXJpb3IuCgpFbiBsb3MgbcOpdG9kb3MgZGUgZGVzY29tcG9zaWNpw7NuIHF1ZSB2YW1vcyBhIHZlciwgcGFyYSBvYnRlbmVyIGxhcyBjb21wb25lbnRlcyBpbmRpdmlkdWFsbWVudGUgcHVlZGVzIHVzYXIgbGEgZnVuY2nDs24gYHNlYXNvbmFsYCBwYXJhIGxhIGNvbXBvbmVudGUgZXN0YWNpb25hbCwgYHRyZW5kY3ljbGVgIHBhcmEgZWwgY29tcG9uZW50ZSBkZSB0ZW5kZW5jaWEsIHkgYHJlbWFpbmRlcmAgcGFyYSBlbCByZXNpZHVvLiAKCiMjIyBFamVtcGxvIGRlIGVzcXVlbWEgYWRpdGl2byB7LX0KClZhbW9zIGEgZGVzY29tcG9uZXIgbGEgc2VyaWUgRWxlY3RyaWNpZGFkIGFzdW1pZW5kbyB1biBlc3F1ZW1hIGFkaXRpdm8gKGB0eXBlID0gImFkZGlgKS4KCmBgYHtyLCBmaWcuaGVpZ2h0PTd9CmVsZURlc0FkaSA8LSBkZWNvbXBvc2UoZWxlY3RyaWNpZGFkLCB0eXBlID0gImFkZGkiKQphdXRvcGxvdChlbGVEZXNBZGksCiAgICAgICAgIHhsYWIgPSAiIiwKICAgICAgICAgbWFpbiA9ICJGaWd1cmEgMjAuIERlc2NvbXBvc2ljacOzbiBhZGl0aXZhIGRlIEVsZWN0cmljaWRhZCBwb3IgbWVkaWFzIG3Ds3ZpbGVzIikKYGBgCgpFcyBmw6FjaWwgdmVyaWZpY2FyIHF1ZSBzaSBzZSBzdW1hIHBhcmEgY2FkYSBmZWNoYSBsYSB0ZW5kZW5jaWEsIGxhIGVzdGFjaW9uYWxpZGFkIHkgZWwgcmVzaWR1byBzZSBvYnRpZW5lIGV4YWN0YW1lbnRlIGVsIHZhbG9yIGRlIGxhIHNlcmllOgoKYGBge3J9ICAKdG1wIDwtIHRyZW5kY3ljbGUoZWxlRGVzQWRpKSArIHNlYXNvbmFsKGVsZURlc0FkaSkgKyByZW1haW5kZXIoZWxlRGVzQWRpKQpzdW1tYXJ5KGVsZWN0cmljaWRhZCAtIHRtcCkKYGBgCgpBIGNvbnRpbnVhY2nDs24sIHRpZW5lcyB1biBlamVtcGxvIGRlbCBtYW5lam8gZGUgbGFzIGNvbXBvbmVudGVzIGV4dHJhw61kYXMgcGFyYSBoYWNlciB1bmEgZ3LDoWZpY2EuCgpgYGB7cn0gIAphdXRvcGxvdChlbGVjdHJpY2lkYWQsIHNlcmllcz0iRGVtYW5kYSBlbMOpY3RyaWNhIiwKICAgICAgICAgeGxhYiA9ICIiLAogICAgICAgICB5bGFiID0gIk1XaCIsCiAgICAgICAgIG1haW4gPSAiRmlndXJhIDIxLiBEZW1hbmRhIGVsw6ljdHJpY2E6IHNlcmllIHkgdGVuZGVuY2lhIikgKwogIGF1dG9sYXllcih0cmVuZGN5Y2xlKGVsZURlc0FkaSksIHNlcmllcz0iVGVuZGVuY2lhIikgKwogIHNjYWxlX2NvbG91cl9tYW51YWwodmFsdWVzPWMoIkRlbWFuZGEgZWzDqWN0cmljYSI9ImJsYWNrIiwiVGVuZGVuY2lhIj0icmVkIiksCiAgICAgICAgICAgICAgICAgICAgICBicmVha3M9YygiRGVtYW5kYSBlbMOpY3RyaWNhIiwiVGVuZGVuY2lhIikpCmBgYAoKVGFtYmnDqW4gcG9kZW1vcyB2ZXIgbGFzIGNvbXBvbmVudGVzIGVzdGFjaW9uYWxlcyB5IHZlcmlmaWNhciBxdWUgc3VtYW4gMC4gT2pvLCBjb21vIGxhIHNlcmllIGVtcGllemEgdW4gbWFydGVzLCBsYSBwcmltZXJhIGNvbXBvbmVudGUgcXVlIHNlIG11ZXN0cmEgZXMgbGEgZGVsIG1hcnRlcyB5IGxhIMO6bHRpbWEgbGEgZGVsIGx1bmVzLgoKYGBge3J9ICAKZWxlRGVzQWRpJGZpZ3VyZQpzdW0oZWxlRGVzQWRpJGZpZ3VyZSkKYGBgCgpQb3Igw7psdGltbywgcG9kZW1vcyByZWFsaXphciB1bmEgZ3LDoWZpY2EgZGUgbGEgY29tcG9uZW50ZSBlc3RhY2lvbmFsLgpgYGB7cn0KY29tcEVzdGFjaW9uYWwgPC0gZWxlRGVzQWRpJGZpZ3VyZVtjKDcsIDE6NildCmdncGxvdCgpICsKICBnZW9tX2xpbmUoYWVzKHggPSAxOjcsIHkgPSBjb21wRXN0YWNpb25hbCkpICsgCiAgZ2VvbV9obGluZSh5aW50ZXJjZXB0ID0gMCwgY29sb3VyID0gImJsdWUiLCBsdHkgPSAyKSArCiAgZ2d0aXRsZSgiRmlndXJhIDIyLiBDb21wb25lbnRlIGVzdGFjaW9uYWwgZGUgRWxlY3RyaWNpZGFkIChlc3F1ZW1hIGFkaXRpdm8pIikgKwogIHhsYWIoIiIpICsKICB5bGFiKCJDb21wb25lbnRlIGVzdGFjaW9uYWwiKSArCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz0gMTo3LCAKICAgICAgICAgICAgICAgICAgICAgbGFiZWxzID0gYygiTHVuZXMiLCAiTWFydGVzIiwgIk1pw6lyY29sZXMiLCAiSnVldmVzIiwgIlZpZXJuZXMiLCAiU8OhYmFkbyIsICJEb21pbmdvIikpIApgYGAKCiMjIyBFamVtcGxvIGRlIEVzcXVlbWEgTXVsdGlwbGljYXRpdm8gey19CgpWZWFtb3MgYWhvcmEgbGEgZGVzY29tcG9zaWNpw7NuIGRlIE5hY2ltaWVudG9zIGJham8gdW4gZXNxdWVtYSBtdWx0aXBsaWNhdGl2byAoYHR5cGUgPSAibXVsdCJgKS4gCgpgYGB7cixmaWcuaGVpZ2h0PTd9Cm5hY0Rlc011bCA8LSBkZWNvbXBvc2UobmFjaW1pZW50b3MsIHR5cGUgPSAibXVsdCIpCmF1dG9wbG90KG5hY0Rlc011bCwKICAgICAgICAgeGxhYiA9ICIiLAogICAgICAgICBtYWluID0gIkZpZ3VyYSAyMy4gRGVzY29tcG9zaWNpw7NuIG11bHRpcGxpY2F0aXZhIGRlIE5hY2ltaWVudG9zIHBvciBtZWRpYXMgbcOzdmlsZXMiKQpgYGAKCk9ic2VydmEgcXVlIHBvciB0cmF0YXJzZSBkZSB1biBlc3F1ZW1hIG11bHRpcGxpY2F0aXZvIGVuIGxhIGZpZ3VyYSAyMyBsYSBjb21wb25lbnRlIGVzdGFjaW9uYWwgc2UgbXVldmUgYWxyZWRlZG9yIGRlbCB2YWxvciAxIHkgZGViZSBpbnRlcnByZXRhcnNlIGNvbW8gdW5hIHZhcmlhY2nDs24gcG9yY2VudHVhbC4gSWd1YWxtZW50ZSwgZWwgcmVzaWR1byB0YW1iacOpbiBnaXJhIGVuIHRvcm5vIGFsIHZhbG9yIDEuCgpMYXMgY29tcG9uZW50ZXMgZXN0YWNpb25hbGVzIHNlIGRlYmVuIGludGVycHJldGFyIGNvbW8gaW5jcmVtZW50b3MgcG9yY2VudHVhbGVzOiBlbiBmZWJyZXJvIG5hY2VuIHVuIDkuMSUgbWVub3MgZGUgbmnDsW9zIHkgZW4gb2N0dWJyZSB1biAzLjMlIG3DoXMsIHJlc3BlY3RvIGRlIGxhIG1lZGlhIGFudWFsLiBBZGVtw6FzLCBsYSBzdW1hIGRlIGxhcyBjb21wb25lbnRlcyBlc3RhY2lvbmFsZXMgc2Vyw6EgMTIuCgpgYGB7cn0gIApuYWNEZXNNdWwkZmlndXJlCnN1bShuYWNEZXNNdWwkZmlndXJlKQpgYGAKClwKCiMjIERlc2NvbXBvc2ljacOzbiBwb3IgcmVncmVzaW9uZXMgbG9jYWxlcyBwb25kZXJhZGFzCgojIyMgSWRlYXMgZ2VuZXJhbGVzIHstfQoKTGEgZnVuY2nDs24gYHN0bGAgZXN0aW1hIGxhcyBjb21wb25lbnRlcyBkZSB0ZW5kZW5jaWEgeSBlc3RhY2lvbmFsaWRhZCBhIHBhcnRpciBkZSByZWdyZXNpb25lcyBsb2NhbGVzIHBvbmRlcmFkYXMgKHTDqWNuaWNhIGNvbm9jaWRhIGNvbW8gX2xvZXNzXykKClN1cyAqKnZlbnRhamFzKiogc29uOgoKKiBObyBzZSBwZXJkZXLDoW4gZGF0b3MgYWwgaW5pY2lvIG8gYWwgZmluYWwgZGUgbGEgc2VyaWUuCiogQXN1bWUgcXVlIHRhbnRvIGxhIHRlbmRlbmNpYSBjb21vIGxhIGVzdGFjaW9uYWxpZGFkIHB1ZWRlbiBjYW1iaWFyIGNvbiBlbCB0aWVtcG8geSBwb3NpYmlsaXRhIGNvbnRyb2xhciBlc3RlIGNhbWJpbyBhIHBhcnRpciBkZSBwYXLDoW1ldHJvcy4KKiBFcyBiYXN0YW50ZSByb2J1c3RhIGZyZW50ZSBhIHZhbG9yZXMgYXTDrXBpY29zLgoKU3UgKipwcmluY2lwYWwgZGVzdmVudGFqYSoqIGVzIHF1ZSBlc3RhIHTDqWNuaWNhIGRlIGRlc2NvbXBvc2ljacOzbiBzb2xvIGVzIHbDoWxpZGEgcGFyYSBlc3F1ZW1hcyBhZGl0aXZvcy4gRXMgcG9zaWJsZSBvYnRlbmVyIGNvbiBgc3RsYCB1bmEgZGVzY29tcG9zaWNpw7NuIG11bHRpcGxpY2F0aXZhIGRlc2NvbXBvbmllbmRvIHByaW1lcm8gZWwgbG9nYXJpdG1vIGRlIGxhIHNlcmllLCBwYXJhIGRlc3B1w6lzIGNhbGN1bGFyIGxhIGV4cG9uZW5jaWFsIGRlIGxhcyBjb21wb25lbnRlcy4KCkxhIGZ1bmNpw7NuIGBzdGxgIGdlbmVyYSB1biBvYmpldG8gY29uIGxhIGNvbXBvbmVudGUgYCR0aW1lLnNlcmllc2AgcXVlIGNvbnRpZW5lIGVuIGNvbHVtbmEgCnRyZXMgc2VyaWVzIHRlbXBvcmFsZXM6IF9zZWFzb25hbF8sIF90cmVuZF8geSBfcmVtYWluZGVyXyAoZGUgbnVldm8gdXNhIGBuYW1lc2AgeSBgc3RyYCBwYXJhIGFwcmVuZGVyIG3DoXMpLgoKTG9zIGRvcyBwYXLDoW1ldHJvcyBwcmluY2lwYWxlcyBxdWUgZGViZW4gZWxlZ2lyc2UgY3VhbmRvIHNlIHV0aWxpemEgYHN0bGAgc29uIGxhIHZlbnRhbmEgZGUgdGVuZGVuY2lhIChgdC53aW5kb3dgKSB5IGxhIHZlbnRhbmEgZXN0YWNpb25hbCAoYHMud2luZG93YCkuIEVzdG9zIHBhcsOhbWV0cm9zIGNvbnRyb2xhbiBsYSByYXBpZGV6IGNvbiBsYSBxdWUgcHVlZGVuIGNhbWJpYXIgbG9zIGNvbXBvbmVudGVzIGRlIHRlbmRlbmNpYSB5IGVzdGFjaW9uYWwgY29uIGVsIHRpZW1wby4gVmFsb3JlcyBwZXF1ZcOxb3MgcGVybWl0ZW4gY2FtYmlvcyBtw6FzIHLDoXBpZG9zLCB2YWxvcmVzIGdyYW5kZXMgaW1wbGljYW4gcXVlIG5vIGhheSBjYW1iaW9zLiBBbWJvcyBwYXLDoW1ldHJvcyBkZWJlbiBzZXIgbsO6bWVyb3MgaW1wYXJlczoKCiogYHQud2luZG93YCBlcyBlbCBuw7ptZXJvIGRlIG9ic2VydmFjaW9uZXMgY29uc2VjdXRpdmFzIHF1ZSBzZSBkZWJlbiB1dGlsaXphciBhbCBlc3RpbWFyIGxhIHRlbmRlbmNpYS4gQ29uc3VsdGEgbGEgYXl1ZGEgcGFyYSB2ZXIgZWwgdmFsb3IgcG9yIGRlZmVjdG8uCiogYHMud2luZG93YCBlc3TDoSByZWxhY2lvbmFkbyBjb24gZWwgbsO6bWVybyBvYnNlcnZhY2lvbmVzIHF1ZSBzZSBkZWJlbiB1dGlsaXphciBhbCBlc3RpbWFyIGNhZGEgdmFsb3IgZGUgbGEgY29tcG9uZW50ZSBlc3RhY2lvbmFsLiBObyBoYXkgbmluZ8O6biB2YWxvciBwb3IgZGVmZWN0byBwYXJhIGVzdGUgcGFyw6FtZXRyby4gRXN0YWJsZWNlcmxvIGNvbW8gYHBlcmlvZGljYCBlcXVpdmFsZSBhIG9ibGlnYXIgYSBxdWUgbGEgY29tcG9uZW50ZSBlc3RhY2lvbmFsIHNlYSBwZXJpw7NkaWNhIChlcyBkZWNpciwgaWTDqW50aWNhIGEgbG8gbGFyZ28gZGUgbG9zIGHDsW9zKS4gU2kgZXMgdW4gdmFsb3IgbnVtw6lyaWNvLCBkZWJlIHNlciBpbXBhciB5IG1heW9yIG8gaWd1YWwgYSA3LgoKIyMjIEVqZW1wbG8gey19CgpWZWFtb3MgdW4gZWplbXBsbyBkZSBzdSB1c28gcGFyYSBsYSBzZXJpZSBFbGVjdHJpY2lkYWQuIFNlIGhhIHVzYWRvIGVsIHZhbG9yIHBvciBkZWZlY3RvIHBhcmEgYHQud2luZG93YCB5IHNlIGhhIGluZGljYWRvIHF1ZSBsYSBlc3RhY2lvbmFsaWRhZCBlcyBjb25zdGFudGUgZW4gZWwgdGllbXBvIChgcy53aW5kb3cgPSAicGVyaW9kaWMiYCkuIEFkZW3DoXMsIHNlIGhhIGVzcGVjaWZpY2FkbyBxdWUgc2UgdGVuZ2EgZW4gY3VlbnRhIGxhIHBvc2libGUgZXhpc3RlbmNpYSBkZSB2YWxvcmVzIGF0w61waWNvcyAoYHJvYnVzdCA9IFRSVUVgKS4KCmBgYHtyfQplbGVTdGwgPC0gc3RsKGVsZWN0cmljaWRhZCwgCiAgICAgICAgICAgICAgIHMud2luZG93ID0gInBlcmlvZGljIiwKICAgICAgICAgICAgICAgcm9idXN0ID0gVFJVRSkKaGVhZChlbGVTdGwkdGltZS5zZXJpZXMpCmBgYAoKCmBgYHtyLCBmaWcuaGVpZ2h0PSA3fSAgCmF1dG9wbG90KGVsZVN0bCwKICAgICAgICAgeGxhYiA9ICIiLAogICAgICAgICBtYWluID0gIkZpZ3VyYSAyNC4gRGVzY29tcG9zaWNpw7NuIGRlIEVsZWN0cmljdmlkYWQgcG9yIHJlZ3Jlc29yZXMgbG9jYWxlcyBwb25kZXJhZG9zIikKYGBgCgpQb2RlbW9zIHZlciBudW3DqXJpY2FtZW50ZSBsYXMgY29tcG9uZW50ZXMgZXN0YWNpb25hbGVzLCBxdWUgZGUgbnVldm8gZGViZW4gc3VtYXIgY2Vyby4KYGBge3J9ICAKaGVhZChzZWFzb25hbChlbGVTdGwpLCA3KQpzdW0oaGVhZChzZWFzb25hbChlbGVTdGwpLCA3KSkKYGBgCgpcCgpQYXJhIEVsZWN0cmljaWRhZCBoZW1vcyBvYnRlbmlkbyB0cmVzIGVzdGltYWNpb25lcyBkZSBsYSBjb21wb25lbnRlIGVzdGFjaW9uYWw6IGxhIHByaW1lcmEgb2J0ZW5pZGEgY29uIGB0YXBwbHlgLCBsYSBzZWd1bmRhIG9idGVuaWRhIGNvbiBgZGVjb21wb3NlYCB5IGxhIHRlcmNlcmEgY29uIGBzdGxgLiBTZSBwdWVkZSBvYnNlcnZhciBxdWUgbGFzIHRyZXMgZXN0aW1hY2lvbmVzIHNvbiBtdXkgc2ltaWxhcmVzLCBwZXJvIG5vIGNvaW5jaWRlbnRlcywgeSBhdW5xdWUgbG9zIG3DqXRvZG9zIGRlIGRlc2NvbXBvc2ljacOzbiBzb24gcHJlZmVyaWJsZXMgYSBgdGFwcGx5YCwgbmluZ3VuYSBlc3RpbWFjacOzbiBlcyAqYSBwcmlvcmkqIG1lam9yIHF1ZSBvdHJhLgoKYGBge3J9CiMgdGFwcGx5CnJvdW5kKGFzLm51bWVyaWMoY29tcG9uZW50ZUVzdGFjaW9uYWwpLCAyKQojIGRlY29tcG9zZQpyb3VuZChzZWFzb25hbChlbGVEZXNBZGkpW2MoNywgMTo2KV0sIDIpCiMgc3RsCnJvdW5kKHNlYXNvbmFsKGVsZVN0bClbYyg3LCAxOjYpXSwgMikKYGBgCgpcCgpTaSBlbiBsdWdhciBkZSBgcGVyaW9kaWNgLCBmaWphbW9zIGVsIHBhcsOhbWV0cm8gYHMud2luZG93YCBhLCBwb3IgZWplbXBsbywgMTEgKHNpZW1wcmUgdW4gdmFsb3IgaW1wYXIpLCBlc3RhcmVtb3MgcGVybWl0aWVuZG8gcXVlIGxhIGVzdGFjaW9uYWxpZGFkIGNhbWJpZW4gZW4gZWwgdGllbXBvLiBMYSBmaWd1cmEgMjUgbXVlc3RyYSBsYSBjb21wb25lbnRlIGVzdGFjaW9uYWwgZXN0aW1hZGEgcHJldmlhbWVudGUgKGJham8gZWwgc3VwdWVzdG8gZGUgY29tcG9uZW50ZSBlc3RhY2lvbmFsIGNvbnN0YW50ZSkgeSBsYSBxdWUgc2Ugb2J0aWVuZSBjb24gZWwgYXJndW1lbnRvIGBzLndpbmRvdyA9IDExYC4gUGFyYSBlbCBwZXJpb2RvIG1vc3RyYWRvIHNlIG9ic2VydmEgcXVlIGxhIGFtcGxpdHVkIGVzdGFjaW9uYWwgZW4gbGEgY29tcG9uZW50ZSBubyBjb25zdGFudGUgaGEgdmFyaWFuZG8gY29uIGVsIHRpZW1wby4gQ3VhbnRvIG1heW9yIGVzIGVsIHZhbG9yIChpbXBhcikgZGUgYHMud2luZG93YCBtw6FzIGNvbnN0YW50ZSBlbiBlbCB0aWVtcG8gZXMgbGEgY29tcG9uZW50ZSBlc3RhY2lvbmFsLiAKCmBgYHtyLCBlY2hvID0gRkFMU0V9IAplbGVTdGwxMSA8LSBzdGwoZWxlY3RyaWNpZGFkLCAKICAgICAgICAgICAgICAgIHMud2luZG93ID0gMTEsCiAgICAgICAgICAgICAgICByb2J1c3QgPSBUUlVFKQoKeHggPC0gd2luZG93KHNlYXNvbmFsKGVsZVN0bCksIHN0YXJ0ID0gMjAsIGVuZCA9IDQwKQp5eSA8LSB3aW5kb3coc2Vhc29uYWwoZWxlU3RsMTEpLCBzdGFydCA9IDIwLCBlbmQgPSA0MCkKYXV0b3Bsb3QoeHgsIHNlcmllcz0icy53aW5kb3cgPSAncGVyaW9kaWMnIiwKICAgICAgICAgeWxhYiA9ICJDb21wb25lbnRlIGVzdGFjaW9uYWwiLAogICAgICAgICBtYWluID0gIkZpZ3VyYSAyNS4gQ29tcG9uZW50ZSBlc3RhY2lvbmFsIHBhcmEgRWxlY3RyaWNpZGFkIikgKwogIGF1dG9sYXllcih5eSwgc2VyaWVzPSJzLndpbmRvdyA9IDExIikgKwogIHNjYWxlX2NvbG91cl9tYW51YWwodmFsdWVzPWMoInMud2luZG93ID0gJ3BlcmlvZGljJyI9ImJsYWNrIiwicy53aW5kb3cgPSAxMSI9InJlZCIpKQpgYGAKClwKXAoKIyBSZXN1bWVuIGRlIGxvcyBwYXF1ZXRlcyB5IGZ1bmNpb25lcyB1dGlsaXphZGFzCgogIHxGdW5jacOzbiAgICAgICAgfFBhcXVldGUgICAgICAgICAgICB8IERlc2NyaXBjacOzbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwKICB8Oi0tLS0tLS0tLS0tLS0tfDotLS0tLS0tLS0tLS0tLS0tLS18Oi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfAogIHx0cyAgICAgICAgICAgICB8c3RhdHMgICAgICAgICAgICAgIHxwcm9kdWNlIHVuIG9iamV0byBkZSBjbGFzZSBzZXJpZSB0ZW1wb3JhbCAgICAgICAgICAgICB8CiAgfHdpbmRvdwkgICAgICAgIHxzdGF0cyB8ZXh0cmFlIHVuIHN1YmNvbmp1bnRvIGRlIGRhdG9zIGRlIHVuYSBzZXJpZSB0ZW1wb3JhbCAgfAogIHxzdWJzZXQgICAgICAgICB8YmFzZSAgfGV4dHJhZSB1biBzdWJjb25qdW50byBkZSBkYXRvcyBwb3NpYmlsaXRhbmRvIGVsIHVzbyBkZSDDrW5kaWNlcyB8CiAgfGFnZ3JlZ2F0ZSAgICAgIHxzdGF0cyB8Y3JlYSB1bmEgc2VyaWUgYWdyZWdhZGEgfAogIHxzdGFydCAgICAgICAgICB8Zm9yZWNhc3QgfGRhIGVsIGZlY2hhZG8gZGVsIHByaW1lciBkYXRvICAgICAgICAgICAgICAgICAgICAgICAgIHwKICB8ZW5kICAgICAgICAgICAgfGZvcmVjYXN0IHxkYSBlbCBmZWNoYWRvIGRlbCDDumx0aW1vIGRhdG8gICAgICAgICAgICAgICAgICAgICAgICAgfAogIHxmcmVxdWVuY3kgICAgICB8Zm9yZWNhc3QgfGRhIGxhIGZyZWN1ZW5jaWEgZGUgbG9zIGRhdG9zICAgICAgICAgICAgICAgICAgICAgICAgIHwKICB8dGltZSAgICAgICAgICAgfGZvcmVjYXN0IHxleHRyYWUgZWwgZmVjaGFkbyBkZSB1bmEgc2VyaWUgdGVtcG9yYWwgICAgICAgICAgICAgICAgfAogIHxjeWNsZSAgICAgICAgICB8Zm9yZWNhc3QgfGRldnVlbHZlIGxhIGVzdGFjacOzbiBkZSBjYWRhIHZhbG9yIGRlIGxhIHNlcmllICAgICAgICB8CiAgfGRlY29tcG9zZSAgICAgfGZvcmVjYXN0IHxkZXNjb21wb25lIGxhIHNlcmllIHVzYW5kbyBtZWRpYXMgbcOzdmlsZXMgICAgICAgICAgICAgfAogIHxzdGwgICAgICAgICAgIHxmb3JlY2FzdCB8ZGVzY29tcG9uZSBsYSBzZXJpZSB1c2FuZG8gYWxpc2FkbyBwb3IgcmVncmVzaW9uZXMgbG9jYWxlcyBwb25kZXJhZGFzICAgICAgICAgIHwKICB8YXV0b3Bsb3QgICAgICAgfGZvcmVjYXN0ICB8ZGlidWphIGdyw6FmaWNvcyBkZSBzZXJpZXMgdGVtcG9yYWxlcyBkZSBmb3JtYSBzZW5jaWxsYSB8CiAgfGdnc3Vic2VyaWVzcGxvdHxmb3JlY2FzdCAgfGRpYnVqYSB1biBncsOhZmljbyBkb25kZSBjYWRhIGNvbXBvbmVudGUgZXN0YWNpb25hbCBlcyBkaWJ1amFkYSBjb21vIHVuYSBzdWJzZXJpZSBzZXBhcmFkYSAgfAogIHxnZ3NlYXNvbnBsb3QgICB8Zm9yZWNhc3QgIHxkaWJ1amEgdW4gZ3LDoWZpY28gZG9uZGUgY2FkYSBhw7FvIChvIGVxdWl2YWxlbnRlKSBlcyBkaWJ1amFkbyBjb21vIHVuYSBzZXJpZSBzZXBhcmFkYSBjb250cmEgZWwgcGVyaW9kbyBlc3RhY2lvbmFsICB8CiAgfGF1dG9sYXllciAgICAgIHxmb3JlY2FzdCAgfGHDsWFkZSB1bmEgc2VyaWUgdGVtcG9yYWwgYSB1biBncsOhZmljbyB5YSBjcmVhZG8gfAogIApUb2RhcyBsYXMgZnVuY2lvbmVzIGdyw6FmaWNhcyBkZWwgcGFxdWV0ZSBgZm9yZWNhc3RgIHJlcXVpZXJlbiB0ZW5lciBpbnN0YWxhZG8gZW4gUiBsYSBsaWJyZXLDrWEgYGdncGxvdDJgLgoKXApcCgojIFJlZmVyZW5jaWFzCgoqIEhvbHRvbiwgSiwgeSBLZWF0aW5nLCBCLiAoMTk5NikuICpQcmV2aXNpb25lcyBlbiBsb3MgbmVnb2Npb3MqLiBFZC4gRVJXSU4sIE1hZHJpZAoqIE1ldGNhbGZlLCBBLlcuIHkgQ293cGVydHdhaXQsIFAuUy5QLiAoMjAwOSkuICpJbnRyb2R1Y3RvcnkgVGltZSBTZXJpZXMgd2l0aCBSKi4gRWQuIFNwcmluZ2VyLCBOZXcgWW9yaywgTlkuIGRvaToxMC4xMDA3Lzk3OC0wLTM4Ny04ODY5OC01CgoKXApcClwKXAo=</div>
+<footer class="footer">
+  
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
+<br>
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.  <div class="text-muted">Website created by Iv&aacute;n Arribas. &copy;  2020. If you find any bugs please report them to <a href="mailto:ivan.arribas@uv.es"> ivan.arribas@uv.es</a>.</div>
+  
+</footer>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("03-01-Tema1.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

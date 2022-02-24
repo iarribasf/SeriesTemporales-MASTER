@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Iván Arribas (Depto. Análisis Económico. Universitat de València)" />
+
+
+<title>Series Temporales: Procesos Estocásticos</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Series Temporales</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="01-Guia-curso.html">
+    <span class="fa fa-graduation-cap"></span>
+     
+    Guía del curso
+  </a>
+</li>
+<li>
+  <a href="02-Logistica.html">
+    <span class="fa fa-laptop"></span>
+     
+    Logística
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-book"></span>
+     
+    Diapos
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Teoría</li>
+    <li>
+      <a href="03-01-Tema1.html">Tema 1: Introducción</a>
+    </li>
+    <li>
+      <a href="03-02-Tema2.html">Tema 2: Alisado</a>
+    </li>
+    <li>
+      <a href="03-03-Tema3.html">Tema 3: Procesos estocásticos</a>
+    </li>
+    <li>
+      <a href="03-04-Tema4.html">Tema 4: ARIMA</a>
+    </li>
+    <li>
+      <a href="03-05-Tema5.html">Tema 5: SARIMA</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Ejemplo de aplicación</li>
+    <li>
+      <a href="03-06-Ejemplo1.html">Ejemplo Tema 1</a>
+    </li>
+    <li>
+      <a href="03-07-Ejemplo2.html">Ejemplo Tema 2</a>
+    </li>
+    <li>
+      <a href="03-08-Ejemplo3.html">Ejemplo Tema 3</a>
+    </li>
+    <li>
+      <a href="03-09-Ejemplo4.html">Ejemplo Tema 4</a>
+    </li>
+    <li>
+      <a href="03-10-Ejemplo5.html">Ejemplo Tema 5</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Otro ejemplo</li>
+    <li>
+      <a href="03-11-Ejemplo-Pasajeros.html">Ejemplo de Pasajeros</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="04-Recursos-R.html">
+    <span class="fa fa-code"></span>
+     
+    Recursos de R
+  </a>
+</li>
+<li>
+  <a href="05-Practica.html">
+    <span class="fa fa-edit"></span>
+     
+    Practica
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-download"></span>
+     
+    Más
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">R</li>
+    <li>
+      <a href="https://cran.r-project.org">Dónde está R</a>
+    </li>
+    <li>
+      <a href="https://rstudio.com">Donde está RStudio</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Markdown</li>
+    <li>
+      <a href="https://bookdown.org/yihui/rmarkdown/">Markdown</a>
+    </li>
+    <li>
+      <a href="https://rmarkdown.rstudio.com/lesson-1.html">R Markdown</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Otros</li>
+    <li>
+      <a href="https://www.r-bloggers.com">Blog sobre R</a>
+    </li>
+    <li>
+      <a href="https://bookdown.org">Libros online que debes conocer</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Series Temporales: Procesos Estocásticos</h1>
+<h3 class="subtitle">Máster de Bioestadística (Modelización Estadística)</h3>
+<h4 class="author">Iván Arribas (Depto. Análisis Económico. Universitat de València)</h4>
+
+</div>
+
+
+<div id="introducción" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Introducción</h1>
+<p>En este tema vamos a definir una serie de conceptos que permitirán entender mejor <strong>una serie temporal como una muestra de un proceso generador de datos</strong> (PGD). Veremos también herramientas para realizar una descriptiva de una la serie temporal (muestra) que permitirá estimar el PGD que hay detrás y así poder hacer predicciones (inferencia).</p>
+<p>Como en el estudio de muestras transversales, la <strong>hipótesis de normalidad</strong> es conveniente, pero a esta hay que añadir las hipótesis de <strong>estacionariedad</strong> y <strong>ergodicidad</strong>.</p>
+<p>En los temas siguientes haremos uso constante de los conceptos aquí definidos.</p>
+<p><br />
+<br />
+</p>
+</div>
+<div id="proceso-estocástico" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Proceso estocástico</h1>
+<p><br />
+</p>
+<div id="definición" class="section level2" number="2.1">
+<h2 number="2.1"><span class="header-section-number">2.1</span> Definición</h2>
+<p>Un <strong>proceso estocástico</strong> <span class="math inline">\(Y_t\)</span> es (sin excesiva precisión) una variable aleatoria que corresponde a momentos sucesivos del tiempo.</p>
+<p>Como toda variable aleatoria, su caracterización puede hacerse a través de su función de distribución o a partir de sus momentos.</p>
+<ul>
+<li>La caracterización de un proceso estocástico mediante los momentos de primer y segundo orden (medias y covarianzas) es más incompleta que cuando se hace mediante funciones de distribución.</li>
+<li>Bajo la <strong>hipótesis de normalidad</strong> el proceso estocástico queda completamente caracterizado a través de los dos primeros momentos.</li>
+</ul>
+<p>Nosotros contamos con una sola realización del proceso estocástico <span class="math inline">\(Y_t\)</span>, la serie temporal observada <span class="math inline">\(\{y_t\}_{t=1}^T\)</span>.</p>
+<ol style="list-style-type: decimal">
+<li>A partir de <span class="math inline">\(\{y_t\}_{t=1}^T\)</span> estimaremos los momentos de primer y segundo orden (medias y covarianzas).</li>
+<li>Estos momentos nos permitirán identificar el PGD.</li>
+<li>Una vez identificado, estimaremos el PGD y podremos realizar inferencia (contrastes de hipótesis y predicciones).</li>
+</ol>
+<p>Para que esta línea de razonamiento sea válida es necesario que el proceso sea <strong>estacionario y ergódico</strong>.</p>
+<p><br />
+</p>
+</div>
+<div id="proceso-estacionario" class="section level2" number="2.2">
+<h2 number="2.2"><span class="header-section-number">2.2</span> Proceso estacionario</h2>
+<div id="proceso-estacionario-en-sentido-estricto" class="section level3 unnumbered">
+<h3 class="unnumbered">Proceso estacionario en sentido estricto</h3>
+<p>Un proceso es <strong>estacionario en sentido estricto</strong> cuando la distribución conjunta no varía al realizar un desplazamiento en el tiempo de todas las variables.</p>
+<ul>
+<li>Si <span class="math inline">\(F(Y_{t_1},..., Y_{t_k})\)</span> es la función de distribución conjunta y <span class="math inline">\(h&gt;0\)</span>, entonces el proceso es estacionario en sentido estricto si <span class="math display">\[F(Y_{t_1},..., Y_{t_k}) = F(Y_{t_1+h},..., Y_{t_k+h})\]</span></li>
+</ul>
+<p>Intuitivamente, <em>la distribución de un proceso estocástico es independiente del momento del tiempo</em>.</p>
+<p>Comprobar si un proceso es estacionario en sentido estricto es muy difícil, así que vamos a encontrar condiciones suficientes: <em>estacionariedad en media</em> y en <em>sentido amplio</em> (covarianza).</p>
+</div>
+<div id="proceso-estacionario-en-media" class="section level3 unnumbered">
+<h3 class="unnumbered">Proceso estacionario en media</h3>
+<p>Un proceso es estacionario en media (o de primer orden) si su nivel se mantiene en el tiempo: <span class="math display">\[E[Y_t] = \mu \; \; \forall t\]</span></p>
+<p>La figura 1 muestra en el panel superior la serie Libros que no es estacionaria en media, y en el panel inferior la diferencia de títulos publicados entre dos años consecutivos, que sí es estacionaria en media.</p>
+<p><img src="03-03-Tema3_files/figure-html/unnamed-chunk-1-1.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="proceso-estacionario-en-sentido-amplio" class="section level3 unnumbered">
+<h3 class="unnumbered">Proceso estacionario en sentido amplio</h3>
+<p>Un proceso (ya estacionario en media) es estacionario en sentido amplio, o de segundo orden, si sus momentos de orden dos no dependen del tiempo:</p>
+<ul>
+<li>La (auto)covarianza entre dos periodos de tiempo es finita y sólo depende del intervalo de tiempo transcurrido entre estos dos periodos: <span class="math display">\[Cov[Y_t, Y_{t+k}] = E[(Y_t - \mu)(Y_{t+k} - \mu)] = \gamma_k,\,\,\,\forall t\]</span></li>
+</ul>
+<p>Observa que la varianza será entonces <span class="math inline">\(Var[Y_t] = E[(Y_t - \mu)^2] = \gamma_0\)</span>.</p>
+<p>La figura 2 muestra una serie que es estacionaria en media, pero no lo es en sentido amplio: al inicio de la serie hay una mayor variabilidad en los datos que en la zona intermedia.</p>
+<p><img src="03-03-Tema3_files/figure-html/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>Un proceso estacionario en sentido estricto también es estacionario en sentido amplio, pero lo contrario no es cierto. Ahora bien, <strong>bajo normalidad</strong> un proceso estacionario en sentido amplio también lo será en sentido estricto.</p>
+<p><br />
+</p>
+</div>
+</div>
+<div id="proceso-ergódico" class="section level2" number="2.3">
+<h2 number="2.3"><span class="header-section-number">2.3</span> Proceso ergódico</h2>
+<p>En el tema siguiente se verá que la estimación de los momentos de primer y segundo orden de la serie temporal permite identificar y estimar el PGD.</p>
+<p>Para que la estimación de los momentos sea consistente el proceso debe ser <strong>ergódico</strong>: <span class="math display">\[\lim_{T\rightarrow \infty} Var(\frac{1}{T}\sum_{t=1}^T Y_t)=0. \]</span></p>
+<p>Para que un proceso sea ergódico las observaciones nuevas tienen que aportar suficiente información para que la varianza del valor medio converja a 0. Esto no ocurre si la dependencia entre las variables es muy fuerte.</p>
+<p>Una condición necesaria pero no suficiente para que un proceso estacionario sea ergódico es: <span class="math display">\[\lim_{k\rightarrow \infty} \gamma_k = 0.\]</span> Es decir, que el pasado cada vez ayuda menos a entender el presente.</p>
+<p><br />
+</p>
+</div>
+<div id="resumen" class="section level2" number="2.4">
+<h2 number="2.4"><span class="header-section-number">2.4</span> Resumen</h2>
+<p><img src="imagenes/pe_resumen.png" /></p>
+<p><br />
+<br />
+</p>
+</div>
+</div>
+<div id="transformaciones-de-una-serie" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Transformaciones de una serie</h1>
+<p><br />
+</p>
+<div id="ideas-generales" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Ideas generales</h2>
+<p>Una serie temporal <span class="math inline">\(\{y_t\}_{t=1}^T\)</span> no tiene porque verificar las condiciones de estacionariedad, ergodicidad y normalidad.</p>
+<p>A continuación, veremos una serie de transformaciones que convierten una serie no estacionaria en estacionaria; no ergódica en ergódica; y, de paso, facilitan la verificación de la hipótesis de normalidad, que dejaremos para más adelante.</p>
+<p>En el panel superior de la figura 3 tienes la serie de nacimientos, que denominaremos <span class="math inline">\(y_t\)</span>, y en panel inferior tienes la diferencia de la transformación logarítmica de la serie, <span class="math inline">\(log(y_t) - log(y_{t-1})\)</span>. La serie nacimientos no es estacionaria en media ni en varianza, pero la transformación logarítmica y la diferencia han logrado que sea estacionaria en ambos sentidos.</p>
+<p><img src="03-03-Tema3_files/figure-html/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="diferenciación" class="section level2" number="3.2">
+<h2 number="3.2"><span class="header-section-number">3.2</span> Diferenciación</h2>
+<p><strong>La diferenciación permite transformar una serie no estacionaria en media en estacionaria en media</strong>.</p>
+<p>Diferenciar de orden <span class="math inline">\(k\)</span> consiste en restar a la observación de un periodo la de <span class="math inline">\(k\)</span> periodos antes: <span class="math display">\[\nabla_k y_t = y_t - y_{t-k}.\]</span></p>
+<div id="diferenciación-regular-k1" class="section level3 unnumbered">
+<h3 class="unnumbered">Diferenciación regular (<span class="math inline">\(k=1\)</span>)</h3>
+<p>Un caso concreto de la diferenciación es la <strong>diferenciación regular o diferenciación de orden uno</strong>, que consiste en restar a la observación de un periodo la del periodo precedente: <span class="math display">\[\nabla y_t = y_t - y_{t-1}.\]</span> Usualmente, la serie diferenciada <span class="math inline">\(\nabla y_t\)</span> ya es estacionaria en media. Por ejemplo, en la figura 1 teníamos la serie Libros (panel superior) no estacionaria, y la serie Libros diferenciada regularmente que es estacionaria.</p>
+<p>En algunos casos la serie diferenciada puede continuar presentando tendencia. En ese caso habrá que seguir diferenciando hasta obtener la estacionariedad en media.</p>
+<p>Si <span class="math inline">\(\nabla y_t\)</span> no es estacionaria, se diferencia (regularmente) una segunda vez para obtener una doble diferenciación de primer orden: <span class="math display">\[\nabla^{2} y_t = \nabla(\nabla y_t) = \nabla y_t - \nabla y_{t-1} = (y_t - y_{t-1}) - (y_{t-1} - y_{t-2}) = y_t - 2y_{t-1} + y_{t-2}\]</span> En la práctica una sola diferenciación suele ser suficiente para obtener la estacionariedad en media; diferenciar dos veces es excepcional; y diferenciar tres o más veces no se da.</p>
+</div>
+<div id="diferenciación-estacional-km" class="section level3 unnumbered">
+<h3 class="unnumbered">Diferenciación estacional (<span class="math inline">\(k=m\)</span>)</h3>
+<p>Existe la <strong>diferencia estacional</strong>, que consiste en restar a la observación de un periodo la observación precedente de la misma estación. Si el orden estacional es <span class="math inline">\(m\)</span>, entonces la diferencia estacional de <span class="math inline">\(y_t\)</span> es <span class="math display">\[\nabla_m y_t = y_t - y_{t-m}.\]</span> Una serie no estacionaria en media puede pasar a serlo tras diferenciarla estacionalmente. Es decir, cualquiera de las dos diferenciaciones (regular o estacional) o ambas a la vez son alternativas para obtener la estacionariedad en media.</p>
+<p>Además, <strong>la diferenciación (regular, estacional o ambas) también permite alcanzar la ergodicidad</strong>.</p>
+<p>La figura 4 muestra un ejemplo de diferenciación regular y/o estacional. En el primer panel aparece la serie original Nacimientos <span class="math inline">\(y_t\)</span>; el segundo panel muestra la serie diferenciada regularmente <span class="math inline">\(\nabla y_t\)</span>; el tercer panel la serie diferenciada estacionalmente <span class="math inline">\(\nabla_m y_t\)</span>; el cuarto panel muestra la serie diferenciada regular y estacionalmente <span class="math inline">\(\nabla\nabla_m y_t\)</span>.</p>
+<p><img src="03-03-Tema3_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><em>¿Qué transformación para nacimientos consideras que genera una serie estacionaria, tanto en media como en varianza?</em> Siempre hay un cierto grado de subjetividad en la elección de las diferencias que hay que aplicar a una serie. En la figura 4 podemos considerar que la diferenciación regular (panel 2) es suficiente para lograr la estacionariedad en media y en varianza y terminar el proceso de diferenciación. Pero también podemos considerar que la serie es estacionaria en media pero no lo suficiente en varianza, y optar por la doble diferenciación, regular y estacional (panel 4). Existen contrastes para ayudarnos en esta decisión (véase epígrafe 5), pero la conclusión puede depender el tipo de contraste elegido o de ciertos parámetros técnicos usados en los contrastes. Muchas veces la decisión final se realiza durante el proceso de modelización o simplemente se opta por la que mejores predicciones genere.</p>
+</div>
+<div id="diferenciación-con-r" class="section level3 unnumbered">
+<h3 class="unnumbered">Diferenciación con <code>R</code></h3>
+<p><code>R</code> dispone de la función <code>diff</code> para diferenciar una serie:</p>
+<ul>
+<li><code>diff(x)</code> calcula la diferencia regular o de orden <span class="math inline">\(1\)</span>, <span class="math inline">\(\nabla y_t\)</span></li>
+<li><code>diff(x, lag = k)</code> calcula la diferencia de orden <span class="math inline">\(k\)</span>, <span class="math inline">\(\nabla_k y_t\)</span></li>
+<li><code>diff(x, lag = k, difference = d)</code> calcula <span class="math inline">\(d\)</span> diferencias de orden <span class="math inline">\(k\)</span>, <span class="math inline">\(\nabla_k^d y_t\)</span></li>
+</ul>
+<p>Si necesitas calcular una diferencia regular y otra estacional, <span class="math inline">\(\nabla\nabla_m y_t\)</span>, debes usar <code>diff(diff(x, lag = m))</code>. El orden de las diferenciaciones no cambia el resultado.</p>
+<p><br />
+</p>
+</div>
+</div>
+<div id="transformación-de-box-cox" class="section level2" number="3.3">
+<h2 number="3.3"><span class="header-section-number">3.3</span> Transformación de Box-Cox</h2>
+<p>En el tema 2 vimos el argumento <code>lambda</code>, que fijado a 0 indicaba que había que transformar la serie logarítmicamente. Veamos en detalle que hay detrás de este argumento.</p>
+<div id="transformación-logarítmica" class="section level3 unnumbered">
+<h3 class="unnumbered">Transformación logarítmica</h3>
+<p>Si la serie original no es estacionaria en varianza porque los datos crecen con el nivel de la serie, es posible obtener la estacionariedad por medio de transformaciones simples.</p>
+<p>La transformación logarítmica de una serie es una alternativa. La figura 5 muestra la serie Nacimientos y su logaritmo. La variabilidad estacional con la transformación logarítmica (panel segundo) es menor que en la serie original (panel superior).</p>
+<p><img src="03-03-Tema3_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="box-cox" class="section level3 unnumbered">
+<h3 class="unnumbered">Box-Cox</h3>
+<p>La transformación logarítmica es un caso concreto de otra más general, la transformación de Box-Cox: <span class="math display">\[
+z_t = 
+    \begin{cases}
+      (y_t^{\lambda}-1)/\lambda &amp; \,\,\,\lambda \neq 0 \\
+      \log(y_t) &amp; \,\,\, \lambda = 0 
+    \end{cases}
+\]</span></p>
+<p>Se puede demostrar que <span class="math inline">\(\lim_{\lambda \rightarrow 0} \;\; (y_t^{\lambda}-1)/\lambda = log(y_t)\)</span>.</p>
+<p>En la figura 5, el panel inferior muestra la transformación <em>óptima</em> de Box-Cox para Nacimientos, la que hace que la serie sea lo más estacionaria en varianza posible. El valor usado es <span class="math inline">\(\lambda= -0.58\)</span>.</p>
+<p>Ahora bien, por un lado no hay grandes diferencias (al menos visuales) entre el resultado de la transformación logarítmica y el resultado de la transformación de Box-Cox con <span class="math inline">\(\lambda= -0.58\)</span>. Por otro lado, ¿qué interpretación tiene <span class="math inline">\(-(nacimientos_t^{-0.58}-1)/0.58\)</span>? En general, y con independencia del resultado de la transformación óptima, se opta por la transformación logarítmica por ser más sencilla y sobre todo más interpretable.</p>
+<p>Por último, ten presente que <strong>si se estima y predice una serie transformada, luego hay que deshacer la transformación para obtener la predicción de la serie original</strong>.</p>
+<p>El argumento <code>lambda</code> que hemos usado en algunas funciones de la librería <code>forecast</code> hace referencia al parámetro <span class="math inline">\(\lambda\)</span> de la transformación Box-Cox. Siempre lo hemos fijado a cero, indicando la transformación logarítmica.</p>
+<p><br />
+</p>
+</div>
+</div>
+<div id="diferencia-logaritmo-y-tasa-de-variación" class="section level2" number="3.4">
+<h2 number="3.4"><span class="header-section-number">3.4</span> Diferencia, Logaritmo y Tasa de variación</h2>
+<p>La transformación <span class="math inline">\(\nabla y_t\)</span> se puede interpretar como variaciones en nivel, pero <span class="math inline">\(\nabla^2 y_t\)</span> no tiene ninguna interpretación. <strong>Nunca hay que perder de vista la realidad de las observaciones</strong>.</p>
+<p>Cuando una serie tiene que ser diferenciada dos veces para conseguir su estacionariedad, vale la pena probar una transformación alternativa que sea interpretable: <span class="math inline">\(\nabla \log(y_t)\)</span> o <span class="math inline">\(\nabla_m \log(y_t)\)</span>. Por un lado, <span class="math display">\[\nabla \log(y_t) = \log(y_t) - \log(y_{t-1}) = \log\big(\frac{y_t}{y_{t-1}} \big)
+  \approx \frac{y_t}{y_{t-1}} - 1 = \frac{y_t - y_{t-1}}{y_{t-1}} =TV y_t.\]</span></p>
+<p>Por ejemplo, para una serie mensual <em>la diferencia regular del logaritmo (natural) es la Tasa de Variación Mensual de la serie</em> <span class="math inline">\((\nabla \log(y_t)=TVM y_t)\)</span>, que tiene una clara interpretación como variación porcentual.</p>
+<p>Por otro lado, <span class="math display">\[\nabla_m \log(y_t) \approx \frac{y_t - y_{t-m}}{y_{t-m}} =TV_m y_t.\]</span></p>
+<p>Es decir, para una serie mensual <em>la diferencia estacional del logaritmo es la Tasa de Variación Anual de la serie</em> <span class="math inline">\((\nabla_{12} \log(y_t)=TVA y_t)\)</span>.</p>
+<p>La figura 6 muestra para la serie Nacimientos la serie original (panel superior), las tasas de variación mensual y anual (paneles dos y tres, respectivamente) y la doble diferencia regular y estacional del logaritmo de nacimientos (panel inferior). Parece que la tasa de variación mensual de los nacimientos y la doble diferencia son, de todas las transformaciones probadas en este epígrafe, las series más estacionarias en media y varianza.</p>
+<p><img src="03-03-Tema3_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div id="transformación-de-box-cox-con-r" class="section level3 unnumbered">
+<h3 class="unnumbered">Transformación de Box-Cox con <code>R</code></h3>
+<p><code>R</code> dispone de una serie de funciones en el paquete <code>forecast</code> que nos facilitan el uso de la transformación de Box-Cox:</p>
+<ul>
+<li><code>BoxCox(y, lambda)</code> realiza la transformación Box-Cox para un valor de <span class="math inline">\(\lambda\)</span> determinado.</li>
+<li><code>InvBoxCox(z, lambda)</code> realiza la transformación inversa</li>
+<li><code>BoxCox.lambda(y)</code> calcula el valor de <span class="math inline">\(\lambda\)</span> más adecuado. Usa <code>help</code> para saber más sobre los métodos de estimación de <span class="math inline">\(\lambda\)</span>.</li>
+</ul>
+<p>Para la serie Nacimientos el valor óptimo de <span class="math inline">\(\lambda\)</span> es:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BoxCox.lambda</span>(nacimientos) </span></code></pre></div>
+<pre><code>[1] -0.5807097</code></pre>
+<p>Recuerda que en la figura 5 puedes ver la serie original, la transformación logarítmica y la transformación Box-Cox para el valor de <span class="math inline">\(\lambda\)</span> óptimo.</p>
+<p><br />
+<br />
+</p>
+</div>
+</div>
+</div>
+<div id="funciones-de-autocorrelación-y-autocorrelación-parcial" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Funciones de autocorrelación y autocorrelación parcial</h1>
+<p><br />
+</p>
+<div id="función-de-autocorrelación" class="section level2" number="4.1">
+<h2 number="4.1"><span class="header-section-number">4.1</span> Función de autocorrelación</h2>
+<p>Ya hemos indicado que bajo ciertas hipótesis los momentos primero y segundo de la serie caracterizan perfectamente el proceso estocástico. En el contexto de series temporales, si se da la estacionariedad en media, el primer momento de la serie es constante y, por tanto, no informativo. <strong>Son los segundos momentos de la serie (covarianzas) los que caracterizan el proceso estocástico</strong>.</p>
+<p>Recordemos que <span class="math inline">\(\gamma_k=Cov(y_t,y_{t-k})\)</span> es la autocovarianza de orden k. Por tanto <span class="math inline">\(\gamma_0\)</span> es la varianza de la serie <span class="math inline">\(y_t\)</span>. Sea <span class="math inline">\(\rho_k\)</span> la autocorrelación se orden <span class="math inline">\(k\)</span>. Se puede verificar que: <span class="math display">\[\rho_k = cor(y_t, y_{t-k}) =\frac{\gamma_k}{\gamma_0}.\]</span></p>
+<ul>
+<li><span class="math inline">\(\rho_1\)</span> mide la información que se transmite de un periodo al siguiente periodo.</li>
+<li><span class="math inline">\(\rho_k\)</span> mide la información que se transmite k periodos hacia adelante.</li>
+</ul>
+<p>Las autocorrelaciones caracterizan el proceso estocástico, y <strong>la función de autocorrelación o correlograma (FAC, o ACF en inglés) es el gráfico de <span class="math inline">\(r_k\)</span> contra <span class="math inline">\(k\)</span></strong>, donde <span class="math inline">\(r_k\)</span> es la estimación de <span class="math inline">\(\rho_k\)</span> obtenida con las observaciones.</p>
+<p>En la figura 7 veamos la FAC para Libros (panel superior) y su diferencia (panel inferior) usando la función <code>ggAcf</code>, donde el argumento <code>lag</code> indica el máximo orden <span class="math inline">\(k\)</span> a visualizar. Existe la función equivalente <code>acf</code> en la librería <code>stats</code>. El decrecimiento lineal de las autocorrelaciones para la serie Libros es un indicio de que la serie tiene tendencia y debería ser diferenciada. Observa que las autocorrelaciones de la primera diferencia de Libros entran en el intervalo de confianza al 95% (bandas azules) desde la primer momento.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(libros, <span class="at">lag =</span> <span class="dv">10</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(<span class="fu">diff</span>(libros), <span class="at">lag =</span> <span class="dv">10</span>)</span></code></pre></div>
+<p><img src="03-03-Tema3_files/figure-html/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Si queremos ver los valores numéricos de las autocorrelaciones debemos añadir a la función <code>ggAfc</code> el argumento <code>plot = FALSE</code>. Vemos que existe una relación (casi) nula entre la variación anual de Libros de dos años consecutivos (<span class="math inline">\(r_1=\)</span>-0.038). Para una serie anual este es un claro indicativo de que la serie diferenciada es ruido blanco.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(<span class="fu">diff</span>(libros), <span class="at">lag =</span> <span class="dv">10</span>, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>
+Autocorrelations of series &#39;diff(libros)&#39;, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000 -0.038 -0.073  0.037 -0.033  0.057 -0.300  0.035  0.162  0.140 -0.024 </code></pre>
+<p>La figura 8 muestra la FAC para la serie Nacimientos y algunas de sus transformaciones. Observa el diferente uso del argumento <code>lag</code>: en la función <code>diff</code> indica el orden de la diferenciación, y en la función <code>ggAcf</code> indica el orden máximo de la autocorrelación. La primera columna muestra la FAC para Nacimientos y varias diferenciaciones, mientras que la segunda columna muestra la FAC para el logaritmo de los nacimientos y sus diferenciaciones. Se puede observar que la FAC de una serie y su transformación logarítmica es muy similar. En los paneles de la primera y tercera fila las autocorrelaciones decrecen muy lentamente, indicando que la serie analizada no es estacionaria ni ergódica. En los paneles de la segunda fila las autocorrelaciones de orden estacional (12, 24,…) también decrecen lentamente, indicando que la serie analizada no es ergódica. Solo la doble diferenciación regular y estacional de la serie (original o su logaritmo) muestran un rápido descenso en los coeficiente de autocorrelación (paneles de la última fila), indicando que la serie transformada es estacionaria en media y ergódica.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(nacimientos, <span class="at">lag =</span> <span class="dv">48</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(<span class="fu">log</span>(nacimientos), <span class="at">lag =</span> <span class="dv">48</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(<span class="fu">diff</span>(nacimientos), <span class="at">lag =</span> <span class="dv">48</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(<span class="fu">diff</span>(<span class="fu">log</span>(nacimientos)), <span class="at">lag =</span> <span class="dv">48</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(<span class="fu">diff</span>(nacimientos, <span class="at">lag =</span> <span class="dv">12</span>),<span class="at">lag =</span> <span class="dv">48</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(<span class="fu">diff</span>(<span class="fu">log</span>(nacimientos), <span class="at">lag =</span> <span class="dv">12</span>), <span class="at">lag =</span> <span class="dv">48</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(<span class="fu">diff</span>(<span class="fu">diff</span>(nacimientos, <span class="at">lag=</span><span class="dv">12</span>)), <span class="at">lag =</span> <span class="dv">48</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(<span class="fu">diff</span>(<span class="fu">diff</span>(<span class="fu">log</span>(nacimientos), <span class="at">lag=</span><span class="dv">12</span>)), <span class="at">lag =</span> <span class="dv">48</span>)</span></code></pre></div>
+<p><img src="03-03-Tema3_files/figure-html/unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>También es posible ver los valores numéricos exactos:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(<span class="fu">diff</span>(<span class="fu">diff</span>(nacimientos, <span class="at">lag=</span><span class="dv">12</span>)), <span class="at">lag =</span> <span class="dv">24</span>, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>
+Autocorrelations of series &#39;diff(diff(nacimientos, lag = 12))&#39;, by lag
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 1.000 -0.396 -0.006  0.031 -0.117 -0.045  0.072 -0.038  0.050  0.097 -0.067 
+    11     12     13     14     15     16     17     18     19     20     21 
+ 0.105 -0.298  0.066  0.034  0.049 -0.070  0.128 -0.048 -0.077  0.087 -0.085 
+    22     23     24 
+ 0.002  0.177 -0.160 </code></pre>
+<p>Las bandas azules de la FAC muestran el intervalo de confianza al 95% (IC95). Si <span class="math inline">\(\rho_k = 0\)</span>, la distribución del estimador <span class="math inline">\(r_k\)</span> se distribuye aproximadamente como una normal de media <span class="math inline">\(-1/T\)</span> y varianza <span class="math inline">\(1/T\)</span>. Las líneas punteadas de la FAC están dibujadas en las posiciones <span class="math inline">\(\frac{-1}{T} \pm \frac{1.96}{\sqrt{T}}\)</span>.</p>
+<ul>
+<li><p>Si un <span class="math inline">\(r_k\)</span> cae fuera del IC95 hay evidencia para rechazar la hipótesis nula de que <span class="math inline">\(\rho_k = 0\)</span> a un nivel del 5%. Recordemos que incluso si todos los <span class="math inline">\(\rho_k\)</span> son cero, cabe esperar que un 5% de sus estimaciones <span class="math inline">\(r_k\)</span> caigan fuera del IC95.</p></li>
+<li><p>Los <span class="math inline">\(\rho_k\)</span> no son independientes. Si uno cae fuera del IC95, es más probable que los valores vecinos caigan también fuera.</p></li>
+</ul>
+<p><br />
+</p>
+</div>
+<div id="función-de-autocorrelación-parcial" class="section level2" number="4.2">
+<h2 number="4.2"><span class="header-section-number">4.2</span> Función de autocorrelación parcial</h2>
+<p><strong>La autocorrelación parcial de orden k, <span class="math inline">\(\phi_k\)</span>, mide la información que se transmite <em>directamente</em> <span class="math inline">\(k\)</span> periodos adelante</strong>, eliminada la información que se transmite a través de los periodos intermedios.</p>
+<ul>
+<li><span class="math inline">\(\phi_1\)</span> mide la información que de un periodo se trasmite directamente al siguiente periodo. Por tanto <span class="math inline">\(\phi_1=\rho_1\)</span>.</li>
+<li><span class="math inline">\(\phi_2\)</span> mide la información que de un periodo se trasmite 2 periodos adelante, eliminando la información que se trasmite a través del periodo intermedio.</li>
+</ul>
+<p>La función de autocorrelación parcial (FACP, o PACF en inglés) es el gráfico de <span class="math inline">\(r_{k.1,2,k-1}\)</span> contra <span class="math inline">\(k\)</span>, donde <span class="math inline">\(r_{k.1,2,k-1}\)</span> es la estimación de <span class="math inline">\(\phi_k\)</span> realizada con las observaciones.</p>
+<p>Las figura 9 y 10 muestran la FACP para las series Libros y Nacimientos así como para sus transformaciones para que sean estacionarias. La FACP no permite conocer si una serie es estacionaria o ergódica.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(libros, <span class="at">lag =</span> <span class="dv">10</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(<span class="fu">diff</span>(libros), <span class="at">lag =</span> <span class="dv">10</span>)</span></code></pre></div>
+<p><img src="03-03-Tema3_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(nacimientos, <span class="at">lag =</span> <span class="dv">48</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(<span class="fu">diff</span>(<span class="fu">diff</span>(nacimientos, <span class="at">lag=</span><span class="dv">12</span>)), <span class="at">lag =</span> <span class="dv">48</span>)</span></code></pre></div>
+<p><img src="03-03-Tema3_files/figure-html/unnamed-chunk-17-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>También puedes obtener directamente los valores numéricos de la FACP:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(<span class="fu">diff</span>(libros), <span class="at">lag =</span> <span class="dv">10</span>, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>
+Partial autocorrelations of series &#39;diff(libros)&#39;, by lag
+
+     1      2      3      4      5      6      7      8      9     10 
+-0.038 -0.074  0.031 -0.036  0.060 -0.306  0.035  0.120  0.203 -0.035 </code></pre>
+<p>Las funciones <code>tsdisplay</code> y <code>ggtsdisplay</code> muestran la serie temporal, su FAC y su FACP en un único gráfico (véase figura 11).</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtsdisplay</span>(<span class="fu">diff</span>(libros), <span class="at">main =</span> <span class="st">&quot;Figura 11. FAC y FACP para la Libros diferenciada&quot;</span>)</span></code></pre></div>
+<p><img src="03-03-Tema3_files/figure-html/unnamed-chunk-19-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+<br />
+</p>
+</div>
+</div>
+<div id="raíces-unitarias" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Raíces unitarias</h1>
+<p><br />
+</p>
+<div id="tipos-de-tendencia" class="section level2" number="5.1">
+<h2 number="5.1"><span class="header-section-number">5.1</span> Tipos de tendencia</h2>
+<p><img src="03-03-Tema3_files/figure-html/unnamed-chunk-20-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>La figura 12 muestra tres posibles tipos de PGD (el residuo <span class="math inline">\(\varepsilon_t\)</span> es siempre ruido blanco):</p>
+<ul>
+<li>PGD con tendencia estocástica, por ejemplo <strong>Paseo aleatorio puro</strong>, <span class="math display">\[y_t = y_{t-1} + \varepsilon_t = y_0 + \sum_{s=1}^t \varepsilon_s.\]</span><br />
+</li>
+<li>PGD con tendencia determinista, por ejemplo <strong>Modelo lineal</strong> <span class="math display">\[y_t = \alpha + \mu t + \varepsilon_t.\]</span></li>
+<li>PGD con tendencia estocástica y determinista, por ejemplo <strong>Paseo aleatorio con deriva</strong> <span class="math display">\[y_t = \mu + y_{t-1} + \varepsilon_t = y_0 + \mu t + \sum_{s=1}^t \varepsilon_s.\]</span></li>
+</ul>
+<p>En los tres casos la serie no es estacionaria, pero es la <strong>presencia de tendencia estocástica</strong> lo que determina que el proceso tenga una <strong>raíz unitaria</strong>. Así, el paseo aleatorio puro y el paseo aleatorio con deriva presentan una <em>raíz unitaria</em>, pero los tres modelos tienen tendencia y deben ser diferenciados una vez para transformarlos en procesos estacionarios.</p>
+<p>Contrastar la tendencia estocástica no es algo trivial, y la prueba es que existen múltiples contrastes para ello: Dickey-Fuller aumentado (ADF), Phillips-Perron (PP), Elliot-Rothemberg-Stock (ERS), Schmidt-Phillips (SP), Kwiatkowski-Phillips-Schmidt-Shin (KPSS), entre otros. (Véase <a href="https://www.springer.com/gp/book/9780387759661">Analysis of Integrated and Cointegrated Time series with R</a>)</p>
+<p>En muchas de las pruebas la hipótesis nula es que la serie tiene raíces unitarias (tendencia estocástica), cuando lo habitual es que la hipótesis nula sea la conservadora (en este caso que la serie no tenga tendencia estocástica). En este curso veremos la <strong>prueba de Kwiatkowski-Phillips-Schmidt-Shin</strong> que usa un contraste de Multiplicadores de Lagrange para contrastar la estacionariedad de una serie en torno a una tendencia determinista, frente a la hipótesis alternativa de existencia de una raíz unitaria. Es decir, la prueba KPSS tiene como hipótesis nula que la serie no tiene tendencia estocástica y por tanto es una prueba más conservadora que la mayoría de ellas. Sin embargo, en la prueba KPSS la ausencia de raíz unitaria no es una prueba de estacionariedad, sino de <em>estacionariedad en torno a una tendencia determinista</em>. Por ejemplo, el Modelo lineal no tiene una raíz unitaria (no tiene tendencia estocástica) pero no es estacionario.</p>
+<p>También existen procesos con <em>estacionalidad estocástica</em> del tipo <span class="math inline">\(y_t = y_{t-m} + \varepsilon_t\)</span>, donde <em>m</em> es el orden estacional. Contrastar la existencia de raíces unitarias estacionales es complicado y no lo veremos en este curso. (Véase <a href="https://www.sciencedirect.com/science/article/abs/pii/0304407694900302">Testing for unit roots in seasonal time series: Some theoretical extensions and a Monte Carlo investigation</a>)</p>
+<p>En lo que queda de exposición asumiremos que la serie no presenta estacionalidad.</p>
+<p><br />
+</p>
+</div>
+<div id="contraste-de-raíz-unitaria-kpss" class="section level2" number="5.2">
+<h2 number="5.2"><span class="header-section-number">5.2</span> Contraste de raíz unitaria KPSS</h2>
+<div id="teoría" class="section level3 unnumbered">
+<h3 class="unnumbered">Teoría</h3>
+<p>Sea <span class="math inline">\(y_t\)</span> la serie para la que queremos contrastar la existencia de raíces unitarias. Asumimos que podemos descomponer la serie en la suma de una tendencia determinista, un paseo aleatorio y una perturbación aleatoria estacionaria: <span class="math display">\[y_t = \xi t + r_t + \varepsilon_t.\]</span> Aquí <span class="math inline">\(r_t\)</span> es el paseo aleatorio, <span class="math display">\[r_t = r_{t-1} + u_t,\]</span> donde <span class="math inline">\(u_t\)</span> son i.i.d. <span class="math inline">\((0,\sigma_u^2)\)</span> y el valor inicial <span class="math inline">\(r_0\)</span> se asume fijo y tiene el papel de un intercepto o constante del modelo.</p>
+<p>Si se cumple la hipótesis <span class="math inline">\(H_0: \sigma_u^2=0\)</span>, entonces <span class="math inline">\(u_t=0\)</span> y <span class="math inline">\(r_t=r_0\)</span> para todo <span class="math inline">\(t\)</span> y la componente estocástica desaparece, quedando solo la tendencia determinista. Como el parámetro de interés es una varianza, <span class="math inline">\(H_1: \sigma_u^2&gt;0\)</span>, es decir, es un contraste de una cola por la derecha.</p>
+<ul>
+<li>Si <span class="math inline">\(\xi=0\)</span>, entonces bajo la hipótesis nula <span class="math inline">\(y_t = r_0 + \varepsilon_t\)</span>, es decir <span class="math inline">\(y_t\)</span> no tiene tendencia estocástica ni determinista: es estacionaria en nivel alrededor de <span class="math inline">\(r_0\)</span> (recuerda que por hipótesis <span class="math inline">\(\varepsilon_t\)</span> es estacionario).</li>
+<li>Si <span class="math inline">\(\xi \neq 0\)</span>, entonces bajo la hipótesis nula <span class="math inline">\(y_t = \xi t + r_0 + \varepsilon_t\)</span>, es decir <span class="math inline">\(y_t\)</span> no tiene tendencia estocástica pero si determinista: es estacionaria alrededor de una tendencia determinista <span class="math inline">\(\xi t + r_0\)</span>.</li>
+<li>En ambos casos, si se rechaza la hipótesis nula es porque la serie tiene una raíz unitaria (tendencia estocástica) y habría que diferenciarla.</li>
+</ul>
+<p>No hay que olvidar que esta prueba descansa bajo los supuestos de <span class="math inline">\(\varepsilon_t\)</span> es estacionario y <span class="math inline">\(u_t\)</span> i.i.d. <span class="math inline">\((0,\sigma_u^2)\)</span>.</p>
+</div>
+<div id="procedimiento-de-contraste" class="section level3 unnumbered">
+<h3 class="unnumbered">Procedimiento de contraste</h3>
+<p><strong>Paso 1:</strong> Se estima la ecuación <span class="math inline">\(y_t = \xi t + r_0 + \varepsilon_t\)</span> para obtener los residuos estimados <span class="math inline">\(\widehat{\varepsilon}_t\)</span>.</p>
+<p>Observa que este vector de residuos se puede estimar fijando <span class="math inline">\(\xi = 0\)</span>, es decir, regresando la serie <span class="math inline">\(y_t\)</span> simplemente sobre una constante; o bajo es supuesto de que <span class="math inline">\(\xi \neq 0\)</span>, es decir, regresando la serie sobre una contante y una tendencia lineal.</p>
+<p><strong>Paso 2:</strong> Se definen las sumas parciales <span class="math inline">\(S_t = \sum_{i=1}^t \widehat{\varepsilon}_i\)</span>, con <span class="math inline">\(t=1,2,\ldots,T\)</span> y se calcula <span class="math inline">\(\widehat{\sigma}^2_{\varepsilon}\)</span>.</p>
+<p>La forma más sencilla de calcular <span class="math inline">\(\widehat{\sigma}^2_{\varepsilon}\)</span> es <span class="math inline">\(\widehat{\sigma}^2_{\varepsilon}= \sum \widehat{\varepsilon}_t^2/T\)</span>, pero una fórmula alternativa es <span class="math inline">\(\widehat{\sigma}^2_{\varepsilon}(l) = T^{-1}\sum_{t = 1}^T \widehat{\varepsilon}_t^2 + 2T^{-1}\sum_{s=1}^l \Big[ \Big( 1 - \frac{s}{l+1} \Big) \sum_{t=s+1}^T \widehat{\varepsilon}_t \widehat{\varepsilon}_{t-s} \Big]\)</span>, que dependen el parámetro <span class="math inline">\(l\)</span>.</p>
+<p><strong>Paso 3:</strong> El estadístico de contraste es <span class="math inline">\(LM = \sum_{t=1}^T S_t^2/\widehat{\sigma}^2_{\varepsilon}\)</span>.</p>
+<p><strong>Paso 4:</strong> Fijado un nivel de significatividad, el estadístico de contraste LM es comparado con el valor crítico. Si LM es mayor que el valor crítico, se rechaza la hipótesis nula, la serie tiene raíces unitarias (tendencia estocástica) y es, por tanto, no estacionaria. Si no se rechaza la hipótesis nula, entonces la serie es estacionaria en torno a un nivel (caso <span class="math inline">\(\xi = 0\)</span>) o a una tendencia determinista (caso <span class="math inline">\(\xi \neq 0\)</span>).</p>
+<p>Puedes encontrar los detalles de este contraste en Kwiatkowski, D., Phillips, P.C.B., Schmidt, P. and Shin, Y., (1992).</p>
+</div>
+<div id="contraste-kpss-en-r" class="section level3 unnumbered">
+<h3 class="unnumbered">Contraste KPSS en <code>R</code></h3>
+<p><code>R</code> proporciona dos implementaciones de esta prueba, <code>ur.kpss</code> en el paquete <code>urca</code> (que será la que usaremos) y <code>kpss.test</code> en el paquete <code>tseries</code>. En ambos casos el usuario debe decidir el valor adecuado del parámetro <span class="math inline">\(l\)</span> para el cálculo de <span class="math inline">\(\widehat{\sigma}^2_{\varepsilon}(l)\)</span>. Como los resultados pueden depender de este parámetro, es conveniente repetir el contraste para diferentes valores.</p>
+<p>Además, en <code>forecast</code> está disponible la función <code>ndiffs</code> que estima el número de diferencias necesarias para que una serie sea estacionaria. Por defecto la función <code>ndiffs</code> emplea el contraste KPSS, pero también están disponibles Dickey-Fuller y Phillips-Perron.</p>
+<p>Los principales argumentos de la función <code>ur.kpss</code> son:</p>
+<ul>
+<li><code>type</code>, puede ser <code>type = "mu"</code> para contrastar la presencia de tendencia estocástica en torno a un nivel (<span class="math inline">\(\xi = 0\)</span>); o <code>type = "tau"</code> para contrastar la presencia de tendencia estocástica en torno a una tendencia determinista (<span class="math inline">\(\xi \neq 0\)</span>).</li>
+<li><code>lags</code>, el valor del parámetro <span class="math inline">\(l\)</span> en <span class="math inline">\(\widehat{\sigma}^2_{\varepsilon}(l)\)</span>. Puede ser ‘’nil’’ cuando no hay corrección (<span class="math inline">\(l=0\)</span>); ‘’short’’ usa el valor <span class="math inline">\((4T/100)^{0.25}\)</span>; y ‘’long’’ para <span class="math inline">\((12T/100)^{0.25}\)</span>.</li>
+<li><code>use.lag</code> fija un valor numérico para <span class="math inline">\(l\)</span>. (La función <code>ndiffs</code> fija este valor a <span class="math inline">\(3\sqrt{T/13}\)</span>.)</li>
+</ul>
+</div>
+<div id="ejemplo-con-libros" class="section level3 unnumbered">
+<h3 class="unnumbered">Ejemplo con Libros</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">ur.kpss</span>(libros, <span class="at">type=</span><span class="st">&#39;tau&#39;</span>, <span class="at">lags =</span> <span class="st">&#39;short&#39;</span>))</span></code></pre></div>
+<pre><code>
+####################### 
+# KPSS Unit Root Test # 
+####################### 
+
+Test is of type: tau with 2 lags. 
+
+Value of test-statistic is: 0.206 
+
+Critical value for a significance level of: 
+                10pct  5pct 2.5pct  1pct
+critical values 0.119 0.146  0.176 0.216</code></pre>
+<p>En el caso en que se asume tendencia determinista, y para <span class="math inline">\(l=2\)</span>, el estadístico de contraste vale 0.206 y el valor crítico al 5% vale 0.146. Como el estadístico de contraste es mayor que el valor crítico, se rechaza la hipótesis nula, la serie tiene una raíz unitaria, es decir tiene tendencia estocástica alrededor de una tendencia determinista (como en el paseo aleatorio con deriva). Observa que al 1% no se rechaza la hipótesis nula.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">ur.kpss</span>(libros, <span class="at">type=</span><span class="st">&#39;mu&#39;</span>, <span class="at">lags =</span> <span class="st">&#39;short&#39;</span>))</span></code></pre></div>
+<pre><code>
+####################### 
+# KPSS Unit Root Test # 
+####################### 
+
+Test is of type: mu with 2 lags. 
+
+Value of test-statistic is: 0.434 
+
+Critical value for a significance level of: 
+                10pct  5pct 2.5pct  1pct
+critical values 0.347 0.463  0.574 0.739</code></pre>
+<p>Ahora, bajo el supuesto de que no hay tendencia determinista, el estadístico de contraste vale 0.434 y el valor crítico al 5% vale 0.463. No se rechaza la hipótesis nula, la serie no tiene tendencia estocástica alrededor de un nivel.</p>
+<p>Tenemos un ejemplo perfecto de lo paradójicos que pueden ser los resultados de un contrate de raíces unitarias y de por qué resultan en la práctica tan poco útiles.</p>
+<p>Si aplicamos el primer contraste (<span class="math inline">\(\xi \neq 0\)</span>) para diferentes valores de <span class="math inline">\(l\)</span> desde 1 hasta 8, los estadísticos de contraste valen:</p>
+<pre><code>    1     2     3     4     5     6     7     8 
+0.276 0.206 0.172 0.154 0.145 0.142 0.142 0.144 </code></pre>
+<p>En todos los casos el valor crítico al 5% sigue siendo 0.146. Se observa que para <span class="math inline">\(l &lt; 5\)</span>, se rechazaría la hipótesis nula, la serie tiene tendencia estocástica; pero para <span class="math inline">\(l \geq 5\)</span> no se rechaza y la serie no tiene tendencia estocástica (aunque se está asumiendo que tiene tendencia determinista). Si se repite este ejercicio fijando <code>tau = "mu"</code>, se rechaza la hipótesis nula sólo para <span class="math inline">\(l = 1\)</span>.</p>
+<p>Si optamos por aceptar que la serie Libros no es estacionaria y la diferenciamos una vez, debemos repetir el contraste para la serie diferenciada a fin de determinar si una diferencia es suficiente para alcanzar la estacionariedad. Esta vez, lo más conveniente es considerar que la tendencia determinista ya ha sido eliminada y fijar <code>tau = "mu"</code>.</p>
+<p>Otra opción es usar la función <code>ndiffs</code> que aplica el contraste KPSS reiteradamente para identificar el número adecuado de diferenciaciones. Esta función permite fijar el nivel de significatividad, el tipo de contraste y el tipo de tendencia determinista.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ndiffs</span>(libros, <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">test =</span> <span class="st">&quot;kpss&quot;</span>, <span class="at">type =</span> <span class="st">&quot;trend&quot;</span>)</span></code></pre></div>
+<pre><code>[1] 1</code></pre>
+<p>También existe la función <code>nsdiffs</code> que identifica el número de diferenciaciones estacionales adecuado. En este caso se basa de una regla de decisión empírica, sin soporte teórico.</p>
+</div>
+<div id="ejemplo-con-nacimientos-anual" class="section level3 unnumbered">
+<h3 class="unnumbered">Ejemplo con Nacimientos (anual)</h3>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>nacimientosAnual<span class="ot">&lt;-</span><span class="fu">aggregate</span>(nacimientos, <span class="at">FUN =</span> sum)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">ur.kpss</span>(nacimientosAnual, <span class="at">type=</span><span class="st">&#39;tau&#39;</span>, <span class="at">lags =</span> <span class="st">&quot;short&quot;</span>))</span></code></pre></div>
+<pre><code>
+####################### 
+# KPSS Unit Root Test # 
+####################### 
+
+Test is of type: tau with 3 lags. 
+
+Value of test-statistic is: 0.2365 
+
+Critical value for a significance level of: 
+                10pct  5pct 2.5pct  1pct
+critical values 0.119 0.146  0.176 0.216</code></pre>
+<p>El estadístico de contraste vale 0.236 y el valor crítico al 5% vale 0.146. Como el estadístico de contraste es mayor que el valor crítico, se rechaza la hipótesis nula, la serie tiene tendencia estocástica alrededor de una tendencia determinista, no es estacionaria.</p>
+<p>De nuevo, aplicando el contraste para diferentes valores de <span class="math inline">\(l\)</span> se tiene que:</p>
+<pre><code>    1     2     3     4     5     6     7     8 
+0.438 0.303 0.237 0.198 0.174 0.157 0.146 0.138 </code></pre>
+<p>Solo para valores de <span class="math inline">\(l\)</span> por encima de 6 no se rechaza la hipótesis nula. Si aplicamos <code>ndiffs</code> obtenemos que hay que diferenciar la serie dos veces para que sea estacionaria.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ndiffs</span>(nacimientosAnual, <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">test =</span> <span class="st">&quot;kpss&quot;</span>, <span class="at">type =</span> <span class="st">&quot;trend&quot;</span>)</span></code></pre></div>
+<pre><code>[1] 2</code></pre>
+</div>
+<div id="pruebas-alternativas-para-contraste-de-raíces-unitarias" class="section level3 unnumbered">
+<h3 class="unnumbered">Pruebas alternativas para contraste de raíces unitarias</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Prueba</th>
+<th align="left">Función</th>
+<th align="left">Package</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">KPSS</td>
+<td align="left"><code>ur.kpss</code></td>
+<td align="left">urca</td>
+</tr>
+<tr class="even">
+<td align="left">KPSS</td>
+<td align="left"><code>kpss.test</code></td>
+<td align="left">tseries</td>
+</tr>
+<tr class="odd">
+<td align="left">ADF</td>
+<td align="left"><code>ur.df</code></td>
+<td align="left">urca</td>
+</tr>
+<tr class="even">
+<td align="left">ADF</td>
+<td align="left"><code>adf.test</code></td>
+<td align="left">tseries</td>
+</tr>
+<tr class="odd">
+<td align="left">ADF</td>
+<td align="left"><code>adftest</code></td>
+<td align="left">fUnitRoots</td>
+</tr>
+<tr class="even">
+<td align="left">ADF</td>
+<td align="left"><code>ADF.test</code></td>
+<td align="left">uroot</td>
+</tr>
+<tr class="odd">
+<td align="left">PP</td>
+<td align="left"><code>ur.pp</code></td>
+<td align="left">urca</td>
+</tr>
+<tr class="even">
+<td align="left">PP</td>
+<td align="left"><code>pp.test</code></td>
+<td align="left">tseries</td>
+</tr>
+<tr class="odd">
+<td align="left">ERS</td>
+<td align="left"><code>ur.ers</code></td>
+<td align="left">urca</td>
+</tr>
+<tr class="even">
+<td align="left">SP</td>
+<td align="left"><code>ur.sp</code></td>
+<td align="left">urca</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+<br />
+</p>
+</div>
+</div>
+</div>
+<div id="resumen-de-los-comandos-utilizados" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> Resumen de los comandos utilizados</h1>
+<table>
+<colgroup>
+<col width="19%" />
+<col width="11%" />
+<col width="68%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Función</th>
+<th align="left">Paquete</th>
+<th align="left">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>lag</code></td>
+<td align="left">stats</td>
+<td align="left">crea una serie desfasada</td>
+</tr>
+<tr class="even">
+<td align="left"><code>diff</code></td>
+<td align="left">base</td>
+<td align="left">diferencia a serie, por defecto una vez</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>ur.kpss</code></td>
+<td align="left">urca</td>
+<td align="left">contraste de raíz unitaria KPSS</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ndiffs</code></td>
+<td align="left">forecast</td>
+<td align="left">identifica el número necesario de diferenciaciones regulares</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>nsdiffs</code></td>
+<td align="left">forecast</td>
+<td align="left">identifica el número necesario de diferenciaciones estacionales</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ggAcf</code>, <code>ggPacf</code></td>
+<td align="left">forecast</td>
+<td align="left">función de autocorrelación y autocorrelación parcial</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>ggtsdisplay</code></td>
+<td align="left">forecast</td>
+<td align="left">dibuja la serie, junto con su ACF y PACF</td>
+</tr>
+<tr class="even">
+<td align="left"><code>BoxCox.lambda</code></td>
+<td align="left">forecast</td>
+<td align="left">estima el parámetro de la transformación de Box-Cox más adecuado</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>BoxCox</code></td>
+<td align="left">forecast</td>
+<td align="left">realiza la transformación de Box-Cox</td>
+</tr>
+<tr class="even">
+<td align="left"><code>InvBoxCox</code></td>
+<td align="left">forecast</td>
+<td align="left">realiza la inversa de la transformación de Box-Cox</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+<br />
+</p>
+</div>
+<div id="referencias" class="section level1" number="7">
+<h1 number="7"><span class="header-section-number">7</span> Referencias</h1>
+<ul>
+<li><p>Ghysels, E., Lee, H. S. y Noh, J. (1994) <em>Testing for unit roots in seasonal time series: Some theoretical extensions and a Monte Carlo investigation</em>. Journal of Econometrics, 62(2), pp. 415-442. doi.org/10.1016/0304-4076(94)90030-2</p></li>
+<li><p>Kwiatkowski, D., Phillips, P.C.B., Schmidt, P. y Shin, Y., (1992), <em>Testing the Null Hypothesis of Stationarity Against the Alternative of a Unit Root: How Sure Are We That Economic Time Series Have a Unit Root?</em>, Journal of Econometrics, 54, pp. 159–178. doi.org/10.1016/0304-4076(92)90104-Y</p></li>
+<li><p>Pfaff, B. (2008). <em>Analysis of Integrated and Cointegrated Time Series with R</em>. Colección Use R!, Ed. Springer.</p></li>
+</ul>
+<p><br />
+<br />
+<br />
+<br />
+</p>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiU2VyaWVzIFRlbXBvcmFsZXM6IFByb2Nlc29zIEVzdG9jw6FzdGljb3MiCnN1YnRpdGxlOiAiTcOhc3RlciBkZSBCaW9lc3RhZMOtc3RpY2EgKE1vZGVsaXphY2nDs24gRXN0YWTDrXN0aWNhKSIKYXV0aG9yOiAiSXbDoW4gQXJyaWJhcyAoRGVwdG8uIEFuw6FsaXNpcyBFY29uw7NtaWNvLiBVbml2ZXJzaXRhdCBkZSBWYWzDqG5jaWEpIgpvdXRwdXQ6IAogIGh0bWxfZG9jdW1lbnQ6CiAgICB0aGVtZTogY2VydWxlYW4KICAgIGhpZ2hsaWdodDogcHlnbWVudHMgCiAgICBmaWdfY2FwdGlvbjogZmFsc2UKICAgIGRmX3ByaW50OiBrYWJsZQogICAgdG9jOiB0cnVlCiAgICB0b2NfZGVwdGg6IDIKICAgIHRvY19mbG9hdDogCiAgICAgIGNvbGxhcHNlZDogdHJ1ZQogICAgbnVtYmVyX3NlY3Rpb25zOiB0cnVlCiAgICBzZWxmX2NvbnRhaW5lZDogdHJ1ZQogICAgY29kZV9kb3dubG9hZDogdHJ1ZQotLS0KCmBgYHtyIGNodW5rX3NldHVwLCBlY2hvID0gRkFMU0V9CmtuaXRyOjpvcHRzX2NodW5rJHNldCh3YXJuaW5nID0gRkFMU0UsIAogICAgICAgICAgICAgICAgICAgICAgbWVzc2FnZSA9IEZBTFNFLCAKICAgICAgICAgICAgICAgICAgICAgIGNvbW1lbnQgPSAiIiwKICAgICAgICAgICAgICAgICAgICAgIGZpZy5hbGlnbiA9ICJjZW50ZXIiLCAKICAgICAgICAgICAgICAgICAgICAgIGZpZy5zaG93ID0gImhvbGQiLAogICAgICAgICAgICAgICAgICAgICAgZmlnLmhlaWdodCA9IDQsCiAgICAgICAgICAgICAgICAgICAgICBmaWcud2lkdGggPSA4LAogICAgICAgICAgICAgICAgICAgICAgb3V0LndpZHRoID0gIjgwJSIpIApgYGAKCmBgYHtyIG9wdGlvbnNfc2V0dXAsIGVjaG8gPSBGQUxTRX0Kb3B0aW9ucyhzY2lwZW4gPSA5OTkpICMtIHBhcmEgcXVpdGFyIGxhIG5vdGFjaW9uIGNpZW50aWZpY2EKYGBgCgpgYGB7ciBsaWJyZXJpYXMsIGVjaG8gPSBGQUxTRX0KbGlicmFyeShmb3JlY2FzdCkKbGlicmFyeShnZ3Bsb3QyKTsgdGhlbWVfc2V0KHRoZW1lX2J3KCkpCmxpYnJhcnkoZ3JpZEV4dHJhKQpsaWJyYXJ5KGdyaWQpCmxpYnJhcnkoc2hhcGUpCmxpYnJhcnkoZ2dmb3JjZSkKbGlicmFyeSh1cmNhKQpgYGAKCiMgSW50cm9kdWNjacOzbgoKRW4gZXN0ZSB0ZW1hIHZhbW9zIGEgZGVmaW5pciB1bmEgc2VyaWUgZGUgY29uY2VwdG9zIHF1ZSBwZXJtaXRpcsOhbiBlbnRlbmRlciBtZWpvciBfX3VuYSBzZXJpZSB0ZW1wb3JhbCBjb21vIHVuYSBtdWVzdHJhIGRlIHVuIHByb2Nlc28gZ2VuZXJhZG9yIGRlIGRhdG9zX18gKFBHRCkuIFZlcmVtb3MgdGFtYmnDqW4gaGVycmFtaWVudGFzIHBhcmEgcmVhbGl6YXIgdW5hIGRlc2NyaXB0aXZhIGRlIHVuYSBsYSBzZXJpZSB0ZW1wb3JhbCAobXVlc3RyYSkgcXVlIHBlcm1pdGlyw6EgZXN0aW1hciBlbCBQR0QgcXVlIGhheSBkZXRyw6FzIHkgYXPDrSBwb2RlciBoYWNlciBwcmVkaWNjaW9uZXMgKGluZmVyZW5jaWEpLgoKQ29tbyBlbiBlbCBlc3R1ZGlvIGRlIG11ZXN0cmFzIHRyYW5zdmVyc2FsZXMsIGxhIF9faGlww7N0ZXNpcyBkZSBub3JtYWxpZGFkX18gZXMgY29udmVuaWVudGUsIHBlcm8gYSBlc3RhIGhheSBxdWUgYcOxYWRpciBsYXMgaGlww7N0ZXNpcyBkZSBfX2VzdGFjaW9uYXJpZWRhZF9fIHkgX19lcmdvZGljaWRhZF9fLgoKRW4gbG9zIHRlbWFzIHNpZ3VpZW50ZXMgaGFyZW1vcyB1c28gY29uc3RhbnRlIGRlIGxvcyBjb25jZXB0b3MgYXF1w60gZGVmaW5pZG9zLgogIApcClwKCiMgUHJvY2VzbyBlc3RvY8Ohc3RpY28KClwKCiMjIERlZmluaWNpw7NuCgpVbiBfX3Byb2Nlc28gZXN0b2PDoXN0aWNvX18gJFlfdCQgZXMgKHNpbiBleGNlc2l2YSBwcmVjaXNpw7NuKSB1bmEgdmFyaWFibGUgYWxlYXRvcmlhIHF1ZSBjb3JyZXNwb25kZSBhIG1vbWVudG9zIHN1Y2VzaXZvcyBkZWwgdGllbXBvLgoKQ29tbyB0b2RhIHZhcmlhYmxlIGFsZWF0b3JpYSwgc3UgY2FyYWN0ZXJpemFjacOzbiBwdWVkZSBoYWNlcnNlIGEgdHJhdsOpcyBkZSBzdSBmdW5jacOzbiBkZSBkaXN0cmlidWNpw7NuIG8gYSBwYXJ0aXIgZGUgc3VzIG1vbWVudG9zLgoKKiBMYSBjYXJhY3Rlcml6YWNpw7NuIGRlIHVuIHByb2Nlc28gZXN0b2PDoXN0aWNvIG1lZGlhbnRlIGxvcyBtb21lbnRvcyBkZSBwcmltZXIgeSBzZWd1bmRvIG9yZGVuIChtZWRpYXMgeSBjb3ZhcmlhbnphcykgZXMgbcOhcyBpbmNvbXBsZXRhIHF1ZSBjdWFuZG8gc2UgaGFjZSBtZWRpYW50ZSBmdW5jaW9uZXMgZGUgZGlzdHJpYnVjacOzbi4KKiBCYWpvIGxhIF9faGlww7N0ZXNpcyBkZSBub3JtYWxpZGFkX18gZWwgcHJvY2VzbyBlc3RvY8Ohc3RpY28gcXVlZGEgY29tcGxldGFtZW50ZSBjYXJhY3Rlcml6YWRvIGEgdHJhdsOpcyBkZSBsb3MgZG9zIHByaW1lcm9zIG1vbWVudG9zLgoKTm9zb3Ryb3MgY29udGFtb3MgY29uIHVuYSBzb2xhIHJlYWxpemFjacOzbiBkZWwgcHJvY2VzbyBlc3RvY8Ohc3RpY28gJFlfdCQsIGxhIHNlcmllIHRlbXBvcmFsIG9ic2VydmFkYSAkXHt5X3RcfV97dD0xfV5UJC4KCjEuIEEgcGFydGlyIGRlICRce3lfdFx9X3t0PTF9XlQkIGVzdGltYXJlbW9zIGxvcyBtb21lbnRvcyBkZSBwcmltZXIgeSBzZWd1bmRvIG9yZGVuIChtZWRpYXMgeSBjb3ZhcmlhbnphcykuCjIuIEVzdG9zIG1vbWVudG9zIG5vcyBwZXJtaXRpcsOhbiBpZGVudGlmaWNhciBlbCBQR0QuCjMuIFVuYSB2ZXogaWRlbnRpZmljYWRvLCBlc3RpbWFyZW1vcyBlbCBQR0QgeSBwb2RyZW1vcyByZWFsaXphciBpbmZlcmVuY2lhIChjb250cmFzdGVzIGRlIGhpcMOzdGVzaXMgeSBwcmVkaWNjaW9uZXMpLgoKUGFyYSBxdWUgZXN0YSBsw61uZWEgZGUgcmF6b25hbWllbnRvIHNlYSB2w6FsaWRhIGVzIG5lY2VzYXJpbyBxdWUgZWwgcHJvY2VzbyBzZWEgIF9fZXN0YWNpb25hcmlvIHkgZXJnw7NkaWNvX18uCiAgClwKICAKIyMgUHJvY2VzbyBlc3RhY2lvbmFyaW8KCiMjIyBQcm9jZXNvIGVzdGFjaW9uYXJpbyBlbiBzZW50aWRvIGVzdHJpY3RvIHstfQoKVW4gcHJvY2VzbyBlcyBfX2VzdGFjaW9uYXJpbyBlbiBzZW50aWRvIGVzdHJpY3RvX18gY3VhbmRvIGxhIGRpc3RyaWJ1Y2nDs24gY29uanVudGEgbm8gdmFyw61hIGFsIHJlYWxpemFyIHVuIGRlc3BsYXphbWllbnRvIGVuIGVsIHRpZW1wbyBkZSB0b2RhcyBsYXMgdmFyaWFibGVzLgoKKiBTaSAkRihZX3t0XzF9LC4uLiwgWV97dF9rfSkkIGVzIGxhIGZ1bmNpw7NuIGRlIGRpc3RyaWJ1Y2nDs24gY29uanVudGEgeSAkaD4wJCwgZW50b25jZXMgZWwgcHJvY2VzbyBlcyBlc3RhY2lvbmFyaW8gZW4gc2VudGlkbyBlc3RyaWN0byBzaQokJEYoWV97dF8xfSwuLi4sIFlfe3Rfa30pID0gRihZX3t0XzEraH0sLi4uLCBZX3t0X2sraH0pJCQKICAgICAgCkludHVpdGl2YW1lbnRlLCBfbGEgZGlzdHJpYnVjacOzbiBkZSB1biBwcm9jZXNvIGVzdG9jw6FzdGljbyBlcyBpbmRlcGVuZGllbnRlIGRlbCBtb21lbnRvIGRlbCB0aWVtcG9fLgoKQ29tcHJvYmFyIHNpIHVuIHByb2Nlc28gZXMgZXN0YWNpb25hcmlvIGVuIHNlbnRpZG8gZXN0cmljdG8gZXMgbXV5IGRpZsOtY2lsLCBhc8OtIHF1ZSB2YW1vcyBhIGVuY29udHJhciBjb25kaWNpb25lcyBzdWZpY2llbnRlczogX2VzdGFjaW9uYXJpZWRhZCBlbiBtZWRpYV8geSBlbiBfc2VudGlkbyBhbXBsaW9fIChjb3ZhcmlhbnphKS4KCiMjIyBQcm9jZXNvIGVzdGFjaW9uYXJpbyBlbiBtZWRpYSB7LX0KClVuIHByb2Nlc28gZXMgZXN0YWNpb25hcmlvIGVuIG1lZGlhIChvIGRlIHByaW1lciBvcmRlbikgc2kgc3Ugbml2ZWwgc2UgbWFudGllbmUgZW4gZWwgdGllbXBvOgokJEVbWV90XSA9IFxtdSBcOyBcOyBcZm9yYWxsIHQkJAoKTGEgZmlndXJhIDEgbXVlc3RyYSBlbiBlbCBwYW5lbCBzdXBlcmlvciBsYSBzZXJpZSBMaWJyb3MgcXVlIG5vIGVzIGVzdGFjaW9uYXJpYSBlbiBtZWRpYSwgeSBlbiBlbCBwYW5lbCBpbmZlcmlvciBsYSBkaWZlcmVuY2lhIGRlIHTDrXR1bG9zIHB1YmxpY2Fkb3MgZW50cmUgZG9zIGHDsW9zIGNvbnNlY3V0aXZvcywgcXVlIHPDrSBlcyBlc3RhY2lvbmFyaWEgZW4gbWVkaWEuCgpgYGB7ciwgZWNobz1GQUxTRX0KbGlicm9zIDwtIHJlYWQuY3N2MigiLi9zZXJpZXMvbGlicm9zLmNzdiIsIGhlYWRlciA9IFRSVUUpCmxpYnJvcyA8LSB0cyhsaWJyb3NbLCAyXSwgc3RhcnQgPSAxOTkzLCBmcmVxID0gMSkKbmFjaW1pZW50b3MgPC0gcmVhZC5jc3YyKCIuL3Nlcmllcy9uYWNpbWllbnRvcy5jc3YiLCBoZWFkZXIgPSBUUlVFKQpuYWNpbWllbnRvcyA8LSB0cyhuYWNpbWllbnRvc1ssIDJdLAogICAgICAgICAgICAgICAgICBzdGFydCA9IGMoMTk3NSwgMSksCiAgICAgICAgICAgICAgICAgIGZyZXEgPSAxMikKCmNiaW5kKCJPcmlnaW5hbCIgPSBsaWJyb3MsCiAgICAgICJEaWYuIGFudWFsIiA9IGRpZmYobGlicm9zKSkgJT4lCiAgYXV0b3Bsb3QoZmFjZXRzID0gVFJVRSwKICAgICAgICAgICB4bGFiID0gIiIsCiAgICAgICAgICAgeWxhYiA9ICIiLAogICAgICAgICAgIG1haW4gPSAiRmlndXJhIDEuIFTDrXR1bG9zIHB1YmxpY2Fkb3MiKSArIAogIHNjYWxlX3hfY29udGludW91cyhicmVha3M9c2VxKDE5OTMsIDIwMTkgLDIpKSAKYGBgCgojIyMgUHJvY2VzbyBlc3RhY2lvbmFyaW8gZW4gc2VudGlkbyBhbXBsaW8gey19CgpVbiBwcm9jZXNvICh5YSBlc3RhY2lvbmFyaW8gZW4gbWVkaWEpIGVzIGVzdGFjaW9uYXJpbyBlbiBzZW50aWRvIGFtcGxpbywgbyBkZSBzZWd1bmRvIG9yZGVuLCBzaSBzdXMgbW9tZW50b3MgZGUgb3JkZW4gZG9zIG5vIGRlcGVuZGVuIGRlbCB0aWVtcG86CgoqIExhIChhdXRvKWNvdmFyaWFuemEgZW50cmUgZG9zIHBlcmlvZG9zIGRlIHRpZW1wbyBlcyBmaW5pdGEgeSBzw7NsbyBkZXBlbmRlIGRlbCBpbnRlcnZhbG8gZGUgdGllbXBvIHRyYW5zY3VycmlkbyBlbnRyZSBlc3RvcyBkb3MgcGVyaW9kb3M6CiQkQ292W1lfdCwgWV97dCtrfV0gPSBFWyhZX3QgLSBcbXUpKFlfe3Qra30gLSBcbXUpXSA9IFxnYW1tYV9rLFwsXCxcLFxmb3JhbGwgdCQkCgpPYnNlcnZhIHF1ZSBsYSB2YXJpYW56YSBzZXLDoSBlbnRvbmNlcyAkVmFyW1lfdF0gPSBFWyhZX3QgLSBcbXUpXjJdID0gXGdhbW1hXzAkLgoKTGEgZmlndXJhIDIgbXVlc3RyYSB1bmEgc2VyaWUgcXVlIGVzIGVzdGFjaW9uYXJpYSBlbiBtZWRpYSwgcGVybyBubyBsbyBlcyBlbiBzZW50aWRvIGFtcGxpbzogYWwgaW5pY2lvIGRlIGxhIHNlcmllIGhheSB1bmEgbWF5b3IgdmFyaWFiaWxpZGFkIGVuIGxvcyBkYXRvcyBxdWUgZW4gbGEgem9uYSBpbnRlcm1lZGlhLgogICAgICAKYGBge3IsIGVjaG89RkFMU0V9CmRuYWMgPC0gZGlmZihuYWNpbWllbnRvcykKZ2dwbG90KCkgKwogIGdlb21fbGluZShhZXMoeCA9IHRpbWUoZG5hYyksIHkgPSBkbmFjKSkgKyB4bGFiKCIiKSArIHlsYWIoIiIpICsgCiAgZ2d0aXRsZSgiRmlndXJhIDIuIEVzdGFjaW9uYXJpZWRhZCBlbiBtZWRpYSBwZXJvIG5vIGVuIHZhcmlhbnphIikgKyAKICBnZW9tX2VsbGlwc2UoYWVzKHgwID0gMTk4MSwgeTAgPSAwLCBhID0gNiwgYiA9IDQ1MDAsICBhbmdsZSA9IDApLCAKICAgICAgICAgICAgICAgbGluZXR5cGUgPSAiZGFzaGVkIiwgY29sb3VyID0gInJlZCIsIHNpemUgPSAxKSArCiAgZ2VvbV9lbGxpcHNlKGFlcyh4MCA9IDIwMDIsIHkwID0gMCwgYSA9IDQsIGIgPSAzMDAwLCAgYW5nbGUgPSAwKSwgCiAgICAgICAgICAgICAgIGxpbmV0eXBlID0gImRhc2hlZCIsIGNvbG91ciA9ICJyZWQiLCBzaXplID0gMSkgKyAKICBhbm5vdGF0ZSgidGV4dCIsIHg9MTk4MiwgeT02NTAwLCBsYWJlbD0iTWF5b3IgdmFyaWFuemEiLCBjb2xvdXIgPSAicmVkIikgKwogIGFubm90YXRlKCJ0ZXh0IiwgeD0yMDAyLCB5PTQzMDAsIGxhYmVsPSJNZW5vciB2YXJpYW56YSIsIGNvbG91ciA9ICJyZWQiKSArCiAgc2NhbGVfeV9jb250aW51b3VzKGJyZWFrcz1OVUxMKSArIHNjYWxlX3hfY29udGludW91cyhicmVha3M9TlVMTCkgKyAKICB0aGVtZV9idygpCmBgYAoKXAoKVW4gcHJvY2VzbyBlc3RhY2lvbmFyaW8gZW4gc2VudGlkbyBlc3RyaWN0byB0YW1iacOpbiBlcyBlc3RhY2lvbmFyaW8gZW4gc2VudGlkbyBhbXBsaW8sIHBlcm8gbG8gY29udHJhcmlvIG5vIGVzIGNpZXJ0by4gQWhvcmEgYmllbiwgX19iYWpvIG5vcm1hbGlkYWRfXyB1biBwcm9jZXNvIGVzdGFjaW9uYXJpbyBlbiBzZW50aWRvIGFtcGxpbyB0YW1iacOpbiBsbyBzZXLDoSBlbiBzZW50aWRvIGVzdHJpY3RvLgogIApcCgojIyBQcm9jZXNvIGVyZ8OzZGljbwoKRW4gZWwgdGVtYSBzaWd1aWVudGUgc2UgdmVyw6EgcXVlIGxhIGVzdGltYWNpw7NuIGRlIGxvcyBtb21lbnRvcyBkZSBwcmltZXIgeSBzZWd1bmRvIG9yZGVuIGRlIGxhIHNlcmllIHRlbXBvcmFsIHBlcm1pdGUgaWRlbnRpZmljYXIgeSBlc3RpbWFyIGVsIFBHRC4KClBhcmEgcXVlIGxhIGVzdGltYWNpw7NuIGRlIGxvcyBtb21lbnRvcyBzZWEgY29uc2lzdGVudGUgZWwgcHJvY2VzbyBkZWJlIHNlciBfX2VyZ8OzZGljb19fOgokJFxsaW1fe1RccmlnaHRhcnJvdyBcaW5mdHl9IFZhcihcZnJhY3sxfXtUfVxzdW1fe3Q9MX1eVCBZX3QpPTAuICQkCgpQYXJhIHF1ZSB1biBwcm9jZXNvIHNlYSBlcmfDs2RpY28gbGFzIG9ic2VydmFjaW9uZXMgbnVldmFzIHRpZW5lbiBxdWUgYXBvcnRhciBzdWZpY2llbnRlIGluZm9ybWFjacOzbiBwYXJhIHF1ZSBsYSB2YXJpYW56YSBkZWwgdmFsb3IgbWVkaW8gY29udmVyamEgYSAwLiBFc3RvIG5vIG9jdXJyZSBzaSBsYSBkZXBlbmRlbmNpYSBlbnRyZSBsYXMgdmFyaWFibGVzIGVzIG11eSBmdWVydGUuCgpVbmEgY29uZGljacOzbiBuZWNlc2FyaWEgcGVybyBubyBzdWZpY2llbnRlIHBhcmEgcXVlIHVuIHByb2Nlc28gZXN0YWNpb25hcmlvIHNlYSBlcmfDs2RpY28gZXM6CiQkXGxpbV97a1xyaWdodGFycm93IFxpbmZ0eX0gXGdhbW1hX2sgPSAwLiQkCkVzIGRlY2lyLCBxdWUgZWwgcGFzYWRvIGNhZGEgdmV6IGF5dWRhIG1lbm9zIGEgZW50ZW5kZXIgZWwgcHJlc2VudGUuCgpcCgojIyBSZXN1bWVuCgohW10oLi9pbWFnZW5lcy9wZV9yZXN1bWVuLnBuZykKClwKXAoKIyBUcmFuc2Zvcm1hY2lvbmVzIGRlIHVuYSBzZXJpZQoKXAoKIyMgSWRlYXMgZ2VuZXJhbGVzCgpVbmEgc2VyaWUgdGVtcG9yYWwgJFx7eV90XH1fe3Q9MX1eVCQgbm8gdGllbmUgcG9ycXVlIHZlcmlmaWNhciBsYXMgY29uZGljaW9uZXMgZGUgZXN0YWNpb25hcmllZGFkLCBlcmdvZGljaWRhZCB5IG5vcm1hbGlkYWQuCiAgCkEgY29udGludWFjacOzbiwgdmVyZW1vcyB1bmEgc2VyaWUgZGUgdHJhbnNmb3JtYWNpb25lcyBxdWUgY29udmllcnRlbiB1bmEgc2VyaWUgbm8gZXN0YWNpb25hcmlhIGVuIGVzdGFjaW9uYXJpYTsgbm8gZXJnw7NkaWNhIGVuIGVyZ8OzZGljYTsgeSwgZGUgcGFzbywgZmFjaWxpdGFuIGxhIHZlcmlmaWNhY2nDs24gZGUgbGEgaGlww7N0ZXNpcyBkZSBub3JtYWxpZGFkLCBxdWUgZGVqYXJlbW9zIHBhcmEgbcOhcyBhZGVsYW50ZS4KICAKRW4gZWwgcGFuZWwgc3VwZXJpb3IgZGUgbGEgZmlndXJhIDMgdGllbmVzIGxhIHNlcmllIGRlIG5hY2ltaWVudG9zLCBxdWUgZGVub21pbmFyZW1vcyAkeV90JCwgeSBlbiBwYW5lbCBpbmZlcmlvciB0aWVuZXMgbGEgZGlmZXJlbmNpYSBkZSBsYSB0cmFuc2Zvcm1hY2nDs24gbG9nYXLDrXRtaWNhIGRlIGxhIHNlcmllLCAkbG9nKHlfdCkgLSBsb2coeV97dC0xfSkkLiBMYSBzZXJpZSBuYWNpbWllbnRvcyBubyBlcyBlc3RhY2lvbmFyaWEgZW4gbWVkaWEgbmkgZW4gdmFyaWFuemEsIHBlcm8gbGEgdHJhbnNmb3JtYWNpw7NuIGxvZ2Fyw610bWljYSB5IGxhIGRpZmVyZW5jaWEgaGFuIGxvZ3JhZG8gcXVlIHNlYSBlc3RhY2lvbmFyaWEgZW4gYW1ib3Mgc2VudGlkb3MuCgpgYGB7ciwgZWNobz1GQUxTRX0KY2JpbmQoIk5hY2lkb3MiID0gbmFjaW1pZW50b3MsCiAgICAgICJEaWYuIGRlIGxvZyBuYWNpZG9zIiA9IGRpZmYobG9nKG5hY2ltaWVudG9zKSkpICU+JQogIGF1dG9wbG90KGZhY2V0cyA9IFRSVUUsCiAgICAgICAgICAgeGxhYiA9ICIiLAogICAgICAgICAgIHlsYWIgPSAiIiwKICAgICAgICAgICBtYWluID0gIkZpZ3VyYSAzLiBOYWNpbWllbnRvcyB5IGRpZmVyZW5jaWEgZGVsIGxvZ2FyaXRtbyBkZSBOYWNpbWllbnRvcyIpCmBgYAoKXAoKIyMgRGlmZXJlbmNpYWNpw7NuCgpfX0xhIGRpZmVyZW5jaWFjacOzbiBwZXJtaXRlIHRyYW5zZm9ybWFyIHVuYSBzZXJpZSBubyBlc3RhY2lvbmFyaWEgZW4gbWVkaWEgZW4gZXN0YWNpb25hcmlhIGVuIG1lZGlhX18uCiAgCkRpZmVyZW5jaWFyIGRlIG9yZGVuICRrJCBjb25zaXN0ZSBlbiByZXN0YXIgYSBsYSBvYnNlcnZhY2nDs24gZGUgdW4gcGVyaW9kbyBsYSBkZSAkayQgcGVyaW9kb3MgYW50ZXM6CiQkXG5hYmxhX2sgeV90ID0geV90IC0geV97dC1rfS4kJAoKIyMjIERpZmVyZW5jaWFjacOzbiByZWd1bGFyICgkaz0xJCkgey19CiAgClVuIGNhc28gY29uY3JldG8gZGUgbGEgZGlmZXJlbmNpYWNpw7NuIGVzIGxhIF9fZGlmZXJlbmNpYWNpw7NuIHJlZ3VsYXIgbyBkaWZlcmVuY2lhY2nDs24gZGUgb3JkZW4gdW5vX18sIHF1ZSBjb25zaXN0ZSBlbiByZXN0YXIgYSBsYSBvYnNlcnZhY2nDs24gZGUgdW4gcGVyaW9kbyBsYSBkZWwgcGVyaW9kbyBwcmVjZWRlbnRlOgokJFxuYWJsYSB5X3QgPSB5X3QgLSB5X3t0LTF9LiQkClVzdWFsbWVudGUsIGxhIHNlcmllIGRpZmVyZW5jaWFkYSAkXG5hYmxhIHlfdCQgeWEgZXMgZXN0YWNpb25hcmlhIGVuIG1lZGlhLiBQb3IgZWplbXBsbywgZW4gbGEgZmlndXJhIDEgdGVuw61hbW9zIGxhIHNlcmllIExpYnJvcyAocGFuZWwgc3VwZXJpb3IpIG5vIGVzdGFjaW9uYXJpYSwgeSBsYSBzZXJpZSBMaWJyb3MgZGlmZXJlbmNpYWRhIHJlZ3VsYXJtZW50ZSBxdWUgZXMgZXN0YWNpb25hcmlhLgoKRW4gYWxndW5vcyBjYXNvcyBsYSBzZXJpZSBkaWZlcmVuY2lhZGEgcHVlZGUgY29udGludWFyIHByZXNlbnRhbmRvIHRlbmRlbmNpYS4gRW4gZXNlIGNhc28gaGFicsOhIHF1ZSBzZWd1aXIgZGlmZXJlbmNpYW5kbyBoYXN0YSBvYnRlbmVyIGxhIGVzdGFjaW9uYXJpZWRhZCBlbiBtZWRpYS4KICAgIApTaSAkXG5hYmxhIHlfdCQgbm8gZXMgZXN0YWNpb25hcmlhLCBzZSBkaWZlcmVuY2lhIChyZWd1bGFybWVudGUpIHVuYSBzZWd1bmRhIHZleiBwYXJhIG9idGVuZXIgdW5hIGRvYmxlIGRpZmVyZW5jaWFjacOzbiBkZSBwcmltZXIgb3JkZW46CiQkXG5hYmxhXnsyfSB5X3QgPSBcbmFibGEoXG5hYmxhIHlfdCkgPSBcbmFibGEgeV90IC0gXG5hYmxhIHlfe3QtMX0gPSAoeV90IC0geV97dC0xfSkgLSAoeV97dC0xfSAtIHlfe3QtMn0pID0geV90IC0gMnlfe3QtMX0gKyB5X3t0LTJ9JCQKRW4gbGEgcHLDoWN0aWNhIHVuYSBzb2xhIGRpZmVyZW5jaWFjacOzbiBzdWVsZSBzZXIgc3VmaWNpZW50ZSBwYXJhIG9idGVuZXIgbGEgZXN0YWNpb25hcmllZGFkIGVuIG1lZGlhOyBkaWZlcmVuY2lhciBkb3MgdmVjZXMgZXMgZXhjZXBjaW9uYWw7IHkgZGlmZXJlbmNpYXIgdHJlcyBvIG3DoXMgdmVjZXMgbm8gc2UgZGEuCgoKIyMjIERpZmVyZW5jaWFjacOzbiBlc3RhY2lvbmFsICgkaz1tJCkgey19CgpFeGlzdGUgbGEgX19kaWZlcmVuY2lhIGVzdGFjaW9uYWxfXywgcXVlIGNvbnNpc3RlIGVuIHJlc3RhciBhIGxhIG9ic2VydmFjacOzbiBkZSB1biBwZXJpb2RvIGxhIG9ic2VydmFjacOzbiBwcmVjZWRlbnRlIGRlIGxhIG1pc21hIGVzdGFjacOzbi4gU2kgZWwgb3JkZW4gZXN0YWNpb25hbCBlcyAkbSQsIGVudG9uY2VzIGxhIGRpZmVyZW5jaWEgZXN0YWNpb25hbCBkZSAkeV90JCBlcyAKJCRcbmFibGFfbSB5X3QgPSB5X3QgLSB5X3t0LW19LiQkClVuYSBzZXJpZSBubyBlc3RhY2lvbmFyaWEgZW4gbWVkaWEgcHVlZGUgcGFzYXIgYSBzZXJsbyB0cmFzIGRpZmVyZW5jaWFybGEgZXN0YWNpb25hbG1lbnRlLiBFcyBkZWNpciwgY3VhbHF1aWVyYSBkZSBsYXMgZG9zIGRpZmVyZW5jaWFjaW9uZXMgKHJlZ3VsYXIgbyBlc3RhY2lvbmFsKSBvIGFtYmFzIGEgbGEgdmV6IHNvbiBhbHRlcm5hdGl2YXMgcGFyYSBvYnRlbmVyIGxhIGVzdGFjaW9uYXJpZWRhZCBlbiBtZWRpYS4KCkFkZW3DoXMsIF9fbGEgZGlmZXJlbmNpYWNpw7NuIChyZWd1bGFyLCBlc3RhY2lvbmFsIG8gYW1iYXMpIHRhbWJpw6luIHBlcm1pdGUgYWxjYW56YXIgbGEgZXJnb2RpY2lkYWRfXy4KCkxhIGZpZ3VyYSA0IG11ZXN0cmEgdW4gZWplbXBsbyBkZSBkaWZlcmVuY2lhY2nDs24gcmVndWxhciB5L28gZXN0YWNpb25hbC4gRW4gZWwgcHJpbWVyIHBhbmVsIGFwYXJlY2UgbGEgc2VyaWUgb3JpZ2luYWwgTmFjaW1pZW50b3MgJHlfdCQ7IGVsIHNlZ3VuZG8gcGFuZWwgbXVlc3RyYSBsYSBzZXJpZSBkaWZlcmVuY2lhZGEgcmVndWxhcm1lbnRlICRcbmFibGEgeV90JDsgZWwgdGVyY2VyIHBhbmVsIGxhIHNlcmllIGRpZmVyZW5jaWFkYSBlc3RhY2lvbmFsbWVudGUgJFxuYWJsYV9tIHlfdCQ7IGVsIGN1YXJ0byBwYW5lbCBtdWVzdHJhIGxhIHNlcmllIGRpZmVyZW5jaWFkYSByZWd1bGFyIHkgZXN0YWNpb25hbG1lbnRlICRcbmFibGFcbmFibGFfbSB5X3QkLgoKYGBge3IsIGVjaG89RkFMU0UsIGZpZy5oZWlnaHQgPSA1fQpjYmluZCgiTmFjaWRvcyIgPSBuYWNpbWllbnRvcywKICAgICAgIkRpZi4gcmVndWxhciIgPSBkaWZmKG5hY2ltaWVudG9zKSwKICAgICAgIkRpZi4gZXN0YWNpb25hbCIgPSBkaWZmKG5hY2ltaWVudG9zLCBsYWcgPSAxMiksCiAgICAgICJEaWYuIHJlZy4geSBlc3RhLiIgPSBkaWZmKGRpZmYobmFjaW1pZW50b3MsIGxhZyA9IDEyKSkpICU+JQogIGF1dG9wbG90KGZhY2V0cyA9IFRSVUUsCiAgICAgICAgICAgeGxhYiA9ICIiLAogICAgICAgICAgIHlsYWIgPSAiIiwKICAgICAgICAgICBtYWluID0gIkZpZ3VyYSA0LiBOYWNpbWllbnRvcyIpCmBgYAoKCl/Cv1F1w6kgdHJhbnNmb3JtYWNpw7NuIHBhcmEgbmFjaW1pZW50b3MgY29uc2lkZXJhcyBxdWUgZ2VuZXJhIHVuYSBzZXJpZSBlc3RhY2lvbmFyaWEsIHRhbnRvIGVuIG1lZGlhIGNvbW8gZW4gdmFyaWFuemE/XyBTaWVtcHJlIGhheSB1biBjaWVydG8gZ3JhZG8gZGUgc3ViamV0aXZpZGFkIGVuIGxhIGVsZWNjacOzbiBkZSBsYXMgZGlmZXJlbmNpYXMgcXVlIGhheSBxdWUgYXBsaWNhciBhIHVuYSBzZXJpZS4gRW4gbGEgZmlndXJhIDQgcG9kZW1vcyBjb25zaWRlcmFyIHF1ZSBsYSBkaWZlcmVuY2lhY2nDs24gcmVndWxhciAocGFuZWwgMikgZXMgc3VmaWNpZW50ZSBwYXJhIGxvZ3JhciBsYSBlc3RhY2lvbmFyaWVkYWQgZW4gbWVkaWEgeSBlbiB2YXJpYW56YSB5IHRlcm1pbmFyIGVsIHByb2Nlc28gZGUgZGlmZXJlbmNpYWNpw7NuLiBQZXJvIHRhbWJpw6luIHBvZGVtb3MgY29uc2lkZXJhciBxdWUgbGEgc2VyaWUgZXMgZXN0YWNpb25hcmlhIGVuIG1lZGlhIHBlcm8gbm8gbG8gc3VmaWNpZW50ZSBlbiB2YXJpYW56YSwgeSBvcHRhciBwb3IgbGEgZG9ibGUgZGlmZXJlbmNpYWNpw7NuLCByZWd1bGFyIHkgZXN0YWNpb25hbCAocGFuZWwgNCkuIEV4aXN0ZW4gY29udHJhc3RlcyBwYXJhIGF5dWRhcm5vcyBlbiBlc3RhIGRlY2lzacOzbiAodsOpYXNlIGVww61ncmFmZSA1KSwgcGVybyBsYSBjb25jbHVzacOzbiBwdWVkZSBkZXBlbmRlciBlbCB0aXBvIGRlIGNvbnRyYXN0ZSBlbGVnaWRvIG8gZGUgY2llcnRvcyBwYXLDoW1ldHJvcyB0w6ljbmljb3MgdXNhZG9zIGVuIGxvcyBjb250cmFzdGVzLiBNdWNoYXMgdmVjZXMgbGEgZGVjaXNpw7NuIGZpbmFsIHNlIHJlYWxpemEgZHVyYW50ZSBlbCBwcm9jZXNvIGRlIG1vZGVsaXphY2nDs24gbyBzaW1wbGVtZW50ZSBzZSBvcHRhIHBvciBsYSBxdWUgbWVqb3JlcyBwcmVkaWNjaW9uZXMgZ2VuZXJlLgoKIyMjIERpZmVyZW5jaWFjacOzbiBjb24gYFJgIHstfQoKYFJgIGRpc3BvbmUgZGUgbGEgZnVuY2nDs24gYGRpZmZgIHBhcmEgZGlmZXJlbmNpYXIgdW5hIHNlcmllOgoKKiBgZGlmZih4KWAgY2FsY3VsYSBsYSBkaWZlcmVuY2lhIHJlZ3VsYXIgbyBkZSBvcmRlbiAkMSQsICRcbmFibGEgeV90JAoqIGBkaWZmKHgsIGxhZyA9IGspYCBjYWxjdWxhIGxhIGRpZmVyZW5jaWEgZGUgb3JkZW4gJGskLCAkXG5hYmxhX2sgeV90JAoqIGBkaWZmKHgsIGxhZyA9IGssIGRpZmZlcmVuY2UgPSBkKWAgY2FsY3VsYSAkZCQgZGlmZXJlbmNpYXMgZGUgb3JkZW4gJGskLCAkXG5hYmxhX2teZCB5X3QkCgpTaSBuZWNlc2l0YXMgY2FsY3VsYXIgdW5hIGRpZmVyZW5jaWEgcmVndWxhciB5IG90cmEgZXN0YWNpb25hbCwgJFxuYWJsYVxuYWJsYV9tIHlfdCQsIGRlYmVzIHVzYXIgYGRpZmYoZGlmZih4LCBsYWcgPSBtKSlgLiBFbCBvcmRlbiBkZSBsYXMgZGlmZXJlbmNpYWNpb25lcyBubyBjYW1iaWEgZWwgcmVzdWx0YWRvLgoKXAoKIyMgVHJhbnNmb3JtYWNpw7NuIGRlIEJveC1Db3gKCkVuIGVsIHRlbWEgMiB2aW1vcyBlbCBhcmd1bWVudG8gYGxhbWJkYWAsIHF1ZSBmaWphZG8gYSAwIGluZGljYWJhIHF1ZSBoYWLDrWEgcXVlIHRyYW5zZm9ybWFyIGxhIHNlcmllIGxvZ2Fyw610bWljYW1lbnRlLiBWZWFtb3MgZW4gZGV0YWxsZSBxdWUgaGF5IGRldHLDoXMgZGUgZXN0ZSBhcmd1bWVudG8uCgoKIyMjIFRyYW5zZm9ybWFjacOzbiBsb2dhcsOtdG1pY2Egey19CgpTaSBsYSBzZXJpZSBvcmlnaW5hbCBubyBlcyBlc3RhY2lvbmFyaWEgZW4gdmFyaWFuemEgcG9ycXVlIGxvcyBkYXRvcyBjcmVjZW4gY29uIGVsIG5pdmVsIGRlIGxhIHNlcmllLCBlcyBwb3NpYmxlIG9idGVuZXIgbGEgZXN0YWNpb25hcmllZGFkIHBvciBtZWRpbyBkZSB0cmFuc2Zvcm1hY2lvbmVzIHNpbXBsZXMuCiAgCkxhIHRyYW5zZm9ybWFjacOzbiBsb2dhcsOtdG1pY2EgZGUgdW5hIHNlcmllIGVzIHVuYSBhbHRlcm5hdGl2YS4gTGEgZmlndXJhIDUgbXVlc3RyYSBsYSBzZXJpZSBOYWNpbWllbnRvcyB5IHN1IGxvZ2FyaXRtby4gTGEgdmFyaWFiaWxpZGFkIGVzdGFjaW9uYWwgY29uIGxhIHRyYW5zZm9ybWFjacOzbiBsb2dhcsOtdG1pY2EgKHBhbmVsIHNlZ3VuZG8pIGVzIG1lbm9yIHF1ZSBlbiBsYSBzZXJpZSBvcmlnaW5hbCAocGFuZWwgc3VwZXJpb3IpLiAKCmBgYHtyLCBlY2hvPUZBTFNFLCBmaWcuaGVpZ2h0ID0gNX0KY2JpbmQoIk5hY2lkb3MiID0gbmFjaW1pZW50b3MsCiAgICAgICJsb2coTmFjaWRvcykiID0gbG9nKG5hY2ltaWVudG9zKSwKICAgICAgIkJveC1Db3goTmFjaW1pZW50b3MpIiA9IEJveENveChuYWNpbWllbnRvcywgLTAuNTgpKSAlPiUKICBhdXRvcGxvdChmYWNldHMgPSBUUlVFLAogICAgICAgICAgIHhsYWIgPSAiIiwKICAgICAgICAgICB5bGFiID0gIiIsCiAgICAgICAgICAgbWFpbiA9ICJGaWd1cmEgNS4gU2VyaWUgTmFjaW1pZW50b3MgeSBhbGd1bmFzIHRyYW5zZm9ybWFjaW9uZXMgQm94LUNveCIpCmBgYAoKIyMjIEJveC1Db3ggey19CgpMYSB0cmFuc2Zvcm1hY2nDs24gbG9nYXLDrXRtaWNhIGVzIHVuIGNhc28gY29uY3JldG8gZGUgb3RyYSBtw6FzIGdlbmVyYWwsIGxhIHRyYW5zZm9ybWFjacOzbiBkZSBCb3gtQ294OgokJAp6X3QgPSAKICAgIFxiZWdpbntjYXNlc30KICAgICAgKHlfdF57XGxhbWJkYX0tMSkvXGxhbWJkYSAmIFwsXCxcLFxsYW1iZGEgXG5lcSAwIFxcCiAgICAgIFxsb2coeV90KSAmIFwsXCxcLCBcbGFtYmRhID0gMCAKICAgIFxlbmR7Y2FzZXN9CiQkCgpTZSBwdWVkZSBkZW1vc3RyYXIgcXVlICRcbGltX3tcbGFtYmRhIFxyaWdodGFycm93IDB9IFw7XDsgKHlfdF57XGxhbWJkYX0tMSkvXGxhbWJkYSA9IGxvZyh5X3QpJC4KCkVuIGxhIGZpZ3VyYSA1LCBlbCBwYW5lbCBpbmZlcmlvciBtdWVzdHJhIGxhIHRyYW5zZm9ybWFjacOzbiBfw7NwdGltYV8gZGUgQm94LUNveCBwYXJhIE5hY2ltaWVudG9zLCBsYSBxdWUgaGFjZSBxdWUgbGEgc2VyaWUgc2VhIGxvIG3DoXMgZXN0YWNpb25hcmlhIGVuIHZhcmlhbnphIHBvc2libGUuIEVsIHZhbG9yIHVzYWRvIGVzICRcbGFtYmRhPSAtMC41OCQuCgpBaG9yYSBiaWVuLCBwb3IgdW4gbGFkbyBubyBoYXkgZ3JhbmRlcyBkaWZlcmVuY2lhcyAoYWwgbWVub3MgdmlzdWFsZXMpIGVudHJlIGVsIHJlc3VsdGFkbyBkZSBsYSB0cmFuc2Zvcm1hY2nDs24gbG9nYXLDrXRtaWNhIHkgZWwgcmVzdWx0YWRvIGRlIGxhIHRyYW5zZm9ybWFjacOzbiBkZSBCb3gtQ294IGNvbiAkXGxhbWJkYT0gLTAuNTgkLiBQb3Igb3RybyBsYWRvLCDCv3F1w6kgaW50ZXJwcmV0YWNpw7NuIHRpZW5lICQtKG5hY2ltaWVudG9zX3Reey0wLjU4fS0xKS8wLjU4JD8gRW4gZ2VuZXJhbCwgeSBjb24gaW5kZXBlbmRlbmNpYSBkZWwgcmVzdWx0YWRvIGRlIGxhIHRyYW5zZm9ybWFjacOzbiDDs3B0aW1hLCBzZSBvcHRhIHBvciBsYSB0cmFuc2Zvcm1hY2nDs24gbG9nYXLDrXRtaWNhIHBvciBzZXIgbcOhcyBzZW5jaWxsYSB5IHNvYnJlIHRvZG8gbcOhcyBpbnRlcnByZXRhYmxlLgoKUG9yIMO6bHRpbW8sIHRlbiBwcmVzZW50ZSBxdWUgX19zaSBzZSBlc3RpbWEgeSBwcmVkaWNlIHVuYSBzZXJpZSB0cmFuc2Zvcm1hZGEsIGx1ZWdvIGhheSBxdWUgZGVzaGFjZXIgIGxhIHRyYW5zZm9ybWFjacOzbiBwYXJhIG9idGVuZXIgbGEgcHJlZGljY2nDs24gZGUgbGEgc2VyaWUgb3JpZ2luYWxfXy4KCkVsIGFyZ3VtZW50byBgbGFtYmRhYCBxdWUgaGVtb3MgdXNhZG8gZW4gYWxndW5hcyBmdW5jaW9uZXMgZGUgbGEgbGlicmVyw61hIGBmb3JlY2FzdGAgaGFjZSByZWZlcmVuY2lhIGFsIHBhcsOhbWV0cm8gJFxsYW1iZGEkIGRlIGxhIHRyYW5zZm9ybWFjacOzbiBCb3gtQ294LiBTaWVtcHJlIGxvIGhlbW9zIGZpamFkbyBhIGNlcm8sIGluZGljYW5kbyBsYSB0cmFuc2Zvcm1hY2nDs24gbG9nYXLDrXRtaWNhLgoKXAoKIyMgRGlmZXJlbmNpYSwgTG9nYXJpdG1vIHkgVGFzYSBkZSB2YXJpYWNpw7NuCgpMYSB0cmFuc2Zvcm1hY2nDs24gJFxuYWJsYSB5X3QkIHNlIHB1ZWRlIGludGVycHJldGFyIGNvbW8gdmFyaWFjaW9uZXMgZW4gbml2ZWwsIHBlcm8gJFxuYWJsYV4yIHlfdCQgbm8gdGllbmUgbmluZ3VuYSBpbnRlcnByZXRhY2nDs24uIF9fTnVuY2EgaGF5IHF1ZSBwZXJkZXIgZGUgdmlzdGEgbGEgcmVhbGlkYWQgZGUgbGFzIG9ic2VydmFjaW9uZXNfXy4KCkN1YW5kbyB1bmEgc2VyaWUgdGllbmUgcXVlIHNlciBkaWZlcmVuY2lhZGEgZG9zIHZlY2VzIHBhcmEgY29uc2VndWlyIHN1IGVzdGFjaW9uYXJpZWRhZCwgdmFsZSBsYSBwZW5hIHByb2JhciB1bmEgdHJhbnNmb3JtYWNpw7NuIGFsdGVybmF0aXZhIHF1ZSBzZWEgaW50ZXJwcmV0YWJsZTogJFxuYWJsYSBcbG9nKHlfdCkkIG8gJFxuYWJsYV9tIFxsb2coeV90KSQuIFBvciB1biBsYWRvLAogICQkXG5hYmxhIFxsb2coeV90KSA9IFxsb2coeV90KSAtIFxsb2coeV97dC0xfSkgPSBcbG9nXGJpZyhcZnJhY3t5X3R9e3lfe3QtMX19IFxiaWcpCiAgXGFwcHJveCBcZnJhY3t5X3R9e3lfe3QtMX19IC0gMSA9IFxmcmFje3lfdCAtIHlfe3QtMX19e3lfe3QtMX19ID1UViB5X3QuJCQKClBvciBlamVtcGxvLCBwYXJhIHVuYSBzZXJpZSBtZW5zdWFsIF9sYSBkaWZlcmVuY2lhIHJlZ3VsYXIgZGVsIGxvZ2FyaXRtbyAobmF0dXJhbCkgZXMgbGEgVGFzYSBkZSBWYXJpYWNpw7NuIE1lbnN1YWwgZGUgbGEgc2VyaWVfICQoXG5hYmxhIFxsb2coeV90KT1UVk0geV90KSQsIHF1ZSB0aWVuZSB1bmEgY2xhcmEgaW50ZXJwcmV0YWNpw7NuIGNvbW8gdmFyaWFjacOzbiBwb3JjZW50dWFsLgoKUG9yIG90cm8gbGFkbywgCiQkXG5hYmxhX20gXGxvZyh5X3QpIFxhcHByb3ggXGZyYWN7eV90IC0geV97dC1tfX17eV97dC1tfX0gPVRWX20geV90LiQkCgpFcyBkZWNpciwgcGFyYSB1bmEgc2VyaWUgbWVuc3VhbCBfbGEgZGlmZXJlbmNpYSBlc3RhY2lvbmFsIGRlbCBsb2dhcml0bW8gZXMgbGEgVGFzYSBkZSBWYXJpYWNpw7NuIEFudWFsIGRlIGxhIHNlcmllXyAkKFxuYWJsYV97MTJ9IFxsb2coeV90KT1UVkEgeV90KSQuCgpMYSBmaWd1cmEgNiBtdWVzdHJhIHBhcmEgbGEgc2VyaWUgTmFjaW1pZW50b3MgbGEgc2VyaWUgb3JpZ2luYWwgKHBhbmVsIHN1cGVyaW9yKSwgbGFzIHRhc2FzIGRlIHZhcmlhY2nDs24gbWVuc3VhbCB5IGFudWFsIChwYW5lbGVzIGRvcyB5IHRyZXMsIHJlc3BlY3RpdmFtZW50ZSkgeSBsYSBkb2JsZSBkaWZlcmVuY2lhIHJlZ3VsYXIgeSBlc3RhY2lvbmFsIGRlbCBsb2dhcml0bW8gZGUgbmFjaW1pZW50b3MgKHBhbmVsIGluZmVyaW9yKS4gUGFyZWNlIHF1ZSBsYSB0YXNhIGRlIHZhcmlhY2nDs24gbWVuc3VhbCBkZSBsb3MgbmFjaW1pZW50b3MgeSBsYSBkb2JsZSBkaWZlcmVuY2lhIHNvbiwgZGUgdG9kYXMgbGFzIHRyYW5zZm9ybWFjaW9uZXMgcHJvYmFkYXMgZW4gZXN0ZSBlcMOtZ3JhZmUsIGxhcyBzZXJpZXMgbcOhcyBlc3RhY2lvbmFyaWFzIGVuIG1lZGlhIHkgdmFyaWFuemEuCgpgYGB7ciwgZWNobz1GQUxTRSwgZmlnLmhlaWdodCA9IDZ9CmNiaW5kKCJOYWNpZG9zIiA9IG5hY2ltaWVudG9zLAogICAgICAiVFYgTWVuc3VhbCIgPSBkaWZmKGxvZyhuYWNpbWllbnRvcykpLAogICAgICAiVFYgQW51YWwiID0gZGlmZihsb2cobmFjaW1pZW50b3MpLCBsYWcgPSAxMiksCiAgICAgICJEaWYuIHJlZy4geSBlc3QuIGRlIGxvZyIgPSBkaWZmKGRpZmYobG9nKG5hY2ltaWVudG9zKSwgbGFnID0gMTIpKSkgJT4lCiAgYXV0b3Bsb3QoZmFjZXRzID0gVFJVRSwKICAgICAgICAgICB4bGFiID0gIiIsCiAgICAgICAgICAgeWxhYiA9ICIiLAogICAgICAgICAgIG1haW4gPSAiRmlndXJhIDYuIE5hY2ltaWVudG9zIHkgZGl2ZXJzYXMgdHJhbnNmb3JtYWNpb25lcyIpCmBgYAoKIyMjIFRyYW5zZm9ybWFjacOzbiBkZSBCb3gtQ294IGNvbiBgUmAgey19CgpgUmAgZGlzcG9uZSBkZSB1bmEgc2VyaWUgZGUgZnVuY2lvbmVzIGVuIGVsIHBhcXVldGUgYGZvcmVjYXN0YCBxdWUgbm9zIGZhY2lsaXRhbiBlbCB1c28gZGUgbGEgdHJhbnNmb3JtYWNpw7NuIGRlIEJveC1Db3g6CgoqIGBCb3hDb3goeSwgbGFtYmRhKWAgcmVhbGl6YSBsYSB0cmFuc2Zvcm1hY2nDs24gQm94LUNveCBwYXJhIHVuIHZhbG9yIGRlICRcbGFtYmRhJCBkZXRlcm1pbmFkby4KKiBgSW52Qm94Q294KHosIGxhbWJkYSlgIHJlYWxpemEgbGEgdHJhbnNmb3JtYWNpw7NuIGludmVyc2EKKiBgQm94Q294LmxhbWJkYSh5KWAgY2FsY3VsYSBlbCB2YWxvciBkZSAkXGxhbWJkYSQgbcOhcyBhZGVjdWFkby4gVXNhIGBoZWxwYCBwYXJhIHNhYmVyIG3DoXMgc29icmUgbG9zIG3DqXRvZG9zIGRlIGVzdGltYWNpw7NuIGRlICRcbGFtYmRhJC4KClBhcmEgbGEgc2VyaWUgTmFjaW1pZW50b3MgZWwgdmFsb3Igw7NwdGltbyBkZSAkXGxhbWJkYSQgZXM6CgpgYGB7cn0KQm94Q294LmxhbWJkYShuYWNpbWllbnRvcykgCmBgYAoKUmVjdWVyZGEgcXVlIGVuIGxhIGZpZ3VyYSA1IHB1ZWRlcyB2ZXIgbGEgc2VyaWUgb3JpZ2luYWwsIGxhIHRyYW5zZm9ybWFjacOzbiBsb2dhcsOtdG1pY2EgeSBsYSB0cmFuc2Zvcm1hY2nDs24gQm94LUNveCBwYXJhIGVsIHZhbG9yIGRlICRcbGFtYmRhJCDDs3B0aW1vLgoKXApcCgojIEZ1bmNpb25lcyBkZSBhdXRvY29ycmVsYWNpw7NuIHkgYXV0b2NvcnJlbGFjacOzbiBwYXJjaWFsCgpcCgojIyBGdW5jacOzbiBkZSBhdXRvY29ycmVsYWNpw7NuCgpZYSBoZW1vcyBpbmRpY2FkbyBxdWUgYmFqbyBjaWVydGFzIGhpcMOzdGVzaXMgbG9zIG1vbWVudG9zIHByaW1lcm8geSBzZWd1bmRvIGRlIGxhIHNlcmllIGNhcmFjdGVyaXphbiBwZXJmZWN0YW1lbnRlIGVsIHByb2Nlc28gZXN0b2PDoXN0aWNvLiBFbiBlbCBjb250ZXh0byBkZSBzZXJpZXMgdGVtcG9yYWxlcywgc2kgc2UgZGEgbGEgZXN0YWNpb25hcmllZGFkIGVuIG1lZGlhLCBlbCBwcmltZXIgbW9tZW50byBkZSBsYSBzZXJpZSBlcyBjb25zdGFudGUgeSwgcG9yIHRhbnRvLCBubyBpbmZvcm1hdGl2by4gKipTb24gbG9zIHNlZ3VuZG9zIG1vbWVudG9zIGRlIGxhIHNlcmllIChjb3ZhcmlhbnphcykgbG9zIHF1ZSBjYXJhY3Rlcml6YW4gZWwgcHJvY2VzbyBlc3RvY8Ohc3RpY28qKi4KClJlY29yZGVtb3MgcXVlICRcZ2FtbWFfaz1Db3YoeV90LHlfe3Qta30pJCBlcyBsYSBhdXRvY292YXJpYW56YSBkZSBvcmRlbiBrLiBQb3IgdGFudG8gJFxnYW1tYV8wJCBlcyBsYSB2YXJpYW56YSBkZSBsYSBzZXJpZSAkeV90JC4gU2VhICRccmhvX2skIGxhIGF1dG9jb3JyZWxhY2nDs24gc2Ugb3JkZW4gJGskLiBTZSBwdWVkZSB2ZXJpZmljYXIgcXVlOgokJFxyaG9fayA9IGNvcih5X3QsIHlfe3Qta30pID1cZnJhY3tcZ2FtbWFfa317XGdhbW1hXzB9LiQkCgoqICRccmhvXzEkIG1pZGUgbGEgaW5mb3JtYWNpw7NuIHF1ZSBzZSB0cmFuc21pdGUgZGUgdW4gcGVyaW9kbyBhbCBzaWd1aWVudGUgcGVyaW9kby4KKiAkXHJob19rJCBtaWRlIGxhIGluZm9ybWFjacOzbiBxdWUgc2UgdHJhbnNtaXRlIGsgcGVyaW9kb3MgaGFjaWEgYWRlbGFudGUuCgpMYXMgYXV0b2NvcnJlbGFjaW9uZXMgY2FyYWN0ZXJpemFuIGVsIHByb2Nlc28gZXN0b2PDoXN0aWNvLCB5IF9fbGEgZnVuY2nDs24gZGUgYXV0b2NvcnJlbGFjacOzbiBvIGNvcnJlbG9ncmFtYSAgKEZBQywgbyBBQ0YgZW4gaW5nbMOpcykgZXMgZWwgZ3LDoWZpY28gZGUgJHJfayQgY29udHJhICRrJF9fLCBkb25kZSAkcl9rJCBlcyBsYSBlc3RpbWFjacOzbiBkZSAkXHJob19rJCBvYnRlbmlkYSBjb24gbGFzIG9ic2VydmFjaW9uZXMuCgpFbiBsYSBmaWd1cmEgNyB2ZWFtb3MgbGEgRkFDIHBhcmEgTGlicm9zIChwYW5lbCBzdXBlcmlvcikgeSBzdSBkaWZlcmVuY2lhIChwYW5lbCBpbmZlcmlvcikgdXNhbmRvIGxhIGZ1bmNpw7NuIGBnZ0FjZmAsIGRvbmRlIGVsIGFyZ3VtZW50byBgbGFnYCBpbmRpY2EgZWwgbcOheGltbyBvcmRlbiAkayQgYSB2aXN1YWxpemFyLiBFeGlzdGUgbGEgZnVuY2nDs24gZXF1aXZhbGVudGUgYGFjZmAgZW4gbGEgbGlicmVyw61hIGBzdGF0c2AuIEVsIGRlY3JlY2ltaWVudG8gbGluZWFsIGRlIGxhcyBhdXRvY29ycmVsYWNpb25lcyBwYXJhIGxhIHNlcmllIExpYnJvcyBlcyB1biBpbmRpY2lvIGRlIHF1ZSBsYSBzZXJpZSB0aWVuZSB0ZW5kZW5jaWEgeSBkZWJlcsOtYSBzZXIgZGlmZXJlbmNpYWRhLiBPYnNlcnZhIHF1ZSBsYXMgYXV0b2NvcnJlbGFjaW9uZXMgZGUgbGEgcHJpbWVyYSBkaWZlcmVuY2lhIGRlIExpYnJvcyBlbnRyYW4gZW4gZWwgaW50ZXJ2YWxvIGRlIGNvbmZpYW56YSBhbCA5NSUgKGJhbmRhcyBhenVsZXMpIGRlc2RlIGxhIHByaW1lciBtb21lbnRvLgoKYGBge3IsIGV2YWwgPSBGQUxTRX0KZ2dBY2YobGlicm9zLCBsYWcgPSAxMCkKZ2dBY2YoZGlmZihsaWJyb3MpLCBsYWcgPSAxMCkKYGBgCgpgYGB7ciwgZWNobyA9IEZBTFNFfQpncmlkLmFycmFuZ2UoCiAgZ2dBY2YobGlicm9zLCBsYWcgPSAxMCwgbWFpbiA9ICJGaWd1cmEgNy4gRkFDIHBhcmEgTGlicm9zIiwgeGxhYiA9ICIiLCB5bGFiID0gIkxpYnJvcyIpLAogIGdnQWNmKGRpZmYobGlicm9zKSwgbGFnID0gMTAsIG1haW4gPSAiIiwgeWxhYiA9IGV4cHJlc3Npb24obmFibGEqIkxpYnJvcyIpKSwKICBucm93ID0gMgopCmBgYAoKU2kgcXVlcmVtb3MgdmVyIGxvcyB2YWxvcmVzIG51bcOpcmljb3MgZGUgbGFzIGF1dG9jb3JyZWxhY2lvbmVzIGRlYmVtb3MgYcOxYWRpciBhIGxhIGZ1bmNpw7NuIGBnZ0FmY2AgZWwgYXJndW1lbnRvIGBwbG90ID0gRkFMU0VgLiBWZW1vcyBxdWUgZXhpc3RlIHVuYSByZWxhY2nDs24gKGNhc2kpIG51bGEgZW50cmUgbGEgdmFyaWFjacOzbiBhbnVhbCBkZSBMaWJyb3MgZGUgZG9zIGHDsW9zIGNvbnNlY3V0aXZvcyAoJHJfMT0kLTAuMDM4KS4gUGFyYSB1bmEgc2VyaWUgYW51YWwgZXN0ZSBlcyB1biBjbGFybyBpbmRpY2F0aXZvIGRlIHF1ZSBsYSBzZXJpZSBkaWZlcmVuY2lhZGEgZXMgcnVpZG8gYmxhbmNvLgoKYGBge3J9CmdnQWNmKGRpZmYobGlicm9zKSwgbGFnID0gMTAsIHBsb3QgPSBGQUxTRSkKYGBgCgpMYSBmaWd1cmEgOCBtdWVzdHJhIGxhIEZBQyBwYXJhIGxhIHNlcmllIE5hY2ltaWVudG9zIHkgYWxndW5hcyBkZSBzdXMgdHJhbnNmb3JtYWNpb25lcy4gT2JzZXJ2YSBlbCBkaWZlcmVudGUgdXNvIGRlbCBhcmd1bWVudG8gYGxhZ2A6IGVuIGxhIGZ1bmNpw7NuIGBkaWZmYCBpbmRpY2EgZWwgb3JkZW4gZGUgbGEgZGlmZXJlbmNpYWNpw7NuLCB5IGVuIGxhIGZ1bmNpw7NuIGBnZ0FjZmAgaW5kaWNhIGVsIG9yZGVuIG3DoXhpbW8gZGUgbGEgYXV0b2NvcnJlbGFjacOzbi4gTGEgcHJpbWVyYSBjb2x1bW5hIG11ZXN0cmEgbGEgRkFDIHBhcmEgTmFjaW1pZW50b3MgeSB2YXJpYXMgZGlmZXJlbmNpYWNpb25lcywgbWllbnRyYXMgcXVlIGxhIHNlZ3VuZGEgY29sdW1uYSBtdWVzdHJhIGxhIEZBQyBwYXJhIGVsIGxvZ2FyaXRtbyBkZSBsb3MgbmFjaW1pZW50b3MgeSBzdXMgZGlmZXJlbmNpYWNpb25lcy4gU2UgcHVlZGUgb2JzZXJ2YXIgcXVlIGxhIEZBQyBkZSB1bmEgc2VyaWUgeSBzdSB0cmFuc2Zvcm1hY2nDs24gbG9nYXLDrXRtaWNhIGVzIG11eSBzaW1pbGFyLiBFbiBsb3MgcGFuZWxlcyBkZSBsYSBwcmltZXJhIHkgdGVyY2VyYSBmaWxhIGxhcyBhdXRvY29ycmVsYWNpb25lcyBkZWNyZWNlbiBtdXkgbGVudGFtZW50ZSwgaW5kaWNhbmRvIHF1ZSBsYSBzZXJpZSBhbmFsaXphZGEgbm8gZXMgZXN0YWNpb25hcmlhIG5pIGVyZ8OzZGljYS4gRW4gbG9zIHBhbmVsZXMgZGUgbGEgc2VndW5kYSBmaWxhIGxhcyBhdXRvY29ycmVsYWNpb25lcyBkZSBvcmRlbiBlc3RhY2lvbmFsICgxMiwgMjQsLi4uKSB0YW1iacOpbiBkZWNyZWNlbiBsZW50YW1lbnRlLCBpbmRpY2FuZG8gcXVlIGxhIHNlcmllIGFuYWxpemFkYSBubyBlcyBlcmfDs2RpY2EuIFNvbG8gbGEgZG9ibGUgZGlmZXJlbmNpYWNpw7NuIHJlZ3VsYXIgeSBlc3RhY2lvbmFsIGRlIGxhIHNlcmllIChvcmlnaW5hbCBvIHN1IGxvZ2FyaXRtbykgbXVlc3RyYW4gdW4gcsOhcGlkbyBkZXNjZW5zbyBlbiBsb3MgY29lZmljaWVudGUgZGUgYXV0b2NvcnJlbGFjacOzbiAocGFuZWxlcyBkZSBsYSDDumx0aW1hIGZpbGEpLCBpbmRpY2FuZG8gcXVlIGxhIHNlcmllIHRyYW5zZm9ybWFkYSBlcyBlc3RhY2lvbmFyaWEgZW4gbWVkaWEgeSBlcmfDs2RpY2EuCgpgYGB7ciwgZXZhbCA9IEZBTFNFfQpnZ0FjZihuYWNpbWllbnRvcywgbGFnID0gNDgpCmdnQWNmKGxvZyhuYWNpbWllbnRvcyksIGxhZyA9IDQ4KQpnZ0FjZihkaWZmKG5hY2ltaWVudG9zKSwgbGFnID0gNDgpCmdnQWNmKGRpZmYobG9nKG5hY2ltaWVudG9zKSksIGxhZyA9IDQ4KQpnZ0FjZihkaWZmKG5hY2ltaWVudG9zLCBsYWcgPSAxMiksbGFnID0gNDgpCmdnQWNmKGRpZmYobG9nKG5hY2ltaWVudG9zKSwgbGFnID0gMTIpLCBsYWcgPSA0OCkKZ2dBY2YoZGlmZihkaWZmKG5hY2ltaWVudG9zLCBsYWc9MTIpKSwgbGFnID0gNDgpCmdnQWNmKGRpZmYoZGlmZihsb2cobmFjaW1pZW50b3MpLCBsYWc9MTIpKSwgbGFnID0gNDgpCmBgYAoKYGBge3IsIGVjaG8gPSBGQUxTRSwgZmlnLmhlaWdodD0gOH0KZ3JpZC5hcnJhbmdlKAogIGdnQWNmKG5hY2ltaWVudG9zLCBsYWcgPSA0OCwgbWFpbiA9ICJGaWd1cmEgOC4gRkFDIHBhcmEgTmFjaW1pZW50b3MiLCB4bGFiID0gIiIsIHlsYWIgPSBleHByZXNzaW9uKHlbdF0pKSwKICBnZ0FjZihsb2cobmFjaW1pZW50b3MpLCBsYWcgPSA0OCwgbWFpbiA9ICIiLCB4bGFiID0gIiIsIHlsYWIgPSBleHByZXNzaW9uKCJsb2coIip5W3RdKiIpIikpLAogIGdnQWNmKGRpZmYobmFjaW1pZW50b3MpLCBsYWcgPSA0OCwgbWFpbiA9ICIiLCB4bGFiID0gIiIsIHlsYWIgPSBleHByZXNzaW9uKG5hYmxhKnlbdF0pKSwKICBnZ0FjZihkaWZmKGxvZyhuYWNpbWllbnRvcykpLCBsYWcgPSA0OCwgbWFpbiA9ICIiLCB4bGFiID0gIiIsIHlsYWIgPSBleHByZXNzaW9uKG5hYmxhfiJsb2coIip5W3RdKiIpIikpLAogIGdnQWNmKGRpZmYobmFjaW1pZW50b3MsIGxhZyA9IDEyKSwgbGFnID0gNDgsIG1haW4gPSAiIiwgeGxhYiA9ICIiLCB5bGFiID0gZXhwcmVzc2lvbihuYWJsYVsxMl0qeVt0XSkpLAogIGdnQWNmKGRpZmYobG9nKG5hY2ltaWVudG9zKSwgbGFnID0gMTIpLCBsYWcgPSA0OCwgbWFpbiA9ICIiLCB4bGFiID0gIiIsIHlsYWIgPSBleHByZXNzaW9uKG5hYmxhWzEyXX4ibG9nKCIqeVt0XSoiKSIpKSwKICBnZ0FjZihkaWZmKGRpZmYobmFjaW1pZW50b3MpLCBsYWcgPSAxMiksIGxhZyA9IDQ4LCBtYWluID0gIiIsIHhsYWIgPSAiIiwgeWxhYiA9IGV4cHJlc3Npb24obmFibGEqbmFibGFbMTJdKnlbdF0pKSwKICBnZ0FjZihkaWZmKGRpZmYobG9nKG5hY2ltaWVudG9zKSksIGxhZyA9IDEyKSwgbGFnID0gNDgsIG1haW4gPSAiIiwgeGxhYiA9ICIiLCB5bGFiID0gZXhwcmVzc2lvbihuYWJsYSpuYWJsYVsxMl1+ImxvZygiKnlbdF0qIikiKSksCiAgbnJvdyA9IDQKKQpgYGAKClRhbWJpw6luIGVzIHBvc2libGUgdmVyIGxvcyB2YWxvcmVzIG51bcOpcmljb3MgZXhhY3RvczoKCmBgYHtyfQpnZ0FjZihkaWZmKGRpZmYobmFjaW1pZW50b3MsIGxhZz0xMikpLCBsYWcgPSAyNCwgcGxvdCA9IEZBTFNFKQpgYGAKCkxhcyBiYW5kYXMgYXp1bGVzIGRlIGxhIEZBQyBtdWVzdHJhbiBlbCBpbnRlcnZhbG8gZGUgY29uZmlhbnphIGFsIDk1JSAoSUM5NSkuIFNpICRccmhvX2sgPSAwJCwgbGEgZGlzdHJpYnVjacOzbiBkZWwgZXN0aW1hZG9yICRyX2skIHNlIGRpc3RyaWJ1eWUgYXByb3hpbWFkYW1lbnRlIGNvbW8gdW5hIG5vcm1hbCBkZSBtZWRpYSAkLTEvVCQgeSB2YXJpYW56YSAkMS9UJC4gTGFzIGzDrW5lYXMgcHVudGVhZGFzIGRlIGxhIEZBQyBlc3TDoW4gZGlidWphZGFzIGVuIGxhcyBwb3NpY2lvbmVzICRcZnJhY3stMX17VH0gXHBtIFxmcmFjezEuOTZ9e1xzcXJ0e1R9fSQuCiAKKiBTaSB1biAkcl9rJCBjYWUgZnVlcmEgZGVsIElDOTUgaGF5IGV2aWRlbmNpYSBwYXJhIHJlY2hhemFyIGxhIGhpcMOzdGVzaXMgbnVsYSBkZSBxdWUgJFxyaG9fayA9IDAkIGEgdW4gbml2ZWwgZGVsIDUlLiBSZWNvcmRlbW9zIHF1ZSBpbmNsdXNvIHNpIHRvZG9zIGxvcyAkXHJob19rJCBzb24gY2VybywgY2FiZSBlc3BlcmFyIHF1ZSB1biA1JSBkZSBzdXMgZXN0aW1hY2lvbmVzICRyX2skIGNhaWdhbiBmdWVyYSBkZWwgSUM5NS4KCiogTG9zICRccmhvX2skIG5vIHNvbiBpbmRlcGVuZGllbnRlcy4gU2kgdW5vIGNhZSBmdWVyYSBkZWwgSUM5NSwgZXMgbcOhcyBwcm9iYWJsZSBxdWUgbG9zIHZhbG9yZXMgdmVjaW5vcyBjYWlnYW4gdGFtYmnDqW4gZnVlcmEuCgpcCgojIyBGdW5jacOzbiBkZSBhdXRvY29ycmVsYWNpw7NuIHBhcmNpYWwKCl9fTGEgYXV0b2NvcnJlbGFjacOzbiBwYXJjaWFsIGRlIG9yZGVuIGssICRccGhpX2skLCBtaWRlIGxhIGluZm9ybWFjacOzbiBxdWUgc2UgdHJhbnNtaXRlIF9kaXJlY3RhbWVudGVfICRrJCBwZXJpb2RvcyBhZGVsYW50ZV9fLCBlbGltaW5hZGEgbGEgaW5mb3JtYWNpw7NuIHF1ZSBzZSB0cmFuc21pdGUgYSB0cmF2w6lzIGRlIGxvcyBwZXJpb2RvcyBpbnRlcm1lZGlvcy4KCiogJFxwaGlfMSQgbWlkZSBsYSBpbmZvcm1hY2nDs24gcXVlIGRlIHVuIHBlcmlvZG8gc2UgdHJhc21pdGUgZGlyZWN0YW1lbnRlIGFsIHNpZ3VpZW50ZSBwZXJpb2RvLiBQb3IgdGFudG8gJFxwaGlfMT1ccmhvXzEkLgoqICRccGhpXzIkIG1pZGUgbGEgaW5mb3JtYWNpw7NuIHF1ZSBkZSB1biBwZXJpb2RvIHNlIHRyYXNtaXRlIDIgcGVyaW9kb3MgYWRlbGFudGUsIGVsaW1pbmFuZG8gbGEgaW5mb3JtYWNpw7NuIHF1ZSBzZSB0cmFzbWl0ZSBhIHRyYXbDqXMgZGVsIHBlcmlvZG8gaW50ZXJtZWRpby4KCkxhIGZ1bmNpw7NuIGRlIGF1dG9jb3JyZWxhY2nDs24gcGFyY2lhbCAoRkFDUCwgbyBQQUNGIGVuIGluZ2zDqXMpIGVzIGVsIGdyw6FmaWNvIGRlICRyX3trLjEsMixrLTF9JCBjb250cmEgJGskLCBkb25kZSAkcl97ay4xLDIsay0xfSQgZXMgbGEgZXN0aW1hY2nDs24gZGUgJFxwaGlfayQgcmVhbGl6YWRhIGNvbiBsYXMgb2JzZXJ2YWNpb25lcy4KCkxhcyBmaWd1cmEgOSB5IDEwIG11ZXN0cmFuIGxhIEZBQ1AgcGFyYSBsYXMgc2VyaWVzIExpYnJvcyB5IE5hY2ltaWVudG9zIGFzw60gY29tbyBwYXJhIHN1cyB0cmFuc2Zvcm1hY2lvbmVzIHBhcmEgcXVlIHNlYW4gZXN0YWNpb25hcmlhcy4gTGEgRkFDUCBubyBwZXJtaXRlIGNvbm9jZXIgc2kgdW5hIHNlcmllIGVzIGVzdGFjaW9uYXJpYSBvIGVyZ8OzZGljYS4KCmBgYHtyLCBldmFsID0gRkFMU0V9CmdnUGFjZihsaWJyb3MsIGxhZyA9IDEwKQpnZ1BhY2YoZGlmZihsaWJyb3MpLCBsYWcgPSAxMCkKYGBgCgpgYGB7ciwgZWNobyA9IEZBTFNFfQpncmlkLmFycmFuZ2UoCiAgZ2dQYWNmKGxpYnJvcywgbGFnID0gMTAsIG1haW4gPSAiRmlndXJhIDkuIEZBQ1AgcGFyYSBMaWJyb3MiLCB4bGFiID0gIiIsIHlsYWIgPSAiTGlicm9zIiksCiAgZ2dQYWNmKGRpZmYobGlicm9zKSwgbGFnID0gMTAsIG1haW4gPSAiIiwgeWxhYiA9IGV4cHJlc3Npb24obmFibGF+IkxpYnJvcyIpKSwKICBucm93ID0gMgopCmBgYAoKYGBge3IsIGV2YWwgPSBGQUxTRX0KZ2dQYWNmKG5hY2ltaWVudG9zLCBsYWcgPSA0OCkKZ2dQYWNmKGRpZmYoZGlmZihuYWNpbWllbnRvcywgbGFnPTEyKSksIGxhZyA9IDQ4KQpgYGAKCmBgYHtyLCBlY2hvID0gRkFMU0V9CmdyaWQuYXJyYW5nZSgKICBnZ1BhY2YobmFjaW1pZW50b3MsIGxhZyA9IDQ4LCBtYWluID0gIkZpZ3VyYSAxMC4gRkFDUCBwYXJhIE5hY2ltaWVudG9zIiwgeGxhYiA9ICIiLCB5bGFiID0gIk5hY2ltaWVudG9zIiksCiAgZ2dQYWNmKGRpZmYoZGlmZihuYWNpbWllbnRvcyksIGxhZyA9IDEyKSwgbGFnID0gNDgsIG1haW4gPSAiIiwgeWxhYiA9IGV4cHJlc3Npb24obmFibGEqbmFibGFbMTJdKiJOYWNpbWllbnRvcyIpKSwKICBucm93ID0gMgopCmBgYAoKVGFtYmnDqW4gcHVlZGVzIG9idGVuZXIgZGlyZWN0YW1lbnRlIGxvcyB2YWxvcmVzIG51bcOpcmljb3MgZGUgbGEgRkFDUDoKICAKYGBge3J9CmdnUGFjZihkaWZmKGxpYnJvcyksIGxhZyA9IDEwLCBwbG90ID0gRkFMU0UpCmBgYAoKTGFzIGZ1bmNpb25lcyBgdHNkaXNwbGF5YCB5IGBnZ3RzZGlzcGxheWAgbXVlc3RyYW4gbGEgc2VyaWUgdGVtcG9yYWwsIHN1IEZBQyB5IHN1IEZBQ1AgZW4gdW4gw7puaWNvIGdyw6FmaWNvICh2w6lhc2UgZmlndXJhIDExKS4gCmBgYHtyfQpnZ3RzZGlzcGxheShkaWZmKGxpYnJvcyksIG1haW4gPSAiRmlndXJhIDExLiBGQUMgeSBGQUNQIHBhcmEgbGEgTGlicm9zIGRpZmVyZW5jaWFkYSIpCmBgYAoKXApcCgojIFJhw61jZXMgdW5pdGFyaWFzCgpcCgojIyBUaXBvcyBkZSB0ZW5kZW5jaWEKYGBge3IsIGVjaG8gPSBGQUxTRX0Kc2V0LnNlZWQoMTIzNDU2KQp0cmVuZCA8LSAxOjUwMAplIDwtIHJub3JtKDUwMCkKcncgPC0gY3Vtc3VtKGUpCnJ3IDwtIChydyAtIG1pbihydykpICogMjUwIC8gKG1heChydykgLSBtaW4ocncpKQpydy5kZSA8LSAwLjUgKiB0cmVuZCArIDIgKiBjdW1zdW0oZSkKZHQgPC0gMC4xICogZSArIDAuNSAqIHRyZW5kCgpkdCA8LSB0cyhkdCwgc3RhcnQgPSAxLCBmcmVxID0gMSkKcncgPC0gdHMocncsIHN0YXJ0ID0gMSwgZnJlcSA9IDEpCnJ3LmRlIDwtIHRzKHJ3LmRlLCBzdGFydCA9IDEsIGZyZXEgPSAxKQoKYXV0b3Bsb3QoZHQsIHNlcmllcz0iRGV0ZXJtaW5pc3RhIiwKICAgICAgICAgeGxhYiA9ICIiLAogICAgICAgICB5bGFiID0gIiIsCiAgICAgICAgIG1haW4gPSAiRmlndXJhIDEyLiBFamVtcGxvcyBkZSBwcm9jZXNvcyBnZW5lcmFkb3JlcyIpICsKICBhdXRvbGF5ZXIocncsIHNlcmllcyA9ICJFc3RvY8Ohc3RpY28iKSArCiAgYXV0b2xheWVyKHJ3LmRlLCBzZXJpZXMgPSAiQW1ib3MiKSArCiAgc2NhbGVfY29sb3VyX21hbnVhbCh2YWx1ZXM9YygiRGV0ZXJtaW5pc3RhIj0iYmx1ZSIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiRXN0b2PDoXN0aWNvIj0ib2xpdmVkcmFiIiwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiQW1ib3MiID0gImJyb3duIiksCiAgICAgICAgICAgICAgICAgICAgICBicmVha3M9YygiRGV0ZXJtaW5pc3RhIiwiRXN0b2PDoXN0aWNvIiwgIkFtYm9zIikpICsKICBndWlkZXMoY29sb3VyID0gZ3VpZGVfbGVnZW5kKHRpdGxlID0gIlByb2Nlc29zIGdlbmVyYWRvcmVzIikpICsgCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcz1OVUxMKSArIAogIHNjYWxlX3lfY29udGludW91cyhicmVha3M9TlVMTCkgKyAKICB0aGVtZShsZWdlbmQucG9zaXRpb249YygwLjk4LDAuMDIpLCBsZWdlbmQuanVzdGlmaWNhdGlvbj1jKDEsMCkpCmBgYAoKTGEgZmlndXJhIDEyIG11ZXN0cmEgdHJlcyBwb3NpYmxlcyB0aXBvcyBkZSBQR0QgKGVsIHJlc2lkdW8gJFx2YXJlcHNpbG9uX3QkIGVzIHNpZW1wcmUgcnVpZG8gYmxhbmNvKToKCiogUEdEIGNvbiB0ZW5kZW5jaWEgZXN0b2PDoXN0aWNhLCBwb3IgZWplbXBsbyBfX1Bhc2VvIGFsZWF0b3JpbyBwdXJvX18sCiQkeV90ID0geV97dC0xfSArIFx2YXJlcHNpbG9uX3QgPSB5XzAgKyBcc3VtX3tzPTF9XnQgXHZhcmVwc2lsb25fcy4kJCAgICAKKiBQR0QgY29uIHRlbmRlbmNpYSBkZXRlcm1pbmlzdGEsIHBvciBlamVtcGxvIF9fTW9kZWxvIGxpbmVhbF9fCiQkeV90ID0gXGFscGhhICsgXG11IHQgKyBcdmFyZXBzaWxvbl90LiQkCiogUEdEIGNvbiB0ZW5kZW5jaWEgZXN0b2PDoXN0aWNhIHkgZGV0ZXJtaW5pc3RhLCBwb3IgZWplbXBsbyBfX1Bhc2VvIGFsZWF0b3JpbyBjb24gZGVyaXZhX18KJCR5X3QgPSBcbXUgKyB5X3t0LTF9ICsgXHZhcmVwc2lsb25fdCA9IHlfMCArIFxtdSB0ICsgXHN1bV97cz0xfV50IFx2YXJlcHNpbG9uX3MuJCQKCkVuIGxvcyB0cmVzIGNhc29zIGxhIHNlcmllIG5vIGVzIGVzdGFjaW9uYXJpYSwgcGVybyBlcyBsYSBfX3ByZXNlbmNpYSBkZSB0ZW5kZW5jaWEgZXN0b2PDoXN0aWNhX18gbG8gcXVlIGRldGVybWluYSBxdWUgZWwgcHJvY2VzbyB0ZW5nYSB1bmEgX19yYcOteiB1bml0YXJpYV9fLiBBc8OtLCBlbCBwYXNlbyBhbGVhdG9yaW8gcHVybyB5IGVsIHBhc2VvIGFsZWF0b3JpbyBjb24gZGVyaXZhIHByZXNlbnRhbiB1bmEgX3Jhw616IHVuaXRhcmlhXywgcGVybyBsb3MgdHJlcyBtb2RlbG9zIHRpZW5lbiB0ZW5kZW5jaWEgeSBkZWJlbiBzZXIgZGlmZXJlbmNpYWRvcyB1bmEgdmV6IHBhcmEgdHJhbnNmb3JtYXJsb3MgZW4gcHJvY2Vzb3MgZXN0YWNpb25hcmlvcy4KCkNvbnRyYXN0YXIgbGEgdGVuZGVuY2lhIGVzdG9jw6FzdGljYSBubyBlcyBhbGdvIHRyaXZpYWwsIHkgbGEgcHJ1ZWJhIGVzIHF1ZSBleGlzdGVuIG3Dumx0aXBsZXMgY29udHJhc3RlcyBwYXJhIGVsbG86IERpY2tleS1GdWxsZXIgYXVtZW50YWRvIChBREYpLCBQaGlsbGlwcy1QZXJyb24gKFBQKSwgRWxsaW90LVJvdGhlbWJlcmctU3RvY2sgKEVSUyksIFNjaG1pZHQtUGhpbGxpcHMgKFNQKSwgS3dpYXRrb3dza2ktUGhpbGxpcHMtU2NobWlkdC1TaGluIChLUFNTKSwgZW50cmUgb3Ryb3MuIChWw6lhc2UgW0FuYWx5c2lzIG9mIEludGVncmF0ZWQgYW5kIENvaW50ZWdyYXRlZCBUaW1lIHNlcmllcyB3aXRoIFJdKGh0dHBzOi8vd3d3LnNwcmluZ2VyLmNvbS9ncC9ib29rLzk3ODAzODc3NTk2NjEpKQoKRW4gbXVjaGFzIGRlIGxhcyBwcnVlYmFzIGxhIGhpcMOzdGVzaXMgbnVsYSBlcyBxdWUgbGEgc2VyaWUgdGllbmUgcmHDrWNlcyB1bml0YXJpYXMgKHRlbmRlbmNpYSBlc3RvY8Ohc3RpY2EpLCBjdWFuZG8gbG8gaGFiaXR1YWwgZXMgcXVlIGxhIGhpcMOzdGVzaXMgbnVsYSBzZWEgbGEgY29uc2VydmFkb3JhIChlbiBlc3RlIGNhc28gcXVlIGxhIHNlcmllIG5vIHRlbmdhIHRlbmRlbmNpYSBlc3RvY8Ohc3RpY2EpLiBFbiBlc3RlIGN1cnNvIHZlcmVtb3MgbGEgX19wcnVlYmEgZGUgS3dpYXRrb3dza2ktUGhpbGxpcHMtU2NobWlkdC1TaGluX18gcXVlIHVzYSB1biBjb250cmFzdGUgZGUgTXVsdGlwbGljYWRvcmVzIGRlIExhZ3JhbmdlIHBhcmEgY29udHJhc3RhciBsYSBlc3RhY2lvbmFyaWVkYWQgZGUgdW5hIHNlcmllIGVuIHRvcm5vIGEgdW5hIHRlbmRlbmNpYSBkZXRlcm1pbmlzdGEsIGZyZW50ZSBhIGxhIGhpcMOzdGVzaXMgYWx0ZXJuYXRpdmEgZGUgZXhpc3RlbmNpYSBkZSB1bmEgcmHDrXogdW5pdGFyaWEuIEVzIGRlY2lyLCBsYSBwcnVlYmEgS1BTUyB0aWVuZSBjb21vIGhpcMOzdGVzaXMgbnVsYSBxdWUgbGEgc2VyaWUgbm8gdGllbmUgdGVuZGVuY2lhIGVzdG9jw6FzdGljYSB5IHBvciB0YW50byBlcyB1bmEgcHJ1ZWJhIG3DoXMgY29uc2VydmFkb3JhIHF1ZSBsYSBtYXlvcsOtYSBkZSBlbGxhcy4gU2luIGVtYmFyZ28sIGVuIGxhIHBydWViYSBLUFNTIGxhIGF1c2VuY2lhIGRlIHJhw616IHVuaXRhcmlhIG5vIGVzIHVuYSBwcnVlYmEgZGUgZXN0YWNpb25hcmllZGFkLCBzaW5vIGRlIF9lc3RhY2lvbmFyaWVkYWQgZW4gdG9ybm8gYSB1bmEgdGVuZGVuY2lhIGRldGVybWluaXN0YV8uIFBvciBlamVtcGxvLCBlbCBNb2RlbG8gbGluZWFsIG5vIHRpZW5lIHVuYSByYcOteiB1bml0YXJpYSAobm8gdGllbmUgdGVuZGVuY2lhIGVzdG9jw6FzdGljYSkgcGVybyBubyBlcyBlc3RhY2lvbmFyaW8uCgpUYW1iacOpbiBleGlzdGVuIHByb2Nlc29zIGNvbiBfZXN0YWNpb25hbGlkYWQgZXN0b2PDoXN0aWNhXyBkZWwgdGlwbyAkeV90ID0geV97dC1tfSArIFx2YXJlcHNpbG9uX3QkLCBkb25kZSBfbV8gZXMgZWwgb3JkZW4gZXN0YWNpb25hbC4gQ29udHJhc3RhciBsYSBleGlzdGVuY2lhIGRlIHJhw61jZXMgdW5pdGFyaWFzIGVzdGFjaW9uYWxlcyBlcyBjb21wbGljYWRvIHkgbm8gbG8gdmVyZW1vcyBlbiBlc3RlIGN1cnNvLiAoVsOpYXNlIFtUZXN0aW5nIGZvciB1bml0IHJvb3RzIGluIHNlYXNvbmFsIHRpbWUgc2VyaWVzOiBTb21lIHRoZW9yZXRpY2FsIGV4dGVuc2lvbnMgYW5kIGEgTW9udGUgQ2FybG8gaW52ZXN0aWdhdGlvbl0oaHR0cHM6Ly93d3cuc2NpZW5jZWRpcmVjdC5jb20vc2NpZW5jZS9hcnRpY2xlL2Ficy9waWkvMDMwNDQwNzY5NDkwMDMwMikpCgpFbiBsbyBxdWUgcXVlZGEgZGUgZXhwb3NpY2nDs24gYXN1bWlyZW1vcyBxdWUgbGEgc2VyaWUgbm8gcHJlc2VudGEgZXN0YWNpb25hbGlkYWQuCiAgClwKCiMjIENvbnRyYXN0ZSBkZSByYcOteiB1bml0YXJpYSBLUFNTCgojIyMgVGVvcsOtYSB7LX0KClNlYSAkeV90JCBsYSBzZXJpZSBwYXJhIGxhIHF1ZSBxdWVyZW1vcyBjb250cmFzdGFyIGxhIGV4aXN0ZW5jaWEgZGUgcmHDrWNlcyB1bml0YXJpYXMuIEFzdW1pbW9zIHF1ZSBwb2RlbW9zIGRlc2NvbXBvbmVyIGxhIHNlcmllIGVuIGxhIHN1bWEgZGUgdW5hIHRlbmRlbmNpYSBkZXRlcm1pbmlzdGEsIHVuIHBhc2VvIGFsZWF0b3JpbyB5IHVuYSBwZXJ0dXJiYWNpw7NuIGFsZWF0b3JpYSBlc3RhY2lvbmFyaWE6CiQkeV90ID0gXHhpIHQgKyByX3QgKyBcdmFyZXBzaWxvbl90LiQkCkFxdcOtICRyX3QkIGVzIGVsIHBhc2VvIGFsZWF0b3JpbywKJCRyX3QgPSByX3t0LTF9ICsgdV90LCQkCmRvbmRlICR1X3QkIHNvbiBpLmkuZC4gJCgwLFxzaWdtYV91XjIpJCB5IGVsIHZhbG9yIGluaWNpYWwgJHJfMCQgc2UgYXN1bWUgZmlqbyB5IHRpZW5lIGVsIHBhcGVsIGRlIHVuIGludGVyY2VwdG8gbyBjb25zdGFudGUgZGVsIG1vZGVsby4gCgpTaSBzZSBjdW1wbGUgbGEgaGlww7N0ZXNpcyAkSF8wOiBcc2lnbWFfdV4yPTAkLCBlbnRvbmNlcyAkdV90PTAkIHkgJHJfdD1yXzAkIHBhcmEgdG9kbyAkdCQgeSBsYSBjb21wb25lbnRlIGVzdG9jw6FzdGljYSBkZXNhcGFyZWNlLCBxdWVkYW5kbyBzb2xvIGxhIHRlbmRlbmNpYSBkZXRlcm1pbmlzdGEuIENvbW8gZWwgcGFyw6FtZXRybyBkZSBpbnRlcsOpcyBlcyB1bmEgdmFyaWFuemEsICRIXzE6IFxzaWdtYV91XjI+MCQsIGVzIGRlY2lyLCBlcyB1biBjb250cmFzdGUgZGUgdW5hIGNvbGEgcG9yIGxhIGRlcmVjaGEuCgoqIFNpICRceGk9MCQsIGVudG9uY2VzIGJham8gbGEgaGlww7N0ZXNpcyBudWxhICR5X3QgPSByXzAgKyBcdmFyZXBzaWxvbl90JCwgZXMgZGVjaXIgJHlfdCQgbm8gdGllbmUgdGVuZGVuY2lhIGVzdG9jw6FzdGljYSBuaSBkZXRlcm1pbmlzdGE6IGVzIGVzdGFjaW9uYXJpYSBlbiBuaXZlbCBhbHJlZGVkb3IgZGUgJHJfMCQgKHJlY3VlcmRhIHF1ZSBwb3IgaGlww7N0ZXNpcyAkXHZhcmVwc2lsb25fdCQgZXMgZXN0YWNpb25hcmlvKS4KKiBTaSAkXHhpIFxuZXEgMCQsIGVudG9uY2VzIGJham8gbGEgaGlww7N0ZXNpcyBudWxhICR5X3QgPSBceGkgdCArIHJfMCArIFx2YXJlcHNpbG9uX3QkLCBlcyBkZWNpciAkeV90JCBubyB0aWVuZSB0ZW5kZW5jaWEgZXN0b2PDoXN0aWNhIHBlcm8gc2kgZGV0ZXJtaW5pc3RhOiBlcyBlc3RhY2lvbmFyaWEgYWxyZWRlZG9yIGRlIHVuYSB0ZW5kZW5jaWEgZGV0ZXJtaW5pc3RhICRceGkgdCArIHJfMCQuCiogRW4gYW1ib3MgY2Fzb3MsIHNpIHNlIHJlY2hhemEgbGEgaGlww7N0ZXNpcyBudWxhIGVzIHBvcnF1ZSBsYSBzZXJpZSB0aWVuZSB1bmEgcmHDrXogdW5pdGFyaWEgKHRlbmRlbmNpYSBlc3RvY8Ohc3RpY2EpIHkgaGFicsOtYSBxdWUgZGlmZXJlbmNpYXJsYS4KCk5vIGhheSBxdWUgb2x2aWRhciBxdWUgZXN0YSBwcnVlYmEgZGVzY2Fuc2EgYmFqbyBsb3Mgc3VwdWVzdG9zIGRlICRcdmFyZXBzaWxvbl90JCBlcyBlc3RhY2lvbmFyaW8geSAkdV90JCBpLmkuZC4gJCgwLFxzaWdtYV91XjIpJC4KCiMjIyBQcm9jZWRpbWllbnRvIGRlIGNvbnRyYXN0ZSB7LX0KCl9fUGFzbyAxOl9fIFNlIGVzdGltYSBsYSBlY3VhY2nDs24gJHlfdCA9IFx4aSB0ICsgcl8wICsgXHZhcmVwc2lsb25fdCQgcGFyYSBvYnRlbmVyIGxvcyByZXNpZHVvcyBlc3RpbWFkb3MgJFx3aWRlaGF0e1x2YXJlcHNpbG9ufV90JC4KCk9ic2VydmEgcXVlIGVzdGUgdmVjdG9yIGRlIHJlc2lkdW9zIHNlIHB1ZWRlIGVzdGltYXIgZmlqYW5kbyAkXHhpID0gMCQsIGVzIGRlY2lyLCByZWdyZXNhbmRvIGxhIHNlcmllICR5X3QkIHNpbXBsZW1lbnRlIHNvYnJlIHVuYSBjb25zdGFudGU7IG8gYmFqbyBlcyBzdXB1ZXN0byBkZSBxdWUgJFx4aSBcbmVxIDAkLCBlcyBkZWNpciwgcmVncmVzYW5kbyBsYSBzZXJpZSBzb2JyZSB1bmEgY29udGFudGUgeSB1bmEgdGVuZGVuY2lhIGxpbmVhbC4KCl9fUGFzbyAyOl9fIFNlIGRlZmluZW4gbGFzIHN1bWFzIHBhcmNpYWxlcyAkU190ID0gXHN1bV97aT0xfV50IFx3aWRlaGF0e1x2YXJlcHNpbG9ufV9pJCwgY29uICR0PTEsMixcbGRvdHMsVCQgeSBzZSBjYWxjdWxhICRcd2lkZWhhdHtcc2lnbWF9XjJfe1x2YXJlcHNpbG9ufSQuCgpMYSBmb3JtYSBtw6FzIHNlbmNpbGxhIGRlIGNhbGN1bGFyICRcd2lkZWhhdHtcc2lnbWF9XjJfe1x2YXJlcHNpbG9ufSQgZXMgJFx3aWRlaGF0e1xzaWdtYX1eMl97XHZhcmVwc2lsb259PSBcc3VtIFx3aWRlaGF0e1x2YXJlcHNpbG9ufV90XjIvVCQsIHBlcm8gdW5hIGbDs3JtdWxhIGFsdGVybmF0aXZhIGVzICRcd2lkZWhhdHtcc2lnbWF9XjJfe1x2YXJlcHNpbG9ufShsKSA9IFReey0xfVxzdW1fe3QgPSAxfV5UIFx3aWRlaGF0e1x2YXJlcHNpbG9ufV90XjIgKyAyVF57LTF9XHN1bV97cz0xfV5sIFxCaWdbIFxCaWcoIDEgLSBcZnJhY3tzfXtsKzF9IFxCaWcpIFxzdW1fe3Q9cysxfV5UIFx3aWRlaGF0e1x2YXJlcHNpbG9ufV90IFx3aWRlaGF0e1x2YXJlcHNpbG9ufV97dC1zfSAgXEJpZ10kLCBxdWUgZGVwZW5kZW4gZWwgcGFyw6FtZXRybyAkbCQuCgpfX1Bhc28gMzpfXyBFbCBlc3RhZMOtc3RpY28gZGUgY29udHJhc3RlIGVzICRMTSA9IFxzdW1fe3Q9MX1eVCBTX3ReMi9cd2lkZWhhdHtcc2lnbWF9XjJfe1x2YXJlcHNpbG9ufSQuCgpfX1Bhc28gNDpfXyBGaWphZG8gdW4gbml2ZWwgZGUgc2lnbmlmaWNhdGl2aWRhZCwgZWwgZXN0YWTDrXN0aWNvIGRlIGNvbnRyYXN0ZSBMTSBlcyBjb21wYXJhZG8gY29uIGVsIHZhbG9yIGNyw610aWNvLiBTaSBMTSBlcyBtYXlvciBxdWUgZWwgdmFsb3IgY3LDrXRpY28sIHNlIHJlY2hhemEgbGEgaGlww7N0ZXNpcyBudWxhLCBsYSBzZXJpZSB0aWVuZSByYcOtY2VzIHVuaXRhcmlhcyAodGVuZGVuY2lhIGVzdG9jw6FzdGljYSkgeSBlcywgcG9yIHRhbnRvLCBubyBlc3RhY2lvbmFyaWEuIFNpIG5vIHNlIHJlY2hhemEgbGEgaGlww7N0ZXNpcyBudWxhLCBlbnRvbmNlcyBsYSBzZXJpZSBlcyBlc3RhY2lvbmFyaWEgZW4gdG9ybm8gYSB1biBuaXZlbCAoY2FzbyAkXHhpID0gMCQpIG8gYSB1bmEgdGVuZGVuY2lhIGRldGVybWluaXN0YSAoY2FzbyAkXHhpIFxuZXEgMCQpLiAKClB1ZWRlcyBlbmNvbnRyYXIgbG9zIGRldGFsbGVzIGRlIGVzdGUgY29udHJhc3RlIGVuIEt3aWF0a293c2tpLCBELiwgUGhpbGxpcHMsIFAuQy5CLiwgU2NobWlkdCwgUC4gYW5kIFNoaW4sIFkuLCAoMTk5MikuCgojIyMgQ29udHJhc3RlIEtQU1MgZW4gYFJgIHstfQoKYFJgIHByb3BvcmNpb25hIGRvcyBpbXBsZW1lbnRhY2lvbmVzIGRlIGVzdGEgcHJ1ZWJhLCBgdXIua3Bzc2AgZW4gZWwgcGFxdWV0ZSBgdXJjYWAgKHF1ZSBzZXLDoSBsYSBxdWUgdXNhcmVtb3MpIHkgYGtwc3MudGVzdGAgZW4gZWwgcGFxdWV0ZSBgdHNlcmllc2AuIEVuIGFtYm9zIGNhc29zIGVsIHVzdWFyaW8gZGViZSBkZWNpZGlyIGVsIHZhbG9yIGFkZWN1YWRvIGRlbCBwYXLDoW1ldHJvICRsJCBwYXJhIGVsIGPDoWxjdWxvIGRlICRcd2lkZWhhdHtcc2lnbWF9XjJfe1x2YXJlcHNpbG9ufShsKSQuIENvbW8gbG9zIHJlc3VsdGFkb3MgcHVlZGVuIGRlcGVuZGVyIGRlIGVzdGUgcGFyw6FtZXRybywgZXMgY29udmVuaWVudGUgcmVwZXRpciBlbCBjb250cmFzdGUgcGFyYSBkaWZlcmVudGVzIHZhbG9yZXMuIAoKQWRlbcOhcywgZW4gYGZvcmVjYXN0YCBlc3TDoSBkaXNwb25pYmxlIGxhIGZ1bmNpw7NuIGBuZGlmZnNgIHF1ZSBlc3RpbWEgZWwgbsO6bWVybyBkZSBkaWZlcmVuY2lhcyBuZWNlc2FyaWFzIHBhcmEgcXVlIHVuYSBzZXJpZSBzZWEgZXN0YWNpb25hcmlhLiBQb3IgZGVmZWN0byBsYSBmdW5jacOzbiBgbmRpZmZzYCBlbXBsZWEgZWwgY29udHJhc3RlIEtQU1MsIHBlcm8gdGFtYmnDqW4gZXN0w6FuIGRpc3BvbmlibGVzIERpY2tleS1GdWxsZXIgeSBQaGlsbGlwcy1QZXJyb24uCgpMb3MgcHJpbmNpcGFsZXMgYXJndW1lbnRvcyBkZSBsYSBmdW5jacOzbiBgdXIua3Bzc2Agc29uOgoKKiBgdHlwZWAsIHB1ZWRlIHNlciBgdHlwZSA9ICJtdSJgIHBhcmEgY29udHJhc3RhciBsYSBwcmVzZW5jaWEgZGUgdGVuZGVuY2lhIGVzdG9jw6FzdGljYSBlbiB0b3JubyBhIHVuIG5pdmVsICgkXHhpID0gMCQpOyBvIGB0eXBlID0gInRhdSJgIHBhcmEgY29udHJhc3RhciBsYSBwcmVzZW5jaWEgZGUgdGVuZGVuY2lhIGVzdG9jw6FzdGljYSBlbiB0b3JubyBhIHVuYSB0ZW5kZW5jaWEgZGV0ZXJtaW5pc3RhICgkXHhpIFxuZXEgMCQpLgoqIGBsYWdzYCwgZWwgdmFsb3IgZGVsIHBhcsOhbWV0cm8gJGwkIGVuICRcd2lkZWhhdHtcc2lnbWF9XjJfe1x2YXJlcHNpbG9ufShsKSQuIFB1ZWRlIHNlciAnJ25pbCcnIGN1YW5kbyBubyBoYXkgY29ycmVjY2nDs24gKCRsPTAkKTsgJydzaG9ydCcnIHVzYSBlbCB2YWxvciAkKDRULzEwMCleezAuMjV9JDsgeSAnJ2xvbmcnJyBwYXJhICQoMTJULzEwMCleezAuMjV9JC4KKiBgdXNlLmxhZ2AgZmlqYSB1biB2YWxvciBudW3DqXJpY28gcGFyYSAkbCQuIChMYSBmdW5jacOzbiBgbmRpZmZzYCBmaWphIGVzdGUgdmFsb3IgYSAkM1xzcXJ0e1QvMTN9JC4pCgojIyMgRWplbXBsbyBjb24gTGlicm9zIHstfQpgYGB7cn0gIApzdW1tYXJ5KHVyLmtwc3MobGlicm9zLCB0eXBlPSd0YXUnLCBsYWdzID0gJ3Nob3J0JykpCmBgYAoKRW4gZWwgY2FzbyBlbiBxdWUgc2UgYXN1bWUgdGVuZGVuY2lhIGRldGVybWluaXN0YSwgeSBwYXJhICRsPTIkLCBlbCBlc3RhZMOtc3RpY28gZGUgY29udHJhc3RlIHZhbGUgMC4yMDYgeSBlbCB2YWxvciBjcsOtdGljbyBhbCA1JSB2YWxlIDAuMTQ2LiBDb21vIGVsIGVzdGFkw61zdGljbyBkZSBjb250cmFzdGUgZXMgbWF5b3IgcXVlIGVsIHZhbG9yIGNyw610aWNvLCBzZSByZWNoYXphIGxhIGhpcMOzdGVzaXMgbnVsYSwgbGEgc2VyaWUgdGllbmUgdW5hIHJhw616IHVuaXRhcmlhLCBlcyBkZWNpciB0aWVuZSB0ZW5kZW5jaWEgZXN0b2PDoXN0aWNhIGFscmVkZWRvciBkZSB1bmEgdGVuZGVuY2lhIGRldGVybWluaXN0YSAoY29tbyBlbiBlbCBwYXNlbyBhbGVhdG9yaW8gY29uIGRlcml2YSkuIE9ic2VydmEgcXVlIGFsIDElIG5vIHNlIHJlY2hhemEgbGEgaGlww7N0ZXNpcyBudWxhLgoKCmBgYHtyfSAgCnN1bW1hcnkodXIua3BzcyhsaWJyb3MsIHR5cGU9J211JywgbGFncyA9ICdzaG9ydCcpKQpgYGAKCkFob3JhLCBiYWpvIGVsIHN1cHVlc3RvIGRlIHF1ZSBubyBoYXkgdGVuZGVuY2lhIGRldGVybWluaXN0YSwgZWwgZXN0YWTDrXN0aWNvIGRlIGNvbnRyYXN0ZSB2YWxlIDAuNDM0IHkgZWwgdmFsb3IgY3LDrXRpY28gYWwgNSUgdmFsZSAwLjQ2My4gTm8gc2UgcmVjaGF6YSBsYSBoaXDDs3Rlc2lzIG51bGEsIGxhIHNlcmllIG5vIHRpZW5lIHRlbmRlbmNpYSBlc3RvY8Ohc3RpY2EgYWxyZWRlZG9yIGRlIHVuIG5pdmVsLgoKVGVuZW1vcyB1biBlamVtcGxvIHBlcmZlY3RvIGRlIGxvIHBhcmFkw7NqaWNvcyBxdWUgcHVlZGVuIHNlciBsb3MgcmVzdWx0YWRvcyBkZSB1biBjb250cmF0ZSBkZSByYcOtY2VzIHVuaXRhcmlhcyB5IGRlIHBvciBxdcOpIHJlc3VsdGFuIGVuIGxhIHByw6FjdGljYSB0YW4gcG9jbyDDunRpbGVzLgoKU2kgYXBsaWNhbW9zIGVsIHByaW1lciBjb250cmFzdGUgKCRceGkgXG5lcSAwJCkgcGFyYSBkaWZlcmVudGVzIHZhbG9yZXMgZGUgJGwkIGRlc2RlIDEgaGFzdGEgOCwgbG9zIGVzdGFkw61zdGljb3MgZGUgY29udHJhc3RlIHZhbGVuOgoKYGBge3IsZWNobyA9IEZBTFNFfSAgCnRtcCA8LSBOVUxMCmZvcihsIGluIDE6OCkgewogIHR0dCA8LSBzdW1tYXJ5KHVyLmtwc3MobGlicm9zLCB0eXBlPSd0YXUnLCB1c2UubGFnID0gbCkpCiAgdG1wIDwtIGModG1wLCB0dHRAdGVzdHN0YXQpCn0KbmFtZXModG1wKSA8LSAxOjgKcm91bmQodG1wLCAzKQpgYGAKCkVuIHRvZG9zIGxvcyBjYXNvcyBlbCB2YWxvciBjcsOtdGljbyBhbCA1JSBzaWd1ZSBzaWVuZG8gMC4xNDYuIFNlIG9ic2VydmEgcXVlIHBhcmEgJGwgPCA1JCwgc2UgcmVjaGF6YXLDrWEgbGEgaGlww7N0ZXNpcyBudWxhLCBsYSBzZXJpZSB0aWVuZSB0ZW5kZW5jaWEgZXN0b2PDoXN0aWNhOyBwZXJvIHBhcmEgJGwgXGdlcSA1JCBubyBzZSByZWNoYXphIHkgbGEgc2VyaWUgbm8gdGllbmUgdGVuZGVuY2lhIGVzdG9jw6FzdGljYSAoYXVucXVlIHNlIGVzdMOhIGFzdW1pZW5kbyBxdWUgdGllbmUgdGVuZGVuY2lhIGRldGVybWluaXN0YSkuIFNpIHNlIHJlcGl0ZSBlc3RlIGVqZXJjaWNpbyBmaWphbmRvIGB0YXUgPSAibXUiYCwgc2UgcmVjaGF6YSBsYSBoaXDDs3Rlc2lzIG51bGEgc8OzbG8gcGFyYSAkbCA9IDEkLgoKU2kgb3B0YW1vcyBwb3IgYWNlcHRhciBxdWUgbGEgc2VyaWUgTGlicm9zIG5vIGVzIGVzdGFjaW9uYXJpYSB5IGxhIGRpZmVyZW5jaWFtb3MgdW5hIHZleiwgZGViZW1vcyByZXBldGlyIGVsIGNvbnRyYXN0ZSBwYXJhIGxhIHNlcmllIGRpZmVyZW5jaWFkYSBhIGZpbiBkZSBkZXRlcm1pbmFyIHNpIHVuYSBkaWZlcmVuY2lhIGVzIHN1ZmljaWVudGUgcGFyYSBhbGNhbnphciBsYSBlc3RhY2lvbmFyaWVkYWQuIEVzdGEgdmV6LCBsbyBtw6FzIGNvbnZlbmllbnRlIGVzIGNvbnNpZGVyYXIgcXVlIGxhIHRlbmRlbmNpYSBkZXRlcm1pbmlzdGEgeWEgaGEgc2lkbyBlbGltaW5hZGEgeSBmaWphciBgdGF1ID0gIm11ImAuCgpPdHJhIG9wY2nDs24gZXMgdXNhciBsYSBmdW5jacOzbiBgbmRpZmZzYCBxdWUgYXBsaWNhIGVsIGNvbnRyYXN0ZSBLUFNTIHJlaXRlcmFkYW1lbnRlIHBhcmEgaWRlbnRpZmljYXIgZWwgbsO6bWVybyBhZGVjdWFkbyBkZSBkaWZlcmVuY2lhY2lvbmVzLiBFc3RhIGZ1bmNpw7NuIHBlcm1pdGUgZmlqYXIgZWwgbml2ZWwgZGUgc2lnbmlmaWNhdGl2aWRhZCwgZWwgdGlwbyBkZSBjb250cmFzdGUgeSBlbCB0aXBvIGRlIHRlbmRlbmNpYSBkZXRlcm1pbmlzdGEuCgpgYGB7cn0gIApuZGlmZnMobGlicm9zLCBhbHBoYSA9IDAuMDUsIHRlc3QgPSAia3BzcyIsIHR5cGUgPSAidHJlbmQiKQpgYGAKClRhbWJpw6luIGV4aXN0ZSBsYSBmdW5jacOzbiBgbnNkaWZmc2AgcXVlIGlkZW50aWZpY2EgZWwgbsO6bWVybyBkZSBkaWZlcmVuY2lhY2lvbmVzIGVzdGFjaW9uYWxlcyBhZGVjdWFkby4gRW4gZXN0ZSBjYXNvIHNlIGJhc2EgZGUgdW5hIHJlZ2xhIGRlIGRlY2lzacOzbiBlbXDDrXJpY2EsIHNpbiBzb3BvcnRlIHRlw7NyaWNvLgoKIyMjIEVqZW1wbG8gY29uIE5hY2ltaWVudG9zIChhbnVhbCkgey19CgoKYGBge3J9ICAKbmFjaW1pZW50b3NBbnVhbDwtYWdncmVnYXRlKG5hY2ltaWVudG9zLCBGVU4gPSBzdW0pCnN1bW1hcnkodXIua3BzcyhuYWNpbWllbnRvc0FudWFsLCB0eXBlPSd0YXUnLCBsYWdzID0gInNob3J0IikpCmBgYAoKRWwgZXN0YWTDrXN0aWNvIGRlIGNvbnRyYXN0ZSB2YWxlIDAuMjM2IHkgZWwgdmFsb3IgY3LDrXRpY28gYWwgNSUgdmFsZSAwLjE0Ni4gQ29tbyBlbCBlc3RhZMOtc3RpY28gZGUgY29udHJhc3RlIGVzIG1heW9yIHF1ZSBlbCB2YWxvciBjcsOtdGljbywgc2UgcmVjaGF6YSBsYSBoaXDDs3Rlc2lzIG51bGEsIGxhIHNlcmllIHRpZW5lIHRlbmRlbmNpYSBlc3RvY8Ohc3RpY2EgYWxyZWRlZG9yIGRlIHVuYSB0ZW5kZW5jaWEgZGV0ZXJtaW5pc3RhLCBubyBlcyBlc3RhY2lvbmFyaWEuCgpEZSBudWV2bywgYXBsaWNhbmRvIGVsIGNvbnRyYXN0ZSBwYXJhIGRpZmVyZW50ZXMgdmFsb3JlcyBkZSAkbCQgc2UgdGllbmUgcXVlOgoKYGBge3IsZWNobyA9IEZBTFNFfSAgCnRtcCA8LSBOVUxMCmZvcihsIGluIDE6OCkgewogIHR0dCA8LSBzdW1tYXJ5KHVyLmtwc3MobmFjaW1pZW50b3NBbnVhbCwgdHlwZT0ndGF1JywgdXNlLmxhZyA9IGwpKQogIHRtcCA8LSBjKHRtcCwgdHR0QHRlc3RzdGF0KQp9Cm5hbWVzKHRtcCkgPC0gMTo4CnJvdW5kKHRtcCwgMykKYGBgCgpTb2xvIHBhcmEgdmFsb3JlcyBkZSAkbCQgcG9yIGVuY2ltYSBkZSA2IG5vIHNlIHJlY2hhemEgbGEgaGlww7N0ZXNpcyBudWxhLiBTaSBhcGxpY2Ftb3MgYG5kaWZmc2Agb2J0ZW5lbW9zIHF1ZSBoYXkgcXVlIGRpZmVyZW5jaWFyIGxhIHNlcmllIGRvcyB2ZWNlcyBwYXJhIHF1ZSBzZWEgZXN0YWNpb25hcmlhLgoKYGBge3J9ICAKbmRpZmZzKG5hY2ltaWVudG9zQW51YWwsIGFscGhhID0gMC4wNSwgdGVzdCA9ICJrcHNzIiwgdHlwZSA9ICJ0cmVuZCIpCmBgYAoKCiMjIyBQcnVlYmFzIGFsdGVybmF0aXZhcyBwYXJhIGNvbnRyYXN0ZSBkZSByYcOtY2VzIHVuaXRhcmlhcyB7LX0KCnxQcnVlYmEgIHxGdW5jacOzbiAgICAgICB8UGFja2FnZSAgICAgICAgfAp8Oi0tLS0tLS18Oi0tLS0tLS0tLS0tLS18Oi0tLS0tLS0tLS0tLS0tfAp8S1BTUyAgICB8YHVyLmtwc3NgICAgICAgIHx1cmNhICAgICAgICAgICB8CnxLUFNTICAgIHxga3Bzcy50ZXN0YCAgICAgfHRzZXJpZXMgICAgICAgIHwKfEFERiAgICAgfGB1ci5kZmAgICAgICAgICB8dXJjYSAgICAgICAgICAgfAp8QURGICAgICB8YGFkZi50ZXN0YCAgICAgIHx0c2VyaWVzICAgICAgICB8CnxBREYgICAgIHxgYWRmdGVzdGAgICAgICAgfGZVbml0Um9vdHMgICAgIHwKfEFERiAgICAgfGBBREYudGVzdGAgICAgICB8dXJvb3QgICAgICAgICAgfAp8UFAgICAgICB8YHVyLnBwYCAgICAgICAgIHx1cmNhICAgICAgICAgICB8CnxQUCAgICAgIHxgcHAudGVzdGAgICAgICAgfHRzZXJpZXMgICAgICAgIHwKfEVSUyAgICAgfGB1ci5lcnNgICAgICAgICB8dXJjYSAgICAgICAgICAgfAp8U1AgICAgICB8YHVyLnNwYCAgICAgICAgIHx1cmNhICAgICAgICAgICB8CgpcClwKCiMgUmVzdW1lbiBkZSBsb3MgY29tYW5kb3MgdXRpbGl6YWRvcwoKfEZ1bmNpw7NuICAgICAgICB8IFBhcXVldGUgfCBEZXNjcmlwY2nDs24gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8Cnw6LS0tLS0tLS0tLS0tLS18Oi0tLS0tLS0tfDotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfAp8YGxhZ2AgICAgICAgICAgfCBzdGF0cyAgfGNyZWEgdW5hIHNlcmllIGRlc2Zhc2FkYSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwKfGBkaWZmYCAgICAgICAgIHwgYmFzZSAgfGRpZmVyZW5jaWEgYSBzZXJpZSwgcG9yIGRlZmVjdG8gdW5hIHZleiAgICAgICAgICAgICAgIHwKfGB1ci5rcHNzYCAgICAgIHwgdXJjYSAgICB8Y29udHJhc3RlIGRlIHJhw616IHVuaXRhcmlhIEtQU1MgICAgICAgICAgICAgICAgICAgICAgICAgICB8CnwgYG5kaWZmc2AgICAgICB8IGZvcmVjYXN0IHwgaWRlbnRpZmljYSBlbCBuw7ptZXJvIG5lY2VzYXJpbyBkZSBkaWZlcmVuY2lhY2lvbmVzIHJlZ3VsYXJlcyAgfAp8IGBuc2RpZmZzYCAgICAgfCBmb3JlY2FzdCB8IGlkZW50aWZpY2EgZWwgbsO6bWVybyBuZWNlc2FyaW8gZGUgZGlmZXJlbmNpYWNpb25lcyBlc3RhY2lvbmFsZXMgICB8CnxgZ2dBY2ZgLCBgZ2dQYWNmYHwgZm9yZWNhc3QgIHxmdW5jacOzbiBkZSBhdXRvY29ycmVsYWNpw7NuIHkgYXV0b2NvcnJlbGFjacOzbiBwYXJjaWFsICB8CnxgZ2d0c2Rpc3BsYXlgICAgIHwgZm9yZWNhc3QgIHxkaWJ1amEgbGEgc2VyaWUsIGp1bnRvIGNvbiBzdSBBQ0YgeSBQQUNGICAgICAgICAgICAgICB8CnxgQm94Q294LmxhbWJkYWAgIHwgZm9yZWNhc3QgfGVzdGltYSBlbCBwYXLDoW1ldHJvIGRlIGxhIHRyYW5zZm9ybWFjacOzbiBkZSBCb3gtQ294IG3DoXMgYWRlY3VhZG98CnxgQm94Q294YCAgICAgICAgIHwgZm9yZWNhc3QgfHJlYWxpemEgbGEgdHJhbnNmb3JtYWNpw7NuIGRlIEJveC1Db3ggICAgICAgICAgICAgICAgICB8CnxgSW52Qm94Q294YCAgICAgIHwgZm9yZWNhc3QgfHJlYWxpemEgbGEgaW52ZXJzYSBkZSBsYSB0cmFuc2Zvcm1hY2nDs24gZGUgQm94LUNveCAgICB8CgpcClwKCgojIFJlZmVyZW5jaWFzCgoqIEdoeXNlbHMsIEUuLCBMZWUsIEguIFMuIHkgTm9oLCBKLiAoMTk5NCkgX1Rlc3RpbmcgZm9yIHVuaXQgcm9vdHMgaW4gc2Vhc29uYWwgdGltZSBzZXJpZXM6IFNvbWUgdGhlb3JldGljYWwgZXh0ZW5zaW9ucyBhbmQgYSBNb250ZSBDYXJsbyBpbnZlc3RpZ2F0aW9uXy4gSm91cm5hbCBvZiBFY29ub21ldHJpY3MsIDYyKDIpLCBwcC4gNDE1LTQ0Mi4gZG9pLm9yZy8xMC4xMDE2LzAzMDQtNDA3Nig5NCk5MDAzMC0yCgoqIEt3aWF0a293c2tpLCBELiwgUGhpbGxpcHMsIFAuQy5CLiwgU2NobWlkdCwgUC4geSBTaGluLCBZLiwgKDE5OTIpLCBfVGVzdGluZyB0aGUgTnVsbCBIeXBvdGhlc2lzIG9mIFN0YXRpb25hcml0eSBBZ2FpbnN0IHRoZSBBbHRlcm5hdGl2ZSBvZiBhIFVuaXQgUm9vdDogSG93IFN1cmUgQXJlIFdlIFRoYXQgRWNvbm9taWMgVGltZSBTZXJpZXMgSGF2ZSBhIFVuaXQgUm9vdD9fLCBKb3VybmFsIG9mIEVjb25vbWV0cmljcywgNTQsIHBwLiAxNTnigJMxNzguIGRvaS5vcmcvMTAuMTAxNi8wMzA0LTQwNzYoOTIpOTAxMDQtWQoKKiBQZmFmZiwgQi4gKDIwMDgpLiBfQW5hbHlzaXMgb2YgSW50ZWdyYXRlZCBhbmQgQ29pbnRlZ3JhdGVkIFRpbWUgU2VyaWVzIHdpdGggUl8uIENvbGVjY2nDs24gVXNlIFIhLCBFZC4gU3ByaW5nZXIuCgpcClwKXApcCg==</div>
+<footer class="footer">
+  
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
+<br>
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.  <div class="text-muted">Website created by Iv&aacute;n Arribas. &copy;  2020. If you find any bugs please report them to <a href="mailto:ivan.arribas@uv.es"> ivan.arribas@uv.es</a>.</div>
+  
+</footer>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("03-03-Tema3.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
