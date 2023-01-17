@@ -1,35 +1,40 @@
 #---------------------------------------------------------------
 # Codigo ejemplo tema 2
 #---------------------------------------------------------------
-
-
 #- Cargamos las librerias que necesitamos para este ejemplo
 library(forecast)
 library(ggplot2)
 
 #- Cargamos el ejemplo
-DefEnfCer <- read.csv2("series/Enfermedades cerebrovasculares.csv", header = TRUE)
-DefEnfCer <- ts(DefEnfCer[,2], start = 1980, freq = 12)
-DefEnfCer <- window(DefEnfCer, start = 1988)
+DefEnfCer <- read.csv2("series/Enfermedades cerebrovasculares.csv", 
+                       header = TRUE)
+
+DefEnfCer <- ts(DefEnfCer[,2], 
+                start = 1980, 
+                freq = 12)
+
+DefEnfCer <- window(DefEnfCer, 
+                    start = 1988)
 
 autoplot(DefEnfCer,
          xlab = "",
          ylab = "Casos",
          main = "Defunciones causadas por enfermedades cerebrovasculares") +
-  scale_x_continuous(breaks= seq(1980, 2018, 2)) 
+  scale_x_continuous(breaks= seq(1980, 2020, 2)) 
 
 #- Ajuste por alisado
 DefEnfCerEts <- ets(DefEnfCer)
+
 summary(DefEnfCerEts) 
 
 autoplot(DefEnfCerEts,
          xlab = "",
          main = "Descomposición para defunciones por enfermedades cerebrovasculares")
 
-TT <- nrow(DefEnfCerEts$states)
-DefEnfCerEts$states[TT,]
+tail(DefEnfCerEts$states, 1)
 
-componenteEstacional <- DefEnfCerEts$states[TT, 14:3]
+componenteEstacional <- tail(DefEnfCerEts$states, 1)[14:3]
+
 ggplot() +
   geom_line(aes(x = 1:12, y = componenteEstacional)) + 
   geom_hline(yintercept = 1, colour = "blue", lty = 2) +
@@ -41,17 +46,23 @@ ggplot() +
                                 "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")) 
 
 #- Prediccion
-DefEnfCerEtsPre <- forecast(DefEnfCerEts, h = 36, level = 95)
+DefEnfCerEtsPre <- forecast(DefEnfCerEts, 
+                            h = 36, 
+                            level = 95)
+
 DefEnfCerEtsPre
+
 autoplot(DefEnfCerEtsPre,
          xlab = "",
          ylab = "Casos",
-         main = "Muertes por enf. cerebrovasculares (1998-2018) y predicción (2019-2021)",
+         main = "Muertes por enf. cerebrovasculares (1998-2020) y predicción (2019-2023)",
          PI = FALSE)
 
 #- Error
-error <- residuals(DefEnfCerEts, type = "response")
+error <- residuals(DefEnfCerEts)
+
 sderror <- sd(error)
+
 autoplot(error,
          xlab = "",
          ylab = "Error",
@@ -59,7 +70,7 @@ autoplot(error,
          colour = "black") +
   geom_hline(yintercept = c(-3, -2, 2 ,3)*sderror, 
              colour = c("red", "blue", "blue", "red"), lty = 2) + 
-  scale_x_continuous(breaks= seq(1988, 2018, 2)) 
+  scale_x_continuous(breaks= seq(1988, 2020, 2)) 
 
 #- Origen de prediccion movil
 k <- 120                 
@@ -68,7 +79,6 @@ TT <- length(DefEnfCer)
 s <- TT - k - h          
 
 mapeAlisado <- matrix(NA, s + 1, h)
-
 for (i in 0:s) {
   train.set <- subset(DefEnfCer, start = i + 1, end = i + k)
   test.set <-  subset(DefEnfCer, start = i + k + 1, end = i + k + h)
@@ -93,7 +103,7 @@ ggplot() +
 k <- 120                 
 h <- 12                  
 TT <- length(DefEnfCer)  
-s <- TT - k - h         
+s <- TT - k - h          
 
 mapeAlisado1 <- matrix(NA, s + 1, h)
 mapeAlisado2 <- matrix(NA, s + 1, h)
@@ -114,11 +124,11 @@ for (i in 0:s) {
   fcast<-forecast(fit, h = h)
   mapeAlisado2[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
   
-  fit <- ets(train.set, model = "AAA", lambda = 0, biasadj = TRUE, damped = FALSE)
+  fit <- ets(train.set, model = "AAA", lambda = 0, damped = FALSE)
   fcast<-forecast(fit, h = h, biasadj = TRUE)
   mapeAlisado3[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
   
-  fit <- ets(train.set, model = "AAA", lambda = 0, biasadj = TRUE, damped = FALSE,  opt.crit = "amse", nmse = 2)
+  fit <- ets(train.set, model = "AAA", lambda = 0, damped = FALSE,  opt.crit = "amse", nmse = 2)
   fcast<-forecast(fit, h = h, biasadj = TRUE)
   mapeAlisado4[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
   
@@ -130,6 +140,7 @@ for (i in 0:s) {
   fcast<-forecast(fit, h = h)
   mapeAlisado6[i + 1,] <- 100*abs(test.set - fcast$mean * monthdays(fcast$mean))/test.set
 }
+
 
 errorAlisado1 <- colMeans(mapeAlisado1)
 errorAlisado2 <- colMeans(mapeAlisado2)
@@ -145,7 +156,7 @@ ggplot() +
   geom_line(aes(x = 1:12, y = errorAlisado4, colour = "Modelo 4")) +
   geom_line(aes(x = 1:12, y = errorAlisado5, colour = "Modelo 5")) +
   geom_line(aes(x = 1:12, y = errorAlisado6, colour = "Modelo 6")) +
-  ggtitle("Errores de previsión extra-muestral. Varios modelos") +
+  ggtitle("") +
   xlab("") +
   ylab("MAPE") +
   scale_x_continuous(breaks= 1:12) +

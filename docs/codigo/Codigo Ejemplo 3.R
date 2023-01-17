@@ -1,23 +1,27 @@
 #---------------------------------------------------------------
 # Codigo ejemplo tema 3
 #---------------------------------------------------------------
-
-
 #- Cargamos las librerias que necesitamos para este ejemplo
 library(forecast)
 library(ggplot2)
 library(urca)
 
 #- Cargamos el ejemplo
-DefEnfCer <- read.csv2("series/Enfermedades cerebrovasculares.csv", header = TRUE)
-DefEnfCer <- ts(DefEnfCer[,2], start = 1980, freq = 12)
-DefEnfCer <- window(DefEnfCer, start = 1988)
+DefEnfCer <- read.csv2("series/Enfermedades cerebrovasculares.csv", 
+                       header = TRUE)
+
+DefEnfCer <- ts(DefEnfCer[,2], 
+                start = 1980, 
+                freq = 12)
+
+DefEnfCer <- window(DefEnfCer, 
+                    start = 1988)
 
 autoplot(DefEnfCer,
          xlab = "",
          ylab = "Casos",
          main = "Defunciones causadas por enfermedades cerebrovasculares") +
-  scale_x_continuous(breaks= seq(1980, 2018, 2)) 
+  scale_x_continuous(breaks= seq(1980, 2020, 2)) 
 
 #- Transformacion logartimica
 (nl <- BoxCox.lambda(DefEnfCer))

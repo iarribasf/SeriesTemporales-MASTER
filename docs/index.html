@@ -1,373 +1,246 @@
 <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<html>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.189">
 
-<head>
-
-<meta charset="utf-8" />
-<meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-
-
-<title>index.knit</title>
-
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
-<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<style>h1 {font-size: 34px;}
-       h1.title {font-size: 38px;}
-       h2 {font-size: 30px;}
-       h3 {font-size: 24px;}
-       h4 {font-size: 18px;}
-       h5 {font-size: 16px;}
-       h6 {font-size: 12px;}
-       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
-       pre:not([class]) { background-color: white }</style>
-<script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
-
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
-
-
-
-
-
-
-<link rel="stylesheet" href="styles.css" type="text/css" />
-
-
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-img {
-  max-width:100%;
-}
-.tabbed-pane {
-  padding-top: 12px;
-}
-.html-widget {
-  margin-bottom: 20px;
-}
-button.code-folding-btn:focus {
-  outline: none;
-}
-summary {
-  display: list-item;
-}
-pre code {
-  padding: 0;
+<title>Series Temporales</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
 }
 </style>
 
 
-<style type="text/css">
-.dropdown-submenu {
-  position: relative;
-}
-.dropdown-submenu>.dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -6px;
-  margin-left: -1px;
-  border-radius: 0 6px 6px 6px;
-}
-.dropdown-submenu:hover>.dropdown-menu {
-  display: block;
-}
-.dropdown-submenu>a:after {
-  display: block;
-  content: " ";
-  float: right;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-left-color: #cccccc;
-  margin-top: 5px;
-  margin-right: -10px;
-}
-.dropdown-submenu:hover>a:after {
-  border-left-color: #adb5bd;
-}
-.dropdown-submenu.pull-left {
-  float: none;
-}
-.dropdown-submenu.pull-left>.dropdown-menu {
-  left: -100%;
-  margin-left: 10px;
-  border-radius: 6px 0 6px 6px;
-}
-</style>
-
-<script type="text/javascript">
-// manage active state of menu based on current page
-$(document).ready(function () {
-  // active menu anchor
-  href = window.location.pathname
-  href = href.substr(href.lastIndexOf('/') + 1)
-  if (href === "")
-    href = "index.html";
-  var menuAnchor = $('a[href="' + href + '"]');
-
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
-
-  // Navbar adjustments
-  var navHeight = $(".navbar").first().height() + 15;
-  var style = document.createElement('style');
-  var pt = "padding-top: " + navHeight + "px; ";
-  var mt = "margin-top: -" + navHeight + "px; ";
-  var css = "";
-  // offset scroll position for anchor links (for fixed navbar)
-  for (var i = 1; i <= 6; i++) {
-    css += ".section h" + i + "{ " + pt + mt + "}\n";
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
   }
-  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
-  document.head.appendChild(style);
-});
-</script>
-
-<!-- tabsets -->
-
-<style type="text/css">
-.tabset-dropdown > .nav-tabs {
-  display: inline-table;
-  max-height: 500px;
-  min-height: 44px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs > li.active {
-  display: block;
-}
-
-.tabset-dropdown > .nav-tabs > li > a,
-.tabset-dropdown > .nav-tabs > li > a:focus,
-.tabset-dropdown > .nav-tabs > li > a:hover {
-  border: none;
-  display: inline-block;
-  border-radius: 4px;
-  background-color: transparent;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
-  display: block;
-  float: none;
-}
-
-.tabset-dropdown > .nav-tabs > li {
-  display: none;
-}
-</style>
-
-<!-- code folding -->
+}</script>
 
 
-
-
+<link rel="stylesheet" href="styles.css">
 </head>
 
-<body>
+<body class="nav-fixed">
 
-
-<div class="container-fluid main-container">
-
-
-
-
-<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="index.html">Series Temporales</a>
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Series Temporales</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page">Inicio</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html">About</a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./01-Guia-curso.html">Guía del curso</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./02-Logistica.html">Logística</a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-diapos" role="button" data-bs-toggle="dropdown" aria-expanded="false">Diapos</a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-diapos">    
+        <li class="dropdown-header">Teoría</li>
+        <li>
+    <a class="dropdown-item" href="./03-01-Tema1.html">
+ <span class="dropdown-text">Tema 1: Definicion y Componentes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-02-Tema2.html">
+ <span class="dropdown-text">Tema 2: Alisado</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-03-Tema3.html">
+ <span class="dropdown-text">Tema 3: Procesos estocásticos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-04-Tema4.html">
+ <span class="dropdown-text">Tema 4: ARIMA</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-05-Tema5.html">
+ <span class="dropdown-text">Tema 5: SARIMA</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Ejemplo de aplicación</li>
+        <li>
+    <a class="dropdown-item" href="./03-06-Ejemplo1.html">
+ <span class="dropdown-text">Ejemplo Tema 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-07-Ejemplo2.html">
+ <span class="dropdown-text">Ejemplo Tema 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-08-Ejemplo3.html">
+ <span class="dropdown-text">Ejemplo Tema 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-09-Ejemplo4.html">
+ <span class="dropdown-text">Ejemplo Tema 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-10-Ejemplo5.html">
+ <span class="dropdown-text">Ejemplo Tema 5</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Otro ejemplo</li>
+        <li>
+    <a class="dropdown-item" href="./03-11-Ejemplo-Pasajeros.html">
+ <span class="dropdown-text">Ejemplo de Pasajeros</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-píldoras" role="button" data-bs-toggle="dropdown" aria-expanded="false">Píldoras</a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-píldoras">    
+        <li>
+    <a class="dropdown-item" href="./04-01-Bootstrapping.html">
+ <span class="dropdown-text">Bootstrapping para IC</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-02-Multiples_CS.html">
+ <span class="dropdown-text">Múltiples componentes estacionales</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-03-Redes_neuronales.html">
+ <span class="dropdown-text">Predicción con Redes Neuronales</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-04-Series_acotadas.html">
+ <span class="dropdown-text">Series acotadas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-05-Valores_perdidos_Outliers.html">
+ <span class="dropdown-text">Valores perdidos y outliers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-06-Covid_Nacimientos.html">
+ <span class="dropdown-text">Efecto de la Covid-19 en Nacimientos</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./05-Recursos-R.html">Recursos de la asignatura</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./06-Practica.html">Practica</a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-más" role="button" data-bs-toggle="dropdown" aria-expanded="false">Más</a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-más">    
+        <li class="dropdown-header">R</li>
+        <li>
+    <a class="dropdown-item" href="https://cran.r-project.org">
+ <span class="dropdown-text">Dónde está R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://rstudio.com">
+ <span class="dropdown-text">Donde está RStudio</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Markdown</li>
+        <li>
+    <a class="dropdown-item" href="https://bookdown.org/yihui/rmarkdown/">
+ <span class="dropdown-text">Markdown</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://rmarkdown.rstudio.com/lesson-1.html">
+ <span class="dropdown-text">R Markdown</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf">
+ <span class="dropdown-text">R Markdown (pdf)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://quarto.org/docs/tools/rstudio.html">
+ <span class="dropdown-text">Quatro</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Otros</li>
+        <li>
+    <a class="dropdown-item" href="https://www.r-bloggers.com">
+ <span class="dropdown-text">Blog sobre R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://bookdown.org">
+ <span class="dropdown-text">Libros online que debes conocer</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#series-temporales-42229-modelización-estadística.-máster-de-bioestadística" id="toc-series-temporales-42229-modelización-estadística.-máster-de-bioestadística" class="nav-link active" data-scroll-target="#series-temporales-42229-modelización-estadística.-máster-de-bioestadística">Series Temporales (42229 Modelización estadística). Máster de Bioestadística</a></li>
+  </ul>
+</nav>
     </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <li>
-  <a href="index.html">
-    <span class="fa fa-home"></span>
-     
-  </a>
-</li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="01-Guia-curso.html">
-    <span class="fa fa-graduation-cap"></span>
-     
-    Guía del curso
-  </a>
-</li>
-<li>
-  <a href="02-Logistica.html">
-    <span class="fa fa-laptop"></span>
-     
-    Logística
-  </a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-book"></span>
-     
-    Diapos
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Teoría</li>
-    <li>
-      <a href="03-01-Tema1.html">Tema 1: Introducción</a>
-    </li>
-    <li>
-      <a href="03-02-Tema2.html">Tema 2: Alisado</a>
-    </li>
-    <li>
-      <a href="03-03-Tema3.html">Tema 3: Procesos estocásticos</a>
-    </li>
-    <li>
-      <a href="03-04-Tema4.html">Tema 4: ARIMA</a>
-    </li>
-    <li>
-      <a href="03-05-Tema5.html">Tema 5: SARIMA</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Ejemplo de aplicación</li>
-    <li>
-      <a href="03-06-Ejemplo1.html">Ejemplo Tema 1</a>
-    </li>
-    <li>
-      <a href="03-07-Ejemplo2.html">Ejemplo Tema 2</a>
-    </li>
-    <li>
-      <a href="03-08-Ejemplo3.html">Ejemplo Tema 3</a>
-    </li>
-    <li>
-      <a href="03-09-Ejemplo4.html">Ejemplo Tema 4</a>
-    </li>
-    <li>
-      <a href="03-10-Ejemplo5.html">Ejemplo Tema 5</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Otro ejemplo</li>
-    <li>
-      <a href="03-11-Ejemplo-Pasajeros.html">Ejemplo de Pasajeros</a>
-    </li>
-  </ul>
-</li>
-<li>
-  <a href="04-Recursos-R.html">
-    <span class="fa fa-code"></span>
-     
-    Recursos de R
-  </a>
-</li>
-<li>
-  <a href="05-Practica.html">
-    <span class="fa fa-edit"></span>
-     
-    Practica
-  </a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-download"></span>
-     
-    Más
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">R</li>
-    <li>
-      <a href="https://cran.r-project.org">Dónde está R</a>
-    </li>
-    <li>
-      <a href="https://rstudio.com">Donde está RStudio</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Markdown</li>
-    <li>
-      <a href="https://bookdown.org/yihui/rmarkdown/">Markdown</a>
-    </li>
-    <li>
-      <a href="https://rmarkdown.rstudio.com/lesson-1.html">R Markdown</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Otros</li>
-    <li>
-      <a href="https://www.r-bloggers.com">Blog sobre R</a>
-    </li>
-    <li>
-      <a href="https://bookdown.org">Libros online que debes conocer</a>
-    </li>
-  </ul>
-</li>
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div><!--/.container -->
-</div><!--/.navbar -->
+<!-- main -->
+<main class="content" id="quarto-document-content">
 
-<div id="header">
-
-
-
-
-</div>
 
 
 <p><br><br><br></p>
-<div id="series-temporales-42229-modelización-estadística.-máster-de-bioestadística" class="section level3">
-<h3>Series Temporales (42229 Modelización estadística). Máster de Bioestadística</h3>
-<hr />
+<section id="series-temporales-42229-modelización-estadística.-máster-de-bioestadística" class="level3">
+<h3 class="anchored" data-anchor-id="series-temporales-42229-modelización-estadística.-máster-de-bioestadística">Series Temporales (42229 Modelización estadística). Máster de Bioestadística</h3>
+<hr>
 <p><br></p>
 <p>Hola a tod@s y bienvenid@s a la página web del curso.</p>
 <p><br></p>
@@ -377,61 +250,117 @@ $(document).ready(function () {
 <p><br></p>
 <p>– Iván Arribas</p>
 <p><br><br><br><br></p>
-</div>
 
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
 <footer class="footer">
-  
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
-<br>
-This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.  <div class="text-muted">Website created by Iv&aacute;n Arribas. &copy;  2020. If you find any bugs please report them to <a href="mailto:ivan.arribas@uv.es"> ivan.arribas@uv.es</a>.</div>
-  
+  <div class="nav-footer">
+    <div class="nav-footer-left">© Copyright 2022, Iván Arribas. If you find any bugs please report them to <a href="mailto:ivan.arribas@uv.es">ivan.arribas@uv.e</a></div>   
+    <div class="nav-footer-right">This page is built with <a href="https://quarto.org/">Quarto</a></div>
+  </div>
 </footer>
 
 
 
-
-
-</div>
-
-<script>
-
-// add bootstrap table styles to pandoc tables
-function bootstrapStylePandocTables() {
-  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
-}
-$(document).ready(function () {
-  bootstrapStylePandocTables();
-});
-
-
-</script>
-
-<!-- tabsets -->
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open');
-  });
-});
-</script>
-
-<!-- code folding -->
-
-
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
-
-</body>
-</html>
+</body></html>
