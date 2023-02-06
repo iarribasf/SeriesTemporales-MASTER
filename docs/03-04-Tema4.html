@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.189">
+<meta name="generator" content="quarto-1.0.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,15 +12,10 @@
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
-  vertical-align: middle;
-}
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -59,7 +54,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
+code span.bu { } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -72,7 +67,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.im { } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -143,11 +138,9 @@ div.csl-indent {
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
-    <a class="navbar-brand" href="./index.html">
+      <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Series Temporales</span>
-    </a>
-  </div>
+  </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -308,50 +301,50 @@ div.csl-indent {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc">
     <h2 id="toc-title">Índice</h2>
    
   <ul>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="toc-section-number">1</span>  Introducción</a></li>
-  <li><a href="#operador-retardo" id="toc-operador-retardo" class="nav-link" data-scroll-target="#operador-retardo"><span class="toc-section-number">2</span>  Operador Retardo</a></li>
-  <li><a href="#hipótesis" id="toc-hipótesis" class="nav-link" data-scroll-target="#hipótesis"><span class="toc-section-number">3</span>  Hipótesis</a>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"> <span class="header-section-number">1</span> Introducción</a></li>
+  <li><a href="#operador-retardo" id="toc-operador-retardo" class="nav-link" data-scroll-target="#operador-retardo"> <span class="header-section-number">2</span> Operador Retardo</a></li>
+  <li><a href="#hipótesis" id="toc-hipótesis" class="nav-link" data-scroll-target="#hipótesis"> <span class="header-section-number">3</span> Hipótesis</a>
   <ul class="collapse">
-  <li><a href="#sobre-el-proceso-estocástico" id="toc-sobre-el-proceso-estocástico" class="nav-link" data-scroll-target="#sobre-el-proceso-estocástico"><span class="toc-section-number">3.1</span>  Sobre el proceso estocástico</a></li>
-  <li><a href="#sobre-el-vector-de-residuos" id="toc-sobre-el-vector-de-residuos" class="nav-link" data-scroll-target="#sobre-el-vector-de-residuos"><span class="toc-section-number">3.2</span>  Sobre el vector de residuos</a></li>
+  <li><a href="#sobre-el-proceso-estocástico" id="toc-sobre-el-proceso-estocástico" class="nav-link" data-scroll-target="#sobre-el-proceso-estocástico"> <span class="header-section-number">3.1</span> Sobre el proceso estocástico</a></li>
+  <li><a href="#sobre-el-vector-de-residuos" id="toc-sobre-el-vector-de-residuos" class="nav-link" data-scroll-target="#sobre-el-vector-de-residuos"> <span class="header-section-number">3.2</span> Sobre el vector de residuos</a></li>
   </ul></li>
-  <li><a href="#procesos-arima" id="toc-procesos-arima" class="nav-link" data-scroll-target="#procesos-arima"><span class="toc-section-number">4</span>  Procesos ARIMA</a>
+  <li><a href="#procesos-arima" id="toc-procesos-arima" class="nav-link" data-scroll-target="#procesos-arima"> <span class="header-section-number">4</span> Procesos ARIMA</a>
   <ul class="collapse">
-  <li><a href="#procesos-autorregresivos-arp" id="toc-procesos-autorregresivos-arp" class="nav-link" data-scroll-target="#procesos-autorregresivos-arp"><span class="toc-section-number">4.1</span>  Procesos autorregresivos AR(p)</a>
+  <li><a href="#procesos-autorregresivos-arp" id="toc-procesos-autorregresivos-arp" class="nav-link" data-scroll-target="#procesos-autorregresivos-arp"> <span class="header-section-number">4.1</span> Procesos autorregresivos AR(p)</a>
   <ul class="collapse">
   <li><a href="#definición" id="toc-definición" class="nav-link" data-scroll-target="#definición">Definición</a></li>
   <li><a href="#propiedades" id="toc-propiedades" class="nav-link" data-scroll-target="#propiedades">Propiedades</a></li>
   <li><a href="#ejemplos" id="toc-ejemplos" class="nav-link" data-scroll-target="#ejemplos">Ejemplos</a></li>
   <li><a href="#simulación-de-procesos-autorregresivos" id="toc-simulación-de-procesos-autorregresivos" class="nav-link" data-scroll-target="#simulación-de-procesos-autorregresivos">Simulación de procesos autorregresivos</a></li>
   </ul></li>
-  <li><a href="#procesos-en-medias-móviles-maq" id="toc-procesos-en-medias-móviles-maq" class="nav-link" data-scroll-target="#procesos-en-medias-móviles-maq"><span class="toc-section-number">4.2</span>  Procesos en medias móviles MA(q)</a>
+  <li><a href="#procesos-en-medias-móviles-maq" id="toc-procesos-en-medias-móviles-maq" class="nav-link" data-scroll-target="#procesos-en-medias-móviles-maq"> <span class="header-section-number">4.2</span> Procesos en medias móviles MA(q)</a>
   <ul class="collapse">
   <li><a href="#definición-1" id="toc-definición-1" class="nav-link" data-scroll-target="#definición-1">Definición</a></li>
   <li><a href="#propiedades-1" id="toc-propiedades-1" class="nav-link" data-scroll-target="#propiedades-1">Propiedades</a></li>
   <li><a href="#ejemplos-1" id="toc-ejemplos-1" class="nav-link" data-scroll-target="#ejemplos-1">Ejemplos</a></li>
   <li><a href="#simulación-de-procesos-en-medias-móviles" id="toc-simulación-de-procesos-en-medias-móviles" class="nav-link" data-scroll-target="#simulación-de-procesos-en-medias-móviles">Simulación de procesos en medias móviles</a></li>
   </ul></li>
-  <li><a href="#procesos-armapq" id="toc-procesos-armapq" class="nav-link" data-scroll-target="#procesos-armapq"><span class="toc-section-number">4.3</span>  Procesos ARMA(p,q)</a>
+  <li><a href="#procesos-armapq" id="toc-procesos-armapq" class="nav-link" data-scroll-target="#procesos-armapq"> <span class="header-section-number">4.3</span> Procesos ARMA(p,q)</a>
   <ul class="collapse">
   <li><a href="#definición-2" id="toc-definición-2" class="nav-link" data-scroll-target="#definición-2">Definición</a></li>
   <li><a href="#propiedades-2" id="toc-propiedades-2" class="nav-link" data-scroll-target="#propiedades-2">Propiedades</a></li>
   <li><a href="#ejemplos-2" id="toc-ejemplos-2" class="nav-link" data-scroll-target="#ejemplos-2">Ejemplos</a></li>
   <li><a href="#simulación-de-procesos-arma" id="toc-simulación-de-procesos-arma" class="nav-link" data-scroll-target="#simulación-de-procesos-arma">Simulación de procesos ARMA</a></li>
   </ul></li>
-  <li><a href="#proceso-arimapdq" id="toc-proceso-arimapdq" class="nav-link" data-scroll-target="#proceso-arimapdq"><span class="toc-section-number">4.4</span>  Proceso ARIMA(p,d,q)</a>
+  <li><a href="#proceso-arimapdq" id="toc-proceso-arimapdq" class="nav-link" data-scroll-target="#proceso-arimapdq"> <span class="header-section-number">4.4</span> Proceso ARIMA(p,d,q)</a>
   <ul class="collapse">
   <li><a href="#ejemplos-3" id="toc-ejemplos-3" class="nav-link" data-scroll-target="#ejemplos-3">Ejemplos</a></li>
   <li><a href="#simulación-de-procesos-no-estacionarios" id="toc-simulación-de-procesos-no-estacionarios" class="nav-link" data-scroll-target="#simulación-de-procesos-no-estacionarios">Simulación de procesos no estacionarios</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#aproximación-de-box-jenkins" id="toc-aproximación-de-box-jenkins" class="nav-link" data-scroll-target="#aproximación-de-box-jenkins"><span class="toc-section-number">5</span>  Aproximación de Box-Jenkins</a></li>
-  <li><a href="#ejemplos-4" id="toc-ejemplos-4" class="nav-link" data-scroll-target="#ejemplos-4"><span class="toc-section-number">6</span>  Ejemplos</a>
+  <li><a href="#aproximación-de-box-jenkins" id="toc-aproximación-de-box-jenkins" class="nav-link" data-scroll-target="#aproximación-de-box-jenkins"> <span class="header-section-number">5</span> Aproximación de Box-Jenkins</a></li>
+  <li><a href="#ejemplos-4" id="toc-ejemplos-4" class="nav-link" data-scroll-target="#ejemplos-4"> <span class="header-section-number">6</span> Ejemplos</a>
   <ul class="collapse">
-  <li><a href="#títulos-de-libros-y-panfletos" id="toc-títulos-de-libros-y-panfletos" class="nav-link" data-scroll-target="#títulos-de-libros-y-panfletos"><span class="toc-section-number">6.1</span>  Títulos de libros y panfletos</a>
+  <li><a href="#títulos-de-libros-y-panfletos" id="toc-títulos-de-libros-y-panfletos" class="nav-link" data-scroll-target="#títulos-de-libros-y-panfletos"> <span class="header-section-number">6.1</span> Títulos de libros y panfletos</a>
   <ul class="collapse">
   <li><a href="#transformación-de-la-serie" id="toc-transformación-de-la-serie" class="nav-link" data-scroll-target="#transformación-de-la-serie">Transformación de la serie</a></li>
   <li><a href="#identificación" id="toc-identificación" class="nav-link" data-scroll-target="#identificación">Identificación</a></li>
@@ -360,7 +353,7 @@ div.csl-indent {
   <li><a href="#predicción" id="toc-predicción" class="nav-link" data-scroll-target="#predicción">Predicción</a></li>
   <li><a href="#identificación-automática" id="toc-identificación-automática" class="nav-link" data-scroll-target="#identificación-automática">Identificación automática</a></li>
   </ul></li>
-  <li><a href="#aforo-de-vehículos" id="toc-aforo-de-vehículos" class="nav-link" data-scroll-target="#aforo-de-vehículos"><span class="toc-section-number">6.2</span>  Aforo de vehículos</a>
+  <li><a href="#aforo-de-vehículos" id="toc-aforo-de-vehículos" class="nav-link" data-scroll-target="#aforo-de-vehículos"> <span class="header-section-number">6.2</span> Aforo de vehículos</a>
   <ul class="collapse">
   <li><a href="#transformación-de-la-serie-1" id="toc-transformación-de-la-serie-1" class="nav-link" data-scroll-target="#transformación-de-la-serie-1">Transformación de la serie</a></li>
   <li><a href="#identificación-y-estimación" id="toc-identificación-y-estimación" class="nav-link" data-scroll-target="#identificación-y-estimación">Identificación y estimación</a></li>
@@ -369,7 +362,7 @@ div.csl-indent {
   <li><a href="#predicción-1" id="toc-predicción-1" class="nav-link" data-scroll-target="#predicción-1">Predicción</a></li>
   <li><a href="#validación-con-origen-de-predicción-móvil" id="toc-validación-con-origen-de-predicción-móvil" class="nav-link" data-scroll-target="#validación-con-origen-de-predicción-móvil">Validación con origen de predicción móvil</a></li>
   </ul></li>
-  <li><a href="#consumo-de-alimentos-en-el-hogar-per-cápita" id="toc-consumo-de-alimentos-en-el-hogar-per-cápita" class="nav-link" data-scroll-target="#consumo-de-alimentos-en-el-hogar-per-cápita"><span class="toc-section-number">6.3</span>  Consumo de alimentos en el hogar per cápita</a>
+  <li><a href="#consumo-de-alimentos-en-el-hogar-per-cápita" id="toc-consumo-de-alimentos-en-el-hogar-per-cápita" class="nav-link" data-scroll-target="#consumo-de-alimentos-en-el-hogar-per-cápita"> <span class="header-section-number">6.3</span> Consumo de alimentos en el hogar per cápita</a>
   <ul class="collapse">
   <li><a href="#transformación-de-la-serie-2" id="toc-transformación-de-la-serie-2" class="nav-link" data-scroll-target="#transformación-de-la-serie-2">Transformación de la serie</a></li>
   <li><a href="#identificación-y-estimación-1" id="toc-identificación-y-estimación-1" class="nav-link" data-scroll-target="#identificación-y-estimación-1">Identificación y Estimación</a></li>
@@ -377,9 +370,9 @@ div.csl-indent {
   <li><a href="#interpretación-del-modelo-1" id="toc-interpretación-del-modelo-1" class="nav-link" data-scroll-target="#interpretación-del-modelo-1">Interpretación del modelo</a></li>
   <li><a href="#predicciones-de-la-serie" id="toc-predicciones-de-la-serie" class="nav-link" data-scroll-target="#predicciones-de-la-serie">Predicciones de la serie</a></li>
   </ul></li>
-  <li><a href="#comparación-con-alisado-exponencial" id="toc-comparación-con-alisado-exponencial" class="nav-link" data-scroll-target="#comparación-con-alisado-exponencial"><span class="toc-section-number">6.4</span>  Comparación con alisado exponencial</a></li>
+  <li><a href="#comparación-con-alisado-exponencial" id="toc-comparación-con-alisado-exponencial" class="nav-link" data-scroll-target="#comparación-con-alisado-exponencial"> <span class="header-section-number">6.4</span> Comparación con alisado exponencial</a></li>
   </ul></li>
-  <li><a href="#resumen-de-los-comandos-utilizados" id="toc-resumen-de-los-comandos-utilizados" class="nav-link" data-scroll-target="#resumen-de-los-comandos-utilizados"><span class="toc-section-number">7</span>  Resumen de los comandos utilizados</a></li>
+  <li><a href="#resumen-de-los-comandos-utilizados" id="toc-resumen-de-los-comandos-utilizados" class="nav-link" data-scroll-target="#resumen-de-los-comandos-utilizados"> <span class="header-section-number">7</span> Resumen de los comandos utilizados</a></li>
   </ul>
 </nav>
     </div>
@@ -433,7 +426,9 @@ div.csl-indent {
 <section id="operador-retardo" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Operador Retardo</h1>
 <p>Definimos el <strong>operador retardo</strong> <span class="math inline">\(L\)</span> como <span class="math inline">\(Ly_t = y_{t-1}\)</span>, es decir, retrasa un periodo la serie. En inglés se denomina <em>lag operator</em> (L) o <em>backward shift</em> (B)</p>
-<p>Así, se tiene que <span class="math display">\[L^k y_t  = y_{t-k}.\]</span> y por tanto que</p>
+<p>Así, se tiene que</p>
+<p><span class="math display">\[L^k y_t  = y_{t-k}.\]</span></p>
+<p>y por tanto que</p>
 <span class="math display">\[\begin{aligned}
   \nabla y_t &amp; =  y_t - y_{t-1} = y_t - Ly_t = (1-L)y_t \\
   \nabla^d y_t &amp; =  (1-L)^d y_t \\
@@ -445,7 +440,7 @@ div.csl-indent {
 <div class="cell-output-display">
 <div id="tbl-operadorretardo" class="anchored">
 <table class="table table-sm table-striped">
-<caption>Tabla&nbsp;1: Ejemplo de aplicación del operador retardo</caption>
+<caption>Tabla 1: Ejemplo de aplicación del operador retardo</caption>
 <thead>
 <tr class="header">
 <th style="text-align: right;">y</th>
@@ -515,9 +510,14 @@ div.csl-indent {
 <p>A lo largo de este tema asumiremos que:</p>
 <ul>
 <li><p><span class="math inline">\(\{y_t\}_{t=1}^T\)</span> es una realización de un proceso estocástico desconocido.</p></li>
-<li><p>El proceso estocástico es <strong>estacionario en sentido amplio</strong>: <span class="math display">\[E[y_t]  = \mu &lt; \infty \;\;\; \forall t,\]</span> <span class="math display">\[Cov[y_t, y_{t-k}]  = \gamma_k  \;\;\; \forall k.\]</span></p></li>
-<li><p>El proceso estocástico es <strong>ergódico</strong>, o su condición suficiente: <span class="math display">\[\lim_{k \rightarrow \infty} \gamma_k  = 0.\]</span></p></li>
+<li><p>El proceso estocástico es <strong>estacionario en sentido amplio</strong>:</p></li>
 </ul>
+<p><span class="math display">\[E[y_t]  = \mu &lt; \infty \;\;\; \forall t,\]</span></p>
+<p><span class="math display">\[Cov[y_t, y_{t-k}]  = \gamma_k  \;\;\; \forall k.\]</span></p>
+<ul>
+<li>El proceso estocástico es <strong>ergódico</strong>, o su condición suficiente:</li>
+</ul>
+<p><span class="math display">\[\lim_{k \rightarrow \infty} \gamma_k  = 0.\]</span></p>
 <p><br>
 </p>
 </section>
@@ -551,18 +551,24 @@ div.csl-indent {
 <h2 data-number="4.1" class="anchored" data-anchor-id="procesos-autorregresivos-arp"><span class="header-section-number">4.1</span> Procesos autorregresivos AR(p)</h2>
 <section id="definición" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="definición">Definición</h3>
-<p>El modelo general <strong>autorregresivo de orden p</strong>, <span class="math inline">\(y_t \sim AR(p)\)</span> viene definido por <span class="math display">\[y_t=c + \phi_1 y_{t-1} + \phi_2 y_{t-2} + \ldots + \phi_p y_{t-p} + \varepsilon_t,\]</span> que usando el operador retardo queda <span class="math display">\[(1 - \phi_1 L - \phi_2 L^2 - \ldots - \phi_p L^p)y_t = c + \varepsilon_t\]</span></p>
+<p>El modelo general <strong>autorregresivo de orden p</strong>, <span class="math inline">\(y_t \sim AR(p)\)</span> viene definido por</p>
+<p><span class="math display">\[y_t=c + \phi_1 y_{t-1} + \phi_2 y_{t-2} + \ldots + \phi_p y_{t-p} + \varepsilon_t,\]</span></p>
+<p>que usando el operador retardo queda</p>
+<p><span class="math display">\[(1 - \phi_1 L - \phi_2 L^2 - \ldots - \phi_p L^p)y_t = c + \varepsilon_t\]</span></p>
 </section>
 <section id="propiedades" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="propiedades">Propiedades</h3>
-<p>El proceso es <strong>estacionario</strong> si quedan fuera del círculo de radio la unidad todas las raíces del polinomio autorregresivo <span class="math display">\[\Phi_p(z) = 1 - \phi_1 z - \phi_2 z^2 - \ldots - \phi_p z^p.\]</span></p>
+<p>El proceso es <strong>estacionario</strong> si quedan fuera del círculo de radio la unidad todas las raíces del polinomio autorregresivo</p>
+<p><span class="math display">\[\Phi_p(z) = 1 - \phi_1 z - \phi_2 z^2 - \ldots - \phi_p z^p.\]</span></p>
 <p>Es <strong>invertible</strong> siempre.</p>
 <ul>
-<li><p>Podemos transformar el proceso AR(p) en un proceso donde <span class="math inline">\(y_t\)</span> depende de la suma infinita de errores pasados, MA(<span class="math inline">\(\infty\)</span>).</p></li>
-<li><p>Si conocemos las p primeras autocorrelaciones, podemos estimar los p parámetros del modelo. Por ejemplo, para un proceso AR(2) se verifica que: <span class="math display">\[\rho_1 = \phi_1 + \phi_2 \rho_1\]</span> <span class="math display">\[\rho_2 = \phi_1 \rho_1 + \phi_2\]</span></p>
-<p>Estas ecuaciones se denominan <strong>Ecuaciones de Yule-Walker</strong>.</p>
-<p>Observa que si tenemos una estimación de las dos primeras autocorrelaciones, estas ecuaciones nos permiten obtener una estimación de los coeficientes del proceso AR(2) como una aplicación del método de los momentos.</p></li>
+<li>Podemos transformar el proceso AR(p) en un proceso donde <span class="math inline">\(y_t\)</span> depende de la suma infinita de errores pasados, MA(<span class="math inline">\(\infty\)</span>).</li>
+<li>Si conocemos las p primeras autocorrelaciones, podemos estimar los p parámetros del modelo. Por ejemplo, para un proceso AR(2) se verifica que:</li>
 </ul>
+<p><span class="math display">\[\rho_1 = \phi_1 + \phi_2 \rho_1\]</span></p>
+<p><span class="math display">\[\rho_2 = \phi_1 \rho_1 + \phi_2\]</span></p>
+<p>Estas ecuaciones se denominan <strong>Ecuaciones de Yule-Walker</strong>.</p>
+<p>Observa que si tenemos una estimación de las dos primeras autocorrelaciones, estas ecuaciones nos permiten obtener una estimación de los coeficientes del proceso AR(2) como una aplicación del método de los momentos.</p>
 <p><strong>Sobre todo</strong>,</p>
 <ul>
 <li>La FAC del proceso decae <em>exponencialmente</em> a partir del orden p</li>
@@ -604,7 +610,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;1: Simulación de dos procesos AR(1) con diferente tamaño muestral</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 1: Simulación de dos procesos AR(1) con diferente tamaño muestral</figcaption><p></p>
 </figure>
 </div>
 <p>La <a href="#fig-simulAR2">Figura&nbsp;2</a> muestra dos simulaciones de procesos AR(2), ambas con 100 datos. En el panes superior se tiene que <span class="math inline">\(y_t = 0.5y_{t-1} + 0.4 y_{t-2}+ \varepsilon_t\)</span> y en el inferior <span class="math inline">\(y_t = 0.9y_{t-1} - 0.5 y_{t-2}+ \varepsilon_t\)</span>.</p>
@@ -630,7 +636,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;2: Simulación de dos procesos AR(2) con n = 100</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 2: Simulación de dos procesos AR(2) con n = 100</figcaption><p></p>
 </figure>
 </div>
 <p><br>
@@ -641,15 +647,21 @@ div.csl-indent {
 <h2 data-number="4.2" class="anchored" data-anchor-id="procesos-en-medias-móviles-maq"><span class="header-section-number">4.2</span> Procesos en medias móviles MA(q)</h2>
 <section id="definición-1" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="definición-1">Definición</h3>
-<p>El modelo general <strong>en medias móviles de orden q</strong>, <span class="math inline">\(y_t \sim MA(q)\)</span> viene definido por <span class="math display">\[y_t=c + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \theta_2 \varepsilon_{t-2} + \ldots + \theta_q \varepsilon_{t-q},\]</span> que usando el operador retardo queda <span class="math display">\[y_t = c + (1 + \theta_1 L + \theta_2 L^2 + \ldots + \theta_q L^q) \varepsilon_t\]</span></p>
+<p>El modelo general <strong>en medias móviles de orden q</strong>, <span class="math inline">\(y_t \sim MA(q)\)</span> viene definido por</p>
+<p><span class="math display">\[y_t=c + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \theta_2 \varepsilon_{t-2} + \ldots + \theta_q \varepsilon_{t-q},\]</span></p>
+<p>que usando el operador retardo queda</p>
+<p><span class="math display">\[y_t = c + (1 + \theta_1 L + \theta_2 L^2 + \ldots + \theta_q L^q) \varepsilon_t\]</span></p>
 </section>
 <section id="propiedades-1" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="propiedades-1">Propiedades</h3>
-<p>El proceso es <strong>invertible</strong> si quedan fuera del círculo de radio la unidad todas las raíces del polinomio en medias móviles <span class="math display">\[\Theta_q(z) = 1 + \theta_1 z + \theta_2 z^2 + \ldots + \theta_q z^q.\]</span></p>
+<p>El proceso es <strong>invertible</strong> si quedan fuera del círculo de radio la unidad todas las raíces del polinomio en medias móviles</p>
+<p><span class="math display">\[\Theta_q(z) = 1 + \theta_1 z + \theta_2 z^2 + \ldots + \theta_q z^q.\]</span></p>
 <ul>
 <li>Podemos transformar el proceso MA(q) en un proceso AR(<span class="math inline">\(\infty\)</span>).</li>
-<li>Si conocemos las q primeras autocorrelaciones, podemos estimar los q parámetros del modelo. Por ejemplo, para un proceso MA(2) se verifica que: <span class="math display">\[\rho_1 = \frac{\theta_1 + \theta_1\theta_2}{1 + \theta_1^2 + \theta_2^2}\]</span> <span class="math display">\[\rho_2 = \frac{\theta_2}{1 + \theta_1^2 + \theta_2^2}\]</span></li>
+<li>Si conocemos las q primeras autocorrelaciones, podemos estimar los q parámetros del modelo. Por ejemplo, para un proceso MA(2) se verifica que:</li>
 </ul>
+<p><span class="math display">\[\rho_1 = \frac{\theta_1 + \theta_1\theta_2}{1 + \theta_1^2 + \theta_2^2}\]</span></p>
+<p><span class="math display">\[\rho_2 = \frac{\theta_2}{1 + \theta_1^2 + \theta_2^2}\]</span></p>
 <p>Es <strong>estacionario</strong> siempre.</p>
 <p><strong>Sobre todo</strong>,</p>
 <ul>
@@ -692,7 +704,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;3: Simulación de dos procesos MA(1) con diferente tamaño muestral</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 3: Simulación de dos procesos MA(1) con diferente tamaño muestral</figcaption><p></p>
 </figure>
 </div>
 <p>Veamos ahora dos simulaciones de procesos MA(2), ambas con 100 datos (<a href="#fig-simulMA2">Figura&nbsp;4</a>). En el panel superior se tiene que <span class="math inline">\(y_t = 0.5\varepsilon_{t-1} + 0.4 \varepsilon_{t-2}+ \varepsilon_t\)</span> y en el panel inferior <span class="math inline">\(y_t = 0.9\varepsilon_{t-1} - 0.5 \varepsilon_{t-2}+ \varepsilon_t\)</span>.</p>
@@ -718,7 +730,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;4: Simulación de dos procesos MA(2) con n = 100</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 4: Simulación de dos procesos MA(2) con n = 100</figcaption><p></p>
 </figure>
 </div>
 <p><br>
@@ -729,14 +741,20 @@ div.csl-indent {
 <h2 data-number="4.3" class="anchored" data-anchor-id="procesos-armapq"><span class="header-section-number">4.3</span> Procesos ARMA(p,q)</h2>
 <section id="definición-2" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="definición-2">Definición</h3>
-<p>El modelo general <span class="math inline">\(y_t \sim ARMA(p,q)\)</span> viene dado por <span class="math display">\[y_t = c + \phi_1 y_{t-1} + \phi_2 y_{t-2} + \ldots + \phi_p y_{t-p}  +
+<p>El modelo general <span class="math inline">\(y_t \sim ARMA(p,q)\)</span> viene dado por</p>
+<p><span class="math display">\[y_t = c + \phi_1 y_{t-1} + \phi_2 y_{t-2} + \ldots + \phi_p y_{t-p}  +
         \theta_1 \varepsilon_{t-1} + \theta_2 \varepsilon_{t-2} + \ldots +
-        \theta_q \varepsilon_{t-q}+ \varepsilon_t,\]</span> que usando el operador retardo queda <span class="math display">\[(1 - \phi_1 L - \ldots - \phi_p L^p)y_t = c + (1 + \theta_1 L + \ldots + \theta_q L^q) \varepsilon_t.\]</span></p>
+        \theta_q \varepsilon_{t-q}+ \varepsilon_t,\]</span> que usando el operador retardo queda</p>
+<p><span class="math display">\[(1 - \phi_1 L - \ldots - \phi_p L^p)y_t = c + (1 + \theta_1 L + \ldots + \theta_q L^q) \varepsilon_t.\]</span></p>
 <p>El proceso más simple es el ARMA(1,1), <span class="math inline">\(y_t = c + \phi_1 y_{t-1} + \theta_1 \varepsilon_{t-1} + \varepsilon_{t}\)</span>.</p>
 </section>
 <section id="propiedades-2" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="propiedades-2">Propiedades</h3>
-<p>El proceso es <strong>estacionario</strong> si quedan fuera del círculo de radio la unidad todas las raíces del polinomio <span class="math display">\[\Phi_p(z) = 1 - \phi_1 z - \phi_2 z^2 - \ldots - \phi_p z^p.\]</span> El proceso es <strong>invertible</strong> si quedan fuera del círculo de radio la unidad todas las raíces del polinomio <span class="math display">\[\Theta_q(z) = 1 + \theta_1 z + \theta_2 z^2 + \ldots + \theta_q z^q.\]</span> <strong>Sobre todo</strong>,</p>
+<p>El proceso es <strong>estacionario</strong> si quedan fuera del círculo de radio la unidad todas las raíces del polinomio</p>
+<p><span class="math display">\[\Phi_p(z) = 1 - \phi_1 z - \phi_2 z^2 - \ldots - \phi_p z^p.\]</span></p>
+<p>El proceso es <strong>invertible</strong> si quedan fuera del círculo de radio la unidad todas las raíces del polinomio</p>
+<p><span class="math display">\[\Theta_q(z) = 1 + \theta_1 z + \theta_2 z^2 + \ldots + \theta_q z^q.\]</span></p>
+<p><strong>Sobre todo</strong>,</p>
 <ul>
 <li>La FAC decae exponencialmente a partir del orden p.</li>
 <li>La FACP decae exponencialmente a partir del orden q.</li>
@@ -776,7 +794,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;5: Simulación de un proceso ARMA(1, 1)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 5: Simulación de un proceso ARMA(1, 1)</figcaption><p></p>
 </figure>
 </div>
 <p><span class="math inline">\(y_t = 0.7y_{t-1}- 0.5y_{t-2} + 0.6\varepsilon_{t-1} + \varepsilon_t\)</span></p>
@@ -800,7 +818,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;6: Simulación de un proceso ARMA(2, 1)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 6: Simulación de un proceso ARMA(2, 1)</figcaption><p></p>
 </figure>
 </div>
 <p><span class="math inline">\(y_t = 0.6y_{t-1} + 0.5\varepsilon_{t-1} + 0.3\varepsilon_{t-2} + \varepsilon_t\)</span></p>
@@ -824,7 +842,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;7: Simulación de un proceso ARMA(2, 1)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 7: Simulación de un proceso ARMA(2, 1)</figcaption><p></p>
 </figure>
 </div>
 <p><br>
@@ -896,7 +914,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;8: FAC para tres procesos no estacionarios simulados</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 8: FAC para tres procesos no estacionarios simulados</figcaption><p></p>
 </figure>
 </div>
 <p><br>
@@ -920,7 +938,7 @@ div.csl-indent {
 <div id="fig-AproximaciónBoxJenkins" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="./imagenes/BoxJenkins.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;9: Esquema de la aproximación de Box-Jenkins a la modelización de procesos ARIMA</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 9: Esquema de la aproximación de Box-Jenkins a la modelización de procesos ARIMA</figcaption><p></p>
 </figure>
 </div>
 <p><br>
@@ -946,7 +964,7 @@ div.csl-indent {
 <div id="fig-Libros" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-04-Tema4_files/figure-html/fig-Libros-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;10: Títulos publicados</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 10: Títulos publicados</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -998,7 +1016,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;11: Gráfica y FAC para Libros</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 11: Gráfica y FAC para Libros</figcaption><p></p>
 </figure>
 </div>
 </section>
@@ -1011,7 +1029,7 @@ div.csl-indent {
 <div id="fig-LibrosDisplay" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-04-Tema4_files/figure-html/fig-LibrosDisplay-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;12: Libros (primera diferencia</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 12: Libros (primera diferencia</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1021,7 +1039,8 @@ div.csl-indent {
 <li>En la FAC ninguna autocorrelación sobrepasa las líneas que marcan el intervalo de confianza al 95%.</li>
 <li>En la FACP tampoco las autocorrelaciones parciales sobrepasan el intervalo de confianza.</li>
 </ul>
-<p>Parece, por tanto, ruido blanco, <span class="math inline">\(p=q=0\)</span>. La identificación inicial es <span class="math inline">\(libros_t \sim ARIMA(0,1,0)\)</span>, paseo aleatorio, que inicialmente asumiremos con deriva: <span class="math display">\[libros_t = c + libros_{t-1} + \varepsilon_t\]</span></p>
+<p>Parece, por tanto, ruido blanco, <span class="math inline">\(p=q=0\)</span>. La identificación inicial es <span class="math inline">\(libros_t \sim ARIMA(0,1,0)\)</span>, paseo aleatorio, que inicialmente asumiremos con deriva:</p>
+<p><span class="math display">\[libros_t = c + libros_{t-1} + \varepsilon_t\]</span></p>
 </section>
 <section id="estimación" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="estimación">Estimación</h3>
@@ -1115,7 +1134,7 @@ X-squared = 0.22466, df = 2, p-value = 0.8938</code></pre>
 <div class="cell-output-display">
 <div id="tbl-librosInco" class="anchored">
 <table class="table table-sm table-striped">
-<caption>Tabla&nbsp;2: Prueba de incorrelacion para diferentes valores del retardo</caption>
+<caption>Tabla 2: Prueba de incorrelacion para diferentes valores del retardo</caption>
 <thead>
 <tr class="header">
 <th style="text-align: right;">k</th>
@@ -1164,7 +1183,7 @@ X-squared = 1.7794, df = 2, p-value = 0.4108</code></pre>
 <div class="cell-output-display">
 <div id="tbl-librosHomo" class="anchored">
 <table class="table table-sm table-striped">
-<caption>Tabla&nbsp;3: Prueba de homocedasticidad para diferentes valores del retardo</caption>
+<caption>Tabla 3: Prueba de homocedasticidad para diferentes valores del retardo</caption>
 <thead>
 <tr class="header">
 <th style="text-align: right;">k</th>
@@ -1238,7 +1257,7 @@ X-squared = 4.4768, df = 2, p-value = 0.1066</code></pre>
 <div id="fig-LibrosError" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-04-Tema4_files/figure-html/fig-LibrosError-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;13: Error + Intervención</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 13: Error + Intervención</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1271,7 +1290,7 @@ X-squared = 4.4768, df = 2, p-value = 0.1066</code></pre>
 <div id="fig-LibrosPre" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-04-Tema4_files/figure-html/fig-LibrosPre-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;14: Libros (1993-2019) y predicción (2020-2024)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 14: Libros (1993-2019) y predicción (2020-2024)</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1340,7 +1359,7 @@ AIC=527.36   AICc=527.53   BIC=528.62</code></pre>
 <div id="fig-Aforo" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-04-Tema4_files/figure-html/fig-Aforo-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;15: Aforo de vehículos en N-340, Oropesa</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 15: Aforo de vehículos en N-340, Oropesa</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1393,7 +1412,7 @@ AIC=527.36   AICc=527.53   BIC=528.62</code></pre>
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;16: Gráfica y FAC para Aforo</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 16: Gráfica y FAC para Aforo</figcaption><p></p>
 </figure>
 </div>
 <div class="cell" data-layout-align="center">
@@ -1412,7 +1431,7 @@ AIC=527.36   AICc=527.53   BIC=528.62</code></pre>
 <div id="fig-AforoDisplay" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-04-Tema4_files/figure-html/fig-AforoDisplay-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;17: Aforo (una diferencia)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 17: Aforo (una diferencia)</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1459,7 +1478,7 @@ AIC=964.91   AICc=966.04   BIC=975.3</code></pre>
 <div id="fig-AforoError" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-04-Tema4_files/figure-html/fig-AforoError-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;18: Error + Intervención</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 18: Error + Intervención</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1524,7 +1543,7 @@ AIC=958.14   AICc=959.27   BIC=968.53</code></pre>
 <div id="fig-AforoError2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-04-Tema4_files/figure-html/fig-AforoError2-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;19: Error + Intervención</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 19: Error + Intervención</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1638,7 +1657,7 @@ X-squared = 2.1563, df = 2, p-value = 0.3402</code></pre>
 <div id="fig-AforoPre" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-04-Tema4_files/figure-html/fig-AforoPre-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;20: Aforo (1960-2019) y predicción (2020-2024)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 20: Aforo (1960-2019) y predicción (2020-2024)</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1715,7 +1734,7 @@ X-squared = 2.1563, df = 2, p-value = 0.3402</code></pre>
 <div id="fig-Alimentos" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-04-Tema4_files/figure-html/fig-Alimentos-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;21: Consumo alimentario en hogar</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 21: Consumo alimentario en hogar</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1768,7 +1787,7 @@ X-squared = 2.1563, df = 2, p-value = 0.3402</code></pre>
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;22: Gráfica y FAC para Alimentos</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 22: Gráfica y FAC para Alimentos</figcaption><p></p>
 </figure>
 </div>
 <div class="cell" data-layout-align="center">
@@ -1823,7 +1842,7 @@ AIC=297.22   AICc=297.99   BIC=301.88</code></pre>
 <div id="fig-AlimentosError" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-04-Tema4_files/figure-html/fig-AlimentosError-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;23: Error + Intervención</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 23: Error + Intervención</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1973,7 +1992,7 @@ La contante del modelo teórico y la media del modelo estimado
 <div id="fig-AlimentosPre" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-04-Tema4_files/figure-html/fig-AlimentosPre-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;24: Consumo de alimentos y predicción</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 24: Consumo de alimentos y predicción</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -2156,8 +2175,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      let href = ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);

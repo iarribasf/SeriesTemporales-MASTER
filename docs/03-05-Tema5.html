@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.189">
+<meta name="generator" content="quarto-1.0.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,15 +12,10 @@
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
-  vertical-align: middle;
-}
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -59,7 +54,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
+code span.bu { } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -72,7 +67,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.im { } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -124,11 +119,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
-    <a class="navbar-brand" href="./index.html">
+      <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Series Temporales</span>
-    </a>
-  </div>
+  </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -289,46 +282,46 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc">
     <h2 id="toc-title">Índice</h2>
    
   <ul>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="toc-section-number">1</span>  Introducción</a></li>
-  <li><a href="#procesos-arima-con-estacionalidad" id="toc-procesos-arima-con-estacionalidad" class="nav-link" data-scroll-target="#procesos-arima-con-estacionalidad"><span class="toc-section-number">2</span>  Procesos ARIMA con estacionalidad</a>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"> <span class="header-section-number">1</span> Introducción</a></li>
+  <li><a href="#procesos-arima-con-estacionalidad" id="toc-procesos-arima-con-estacionalidad" class="nav-link" data-scroll-target="#procesos-arima-con-estacionalidad"> <span class="header-section-number">2</span> Procesos ARIMA con estacionalidad</a>
   <ul class="collapse">
-  <li><a href="#procesos-autorregresivos-ar_mp" id="toc-procesos-autorregresivos-ar_mp" class="nav-link" data-scroll-target="#procesos-autorregresivos-ar_mp"><span class="toc-section-number">2.1</span>  Procesos autorregresivos <span class="math inline">\(AR_m(P)\)</span></a>
+  <li><a href="#procesos-autorregresivos-ar_mp" id="toc-procesos-autorregresivos-ar_mp" class="nav-link" data-scroll-target="#procesos-autorregresivos-ar_mp"> <span class="header-section-number">2.1</span> Procesos autorregresivos <span class="math inline">\(AR_m(P)\)</span></a>
   <ul class="collapse">
   <li><a href="#definición" id="toc-definición" class="nav-link" data-scroll-target="#definición">Definición</a></li>
   <li><a href="#propiedades" id="toc-propiedades" class="nav-link" data-scroll-target="#propiedades">Propiedades</a></li>
   <li><a href="#ejemplos" id="toc-ejemplos" class="nav-link" data-scroll-target="#ejemplos">Ejemplos</a></li>
   <li><a href="#simulaciones-de-procesos-autorregresivos-ar_mp" id="toc-simulaciones-de-procesos-autorregresivos-ar_mp" class="nav-link" data-scroll-target="#simulaciones-de-procesos-autorregresivos-ar_mp">Simulaciones de procesos autorregresivos <span class="math inline">\(AR_m(P)\)</span></a></li>
   </ul></li>
-  <li><a href="#procesos-en-medias-móviles-ma_mq" id="toc-procesos-en-medias-móviles-ma_mq" class="nav-link" data-scroll-target="#procesos-en-medias-móviles-ma_mq"><span class="toc-section-number">2.2</span>  Procesos en medias móviles <span class="math inline">\(MA_m(Q)\)</span></a>
+  <li><a href="#procesos-en-medias-móviles-ma_mq" id="toc-procesos-en-medias-móviles-ma_mq" class="nav-link" data-scroll-target="#procesos-en-medias-móviles-ma_mq"> <span class="header-section-number">2.2</span> Procesos en medias móviles <span class="math inline">\(MA_m(Q)\)</span></a>
   <ul class="collapse">
   <li><a href="#definición-1" id="toc-definición-1" class="nav-link" data-scroll-target="#definición-1">Definición</a></li>
   <li><a href="#propiedades-1" id="toc-propiedades-1" class="nav-link" data-scroll-target="#propiedades-1">Propiedades</a></li>
   <li><a href="#ejemplos-1" id="toc-ejemplos-1" class="nav-link" data-scroll-target="#ejemplos-1">Ejemplos</a></li>
   <li><a href="#simulaciones-de-procesos-en-medias-móviles-ma_mq" id="toc-simulaciones-de-procesos-en-medias-móviles-ma_mq" class="nav-link" data-scroll-target="#simulaciones-de-procesos-en-medias-móviles-ma_mq">Simulaciones de procesos en medias móviles <span class="math inline">\(MA_m(Q)\)</span></a></li>
   </ul></li>
-  <li><a href="#procesos-arma_mpq" id="toc-procesos-arma_mpq" class="nav-link" data-scroll-target="#procesos-arma_mpq"><span class="toc-section-number">2.3</span>  Procesos <span class="math inline">\(ARMA_m(P,Q)\)</span></a>
+  <li><a href="#procesos-arma_mpq" id="toc-procesos-arma_mpq" class="nav-link" data-scroll-target="#procesos-arma_mpq"> <span class="header-section-number">2.3</span> Procesos <span class="math inline">\(ARMA_m(P,Q)\)</span></a>
   <ul class="collapse">
   <li><a href="#definición-2" id="toc-definición-2" class="nav-link" data-scroll-target="#definición-2">Definición</a></li>
   <li><a href="#propiedades-2" id="toc-propiedades-2" class="nav-link" data-scroll-target="#propiedades-2">Propiedades</a></li>
   <li><a href="#ejemplos-2" id="toc-ejemplos-2" class="nav-link" data-scroll-target="#ejemplos-2">Ejemplos</a></li>
   <li><a href="#simulación-de-un-proceso-arma_mpq" id="toc-simulación-de-un-proceso-arma_mpq" class="nav-link" data-scroll-target="#simulación-de-un-proceso-arma_mpq">Simulación de un proceso <span class="math inline">\(ARMA_m(P,Q)\)</span></a></li>
   </ul></li>
-  <li><a href="#procesos-arima_mpdq" id="toc-procesos-arima_mpdq" class="nav-link" data-scroll-target="#procesos-arima_mpdq"><span class="toc-section-number">2.4</span>  Procesos <span class="math inline">\(ARIMA_m(P,D,Q)\)</span></a>
+  <li><a href="#procesos-arima_mpdq" id="toc-procesos-arima_mpdq" class="nav-link" data-scroll-target="#procesos-arima_mpdq"> <span class="header-section-number">2.4</span> Procesos <span class="math inline">\(ARIMA_m(P,D,Q)\)</span></a>
   <ul class="collapse">
   <li><a href="#ejemplo" id="toc-ejemplo" class="nav-link" data-scroll-target="#ejemplo">Ejemplo</a></li>
   </ul></li>
-  <li><a href="#proceso-arima_mpdqpdq" id="toc-proceso-arima_mpdqpdq" class="nav-link" data-scroll-target="#proceso-arima_mpdqpdq"><span class="toc-section-number">2.5</span>  Proceso <span class="math inline">\(ARIMA_m(p,d,q)(P,D,Q)\)</span></a>
+  <li><a href="#proceso-arima_mpdqpdq" id="toc-proceso-arima_mpdqpdq" class="nav-link" data-scroll-target="#proceso-arima_mpdqpdq"> <span class="header-section-number">2.5</span> Proceso <span class="math inline">\(ARIMA_m(p,d,q)(P,D,Q)\)</span></a>
   <ul class="collapse">
   <li><a href="#simulaciones-de-un-proceso-arima_mpdqpdq" id="toc-simulaciones-de-un-proceso-arima_mpdqpdq" class="nav-link" data-scroll-target="#simulaciones-de-un-proceso-arima_mpdqpdq">Simulaciones de un proceso <span class="math inline">\(ARIMA_m(p,d,q)(P,D,Q)\)</span></a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#ejemplos-3" id="toc-ejemplos-3" class="nav-link" data-scroll-target="#ejemplos-3"><span class="toc-section-number">3</span>  Ejemplos</a>
+  <li><a href="#ejemplos-3" id="toc-ejemplos-3" class="nav-link" data-scroll-target="#ejemplos-3"> <span class="header-section-number">3</span> Ejemplos</a>
   <ul class="collapse">
-  <li><a href="#nacimientos" id="toc-nacimientos" class="nav-link" data-scroll-target="#nacimientos"><span class="toc-section-number">3.1</span>  Nacimientos</a>
+  <li><a href="#nacimientos" id="toc-nacimientos" class="nav-link" data-scroll-target="#nacimientos"> <span class="header-section-number">3.1</span> Nacimientos</a>
   <ul class="collapse">
   <li><a href="#transformación-de-la-serie" id="toc-transformación-de-la-serie" class="nav-link" data-scroll-target="#transformación-de-la-serie">Transformación de la serie</a></li>
   <li><a href="#identificación" id="toc-identificación" class="nav-link" data-scroll-target="#identificación">Identificación</a></li>
@@ -339,7 +332,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#predicción-de-la-serie" id="toc-predicción-de-la-serie" class="nav-link" data-scroll-target="#predicción-de-la-serie">Predicción de la serie</a></li>
   <li><a href="#error-de-predicción-extra-muestral-según-horizonte-temporal" id="toc-error-de-predicción-extra-muestral-según-horizonte-temporal" class="nav-link" data-scroll-target="#error-de-predicción-extra-muestral-según-horizonte-temporal">Error de predicción extra-muestral según horizonte temporal</a></li>
   </ul></li>
-  <li><a href="#exportaciones" id="toc-exportaciones" class="nav-link" data-scroll-target="#exportaciones"><span class="toc-section-number">3.2</span>  Exportaciones</a>
+  <li><a href="#exportaciones" id="toc-exportaciones" class="nav-link" data-scroll-target="#exportaciones"> <span class="header-section-number">3.2</span> Exportaciones</a>
   <ul class="collapse">
   <li><a href="#transformación-de-la-serie-1" id="toc-transformación-de-la-serie-1" class="nav-link" data-scroll-target="#transformación-de-la-serie-1">Transformación de la serie</a></li>
   <li><a href="#identificación-1" id="toc-identificación-1" class="nav-link" data-scroll-target="#identificación-1">Identificación</a></li>
@@ -349,7 +342,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#interpretación-1" id="toc-interpretación-1" class="nav-link" data-scroll-target="#interpretación-1">Interpretación</a></li>
   <li><a href="#predicción-de-la-serie-1" id="toc-predicción-de-la-serie-1" class="nav-link" data-scroll-target="#predicción-de-la-serie-1">Predicción de la serie</a></li>
   </ul></li>
-  <li><a href="#chocolate" id="toc-chocolate" class="nav-link" data-scroll-target="#chocolate"><span class="toc-section-number">3.3</span>  Chocolate</a>
+  <li><a href="#chocolate" id="toc-chocolate" class="nav-link" data-scroll-target="#chocolate"> <span class="header-section-number">3.3</span> Chocolate</a>
   <ul class="collapse">
   <li><a href="#transformación-de-la-serie-2" id="toc-transformación-de-la-serie-2" class="nav-link" data-scroll-target="#transformación-de-la-serie-2">Transformación de la serie</a></li>
   <li><a href="#identificación-2" id="toc-identificación-2" class="nav-link" data-scroll-target="#identificación-2">Identificación</a></li>
@@ -360,13 +353,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#error-de-predicción-extra-muestral-según-horizonte-temporal-2" id="toc-error-de-predicción-extra-muestral-según-horizonte-temporal-2" class="nav-link" data-scroll-target="#error-de-predicción-extra-muestral-según-horizonte-temporal-2">Error de predicción extra-muestral según horizonte temporal</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#comparación-con-alisado-exponencial" id="toc-comparación-con-alisado-exponencial" class="nav-link" data-scroll-target="#comparación-con-alisado-exponencial"><span class="toc-section-number">4</span>  Comparación con alisado exponencial</a>
+  <li><a href="#comparación-con-alisado-exponencial" id="toc-comparación-con-alisado-exponencial" class="nav-link" data-scroll-target="#comparación-con-alisado-exponencial"> <span class="header-section-number">4</span> Comparación con alisado exponencial</a>
   <ul class="collapse">
   <li><a href="#nacimientos-log" id="toc-nacimientos-log" class="nav-link" data-scroll-target="#nacimientos-log">Nacimientos (log)</a></li>
   <li><a href="#exportaciones-log" id="toc-exportaciones-log" class="nav-link" data-scroll-target="#exportaciones-log">Exportaciones (log)</a></li>
   <li><a href="#chocolate-log" id="toc-chocolate-log" class="nav-link" data-scroll-target="#chocolate-log">Chocolate (log)</a></li>
   </ul></li>
-  <li><a href="#resumen-de-los-comandos-utilizados" id="toc-resumen-de-los-comandos-utilizados" class="nav-link" data-scroll-target="#resumen-de-los-comandos-utilizados"><span class="toc-section-number">5</span>  Resumen de los comandos utilizados</a></li>
+  <li><a href="#resumen-de-los-comandos-utilizados" id="toc-resumen-de-los-comandos-utilizados" class="nav-link" data-scroll-target="#resumen-de-los-comandos-utilizados"> <span class="header-section-number">5</span> Resumen de los comandos utilizados</a></li>
   </ul>
 </nav>
     </div>
@@ -420,11 +413,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 data-number="2.1" class="anchored" data-anchor-id="procesos-autorregresivos-ar_mp"><span class="header-section-number">2.1</span> Procesos autorregresivos <span class="math inline">\(AR_m(P)\)</span></h2>
 <section id="definición" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="definición">Definición</h3>
-<p>El modelo general <strong>autorregresivo estacional de orden P</strong>, <span class="math inline">\(y_t \sim AR_m(P)\)</span> viene definido por <span class="math display">\[y_t=c + \phi_m y_{t-m} + \phi_{2m} y_{t-2m} + \ldots + \phi_{Pm} y_{t-Pm} + \varepsilon_t,\]</span> que usando el operador retardo queda <span class="math display">\[(1 - \phi_m L^m - \phi_{2m} L^{2m} - \ldots - \phi_{Pm} L^{Pm})y_t = c + \varepsilon_t.\]</span></p>
+<p>El modelo general <strong>autorregresivo estacional de orden P</strong>, <span class="math inline">\(y_t \sim AR_m(P)\)</span> viene definido por</p>
+<p><span class="math display">\[y_t=c + \phi_m y_{t-m} + \phi_{2m} y_{t-2m} + \ldots + \phi_{Pm} y_{t-Pm} + \varepsilon_t,\]</span></p>
+<p>que usando el operador retardo queda</p>
+<p><span class="math display">\[(1 - \phi_m L^m - \phi_{2m} L^{2m} - \ldots - \phi_{Pm} L^{Pm})y_t = c + \varepsilon_t.\]</span></p>
 </section>
 <section id="propiedades" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="propiedades">Propiedades</h3>
-<p>El proceso es <strong>estacionario</strong> si quedan fuera del círculo de radio unidad todas las raíces del polinomio <span class="math display">\[\Phi_P(z) = 1 - \phi_m z^m - \phi_{2m} z^{2m} - \ldots - \phi_{Pm} z^{Pm}.\]</span></p>
+<p>El proceso es <strong>estacionario</strong> si quedan fuera del círculo de radio unidad todas las raíces del polinomio</p>
+<p><span class="math display">\[\Phi_P(z) = 1 - \phi_m z^m - \phi_{2m} z^{2m} - \ldots - \phi_{Pm} z^{Pm}.\]</span></p>
 <p>Es <strong>invertible</strong> siempre.</p>
 <p><strong>Sobre todo</strong>,</p>
 <ul>
@@ -464,7 +461,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;1: Simulación de dos procesos AR estacionales con diferente orden estacional</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 1: Simulación de dos procesos AR estacionales con diferente orden estacional</figcaption><p></p>
 </figure>
 </div>
 <p><br>
@@ -475,12 +472,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 data-number="2.2" class="anchored" data-anchor-id="procesos-en-medias-móviles-ma_mq"><span class="header-section-number">2.2</span> Procesos en medias móviles <span class="math inline">\(MA_m(Q)\)</span></h2>
 <section id="definición-1" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="definición-1">Definición</h3>
-<p>El modelo general <strong>en medias móviles estacional de orden Q</strong>, <span class="math inline">\(y_t \sim MA_m(Q)\)</span> viene definido por <span class="math display">\[y_t=c + \varepsilon_t + \theta_m \varepsilon_{t-m} + \theta_{2m} \varepsilon_{t-2m} + \ldots +
-  \theta_{Qm} \varepsilon_{t-Qm},\]</span> que usando el operador retardo queda <span class="math display">\[y_t = c + (1 + \theta_m L^m + \theta_{2m} L^{2m} + \ldots + \theta_{Qm} L^{Qm}) \varepsilon_t.\]</span></p>
+<p>El modelo general <strong>en medias móviles estacional de orden Q</strong>, <span class="math inline">\(y_t \sim MA_m(Q)\)</span> viene definido por</p>
+<p><span class="math display">\[y_t=c + \varepsilon_t + \theta_m \varepsilon_{t-m} + \theta_{2m} \varepsilon_{t-2m} + \ldots +
+  \theta_{Qm} \varepsilon_{t-Qm},\]</span> que usando el operador retardo queda</p>
+<p><span class="math display">\[y_t = c + (1 + \theta_m L^m + \theta_{2m} L^{2m} + \ldots + \theta_{Qm} L^{Qm}) \varepsilon_t.\]</span></p>
 </section>
 <section id="propiedades-1" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="propiedades-1">Propiedades</h3>
-<p>El proceso es <strong>invertible</strong> si quedan fuera del círculo de radio unidad todas las raíces del polinomio <span class="math display">\[\Theta_Q(z) = 1 + \theta_m z^m + \theta_{2m} z^{2m} + \ldots + \theta_{Qm} z^{Qm}.\]</span></p>
+<p>El proceso es <strong>invertible</strong> si quedan fuera del círculo de radio unidad todas las raíces del polinomio</p>
+<p><span class="math display">\[\Theta_Q(z) = 1 + \theta_m z^m + \theta_{2m} z^{2m} + \ldots + \theta_{Qm} z^{Qm}.\]</span></p>
 <p>Es <strong>estacionario</strong> siempre.</p>
 <p><strong>Sobre todo</strong>,</p>
 <ul>
@@ -520,7 +520,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;2: Simulación de dos procesos MA estacionales con diferente orden estacional</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 2: Simulación de dos procesos MA estacionales con diferente orden estacional</figcaption><p></p>
 </figure>
 </div>
 <p><br>
@@ -532,16 +532,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="definición-2" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="definición-2">Definición</h3>
 <p>El modelo general <strong><span class="math inline">\(y_t \sim ARMA_m(P,Q)\)</span></strong> viene definido por</p>
-<p><span class="math display">\[y_t = c + \phi_m y_{t-m} + \phi_{2m} y_{t-2m} + \ldots + \phi_{Pm} y_{t-Pm}  +
-  \varepsilon_t + \theta_m \varepsilon_{t-m} + \theta_{2m} \varepsilon_{t-2m} + \ldots +
-  \theta_{Qm} \varepsilon_{t-Qm},\]</span> que usando el operador retardo queda</p>
+<p>$$y_t = c + <em>m y</em>{t-m} + <em>{2m} y</em>{t-2m} + + <em>{Pm} y</em>{t-Pm} +</p>
+<p><em>t + <em>m </em>{t-m} + </em>{2m} <em>{t-2m} + + </em>{Qm} _{t-Qm},$$ que usando el operador retardo queda</p>
 <p><span class="math display">\[(1 - \phi_m L^m - \ldots - \phi_{Pm} L^{Pm})y_t = c + (1 + \theta_m L^m + \ldots + \theta_{Qm} L^{Qm}) \varepsilon_t.\]</span></p>
 <p>El proceso más simple es el <span class="math inline">\(ARMA_m(1,1)\)</span>: <span class="math inline">\(y_t = c + \phi_m y_{t-m} + \theta_m \varepsilon_{t-m} + \varepsilon_{t}.\)</span></p>
 </section>
 <section id="propiedades-2" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="propiedades-2">Propiedades</h3>
-<p>El proceso es <strong>estacionario</strong> si quedan fuera del círculo de radio unidad todas las raíces del polinomio <span class="math display">\[\Phi_P(z) = 1 - \phi_m z^m - \phi_{2m} z^{2m} - \ldots - \phi_{Pm} z^{Pm}.\]</span></p>
-<p>El proceso es <strong>invertible</strong> si quedan fuera del círculo de radio unidad todas las raíces del polinomio <span class="math display">\[\Theta_Q(z) = 1 + \theta_m z^m + \theta_{2m} z^{2m} + \ldots + \theta_{Qm} z^{Qm}.\]</span></p>
+<p>El proceso es <strong>estacionario</strong> si quedan fuera del círculo de radio unidad todas las raíces del polinomio</p>
+<p><span class="math display">\[\Phi_P(z) = 1 - \phi_m z^m - \phi_{2m} z^{2m} - \ldots - \phi_{Pm} z^{Pm}.\]</span></p>
+<p>El proceso es <strong>invertible</strong> si quedan fuera del círculo de radio unidad todas las raíces del polinomio</p>
+<p><span class="math display">\[\Theta_Q(z) = 1 + \theta_m z^m + \theta_{2m} z^{2m} + \ldots + \theta_{Qm} z^{Qm}.\]</span></p>
 <p><strong>Sobre todo</strong>,</p>
 <ul>
 <li>En la FAC las autocorrelaciones de <strong>orden múltiplo de m</strong> decaen exponencialmente a partir del orden P.</li>
@@ -563,7 +564,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="fig-simulARMA" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-simulARMA-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;3: Simulación de un proceso ARMA(1,1) estacional con m = 7</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 3: Simulación de un proceso ARMA(1,1) estacional con m = 7</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -603,8 +604,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="proceso-arima_mpdqpdq" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="proceso-arima_mpdqpdq"><span class="header-section-number">2.5</span> Proceso <span class="math inline">\(ARIMA_m(p,d,q)(P,D,Q)\)</span></h2>
 <p>La realidad nos muestra que la mayoría de las series con estacionalidad se ajustan a una combinación de <em>procesos regulares y estacionales</em>.</p>
-<p>El proceso <span class="math inline">\(ARIMA_m(p, d, q)(P, D, Q)\)</span> puede ser expresado de forma abreviada como <span class="math display">\[\Phi_p(L)\Phi_P(L^m)\nabla^d\nabla_m^D  y_t = c + \Theta_q(L)\Theta_Q(L^m)\varepsilon_t,\]</span><br>
-o menos sucintamente como <span class="math display">\[\begin{equation*}
+<p>El proceso <span class="math inline">\(ARIMA_m(p, d, q)(P, D, Q)\)</span> puede ser expresado de forma abreviada como</p>
+<p><span class="math display">\[\Phi_p(L)\Phi_P(L^m)\nabla^d\nabla_m^D  y_t = c + \Theta_q(L)\Theta_Q(L^m)\varepsilon_t,\]</span></p>
+<p>o menos sucintamente como <span class="math display">\[\begin{equation*}
 \begin{array}{ccccc}
   AR(p) &amp; AR_m(P) &amp; I(d) &amp; I_m(D) &amp;  \\
   \downarrow &amp; \downarrow &amp; \downarrow &amp; \downarrow  &amp;  \\
@@ -615,7 +617,9 @@ o menos sucintamente como <span class="math display">\[\begin{equation*}
 \end{array}
 \end{equation*}\]</span></p>
 <p>Por ejemplo, entre las series mensuales uno de los procesos más comunes es <span class="math inline">\(ARIMA_{12}(0, 1, 1)(0, 1, 1)\)</span>, denominado <em>modelo de las aerolíneas</em> por ser el proceso generador de datos de muchas series mensuales de transporte de pasajeros, en concreto la serie mensual de pasajeros de avión. La ecuación de este modelo es</p>
-<p><span class="math display">\[(1-L)(1-L^{12})y_t = (1+ \theta_1L)(1 + \theta_{12}L^{12})\varepsilon_t\]</span> que si desarrollamos queda <span class="math display">\[y_t = y_{t-1} + (y_{t-12} - y_{t-13}) + \theta_1 \varepsilon_{t-1} + \theta_{12} \varepsilon_{t-12} + \theta_{13} \varepsilon_{t-13} + \varepsilon_t \]</span></p>
+<p><span class="math display">\[(1-L)(1-L^{12})y_t = (1+ \theta_1L)(1 + \theta_{12}L^{12})\varepsilon_t\]</span></p>
+<p>que si desarrollamos queda</p>
+<p><span class="math display">\[y_t = y_{t-1} + (y_{t-12} - y_{t-13}) + \theta_1 \varepsilon_{t-1} + \theta_{12} \varepsilon_{t-12} + \theta_{13} \varepsilon_{t-13} + \varepsilon_t \]</span></p>
 <ul>
 <li>El número de pasajeros del mes <span class="math inline">\(t\)</span> es el mismo que el del mes previo <span class="math inline">\(t-1\)</span>, más la diferencia entre estos meses observada el año pasado.</li>
 <li>Si en los meses usados para la predicción (<span class="math inline">\(t-1\)</span>, <span class="math inline">\(t-12\)</span> y <span class="math inline">\(t-12\)</span>) ha ocurrido algo extraordinario, hay que tenerlo en cuenta a la hora de afinar la predicción.</li>
@@ -628,7 +632,7 @@ o menos sucintamente como <span class="math display">\[\begin{equation*}
 <div id="fig-simulARIMA" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-simulARIMA-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;4: Simulación del proceso de las aerolineas ARIMA(0, 1, 1)(0, 1, 1), m = 12</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 4: Simulación del proceso de las aerolineas ARIMA(0, 1, 1)(0, 1, 1), m = 12</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -661,7 +665,7 @@ o menos sucintamente como <span class="math display">\[\begin{equation*}
 <div id="fig-Nacimientos" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-Nacimientos-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;5: Nacimientos mensuales</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 5: Nacimientos mensuales</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -680,7 +684,7 @@ o menos sucintamente como <span class="math display">\[\begin{equation*}
 <div id="fig-NacimientosFAC" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-NacimientosFAC-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;6: Nacimientos mensuales</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 6: Nacimientos mensuales</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -774,7 +778,8 @@ Box-Ljung (no autocorr.): 27.65   Shapiro (normality): 0.993  </code></pre>
 </div>
 <p>En primer lugar, la función identifica el modelo de las aerolíneas para la transformación logarítmica de Nacimientos. Este resultado está en consonancia con el alcanzado con la función <code>auto.arima</code>. Además, identifica un valor extremo en diciembre de 2010, un efecto calendario Semana Santa y un efecto calendario días laborables del mes (que podemos entender similar a nuestro efecto días del mes).</p>
 <p>Tras estos análisis alternativos, decidimos que la identificación de partida es <span class="math inline">\(ARIMA_{12}(0,1,1)(0,1,2)+AI\)</span>,</p>
-<p><span class="math display">\[(1 - L^{12})(1 - L)\log(nacimientos_t) = (1 + \theta_1 L)(1 + \theta_{12} L^{12} + \theta_{24} L^{24})\varepsilon_t + AI.\]</span> donde <em>AI</em> recoge las variables de intervención incluidas en <code>auto.arima</code> y la identificada por <code>seas</code>.</p>
+<p><span class="math display">\[(1 - L^{12})(1 - L)\log(nacimientos_t) = (1 + \theta_1 L)(1 + \theta_{12} L^{12} + \theta_{24} L^{24})\varepsilon_t + AI.\]</span></p>
+<p>donde <em>AI</em> recoge las variables de intervención incluidas en <code>auto.arima</code> y la identificada por <code>seas</code>.</p>
 </section>
 <section id="estimación-y-valores-extremos" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="estimación-y-valores-extremos">Estimación (y valores extremos)</h3>
@@ -819,7 +824,7 @@ AIC=-1106.34   AICc=-1105.68   BIC=-1078.94</code></pre>
 <div id="fig-NacError" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-NacError-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;7: Error + Intervención</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 7: Error + Intervención</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -874,7 +879,7 @@ AIC=-1121.28   AICc=-1120.05   BIC=-1083.61</code></pre>
 <div id="fig-NacError2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-NacError2-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;8: Error + Intervención</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 8: Error + Intervención</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1033,7 +1038,7 @@ X-squared = 2.0706, df = 2, p-value = 0.3551</code></pre>
 <div id="fig-ErrorNAC" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-ErrorNAC-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;9: FAC del error del modelo</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 9: FAC del error del modelo</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1098,7 +1103,7 @@ Dec 2020       28439.39 26230.03 30834.86</code></pre>
 <div id="fig-NacPre" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-NacPre-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;10: Nacimientos (2000-2019) y predicción (2020-2023)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 10: Nacimientos (2000-2019) y predicción (2020-2023)</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1169,7 +1174,7 @@ Dec 2020       28439.39 26230.03 30834.86</code></pre>
 <div id="fig-NacMAPE" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-NacMAPE-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;11: Error de predicción (MAPE) según horizonte temporal</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 11: Error de predicción (MAPE) según horizonte temporal</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1196,7 +1201,7 @@ Dec 2020       28439.39 26230.03 30834.86</code></pre>
 <div id="fig-Exportaciones" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-Exportaciones-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;12: Exportaciones de España a la EU27</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 12: Exportaciones de España a la EU27</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1248,7 +1253,7 @@ Dec 2020       28439.39 26230.03 30834.86</code></pre>
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;13: FAC para Exportaciones (log)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 13: FAC para Exportaciones (log)</figcaption><p></p>
 </figure>
 </div>
 <div class="cell" data-layout-align="center">
@@ -1370,7 +1375,7 @@ AIC=-983.34   AICc=-982.46   BIC=-947.61</code></pre>
 <div id="fig-ExpError" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-ExpError-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;14: Error + Intervención</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 14: Error + Intervención</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1533,7 +1538,7 @@ X-squared = 3.5363, df = 2, p-value = 0.1707</code></pre>
 <div id="fig-ExpMAPE" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-ExpMAPE-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;15: Error de predicción (MAPE) según horizonte temporal</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 15: Error de predicción (MAPE) según horizonte temporal</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1602,7 +1607,7 @@ Dec 2022       19956.25 17130.79 23247.73</code></pre>
 <div id="fig-ExpPre" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-ExpPre-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;16: Exportaciones (1999-2021) y predicción (2022-2025)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 16: Exportaciones (1999-2021) y predicción (2022-2025)</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1626,7 +1631,7 @@ Dec 2022       19956.25 17130.79 23247.73</code></pre>
 <div id="fig-Chocolate" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-Chocolate-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;17: Producción de Chocolate (Australia)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 17: Producción de Chocolate (Australia)</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1679,7 +1684,7 @@ Dec 2022       19956.25 17130.79 23247.73</code></pre>
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;18: FAC para Chocolate (log)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 18: FAC para Chocolate (log)</figcaption><p></p>
 </figure>
 </div>
 <p>Las funciones que identifican la diferenciación de forma automática avalan esta decisión.</p>
@@ -1704,7 +1709,7 @@ Dec 2022       19956.25 17130.79 23247.73</code></pre>
 <div id="fig-ChoDisplay" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-ChoDisplay-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;19: FAC y FACP para Chocolate (log)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 19: FAC y FACP para Chocolate (log)</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1824,7 +1829,7 @@ AIC=-769.1   AICc=-768.96   BIC=-748.77</code></pre>
 <div id="fig-ChoError" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-ChoError-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;20: Error + Intervención</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 20: Error + Intervención</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1881,7 +1886,7 @@ AIC=-828.8   AICc=-828.37   BIC=-792.2</code></pre>
 <div id="fig-ChoError2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-ChoError2-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;21: Error + Intervención</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 21: Error + Intervención</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -2010,7 +2015,7 @@ X-squared = 1.0924, df = 2, p-value = 0.5791</code></pre>
 <div id="fig-ChoPre" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-ChoPre-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;22: Chocolate (1958-1994) y predicción (1995-1998)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 22: Chocolate (1958-1994) y predicción (1995-1998)</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -2080,7 +2085,7 @@ X-squared = 1.0924, df = 2, p-value = 0.5791</code></pre>
 <div id="fig-ChoMAPE" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-05-Tema5_files/figure-html/fig-ChoMAPE-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;23: Error de predicción (MAPE) según horizonte temporal</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 23: Error de predicción (MAPE) según horizonte temporal</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -2292,11 +2297,11 @@ X-squared = 1.0924, df = 2, p-value = 0.5791</code></pre>
 </section>
 
 
-<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+<div id="quarto-appendix" class="default"><section class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>Acude al epígrafe Intervención del Tema 2 para refrescar estos conceptos<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p><code>R</code> permite crear tu propio calendario de festivos y existen otras librerías que extienden las opciones de <code>bizdays</code>. En el ejemplo de Pasajeros puedes ver como construir la serie de días laborables del mes para España paso a paso.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1" role="doc-endnote"><p>Acude al epígrafe Intervención del Tema 2 para refrescar estos conceptos<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p><code>R</code> permite crear tu propio calendario de festivos y existen otras librerías que extienden las opciones de <code>bizdays</code>. En el ejemplo de Pasajeros puedes ver como construir la serie de días laborables del mes para España paso a paso.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -2368,8 +2373,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      let href = ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);

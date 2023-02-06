@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.189">
+<meta name="generator" content="quarto-1.0.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,15 +12,10 @@
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
-  vertical-align: middle;
-}
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -59,7 +54,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
+code span.bu { } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -72,7 +67,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.im { } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -124,11 +119,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
-    <a class="navbar-brand" href="./index.html">
+      <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Series Temporales</span>
-    </a>
-  </div>
+  </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -289,56 +282,56 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc">
     <h2 id="toc-title">Índice</h2>
    
   <ul>
   <li><a href="#antecedentes" id="toc-antecedentes" class="nav-link active" data-scroll-target="#antecedentes">Antecedentes</a></li>
-  <li><a href="#pasajeros-en-transporte-urbano" id="toc-pasajeros-en-transporte-urbano" class="nav-link" data-scroll-target="#pasajeros-en-transporte-urbano"><span class="toc-section-number">1</span>  Pasajeros en transporte urbano</a></li>
-  <li><a href="#descriptiva" id="toc-descriptiva" class="nav-link" data-scroll-target="#descriptiva"><span class="toc-section-number">2</span>  Descriptiva</a>
+  <li><a href="#pasajeros-en-transporte-urbano" id="toc-pasajeros-en-transporte-urbano" class="nav-link" data-scroll-target="#pasajeros-en-transporte-urbano"> <span class="header-section-number">1</span> Pasajeros en transporte urbano</a></li>
+  <li><a href="#descriptiva" id="toc-descriptiva" class="nav-link" data-scroll-target="#descriptiva"> <span class="header-section-number">2</span> Descriptiva</a>
   <ul class="collapse">
-  <li><a href="#análisis-de-la-tendencia" id="toc-análisis-de-la-tendencia" class="nav-link" data-scroll-target="#análisis-de-la-tendencia"><span class="toc-section-number">2.1</span>  Análisis de la tendencia</a></li>
-  <li><a href="#análisis-de-la-estacionalidad" id="toc-análisis-de-la-estacionalidad" class="nav-link" data-scroll-target="#análisis-de-la-estacionalidad"><span class="toc-section-number">2.2</span>  Análisis de la estacionalidad</a>
+  <li><a href="#análisis-de-la-tendencia" id="toc-análisis-de-la-tendencia" class="nav-link" data-scroll-target="#análisis-de-la-tendencia"> <span class="header-section-number">2.1</span> Análisis de la tendencia</a></li>
+  <li><a href="#análisis-de-la-estacionalidad" id="toc-análisis-de-la-estacionalidad" class="nav-link" data-scroll-target="#análisis-de-la-estacionalidad"> <span class="header-section-number">2.2</span> Análisis de la estacionalidad</a>
   <ul class="collapse">
   <li><a href="#días-laborables-de-cada-mes" id="toc-días-laborables-de-cada-mes" class="nav-link" data-scroll-target="#días-laborables-de-cada-mes">Días laborables de cada mes</a></li>
   <li><a href="#análisis-gráfico-de-la-estacionalidad" id="toc-análisis-gráfico-de-la-estacionalidad" class="nav-link" data-scroll-target="#análisis-gráfico-de-la-estacionalidad">Análisis gráfico de la estacionalidad</a></li>
   <li><a href="#análisis-numérico-de-la-estacionalidad" id="toc-análisis-numérico-de-la-estacionalidad" class="nav-link" data-scroll-target="#análisis-numérico-de-la-estacionalidad">Análisis numérico de la estacionalidad</a></li>
   </ul></li>
-  <li><a href="#descomposición-de-la-serie" id="toc-descomposición-de-la-serie" class="nav-link" data-scroll-target="#descomposición-de-la-serie"><span class="toc-section-number">2.3</span>  Descomposición de la serie</a></li>
-  <li><a href="#conclusión" id="toc-conclusión" class="nav-link" data-scroll-target="#conclusión"><span class="toc-section-number">2.4</span>  Conclusión</a></li>
+  <li><a href="#descomposición-de-la-serie" id="toc-descomposición-de-la-serie" class="nav-link" data-scroll-target="#descomposición-de-la-serie"> <span class="header-section-number">2.3</span> Descomposición de la serie</a></li>
+  <li><a href="#conclusión" id="toc-conclusión" class="nav-link" data-scroll-target="#conclusión"> <span class="header-section-number">2.4</span> Conclusión</a></li>
   </ul></li>
-  <li><a href="#un-predicción-rápida-y-sencilla" id="toc-un-predicción-rápida-y-sencilla" class="nav-link" data-scroll-target="#un-predicción-rápida-y-sencilla"><span class="toc-section-number">3</span>  Un predicción rápida y sencilla</a></li>
-  <li><a href="#alisado-exponencial" id="toc-alisado-exponencial" class="nav-link" data-scroll-target="#alisado-exponencial"><span class="toc-section-number">4</span>  Alisado Exponencial</a>
+  <li><a href="#un-predicción-rápida-y-sencilla" id="toc-un-predicción-rápida-y-sencilla" class="nav-link" data-scroll-target="#un-predicción-rápida-y-sencilla"> <span class="header-section-number">3</span> Un predicción rápida y sencilla</a></li>
+  <li><a href="#alisado-exponencial" id="toc-alisado-exponencial" class="nav-link" data-scroll-target="#alisado-exponencial"> <span class="header-section-number">4</span> Alisado Exponencial</a>
   <ul class="collapse">
-  <li><a href="#análisis-de-la-serie-pasajeros" id="toc-análisis-de-la-serie-pasajeros" class="nav-link" data-scroll-target="#análisis-de-la-serie-pasajeros"><span class="toc-section-number">4.1</span>  Análisis de la serie Pasajeros</a>
+  <li><a href="#análisis-de-la-serie-pasajeros" id="toc-análisis-de-la-serie-pasajeros" class="nav-link" data-scroll-target="#análisis-de-la-serie-pasajeros"> <span class="header-section-number">4.1</span> Análisis de la serie Pasajeros</a>
   <ul class="collapse">
   <li><a href="#estimación-e-interpretación" id="toc-estimación-e-interpretación" class="nav-link" data-scroll-target="#estimación-e-interpretación">Estimación e interpretación</a></li>
   <li><a href="#predicción" id="toc-predicción" class="nav-link" data-scroll-target="#predicción">Predicción</a></li>
   <li><a href="#análisis-del-error" id="toc-análisis-del-error" class="nav-link" data-scroll-target="#análisis-del-error">Análisis del error</a></li>
   </ul></li>
-  <li><a href="#otras-alternativas-de-análisis" id="toc-otras-alternativas-de-análisis" class="nav-link" data-scroll-target="#otras-alternativas-de-análisis"><span class="toc-section-number">4.2</span>  Otras alternativas de análisis</a></li>
-  <li><a href="#conclusión-1" id="toc-conclusión-1" class="nav-link" data-scroll-target="#conclusión-1"><span class="toc-section-number">4.3</span>  Conclusión</a></li>
+  <li><a href="#otras-alternativas-de-análisis" id="toc-otras-alternativas-de-análisis" class="nav-link" data-scroll-target="#otras-alternativas-de-análisis"> <span class="header-section-number">4.2</span> Otras alternativas de análisis</a></li>
+  <li><a href="#conclusión-1" id="toc-conclusión-1" class="nav-link" data-scroll-target="#conclusión-1"> <span class="header-section-number">4.3</span> Conclusión</a></li>
   </ul></li>
-  <li><a href="#modelos-arima" id="toc-modelos-arima" class="nav-link" data-scroll-target="#modelos-arima"><span class="toc-section-number">5</span>  Modelos Arima</a>
+  <li><a href="#modelos-arima" id="toc-modelos-arima" class="nav-link" data-scroll-target="#modelos-arima"> <span class="header-section-number">5</span> Modelos Arima</a>
   <ul class="collapse">
-  <li><a href="#transformación-de-la-serie-pasajeros" id="toc-transformación-de-la-serie-pasajeros" class="nav-link" data-scroll-target="#transformación-de-la-serie-pasajeros"><span class="toc-section-number">5.1</span>  Transformación de la serie Pasajeros</a></li>
-  <li><a href="#identificación-de-la-serie-pasajeros" id="toc-identificación-de-la-serie-pasajeros" class="nav-link" data-scroll-target="#identificación-de-la-serie-pasajeros"><span class="toc-section-number">5.2</span>  Identificación de la serie Pasajeros</a>
+  <li><a href="#transformación-de-la-serie-pasajeros" id="toc-transformación-de-la-serie-pasajeros" class="nav-link" data-scroll-target="#transformación-de-la-serie-pasajeros"> <span class="header-section-number">5.1</span> Transformación de la serie Pasajeros</a></li>
+  <li><a href="#identificación-de-la-serie-pasajeros" id="toc-identificación-de-la-serie-pasajeros" class="nav-link" data-scroll-target="#identificación-de-la-serie-pasajeros"> <span class="header-section-number">5.2</span> Identificación de la serie Pasajeros</a>
   <ul class="collapse">
   <li><a href="#identificación-automática-con-auto.arima" id="toc-identificación-automática-con-auto.arima" class="nav-link" data-scroll-target="#identificación-automática-con-auto.arima">Identificación automática con <code>auto.arima</code></a></li>
   <li><a href="#identificación-automática-con-seas" id="toc-identificación-automática-con-seas" class="nav-link" data-scroll-target="#identificación-automática-con-seas">Identificación automática con <code>seas</code></a></li>
   </ul></li>
-  <li><a href="#estimación-del-modelo-e-identificación-de-otras-componentes-de-intervención" id="toc-estimación-del-modelo-e-identificación-de-otras-componentes-de-intervención" class="nav-link" data-scroll-target="#estimación-del-modelo-e-identificación-de-otras-componentes-de-intervención"><span class="toc-section-number">5.3</span>  Estimación del modelo e identificación de otras componentes de intervención</a></li>
-  <li><a href="#validación-del-modelo" id="toc-validación-del-modelo" class="nav-link" data-scroll-target="#validación-del-modelo"><span class="toc-section-number">5.4</span>  Validación del modelo</a>
+  <li><a href="#estimación-del-modelo-e-identificación-de-otras-componentes-de-intervención" id="toc-estimación-del-modelo-e-identificación-de-otras-componentes-de-intervención" class="nav-link" data-scroll-target="#estimación-del-modelo-e-identificación-de-otras-componentes-de-intervención"> <span class="header-section-number">5.3</span> Estimación del modelo e identificación de otras componentes de intervención</a></li>
+  <li><a href="#validación-del-modelo" id="toc-validación-del-modelo" class="nav-link" data-scroll-target="#validación-del-modelo"> <span class="header-section-number">5.4</span> Validación del modelo</a>
   <ul class="collapse">
   <li><a href="#incorrelación-homocedasticidad-y-normalidad" id="toc-incorrelación-homocedasticidad-y-normalidad" class="nav-link" data-scroll-target="#incorrelación-homocedasticidad-y-normalidad">Incorrelación, Homocedasticidad y Normalidad</a></li>
   <li><a href="#calidad-del-ajuste" id="toc-calidad-del-ajuste" class="nav-link" data-scroll-target="#calidad-del-ajuste">Calidad del ajuste</a></li>
   <li><a href="#calidad-de-las-predicciones" id="toc-calidad-de-las-predicciones" class="nav-link" data-scroll-target="#calidad-de-las-predicciones">Calidad de las predicciones</a></li>
   </ul></li>
-  <li><a href="#interpretación-del-modelo-estimado" id="toc-interpretación-del-modelo-estimado" class="nav-link" data-scroll-target="#interpretación-del-modelo-estimado"><span class="toc-section-number">5.5</span>  Interpretación del modelo estimado</a></li>
-  <li><a href="#predicción-del-número-de-pasajeros-en-transporte-urbano" id="toc-predicción-del-número-de-pasajeros-en-transporte-urbano" class="nav-link" data-scroll-target="#predicción-del-número-de-pasajeros-en-transporte-urbano"><span class="toc-section-number">5.6</span>  Predicción del número de pasajeros en transporte urbano</a></li>
+  <li><a href="#interpretación-del-modelo-estimado" id="toc-interpretación-del-modelo-estimado" class="nav-link" data-scroll-target="#interpretación-del-modelo-estimado"> <span class="header-section-number">5.5</span> Interpretación del modelo estimado</a></li>
+  <li><a href="#predicción-del-número-de-pasajeros-en-transporte-urbano" id="toc-predicción-del-número-de-pasajeros-en-transporte-urbano" class="nav-link" data-scroll-target="#predicción-del-número-de-pasajeros-en-transporte-urbano"> <span class="header-section-number">5.6</span> Predicción del número de pasajeros en transporte urbano</a></li>
   </ul></li>
-  <li><a href="#comparación-entre-modelos" id="toc-comparación-entre-modelos" class="nav-link" data-scroll-target="#comparación-entre-modelos"><span class="toc-section-number">6</span>  Comparación entre modelos</a></li>
-  <li><a href="#lista-de-funciones-utilizadas" id="toc-lista-de-funciones-utilizadas" class="nav-link" data-scroll-target="#lista-de-funciones-utilizadas"><span class="toc-section-number">7</span>  Lista de funciones utilizadas</a></li>
+  <li><a href="#comparación-entre-modelos" id="toc-comparación-entre-modelos" class="nav-link" data-scroll-target="#comparación-entre-modelos"> <span class="header-section-number">6</span> Comparación entre modelos</a></li>
+  <li><a href="#lista-de-funciones-utilizadas" id="toc-lista-de-funciones-utilizadas" class="nav-link" data-scroll-target="#lista-de-funciones-utilizadas"> <span class="header-section-number">7</span> Lista de funciones utilizadas</a></li>
   </ul>
 </nav>
     </div>
@@ -420,7 +413,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="fig-Pasajeros" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-11-Ejemplo-Pasajeros_files/figure-html/fig-Pasajeros-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;1: Pasajeros en transporte urbano (datos mensuales)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 1: Pasajeros en transporte urbano (datos mensuales)</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -461,7 +454,7 @@ Serie recortada
 <div id="fig-PasajerosTendencia" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-11-Ejemplo-Pasajeros_files/figure-html/fig-PasajerosTendencia-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;2: Pasajeros en transporte urbano (datos anuales)</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 2: Pasajeros en transporte urbano (datos anuales)</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -572,7 +565,7 @@ Serie recortada
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;3: Estacionalidad de la serie Pasajeros</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 3: Estacionalidad de la serie Pasajeros</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -600,7 +593,7 @@ Serie recortada
 <div id="fig-Esquema" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-11-Ejemplo-Pasajeros_files/figure-html/fig-Esquema-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;4: Identificación del tipo de esquema</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 4: Identificación del tipo de esquema</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -623,7 +616,7 @@ Serie recortada
 <div class="cell-output-display">
 <div id="tbl-EfectoEstacional" class="anchored">
 <table class="table table-sm table-striped">
-<caption>Tabla&nbsp;1: Efecto estacional</caption>
+<caption>Tabla 1: Efecto estacional</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;"></th>
@@ -728,7 +721,7 @@ Serie recortada
 <div id="fig-ErrorDescomposicion1" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-11-Ejemplo-Pasajeros_files/figure-html/fig-ErrorDescomposicion1-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;5: Error + Intervención. Descomposición de Pasajeros</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 5: Error + Intervención. Descomposición de Pasajeros</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -756,7 +749,7 @@ Serie recortada
 <div id="fig-ErrorDescomposicion2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-11-Ejemplo-Pasajeros_files/figure-html/fig-ErrorDescomposicion2-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;6: Error + Intervención. Descomposición de Pasajeros por día laborable</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 6: Error + Intervención. Descomposición de Pasajeros por día laborable</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -801,7 +794,7 @@ Training set 2.377978 10.96492 8.260812 0.9534372 3.509156    1 -0.01034773</cod
 <div id="fig-Sencillo" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-11-Ejemplo-Pasajeros_files/figure-html/fig-Sencillo-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;7: Pasajeros (1996-2019) y predicción (2020-2024). Método ingenuo con estacionalidad</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 7: Pasajeros (1996-2019) y predicción (2020-2024). Método ingenuo con estacionalidad</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -883,7 +876,7 @@ Training set -0.1434247</code></pre>
 <div id="fig-AlisadoComponente" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-11-Ejemplo-Pasajeros_files/figure-html/fig-AlisadoComponente-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;8: Componente estacional estimada con Alisado exponencial</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 8: Componente estacional estimada con Alisado exponencial</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -907,7 +900,7 @@ Training set -0.1434247</code></pre>
 <div id="fig-AlisadoPrediccion" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-11-Ejemplo-Pasajeros_files/figure-html/fig-AlisadoPrediccion-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;9: Pasajeros (1996-2019) y predicción (2020-2024). Método de Alisado Exponencial</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 9: Pasajeros (1996-2019) y predicción (2020-2024). Método de Alisado Exponencial</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -935,7 +928,7 @@ Training set -0.1434247</code></pre>
 <div id="fig-AlisadoError" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-11-Ejemplo-Pasajeros_files/figure-html/fig-AlisadoError-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;10: Error + Intervención. Método de Alisado Exponencial</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 10: Error + Intervención. Método de Alisado Exponencial</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1033,7 +1026,7 @@ Training set -0.1434247</code></pre>
 <div id="fig-AlisadoErrorOPM" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-11-Ejemplo-Pasajeros_files/figure-html/fig-AlisadoErrorOPM-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;11: Error de predicción (MAPE) según horizonte temporal y enfoque. Método de Alisado Exponencial</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 11: Error de predicción (MAPE) según horizonte temporal y enfoque. Método de Alisado Exponencial</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1108,7 +1101,7 @@ Training set -0.1434247</code></pre>
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figura&nbsp;12: FAC para Pasajeros</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 12: FAC para Pasajeros</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1135,7 +1128,7 @@ Training set -0.1434247</code></pre>
 <div id="fig-PasajerosyTransformacion" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-11-Ejemplo-Pasajeros_files/figure-html/fig-PasajerosyTransformacion-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;13: Serie original de Pasajeros y su transformación</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 13: Serie original de Pasajeros y su transformación</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1355,7 +1348,7 @@ AIC=-1420.51   AICc=-1419.97   BIC=-1391.58</code></pre>
 <div id="fig-PasajerosError1" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-11-Ejemplo-Pasajeros_files/figure-html/fig-PasajerosError1-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;14: Error + Intervención. Modelo ARIMA</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 14: Error + Intervención. Modelo ARIMA</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1410,7 +1403,7 @@ AIC=-1451.23   AICc=-1450.03   BIC=-1407.82</code></pre>
 <div id="fig-PasajerosError2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-11-Ejemplo-Pasajeros_files/figure-html/fig-PasajerosError2-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;15: Error + Intervención. Modelo ARIMA</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 15: Error + Intervención. Modelo ARIMA</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1433,7 +1426,7 @@ AIC=-1451.23   AICc=-1450.03   BIC=-1407.82</code></pre>
 <div class="cell-output-display">
 <div id="tbl-Significatividad" class="anchored">
 <table class="table table-sm table-striped">
-<caption>Tabla&nbsp;2: Contrastes de significatividad</caption>
+<caption>Tabla 2: Contrastes de significatividad</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Coeficiente</th>
@@ -1654,7 +1647,7 @@ Training set -0.05 3.72 2.92 0.01 1.26 0.35 0.02</code></pre>
 <div id="fig-PasajerosPrediccion" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-11-Ejemplo-Pasajeros_files/figure-html/fig-PasajerosPrediccion-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;16: Pasajeros (1996-2019) y predicción (2020-2024). Modelo ARIMA</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 16: Pasajeros (1996-2019) y predicción (2020-2024). Modelo ARIMA</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1693,7 +1686,7 @@ Training set -0.05 3.72 2.92 0.01 1.26 0.35 0.02</code></pre>
 <div id="fig-PasajerosComparacion" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-11-Ejemplo-Pasajeros_files/figure-html/fig-PasajerosComparacion-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;17: Error de predicción (MAPE) según horizonte temporal y enfoque</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 17: Error de predicción (MAPE) según horizonte temporal y enfoque</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1986,11 +1979,11 @@ Training set -0.05 3.72 2.92 0.01 1.26 0.35 0.02</code></pre>
 </section>
 
 
-<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+<div id="quarto-appendix" class="default"><section class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>Recordemos que hemos recortado la serie hasta 2019 y <em>vivimos en un mundo donde nada sabemos de la Covid-19</em>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>Realmente en 2020 el número de Pasajeros fue de 1682 millones, un 45% menos que en 2019.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1" role="doc-endnote"><p>Recordemos que hemos recortado la serie hasta 2019 y <em>vivimos en un mundo donde nada sabemos de la Covid-19</em>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Realmente en 2020 el número de Pasajeros fue de 1682 millones, un 45% menos que en 2019.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -2062,8 +2055,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      let href = ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);

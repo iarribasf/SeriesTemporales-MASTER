@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.189">
+<meta name="generator" content="quarto-1.0.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,15 +12,10 @@
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
-  vertical-align: middle;
-}
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -59,7 +54,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
+code span.bu { } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -72,7 +67,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.im { } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -143,11 +138,9 @@ div.csl-indent {
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
-    <a class="navbar-brand" href="./index.html">
+      <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Series Temporales</span>
-    </a>
-  </div>
+  </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -308,111 +301,111 @@ div.csl-indent {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc">
     <h2 id="toc-title">Índice</h2>
    
   <ul>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="toc-section-number">1</span>  Introducción</a></li>
-  <li><a href="#criterios-de-calidad" id="toc-criterios-de-calidad" class="nav-link" data-scroll-target="#criterios-de-calidad"><span class="toc-section-number">2</span>  Criterios de calidad</a>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"> <span class="header-section-number">1</span> Introducción</a></li>
+  <li><a href="#criterios-de-calidad" id="toc-criterios-de-calidad" class="nav-link" data-scroll-target="#criterios-de-calidad"> <span class="header-section-number">2</span> Criterios de calidad</a>
   <ul class="collapse">
-  <li><a href="#notación-y-definiciones" id="toc-notación-y-definiciones" class="nav-link" data-scroll-target="#notación-y-definiciones"><span class="toc-section-number">2.1</span>  Notación y definiciones</a></li>
-  <li><a href="#medidas-de-precisión-de-la-predicción" id="toc-medidas-de-precisión-de-la-predicción" class="nav-link" data-scroll-target="#medidas-de-precisión-de-la-predicción"><span class="toc-section-number">2.2</span>  Medidas de precisión de la predicción</a></li>
+  <li><a href="#notación-y-definiciones" id="toc-notación-y-definiciones" class="nav-link" data-scroll-target="#notación-y-definiciones"> <span class="header-section-number">2.1</span> Notación y definiciones</a></li>
+  <li><a href="#medidas-de-precisión-de-la-predicción" id="toc-medidas-de-precisión-de-la-predicción" class="nav-link" data-scroll-target="#medidas-de-precisión-de-la-predicción"> <span class="header-section-number">2.2</span> Medidas de precisión de la predicción</a></li>
   </ul></li>
-  <li><a href="#métodos-sencillos-de-predicción" id="toc-métodos-sencillos-de-predicción" class="nav-link" data-scroll-target="#métodos-sencillos-de-predicción"><span class="toc-section-number">3</span>  Métodos sencillos de predicción</a>
+  <li><a href="#métodos-sencillos-de-predicción" id="toc-métodos-sencillos-de-predicción" class="nav-link" data-scroll-target="#métodos-sencillos-de-predicción"> <span class="header-section-number">3</span> Métodos sencillos de predicción</a>
   <ul class="collapse">
-  <li><a href="#métodos-sencillos-de-predicción-1" id="toc-métodos-sencillos-de-predicción-1" class="nav-link" data-scroll-target="#métodos-sencillos-de-predicción-1"><span class="toc-section-number">3.1</span>  Métodos sencillos de predicción</a>
+  <li><a href="#métodos-sencillos-de-predicción-1" id="toc-métodos-sencillos-de-predicción-1" class="nav-link" data-scroll-target="#métodos-sencillos-de-predicción-1"> <span class="header-section-number">3.1</span> Métodos sencillos de predicción</a>
   <ul class="collapse">
   <li><a href="#series-sin-tendencia-y-sin-estacionalidad" id="toc-series-sin-tendencia-y-sin-estacionalidad" class="nav-link" data-scroll-target="#series-sin-tendencia-y-sin-estacionalidad">Series <em>sin</em> tendencia y <em>sin</em> estacionalidad</a></li>
   <li><a href="#series-con-tendencia-y-sin-estacionalidad" id="toc-series-con-tendencia-y-sin-estacionalidad" class="nav-link" data-scroll-target="#series-con-tendencia-y-sin-estacionalidad">Series <em>con</em> tendencia y <em>sin</em> estacionalidad</a></li>
   <li><a href="#series-sin-tendencia-y-con-estacionalidad" id="toc-series-sin-tendencia-y-con-estacionalidad" class="nav-link" data-scroll-target="#series-sin-tendencia-y-con-estacionalidad">Series <em>sin</em> tendencia y <em>con</em> estacionalidad</a></li>
   </ul></li>
-  <li><a href="#ejemplo-de-aplicación" id="toc-ejemplo-de-aplicación" class="nav-link" data-scroll-target="#ejemplo-de-aplicación"><span class="toc-section-number">3.2</span>  Ejemplo de aplicación</a>
+  <li><a href="#ejemplo-de-aplicación" id="toc-ejemplo-de-aplicación" class="nav-link" data-scroll-target="#ejemplo-de-aplicación"> <span class="header-section-number">3.2</span> Ejemplo de aplicación</a>
   <ul class="collapse">
   <li><a href="#serie-libros" id="toc-serie-libros" class="nav-link" data-scroll-target="#serie-libros">Serie Libros</a></li>
   <li><a href="#serie-nacimientos" id="toc-serie-nacimientos" class="nav-link" data-scroll-target="#serie-nacimientos">Serie Nacimientos</a></li>
   <li><a href="#serie-demanda-eléctrica" id="toc-serie-demanda-eléctrica" class="nav-link" data-scroll-target="#serie-demanda-eléctrica">Serie Demanda eléctrica</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#evaluación-de-las-predicciones" id="toc-evaluación-de-las-predicciones" class="nav-link" data-scroll-target="#evaluación-de-las-predicciones"><span class="toc-section-number">4</span>  Evaluación de las predicciones</a>
+  <li><a href="#evaluación-de-las-predicciones" id="toc-evaluación-de-las-predicciones" class="nav-link" data-scroll-target="#evaluación-de-las-predicciones"> <span class="header-section-number">4</span> Evaluación de las predicciones</a>
   <ul class="collapse">
-  <li><a href="#validación-por-la-metodología-de-training-settest-set-para-series-temporales" id="toc-validación-por-la-metodología-de-training-settest-set-para-series-temporales" class="nav-link" data-scroll-target="#validación-por-la-metodología-de-training-settest-set-para-series-temporales"><span class="toc-section-number">4.1</span>  Validación por la metodología de <em>Training set/Test set</em> para Series Temporales</a>
+  <li><a href="#validación-por-la-metodología-de-training-settest-set-para-series-temporales" id="toc-validación-por-la-metodología-de-training-settest-set-para-series-temporales" class="nav-link" data-scroll-target="#validación-por-la-metodología-de-training-settest-set-para-series-temporales"> <span class="header-section-number">4.1</span> Validación por la metodología de <em>Training set/Test set</em> para Series Temporales</a>
   <ul class="collapse">
   <li><a href="#serie-libros-1" id="toc-serie-libros-1" class="nav-link" data-scroll-target="#serie-libros-1">Serie Libros</a></li>
   <li><a href="#serie-nacimientos-1" id="toc-serie-nacimientos-1" class="nav-link" data-scroll-target="#serie-nacimientos-1">Serie Nacimientos</a></li>
   <li><a href="#serie-demanda-eléctrica-1" id="toc-serie-demanda-eléctrica-1" class="nav-link" data-scroll-target="#serie-demanda-eléctrica-1">Serie Demanda eléctrica</a></li>
   </ul></li>
-  <li><a href="#validación-cruzada-para-series-temporales" id="toc-validación-cruzada-para-series-temporales" class="nav-link" data-scroll-target="#validación-cruzada-para-series-temporales"><span class="toc-section-number">4.2</span>  Validación cruzada para Series Temporales</a>
+  <li><a href="#validación-cruzada-para-series-temporales" id="toc-validación-cruzada-para-series-temporales" class="nav-link" data-scroll-target="#validación-cruzada-para-series-temporales"> <span class="header-section-number">4.2</span> Validación cruzada para Series Temporales</a>
   <ul class="collapse">
   <li><a href="#ejemplo-de-aplicación-con-nacimientos" id="toc-ejemplo-de-aplicación-con-nacimientos" class="nav-link" data-scroll-target="#ejemplo-de-aplicación-con-nacimientos">Ejemplo de aplicación con Nacimientos</a></li>
   <li><a href="#ejemplo-de-aplicación-con-demanda-eléctrica" id="toc-ejemplo-de-aplicación-con-demanda-eléctrica" class="nav-link" data-scroll-target="#ejemplo-de-aplicación-con-demanda-eléctrica">Ejemplo de aplicación con Demanda eléctrica</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#métodos-de-alisado-exponencial" id="toc-métodos-de-alisado-exponencial" class="nav-link" data-scroll-target="#métodos-de-alisado-exponencial"><span class="toc-section-number">5</span>  Métodos de Alisado Exponencial</a>
+  <li><a href="#métodos-de-alisado-exponencial" id="toc-métodos-de-alisado-exponencial" class="nav-link" data-scroll-target="#métodos-de-alisado-exponencial"> <span class="header-section-number">5</span> Métodos de Alisado Exponencial</a>
   <ul class="collapse">
-  <li><a href="#introducción-1" id="toc-introducción-1" class="nav-link" data-scroll-target="#introducción-1"><span class="toc-section-number">5.1</span>  Introducción</a></li>
-  <li><a href="#componentes-de-una-serie-en-el-contexto-del-alisado-exponencial" id="toc-componentes-de-una-serie-en-el-contexto-del-alisado-exponencial" class="nav-link" data-scroll-target="#componentes-de-una-serie-en-el-contexto-del-alisado-exponencial"><span class="toc-section-number">5.2</span>  Componentes de una serie en el contexto del alisado exponencial</a></li>
-  <li><a href="#casos-posibles" id="toc-casos-posibles" class="nav-link" data-scroll-target="#casos-posibles"><span class="toc-section-number">5.3</span>  Casos posibles</a>
+  <li><a href="#introducción-1" id="toc-introducción-1" class="nav-link" data-scroll-target="#introducción-1"> <span class="header-section-number">5.1</span> Introducción</a></li>
+  <li><a href="#componentes-de-una-serie-en-el-contexto-del-alisado-exponencial" id="toc-componentes-de-una-serie-en-el-contexto-del-alisado-exponencial" class="nav-link" data-scroll-target="#componentes-de-una-serie-en-el-contexto-del-alisado-exponencial"> <span class="header-section-number">5.2</span> Componentes de una serie en el contexto del alisado exponencial</a></li>
+  <li><a href="#casos-posibles" id="toc-casos-posibles" class="nav-link" data-scroll-target="#casos-posibles"> <span class="header-section-number">5.3</span> Casos posibles</a>
   <ul class="collapse">
   <li><a href="#las-funciones-ets-y-forecast" id="toc-las-funciones-ets-y-forecast" class="nav-link" data-scroll-target="#las-funciones-ets-y-forecast">Las funciones <code>ets</code> y <code>forecast</code></a></li>
   </ul></li>
-  <li><a href="#alisado-exponencial-simple-a-n-n" id="toc-alisado-exponencial-simple-a-n-n" class="nav-link" data-scroll-target="#alisado-exponencial-simple-a-n-n"><span class="toc-section-number">5.4</span>  Alisado exponencial simple (A, N, N)</a>
+  <li><a href="#alisado-exponencial-simple-a-n-n" id="toc-alisado-exponencial-simple-a-n-n" class="nav-link" data-scroll-target="#alisado-exponencial-simple-a-n-n"> <span class="header-section-number">5.4</span> Alisado exponencial simple (A, N, N)</a>
   <ul class="collapse">
   <li><a href="#definición" id="toc-definición" class="nav-link" data-scroll-target="#definición">Definición</a></li>
   <li><a href="#formulas-interactivas-de-sus-componentes" id="toc-formulas-interactivas-de-sus-componentes" class="nav-link" data-scroll-target="#formulas-interactivas-de-sus-componentes">Formulas interactivas de sus componentes</a></li>
   <li><a href="#estimación-de-los-parámetros-del-modelo" id="toc-estimación-de-los-parámetros-del-modelo" class="nav-link" data-scroll-target="#estimación-de-los-parámetros-del-modelo">Estimación de los parámetros del modelo</a></li>
   <li><a href="#ejemplo" id="toc-ejemplo" class="nav-link" data-scroll-target="#ejemplo">Ejemplo</a></li>
   </ul></li>
-  <li><a href="#alisado-exponencial-de-holt-a-a-n" id="toc-alisado-exponencial-de-holt-a-a-n" class="nav-link" data-scroll-target="#alisado-exponencial-de-holt-a-a-n"><span class="toc-section-number">5.5</span>  Alisado exponencial de Holt (A, A, N)</a>
+  <li><a href="#alisado-exponencial-de-holt-a-a-n" id="toc-alisado-exponencial-de-holt-a-a-n" class="nav-link" data-scroll-target="#alisado-exponencial-de-holt-a-a-n"> <span class="header-section-number">5.5</span> Alisado exponencial de Holt (A, A, N)</a>
   <ul class="collapse">
   <li><a href="#formulas-interactivas-de-sus-componentes-1" id="toc-formulas-interactivas-de-sus-componentes-1" class="nav-link" data-scroll-target="#formulas-interactivas-de-sus-componentes-1">Formulas interactivas de sus componentes</a></li>
   <li><a href="#estimación-de-los-parámetros-del-modelo-1" id="toc-estimación-de-los-parámetros-del-modelo-1" class="nav-link" data-scroll-target="#estimación-de-los-parámetros-del-modelo-1">Estimación de los parámetros del modelo</a></li>
   <li><a href="#ejemplo-1" id="toc-ejemplo-1" class="nav-link" data-scroll-target="#ejemplo-1">Ejemplo</a></li>
   </ul></li>
-  <li><a href="#alisado-exponencial-con-pendiente-amortiguada-a-ad-n" id="toc-alisado-exponencial-con-pendiente-amortiguada-a-ad-n" class="nav-link" data-scroll-target="#alisado-exponencial-con-pendiente-amortiguada-a-ad-n"><span class="toc-section-number">5.6</span>  Alisado exponencial con pendiente amortiguada (A, Ad, N)</a>
+  <li><a href="#alisado-exponencial-con-pendiente-amortiguada-a-ad-n" id="toc-alisado-exponencial-con-pendiente-amortiguada-a-ad-n" class="nav-link" data-scroll-target="#alisado-exponencial-con-pendiente-amortiguada-a-ad-n"> <span class="header-section-number">5.6</span> Alisado exponencial con pendiente amortiguada (A, Ad, N)</a>
   <ul class="collapse">
   <li><a href="#formulas-interactivas-de-sus-componentes-2" id="toc-formulas-interactivas-de-sus-componentes-2" class="nav-link" data-scroll-target="#formulas-interactivas-de-sus-componentes-2">Formulas interactivas de sus componentes</a></li>
   <li><a href="#ejemplo-2" id="toc-ejemplo-2" class="nav-link" data-scroll-target="#ejemplo-2">Ejemplo</a></li>
   </ul></li>
-  <li><a href="#alisado-de-holt-winters-aditivo-a-a-a-y-multiplicativo-m-a-m" id="toc-alisado-de-holt-winters-aditivo-a-a-a-y-multiplicativo-m-a-m" class="nav-link" data-scroll-target="#alisado-de-holt-winters-aditivo-a-a-a-y-multiplicativo-m-a-m"><span class="toc-section-number">5.7</span>  Alisado de Holt-Winters aditivo (A, A, A) y multiplicativo (M, A, M)</a>
+  <li><a href="#alisado-de-holt-winters-aditivo-a-a-a-y-multiplicativo-m-a-m" id="toc-alisado-de-holt-winters-aditivo-a-a-a-y-multiplicativo-m-a-m" class="nav-link" data-scroll-target="#alisado-de-holt-winters-aditivo-a-a-a-y-multiplicativo-m-a-m"> <span class="header-section-number">5.7</span> Alisado de Holt-Winters aditivo (A, A, A) y multiplicativo (M, A, M)</a>
   <ul class="collapse">
   <li><a href="#alisado-de-holt-winters-aditivo-a-a-a" id="toc-alisado-de-holt-winters-aditivo-a-a-a" class="nav-link" data-scroll-target="#alisado-de-holt-winters-aditivo-a-a-a">Alisado de Holt-Winters aditivo (A, A, A)</a></li>
   <li><a href="#alisado-de-holt-winters-multiplicativo-m-a-m" id="toc-alisado-de-holt-winters-multiplicativo-m-a-m" class="nav-link" data-scroll-target="#alisado-de-holt-winters-multiplicativo-m-a-m">Alisado de Holt-Winters multiplicativo (M, A, M)</a></li>
   <li><a href="#ejemplo-con-demanda-electrica" id="toc-ejemplo-con-demanda-electrica" class="nav-link" data-scroll-target="#ejemplo-con-demanda-electrica">Ejemplo con Demanda electrica</a></li>
   <li><a href="#ejemplo-con-nacimientos" id="toc-ejemplo-con-nacimientos" class="nav-link" data-scroll-target="#ejemplo-con-nacimientos">Ejemplo con Nacimientos</a></li>
   </ul></li>
-  <li><a href="#ejemplo-con-transformación-logarítmica" id="toc-ejemplo-con-transformación-logarítmica" class="nav-link" data-scroll-target="#ejemplo-con-transformación-logarítmica"><span class="toc-section-number">5.8</span>  Ejemplo con transformación logarítmica</a></li>
-  <li><a href="#casos-generales-de-alisado-exponencial-la-función-ets-de-nuevo" id="toc-casos-generales-de-alisado-exponencial-la-función-ets-de-nuevo" class="nav-link" data-scroll-target="#casos-generales-de-alisado-exponencial-la-función-ets-de-nuevo"><span class="toc-section-number">5.9</span>  Casos generales de alisado exponencial: la función <code>ets</code> (de nuevo)</a>
+  <li><a href="#ejemplo-con-transformación-logarítmica" id="toc-ejemplo-con-transformación-logarítmica" class="nav-link" data-scroll-target="#ejemplo-con-transformación-logarítmica"> <span class="header-section-number">5.8</span> Ejemplo con transformación logarítmica</a></li>
+  <li><a href="#casos-generales-de-alisado-exponencial-la-función-ets-de-nuevo" id="toc-casos-generales-de-alisado-exponencial-la-función-ets-de-nuevo" class="nav-link" data-scroll-target="#casos-generales-de-alisado-exponencial-la-función-ets-de-nuevo"> <span class="header-section-number">5.9</span> Casos generales de alisado exponencial: la función <code>ets</code> (de nuevo)</a>
   <ul class="collapse">
   <li><a href="#criterios-de-optimización" id="toc-criterios-de-optimización" class="nav-link" data-scroll-target="#criterios-de-optimización">Criterios de optimización</a></li>
   <li><a href="#criterios-de-selección-de-modelos" id="toc-criterios-de-selección-de-modelos" class="nav-link" data-scroll-target="#criterios-de-selección-de-modelos">Criterios de selección de modelos</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#residuo-de-un-modelo" id="toc-residuo-de-un-modelo" class="nav-link" data-scroll-target="#residuo-de-un-modelo"><span class="toc-section-number">6</span>  Residuo de un modelo</a></li>
-  <li><a href="#ejemplos-de-aplicación" id="toc-ejemplos-de-aplicación" class="nav-link" data-scroll-target="#ejemplos-de-aplicación"><span class="toc-section-number">7</span>  Ejemplos de aplicación</a>
+  <li><a href="#residuo-de-un-modelo" id="toc-residuo-de-un-modelo" class="nav-link" data-scroll-target="#residuo-de-un-modelo"> <span class="header-section-number">6</span> Residuo de un modelo</a></li>
+  <li><a href="#ejemplos-de-aplicación" id="toc-ejemplos-de-aplicación" class="nav-link" data-scroll-target="#ejemplos-de-aplicación"> <span class="header-section-number">7</span> Ejemplos de aplicación</a>
   <ul class="collapse">
-  <li><a href="#libros" id="toc-libros" class="nav-link" data-scroll-target="#libros"><span class="toc-section-number">7.1</span>  Libros</a>
+  <li><a href="#libros" id="toc-libros" class="nav-link" data-scroll-target="#libros"> <span class="header-section-number">7.1</span> Libros</a>
   <ul class="collapse">
   <li><a href="#identificación-y-estimación-del-mejor-modelo" id="toc-identificación-y-estimación-del-mejor-modelo" class="nav-link" data-scroll-target="#identificación-y-estimación-del-mejor-modelo">Identificación y estimación del mejor modelo</a></li>
   <li><a href="#predicción" id="toc-predicción" class="nav-link" data-scroll-target="#predicción">Predicción</a></li>
   <li><a href="#análisis-del-residuo" id="toc-análisis-del-residuo" class="nav-link" data-scroll-target="#análisis-del-residuo">Análisis del residuo</a></li>
   <li><a href="#validación-error-extramuestral-a-varios-periodos-vista" id="toc-validación-error-extramuestral-a-varios-periodos-vista" class="nav-link" data-scroll-target="#validación-error-extramuestral-a-varios-periodos-vista">Validación: error extramuestral a varios periodos vista</a></li>
   </ul></li>
-  <li><a href="#nacimientos" id="toc-nacimientos" class="nav-link" data-scroll-target="#nacimientos"><span class="toc-section-number">7.2</span>  Nacimientos</a>
+  <li><a href="#nacimientos" id="toc-nacimientos" class="nav-link" data-scroll-target="#nacimientos"> <span class="header-section-number">7.2</span> Nacimientos</a>
   <ul class="collapse">
   <li><a href="#identificación-y-estimación-del-mejor-modelo-1" id="toc-identificación-y-estimación-del-mejor-modelo-1" class="nav-link" data-scroll-target="#identificación-y-estimación-del-mejor-modelo-1">Identificación y estimación del mejor modelo</a></li>
   <li><a href="#predicción-1" id="toc-predicción-1" class="nav-link" data-scroll-target="#predicción-1">Predicción</a></li>
   <li><a href="#análisis-del-error" id="toc-análisis-del-error" class="nav-link" data-scroll-target="#análisis-del-error">Análisis del error</a></li>
   <li><a href="#validación-error-extramuestral-según-horizonte-temporal" id="toc-validación-error-extramuestral-según-horizonte-temporal" class="nav-link" data-scroll-target="#validación-error-extramuestral-según-horizonte-temporal">Validación: error extramuestral según horizonte temporal</a></li>
   </ul></li>
-  <li><a href="#demanda-eléctrica" id="toc-demanda-eléctrica" class="nav-link" data-scroll-target="#demanda-eléctrica"><span class="toc-section-number">7.3</span>  Demanda eléctrica</a>
+  <li><a href="#demanda-eléctrica" id="toc-demanda-eléctrica" class="nav-link" data-scroll-target="#demanda-eléctrica"> <span class="header-section-number">7.3</span> Demanda eléctrica</a>
   <ul class="collapse">
   <li><a href="#identificación-y-estimación-del-mejor-modelo-2" id="toc-identificación-y-estimación-del-mejor-modelo-2" class="nav-link" data-scroll-target="#identificación-y-estimación-del-mejor-modelo-2">Identificación y estimación del mejor modelo</a></li>
   <li><a href="#predicción-2" id="toc-predicción-2" class="nav-link" data-scroll-target="#predicción-2">Predicción</a></li>
   <li><a href="#análisis-del-error-1" id="toc-análisis-del-error-1" class="nav-link" data-scroll-target="#análisis-del-error-1">Análisis del error</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#otras-alternativas-para-ajustar-un-modelo-y-predecir" id="toc-otras-alternativas-para-ajustar-un-modelo-y-predecir" class="nav-link" data-scroll-target="#otras-alternativas-para-ajustar-un-modelo-y-predecir"><span class="toc-section-number">8</span>  Otras alternativas para ajustar un modelo y predecir</a></li>
-  <li><a href="#resumen-de-los-comandos-utilizados" id="toc-resumen-de-los-comandos-utilizados" class="nav-link" data-scroll-target="#resumen-de-los-comandos-utilizados"><span class="toc-section-number">9</span>  Resumen de los comandos utilizados</a></li>
+  <li><a href="#otras-alternativas-para-ajustar-un-modelo-y-predecir" id="toc-otras-alternativas-para-ajustar-un-modelo-y-predecir" class="nav-link" data-scroll-target="#otras-alternativas-para-ajustar-un-modelo-y-predecir"> <span class="header-section-number">8</span> Otras alternativas para ajustar un modelo y predecir</a></li>
+  <li><a href="#resumen-de-los-comandos-utilizados" id="toc-resumen-de-los-comandos-utilizados" class="nav-link" data-scroll-target="#resumen-de-los-comandos-utilizados"> <span class="header-section-number">9</span> Resumen de los comandos utilizados</a></li>
   </ul>
 </nav>
     </div>
@@ -670,7 +663,7 @@ div.csl-indent {
 <div id="fig-librossencillos" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-librossencillos-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;1: Libros y predicción por métodos sencillos</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 1: Libros y predicción por métodos sencillos</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -751,7 +744,7 @@ Training set -588.3163 1721.42 1389.544 -1.512298 3.647559    1 0.7170624</code>
 <div id="fig-nacimientossencillo" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-nacimientossencillo-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;2: Nacimientos y predicción por el método Ingenuo con estacionalidad</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 2: Nacimientos y predicción por el método Ingenuo con estacionalidad</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -783,7 +776,7 @@ Training set -2.117489 42.99794 27.93245 -0.4964111 4.000218    1 0.7096965</cod
 <div id="fig-electricidadsencillo" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-electricidadsencillo-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;3: Demanda eléctrica y predicción por el método Ingenuo con estacionalidad</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 3: Demanda eléctrica y predicción por el método Ingenuo con estacionalidad</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -839,7 +832,7 @@ Test set     -15817.32 15867.44 15817.32 -26.44 26.44 3.23 -0.21       6.4</code
 <div id="fig-librostraintest" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-librostraintest-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;4: Libros, predicción intra y extramuestral</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 4: Libros, predicción intra y extramuestral</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -881,7 +874,7 @@ Test set     -2926.75 3221.74 2926.75 -9.57 9.57 2.11 0.69      1.89</code></pre
 <div id="fig-nacimientostraintest" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-nacimientostraintest-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;5: Nacimientos, predicción intra y extramuestral</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 5: Nacimientos, predicción intra y extramuestral</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -934,7 +927,7 @@ Test set     59.30 86.23 73.54  7.82 10.14 2.93 0.48      1.55</code></pre>
 <div id="fig-rollingwindows" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="./imagenes/RollingWindows.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;6: Descripción del proceso de origen de predicción móvil</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 6: Descripción del proceso de origen de predicción móvil</figcaption><p></p>
 </figure>
 </div>
 <p>Este procedimiento se denomina <strong>origen de predicción móvil</strong> (<em>rolling forecast origin</em>) o <em>rolling windows</em>.</p>
@@ -1044,7 +1037,7 @@ s_t&amp; = f_s(y_t,y_{t-1}\ldots, l_{t},l_{t-1}\ldots,b_{t},b_{t-1}\ldots,s_{t-1
 <p>Todas las series tiene nivel, pero dependiendo del tipo de pendiente y estacionalidad hay 15 casos posibles, mostrados en la <a href="#tbl-taxonomia">Tabla&nbsp;1</a>.</p>
 <div id="tbl-taxonomia" class="anchored">
 <table class="table">
-<caption>Tabla&nbsp;1: Casos de alisado según el tipo de tendencia y estacionalidad</caption>
+<caption>Tabla 1: Casos de alisado según el tipo de tendencia y estacionalidad</caption>
 <colgroup>
 <col style="width: 26%">
 <col style="width: 24%">
@@ -1135,8 +1128,10 @@ s_t&amp; = f_s(y_t,y_{t-1}\ldots, l_{t},l_{t-1}\ldots,b_{t},b_{t-1}\ldots,s_{t-1
 <h3 class="unnumbered anchored" data-anchor-id="definición">Definición</h3>
 <p>El alisado exponencial simple es adecuado para una serie estacionaria y sin estacionalidad. Es decir, una serie que se mueve alrededor de un nivel constante.</p>
 <p>La ecuación de la <strong>predicción intramuestral</strong> es</p>
-<p><span class="math display">\[\widehat{y}_{t+1} = \alpha y_t + \alpha (1-\alpha) y_{t-1} + \alpha (1-\alpha)^2 y_{t-2} + \alpha (1-\alpha)^3 y_{t-3} + \ldots =  \alpha y_t + (1-\alpha)\widehat{y}_{t},\]</span> donde <span class="math inline">\(0 \leq \alpha \leq 1\)</span> es el parámetro de suavizado. La primera <strong>predicción extramuestral</strong> queda</p>
-<p><span class="math display">\[\widehat{y}_{T+1}=\alpha y_T + (1-\alpha)\widehat{y}_{T}\]</span> y para las restantes</p>
+<p><span class="math display">\[\widehat{y}_{t+1} = \alpha y_t + \alpha (1-\alpha) y_{t-1} + \alpha (1-\alpha)^2 y_{t-2} + \alpha (1-\alpha)^3 y_{t-3} + \ldots =  \alpha y_t + (1-\alpha)\widehat{y}_{t},\]</span></p>
+<p>donde <span class="math inline">\(0 \leq \alpha \leq 1\)</span> es el parámetro de suavizado. La primera <strong>predicción extramuestral</strong> queda</p>
+<p><span class="math display">\[\widehat{y}_{T+1}=\alpha y_T + (1-\alpha)\widehat{y}_{T}\]</span></p>
+<p>y para las restantes</p>
 <p><span class="math display">\[\widehat{y}_{T+h} = \widehat{y}_{T+1}.\]</span></p>
 <p><br>
 </p>
@@ -1251,7 +1246,7 @@ Frequency = 1
 <div id="fig-electricidadANN" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-electricidadANN-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;7: Consumo semanal de electricidad (febrero a mayo 2021) y predicción con alisado simple</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 7: Consumo semanal de electricidad (febrero a mayo 2021) y predicción con alisado simple</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1382,7 +1377,7 @@ Frequency = 1
 <div id="fig-librosAAN" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-librosAAN-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;8: Libros y predicción con alisado de Holt</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 8: Libros y predicción con alisado de Holt</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1492,7 +1487,7 @@ Parámetros estimados
 <div id="fig-librosAAdN" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-librosAAdN-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;9: Libros y predicción con alisado exponencial con amortiguamiento</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 9: Libros y predicción con alisado exponencial con amortiguamiento</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1517,8 +1512,10 @@ s_t &amp; =\gamma (y_t - l_{t-1} - b_{t-1}) + (1 - \gamma)s_{t-m}
 \end{aligned}\]</span>
 <p>con <span class="math inline">\(0 \leq \alpha, \beta, \gamma \leq 1\)</span>.</p>
 <p>La ecuación de la <strong>predicción intramuestral</strong> a un periodo vista es</p>
-<p><span class="math display">\[\widehat{y}_{t+1}  = l_t + b_t + s_{t+1-m},\]</span> de forma que la ecuación de <strong>predicción extramuestral es</strong>:</p>
-<p><span class="math display">\[\widehat{y}_{T+h}=l_T + h b_T + s_{T+h - m(k+1)},\]</span> con <span class="math inline">\(k = \lfloor(h-1)/m\rfloor\)</span>.</p>
+<p><span class="math display">\[\widehat{y}_{t+1}  = l_t + b_t + s_{t+1-m},\]</span></p>
+<p>de forma que la ecuación de <strong>predicción extramuestral es</strong>:</p>
+<p><span class="math display">\[\widehat{y}_{T+h}=l_T + h b_T + s_{T+h - m(k+1)},\]</span></p>
+<p>con <span class="math inline">\(k = \lfloor(h-1)/m\rfloor\)</span>.</p>
 <p><br>
 </p>
 </section>
@@ -1635,7 +1632,7 @@ Training set 0.03820125</code></pre>
 <div id="fig-electricidadAAA" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-electricidadAAA-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;10: Demanda eléctrica y predicción con alisado de Holt-Winters aditivo</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 10: Demanda eléctrica y predicción con alisado de Holt-Winters aditivo</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1756,7 +1753,7 @@ Dec 2021       27478.84 20726.54 34231.15</code></pre>
 <div id="fig-nacimientosMAM" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-nacimientosMAM-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;11: Nacimientos y predicción con alisado de Holt-Winters multiplicativo</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 11: Nacimientos y predicción con alisado de Holt-Winters multiplicativo</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1853,7 +1850,7 @@ Dec 2021       27620.71 23108.37 32754.26</code></pre>
 <div id="fig-nacimientoslog" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-nacimientoslog-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;12: Nacimientos y dos predicciones con alisado de Holt-Winters</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 12: Nacimientos y dos predicciones con alisado de Holt-Winters</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1863,7 +1860,7 @@ Dec 2021       27620.71 23108.37 32754.26</code></pre>
 <div class="cell-output-display">
 <div id="tbl-nacimientoslog" class="anchored">
 <table class="table table-sm table-striped">
-<caption>Tabla&nbsp;2: Diferencias en la predicción según transformación logarítmica y corrección por sesgo</caption>
+<caption>Tabla 2: Diferencias en la predicción según transformación logarítmica y corrección por sesgo</caption>
 <thead>
 <tr class="header">
 <th style="text-align: right;">Sin transformar</th>
@@ -2069,7 +2066,7 @@ Training set 877.6729 5798.394 4367.896 1.318359 6.900756 0.9654123 -0.03788908<
 <div id="fig-librosETSLibre" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-librosETSLibre-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;13: Libros y predicción a 5 años vista</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 13: Libros y predicción a 5 años vista</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -2094,7 +2091,7 @@ Training set 877.6729 5798.394 4367.896 1.318359 6.900756 0.9654123 -0.03788908<
 <div id="fig-librosError" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-librosError-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;14: Error + Intervención</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 14: Error + Intervención</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -2144,7 +2141,7 @@ Test set      0.08397051  1.881683</code></pre>
 <div id="fig-librosTSTS" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-librosTSTS-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;15: Libros, predicción intra y extramuestral</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 15: Libros, predicción intra y extramuestral</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -2201,7 +2198,7 @@ Training set -0.01404832</code></pre>
 <div id="fig-nacimientoscomponentes" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-nacimientoscomponentes-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;16: Componentes del modelo óptimo para Nacimientos</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 16: Componentes del modelo óptimo para Nacimientos</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -2263,7 +2260,7 @@ May 2020       29160.49 27434.66 30886.32</code></pre>
 <div id="fig-nacimientosPrediccion" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-nacimientosPrediccion-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;17: Nacimientos y predicción</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 17: Nacimientos y predicción</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -2288,7 +2285,7 @@ May 2020       29160.49 27434.66 30886.32</code></pre>
 <div id="fig-NacimientosError" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-NacimientosError-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;18: Error + Intervención</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 18: Error + Intervención</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -2331,7 +2328,7 @@ May 2020       29160.49 27434.66 30886.32</code></pre>
 <div id="fig-NacimientosErrorRW" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-NacimientosErrorRW-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;19: Error de predicción según horizonte temporal</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 19: Error de predicción según horizonte temporal</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -2434,7 +2431,7 @@ Training set 0.04689494</code></pre>
 <div id="fig-electricidadPrediccion" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-electricidadPrediccion-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;20: Demanda eléctrica y predicción</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 20: Demanda eléctrica y predicción</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -2458,7 +2455,7 @@ Training set 0.04689494</code></pre>
 <div id="fig-NacimientosError2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-02-Tema2_files/figure-html/fig-NacimientosError2-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;21: Error + Intervención</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 21: Error + Intervención</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -2655,11 +2652,11 @@ Makridakis, Spyros, and Michèle Hibon. 2000. <span>“The M3-Competition: Resul
 <div id="ref-Winters60" class="csl-entry" role="doc-biblioentry">
 Winters, Peter R. 1960. <span>“Forecasting Sales by Exponentially Weighted Moving Averages.”</span> <em>Management Science</em> 6 (3): 324–42. <a href="https://doi.org/10.1287/mnsc.6.3.324">https://doi.org/10.1287/mnsc.6.3.324</a>.
 </div>
-</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+</div></section><section class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>Formalmente en el modelo de Holt-Winters multiplicativo el error es aditivo. Es decir, debería ser <code>model = "AAM"</code>. Este modelo se puede estimar mediante la función <code>hw</code> que replica fielmente el modelo definido en su momento por Holt y Winters. Sin embargo, al usar la función <code>ets</code>, que posibilita el cálculo de intervalos de confianza para las predicciones, no es factible estimar un modelo con estacionalidad multiplicativa y error aditivo. Por este motivo se fija <code>model = "MAM"</code>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>Una forma sencilla de identificar donde están los valores atípicos es mediante el comando <code>abs(error) &gt; 3 * sderror</code> que devuelve una tabla de FALSE y TRUE, donde TRUE identifica las fechas con errores que superan las 3 desviaciones típicas. El comando <code>time(error)[abs(error) &gt; 3 * sderror]</code> devuelve solo las fechas asociadas a errores atípicos. El valor de 3 es uno de los posibles y debe ajustarse a las características de la serie y el análisis.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1" role="doc-endnote"><p>Formalmente en el modelo de Holt-Winters multiplicativo el error es aditivo. Es decir, debería ser <code>model = "AAM"</code>. Este modelo se puede estimar mediante la función <code>hw</code> que replica fielmente el modelo definido en su momento por Holt y Winters. Sin embargo, al usar la función <code>ets</code>, que posibilita el cálculo de intervalos de confianza para las predicciones, no es factible estimar un modelo con estacionalidad multiplicativa y error aditivo. Por este motivo se fija <code>model = "MAM"</code>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Una forma sencilla de identificar donde están los valores atípicos es mediante el comando <code>abs(error) &gt; 3 * sderror</code> que devuelve una tabla de FALSE y TRUE, donde TRUE identifica las fechas con errores que superan las 3 desviaciones típicas. El comando <code>time(error)[abs(error) &gt; 3 * sderror]</code> devuelve solo las fechas asociadas a errores atípicos. El valor de 3 es uno de los posibles y debe ajustarse a las características de la serie y el análisis.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -2731,8 +2728,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      let href = ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);

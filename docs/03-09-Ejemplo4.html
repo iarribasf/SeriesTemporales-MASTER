@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.189">
+<meta name="generator" content="quarto-1.0.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,15 +12,10 @@
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
-  vertical-align: middle;
-}
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -59,7 +54,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
+code span.bu { } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -72,7 +67,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.im { } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -124,11 +119,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
-    <a class="navbar-brand" href="./index.html">
+      <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Series Temporales</span>
-    </a>
-  </div>
+  </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -289,23 +282,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc">
     <h2 id="toc-title">Índice</h2>
    
   <ul>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="toc-section-number">1</span>  Introducción</a></li>
-  <li><a href="#transformación-de-la-serie" id="toc-transformación-de-la-serie" class="nav-link" data-scroll-target="#transformación-de-la-serie"><span class="toc-section-number">2</span>  Transformación de la serie</a></li>
-  <li><a href="#identificación" id="toc-identificación" class="nav-link" data-scroll-target="#identificación"><span class="toc-section-number">3</span>  Identificación</a></li>
-  <li><a href="#validación" id="toc-validación" class="nav-link" data-scroll-target="#validación"><span class="toc-section-number">4</span>  Validación</a>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"> <span class="header-section-number">1</span> Introducción</a></li>
+  <li><a href="#transformación-de-la-serie" id="toc-transformación-de-la-serie" class="nav-link" data-scroll-target="#transformación-de-la-serie"> <span class="header-section-number">2</span> Transformación de la serie</a></li>
+  <li><a href="#identificación" id="toc-identificación" class="nav-link" data-scroll-target="#identificación"> <span class="header-section-number">3</span> Identificación</a></li>
+  <li><a href="#validación" id="toc-validación" class="nav-link" data-scroll-target="#validación"> <span class="header-section-number">4</span> Validación</a>
   <ul class="collapse">
   <li><a href="#coeficientes-son-significativos" id="toc-coeficientes-son-significativos" class="nav-link" data-scroll-target="#coeficientes-son-significativos">Coeficientes son significativos</a></li>
   <li><a href="#medidas-de-error" id="toc-medidas-de-error" class="nav-link" data-scroll-target="#medidas-de-error">Medidas de error</a></li>
   <li><a href="#incorrelación-homocedasticidad-y-normalidad" id="toc-incorrelación-homocedasticidad-y-normalidad" class="nav-link" data-scroll-target="#incorrelación-homocedasticidad-y-normalidad">Incorrelación, Homocedasticidad y Normalidad</a></li>
   </ul></li>
-  <li><a href="#interpretación-del-modelo" id="toc-interpretación-del-modelo" class="nav-link" data-scroll-target="#interpretación-del-modelo"><span class="toc-section-number">5</span>  Interpretación del modelo</a></li>
-  <li><a href="#predicción" id="toc-predicción" class="nav-link" data-scroll-target="#predicción"><span class="toc-section-number">6</span>  Predicción</a></li>
-  <li><a href="#calidad-de-las-previsiones-extramuestrales-según-horizonte-temporal" id="toc-calidad-de-las-previsiones-extramuestrales-según-horizonte-temporal" class="nav-link" data-scroll-target="#calidad-de-las-previsiones-extramuestrales-según-horizonte-temporal"><span class="toc-section-number">7</span>  Calidad de las previsiones extramuestrales según horizonte temporal</a></li>
-  <li><a href="#comparación-con-un-modelo-de-alisado" id="toc-comparación-con-un-modelo-de-alisado" class="nav-link" data-scroll-target="#comparación-con-un-modelo-de-alisado"><span class="toc-section-number">8</span>  Comparación con un modelo de Alisado</a></li>
+  <li><a href="#interpretación-del-modelo" id="toc-interpretación-del-modelo" class="nav-link" data-scroll-target="#interpretación-del-modelo"> <span class="header-section-number">5</span> Interpretación del modelo</a></li>
+  <li><a href="#predicción" id="toc-predicción" class="nav-link" data-scroll-target="#predicción"> <span class="header-section-number">6</span> Predicción</a></li>
+  <li><a href="#calidad-de-las-previsiones-extramuestrales-según-horizonte-temporal" id="toc-calidad-de-las-previsiones-extramuestrales-según-horizonte-temporal" class="nav-link" data-scroll-target="#calidad-de-las-previsiones-extramuestrales-según-horizonte-temporal"> <span class="header-section-number">7</span> Calidad de las previsiones extramuestrales según horizonte temporal</a></li>
+  <li><a href="#comparación-con-un-modelo-de-alisado" id="toc-comparación-con-un-modelo-de-alisado" class="nav-link" data-scroll-target="#comparación-con-un-modelo-de-alisado"> <span class="header-section-number">8</span> Comparación con un modelo de Alisado</a></li>
   </ul>
 </nav>
     </div>
@@ -370,7 +363,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="fig-ECBAnual" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-09-Ejemplo4_files/figure-html/fig-ECBAnual-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;1: Defunciones anuales causadas por enfermedades cerebrovasculares</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 1: Defunciones anuales causadas por enfermedades cerebrovasculares</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -396,7 +389,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="fig-ECBDisplay" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-09-Ejemplo4_files/figure-html/fig-ECBDisplay-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;2: Defunciones anuales por enfermedades cerebrovasculares, FAC y FACP de la serie transformada</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 2: Defunciones anuales por enfermedades cerebrovasculares, FAC y FACP de la serie transformada</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -441,7 +434,7 @@ AIC=522.67   AICc=523.53   BIC=527.07</code></pre>
 <div id="fig-ECBError" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-09-Ejemplo4_files/figure-html/fig-ECBError-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;3: Error + Intervención</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 3: Error + Intervención</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -530,9 +523,13 @@ W = 0.95171, p-value = 0.1492</code></pre>
 </section>
 <section id="interpretación-del-modelo" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Interpretación del modelo</h1>
-<p>El <strong>modelo teórico</strong> es <span class="math inline">\(DefEnfCer \sim ARIMA(0,1,1)\)</span> + constante: <span class="math display">\[(1 - L) DefEnfCer_t =  c + (1 + \theta_1 L)\varepsilon_t.\]</span></p>
-<p>Desarrollando queda: <span class="math display">\[DefEnfCer_t = c + DefEnfCer_{t-1} + \theta_1 \varepsilon_{t-1} + \varepsilon_t\]</span></p>
-<p>Finalmente. el <strong>modelo estimado</strong> es: <span class="math display">\[\widehat{DefEnfCer}_t = -606.76 + DefEnfCer_{t-1} - 0.669 \varepsilon_{t-1} \]</span> Cada año el número de defunciones por enfermedades cerebrovasculares es el mismo que el año previo, menos 607 casos. Si el año previo el número de defunciones fue atípico generando un residuo no nulo (<span class="math inline">\(\varepsilon_{t-1} \neq 0\)</span>), hay que tenerlo en cuenta en la previsión.</p>
+<p>El <strong>modelo teórico</strong> es <span class="math inline">\(DefEnfCer \sim ARIMA(0,1,1)\)</span> + constante:</p>
+<p><span class="math display">\[(1 - L) DefEnfCer_t =  c + (1 + \theta_1 L)\varepsilon_t.\]</span></p>
+<p>Desarrollando queda:</p>
+<p><span class="math display">\[DefEnfCer_t = c + DefEnfCer_{t-1} + \theta_1 \varepsilon_{t-1} + \varepsilon_t\]</span></p>
+<p>Finalmente. el <strong>modelo estimado</strong> es:</p>
+<p><span class="math display">\[\widehat{DefEnfCer}_t = -606.76 + DefEnfCer_{t-1} - 0.669 \varepsilon_{t-1} \]</span></p>
+<p>Cada año el número de defunciones por enfermedades cerebrovasculares es el mismo que el año previo, menos 607 casos. Si el año previo el número de defunciones fue atípico generando un residuo no nulo (<span class="math inline">\(\varepsilon_{t-1} \neq 0\)</span>), hay que tenerlo en cuenta en la previsión.</p>
 <p><br>
 <br>
 </p>
@@ -563,7 +560,7 @@ W = 0.95171, p-value = 0.1492</code></pre>
 <div id="fig-ECBPrediccion" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-09-Ejemplo4_files/figure-html/fig-ECBPrediccion-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;4: Defunciones por enfermedades cerebrovasculares y predicción</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 4: Defunciones por enfermedades cerebrovasculares y predicción</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -656,7 +653,7 @@ Training set -0.06832854</code></pre>
 <div id="fig-ECBPrediccion2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-09-Ejemplo4_files/figure-html/fig-ECBPrediccion2-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura&nbsp;5: Defunciones Enf. Cerebrovasculares y previsión</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figura 5: Defunciones Enf. Cerebrovasculares y previsión</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -741,8 +738,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      let href = ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
