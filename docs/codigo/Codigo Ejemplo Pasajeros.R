@@ -9,7 +9,7 @@
 library(forecast)
 library(ggplot2); theme_set(theme_bw())
 library(seasonal)
-library(aod)
+library(lmtest)
 library(timeDate)
 library(knitr)
 library(tseries)
@@ -136,16 +136,24 @@ tail(DiasPascua, n = 60)
 # Descriptiva
 #----------------------------------------------------------
 # Tendencia
-PasajerosAnual <- aggregate(Pasajeros,
-                            FUN = sum)
-
+PasajerosAnual <- aggregate(Pasajeros, FUN = sum)
 autoplot(PasajerosAnual, colour = "darkblue",
          xlab = "",
          ylab = "Millones de pasajeros",
          main = "") +
   scale_x_continuous(breaks= seq(1996, 2020, 2))
 
-# Estacionalidad
+# Esquema
+MediaAnual <- aggregate(Pasajeros, FUN = mean)
+DesviacionAnual <- aggregate(Pasajeros, FUN = sd)
+
+ggplot() +
+  geom_point(aes(x = MediaAnual, y = DesviacionAnual), size = 2) +
+  xlab("Media de pasajeros por año") + 
+  ylab("Desviación típica de pasajeros por año") + 
+  ggtitle("")
+
+# Descomposición y Estacionalidad
 PasajerosDL <- Pasajeros/DiasLaborables
 
 ggsubseriesplot(Pasajeros) +
@@ -158,37 +166,23 @@ ggsubseriesplot(PasajerosDL) +
   xlab("") +
   ggtitle("")
 
-# Esquema
-MediaAnual <- aggregate(Pasajeros, FUN = mean)
-DesviacionAnual <- aggregate(Pasajeros, FUN = sd)
+PasajerosStl <- stl(Pasajeros[,1], 
+                    s.window = "periodic", 
+                    robust = TRUE)
 
-ggplot() +
-  geom_point(aes(x = MediaAnual, y = DesviacionAnual), size = 2) +
-  xlab("Media de pasajeros por año") + 
-  ylab("Desviación típica de pasajeros por año") + 
-  ggtitle("")
+PasajerosDLStl <- stl(PasajerosDL[,1], 
+                      s.window = "periodic", 
+                      robust = TRUE)
 
-# Analisis numerico estacionalidad
-PasajerosMedia <- tapply(Pasajeros - mean(Pasajeros), 
-                         cycle(Pasajeros), 
-                         mean)
-
-PasajerosDLMedia <- tapply((PasajerosDL - mean(PasajerosDL)), 
-                           cycle(PasajerosDL), 
-                           mean)
-
-datos <- cbind(PasajerosMedia, PasajerosDLMedia)
+datos <- cbind(seasonal(PasajerosStl)[1:12], seasonal(PasajerosDLStl)[1:12])
 colnames(datos) <- c("Pasajeros", "Pasajeros por día laborable")
 rownames(datos) <- meses
 
 kable(datos, 
       digits = 2)
 
-# Descomposicion
-PasajerosStl <- stl(Pasajeros[,1], 
-                    s.window = "periodic", 
-                    robust = TRUE)
 
+# Intervención
 error <- remainder(PasajerosStl)
 sderror <- sd(error)
 
@@ -202,11 +196,8 @@ autoplot(error,
              lty = 2) + 
   scale_x_continuous(breaks= seq(1996, 2020, 2))
 
-PasajerosStl <- stl(PasajerosDL[,1], 
-                    s.window = "periodic", 
-                    robust = TRUE)
 
-error <- remainder(PasajerosStl)
+error <- remainder(PasajerosDLStl)
 sderror <- sd(error)
 
 autoplot(error,
@@ -296,7 +287,7 @@ TT <- length(Pasajeros)
 s <- TT - k - h          
 
 mapeAlisadoPas <- matrix(NA, s + 1, h)
-mapeAlisadolPas <- matrix(NA, s + 1, h)
+mapeAlisadoLogPas <- matrix(NA, s + 1, h)
 mapeAlisadoPasDL <- matrix(NA, s + 1, h)
 mapeAlisadoPasDM <- matrix(NA, s + 1, h)
 
@@ -316,7 +307,7 @@ for (i in 0:s) {
   
   fit <- ets(train.set, model = "AAA", damped = TRUE, lambda = 0)
   fcast <- forecast(fit, h = h)
-  mapeAlisadolPas[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
+  mapeAlisadoLogPas[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
   
   fit <- ets(trainDL.set, model = "MAA", damped = TRUE)
   fcast <- forecast(fit, h = h)
@@ -328,7 +319,7 @@ for (i in 0:s) {
 }
 
 errorAlisadoPas <- colMeans(mapeAlisadoPas)
-errorAlisadolPas <- colMeans(mapeAlisadolPas)
+errorAlisadoLogPas <- colMeans(mapeAlisadoLogPas)
 errorAlisadoPasDL <- colMeans(mapeAlisadoPasDL)
 errorAlisadoPasDM <- colMeans(mapeAlisadoPasDM)
 
@@ -338,7 +329,7 @@ datos <- data.frame(
              rep("Pasajeros por día del mes", 12), 
              rep("Pasajeros (log)", 12)),
   x = c(1:12, 1:12, 1:12, 1:12),
-  y = c(errorAlisadoPas, errorAlisadoPasDL, errorAlisadoPasDM, errorAlisadolPas)
+  y = c(errorAlisadoPas, errorAlisadoPasDL, errorAlisadoPasDM, errorAlisadoLogPas)
 )
 
 ggplot(datos, aes(x = x, y = y,  colour= factor)) + 
@@ -358,17 +349,20 @@ ggplot(datos, aes(x = x, y = y,  colour= factor)) +
 # Arima
 #----------------------------------------------------------
 # Transformacion
-ggAcf(log(Pasajeros), lag = 48, xlab = "", ylab = "", main = "")
-ggAcf(diff(log(Pasajeros)), lag = 48, xlab = "", ylab = "", main = "")
-ggAcf(diff(log(Pasajeros), lag = 12), lag = 48, xlab = "", ylab = "", main = "")
-ggAcf(diff(diff(log(Pasajeros), lag=12)), lag = 48, xlab = "", ylab = "", main = "")
+ggAcf(log(Pasajeros), lag = 48, ylim = c(-1, 1), 
+      xlab = "", ylab = "", main = "")
+ggAcf(diff(log(Pasajeros)), lag = 48, ylim = c(-1, 1), 
+      xlab = "", ylab = "", main = "")
+ggAcf(diff(log(Pasajeros), lag = 12), lag = 48, ylim = c(-1, 1), 
+      xlab = "", ylab = "", main = "")
+ggAcf(diff(diff(log(Pasajeros), lag=12)), lag = 48, ylim = c(-1, 1), 
+      xlab = "", ylab = "", main = "")
 
 ndiffs(log(Pasajeros))
 nsdiffs(log(Pasajeros))
 
 series <- cbind("Original" = Pasajeros,
                 "Dif reg. y est. de log" = diff(diff(log(Pasajeros), lag = 12)))
-
 autoplot(series, facets = TRUE,
          xlab = "",
          ylab = "",
@@ -382,7 +376,7 @@ auto.arima(Pasajeros,
            xreg = cbind(DiasLaborables, DiasNoLaborables, 
                         LunesNavidad, DiasPreSanta, DiasPascua))
 
-summary(seas(log(Pasajeros)))
+summary(seas(Pasajeros, transform.function = "log"))
 
 # Estimación + Intervencion
 PasajerosAri <- Arima(Pasajeros, 
@@ -435,18 +429,7 @@ autoplot(error, series="Error",
   scale_x_continuous(breaks= seq(1996, 2020, 2))
 
 # Validacion
-datos <- NULL
-for(i in 1:length(coef(PasajerosAri))) {
-  datos <- rbind(datos,
-                 data.frame(
-                   "Coeficiente" = names(coef(PasajerosAri))[i],
-                   "Valor de p" = wald.test(b = coef(PasajerosAri), 
-                                            Sigma = vcov(PasajerosAri), 
-                                            Terms = i)$result$chi2[3])
-  )
-}
-
-kable(datos, digits = 4, row.names = FALSE)
+coeftest(PasajerosAri)
 
 # Hipotesis sobre el residuo
 Box.test(error, lag = 2,type = "Ljung-Box")
@@ -477,10 +460,11 @@ for (i in 0:s) {
   test.set <-  subset(Pasajeros, start = i + k + 1, end = i + k + h) 
   
   X.train <- X[(i + 1):(i + k),]
-  hay <- colSums(X.train)
-  X.train <- X.train[, hay>0]
-  
   X.test <- X[(i + k + 1):(i + k + h),]
+  
+  hay <- colSums(X.train)
+  
+  X.train <- X.train[, hay>0]
   X.test <- X.test[, hay>0]
   
   fit <- try(Arima(train.set, 
@@ -534,4 +518,25 @@ ggplot(datos, aes(x = x, y = y,  colour= factor)) +
   scale_y_continuous(breaks= seq(1.5, 4, .5)) +
   labs(colour = "Métodos") + 
   theme(legend.position=c(0.1,0.8))
+#----------------------------------------------------------
+#
+#
+#
+#----------------------------------------------------------
+# Estimación del efecto de la pandemia por Covid-19
+#----------------------------------------------------------
+Pasajeros <- read.csv2("./series/Pasajeros.csv",
+                       header = TRUE)
+
+Pasajeros <- ts(Pasajeros/1000, 
+                start = 1996, 
+                freq = 12)
+
+ggseasonplot(window(Pasajeros, start = 2019)) +
+  ylab("") +
+  xlab("") +
+  ggtitle("") + 
+  geom_point()
+
+aggregate(Pasajeros - pPasajerosAri$mean, FUN = sum)
 

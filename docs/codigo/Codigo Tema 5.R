@@ -8,7 +8,7 @@
 # Librerias
 library(forecast)
 library(ggplot2); theme_set(theme_bw())
-library(aod)
+library(lmtest)
 library(seasonal)
 library(tseries)
 #----------------------------------------------------------
@@ -65,10 +65,14 @@ autoplot(chocolate,
 # Nacimientos
 #----------------------------------------------------------
 # Estacionariedad y ergodicidad
-ggAcf(log(nacimientos), lag = 48, xlab = "", ylab = "", main = "")
-ggAcf(diff(log(nacimientos)), lag = 48, xlab = "", ylab = "", main = "")
-ggAcf(diff(log(nacimientos), lag = 12), lag = 48, xlab = "", ylab = "", main = "")
-ggAcf(diff(diff(log(nacimientos), lag = 12)), lag = 48, xlab = "", ylab = "", main = "")
+ggAcf(log(nacimientos), lag = 48, ylim = c(-1, 1), 
+      xlab = "", ylab = "", main = "")
+ggAcf(diff(log(nacimientos)), lag = 48, ylim = c(-1, 1), 
+      xlab = "", ylab = "", main = "")
+ggAcf(diff(log(nacimientos), lag = 12), lag = 48, ylim = c(-1, 1), 
+      xlab = "", ylab = "", main = "")
+ggAcf(diff(diff(log(nacimientos), lag = 12)), lag = 48, ylim = c(-1, 1), 
+      xlab = "", ylab = "", main = "")
 
 # Identificación
 ggtsdisplay(diff(diff(log(nacimientos), lag = 12)), lag = 48)
@@ -78,24 +82,34 @@ easter(nacimientos)
 
 DiasMes <- monthdays(nacimientos)
 SemanaSanta <- easter(nacimientos)
-d0111 <- 1*(cycle(nacimientos) == 1 & trunc(time(nacimientos)) == 2011)
+d0111 <- 1*(cycle(nacimientos) == 1  & trunc(time(nacimientos)) == 2011)
+d1220 <- 1*(cycle(nacimientos) == 12 & trunc(time(nacimientos)) == 2020)
+d0221 <- 1*(cycle(nacimientos) == 2  & trunc(time(nacimientos)) == 2021)
+d0321 <- 1*(cycle(nacimientos) == 3  & trunc(time(nacimientos)) == 2021)
 
 auto.arima(nacimientos, 
            d = 1, 
            D = 1, 
            lambda = 0,
-           xreg = cbind(DiasMes, SemanaSanta, d0111))
+           xreg = cbind(DiasMes, SemanaSanta, d0111, d1220, d0221, d0321))
 
 summary(seas(nacimientos))
+summary(seas(nacimientos, transform.function = "log"))
 
 # Estimación e intervencion
 d1210 <- 1*(cycle(nacimientos) == 12 & trunc(time(nacimientos)) == 2010)
 
+l1220 <- 1*(trunc(time(nacimientos)) > 2020) + 
+  1*(cycle(nacimientos) == 12 & trunc(time(nacimientos)) == 2020)
+
+l0221 <- 1*(trunc(time(nacimientos)) > 2021) + 
+  1*(cycle(nacimientos) >= 2 & trunc(time(nacimientos)) == 2021)
+
 nac.ar1 <- Arima(nacimientos, 
                  order = c(0, 1, 1),
-                 seasonal = c(0, 1, 2),
+                 seasonal = c(0, 1, 1),
                  lambda = 0,
-                 xreg = cbind(DiasMes, SemanaSanta, d1210,  d0111))
+                 xreg = cbind(DiasMes, SemanaSanta, d1210,  d0111, l1220, l0221))
 nac.ar1
 
 error <- residuals(nac.ar1)
@@ -109,18 +123,20 @@ autoplot(error, series="Error",
   geom_hline(yintercept = c(-3, -2,2, 3)*sderror, 
              colour = c("red", "green", "green", "red"), 
              lty = 2) + 
-  scale_x_continuous(breaks= seq(2000, 2020, 2)) 
+  scale_x_continuous(breaks= seq(2000, 2022, 2)) 
 
 d1206 <- 1*(cycle(nacimientos) == 12 & trunc(time(nacimientos)) == 2006)
 d0416 <- 1*(cycle(nacimientos) == 4 & trunc(time(nacimientos)) == 2016)
-d0616 <- 1*(cycle(nacimientos) == 6 & trunc(time(nacimientos)) == 2016)
+d1120 <- 1*(cycle(nacimientos) == 11 & trunc(time(nacimientos)) == 2020)
+d1122 <- 1*(cycle(nacimientos) == 11 & trunc(time(nacimientos)) == 2022)
 
 nac.ar2 <- Arima(nacimientos, 
-                 order = c(0,1,1),
-                 seasonal = c(0, 1, 2),
+                 order = c(0, 1, 1),
+                 seasonal = c(0, 1, 1),
                  lambda = 0,
                  xreg = cbind(DiasMes, SemanaSanta, 
-                              d1206, d1210, d0111, d0416, d0616))
+                              d1206, d1210, d0111, d0416, d1120, d1122,
+                              l1220, l0221))
 nac.ar2
 
 error <- residuals(nac.ar2)
@@ -134,44 +150,29 @@ autoplot(error, series="Error",
   geom_hline(yintercept = c(-3, -2, 2, 3)*sderror, 
              colour = c("red", "green", "green", "red"), 
              lty = 2) + 
-  scale_x_continuous(breaks= seq(2000, 2020, 2)) 
+  scale_x_continuous(breaks= seq(2000, 2022, 2)) 
 
 # Compensacion
 d12100111 <- d1210 - d0111
+l12200221 <- l1220 - l0221
 
 nac.ar3 <- Arima(nacimientos, 
                  order = c(0, 1, 1),
-                 seasonal = c(0, 1, 2),
+                 seasonal = c(0, 1, 1),
                  lambda = 0,
                  xreg = cbind(DiasMes, SemanaSanta, 
-                              d1206, d12100111, d0416, d0616))
+                              d1206, d12100111, d0416, d1120, d1122,
+                              l12200221))
 nac.ar3
 
 # Significatividad
-wald.test(b = coef(nac.ar3), Sigma = vcov(nac.ar3), Terms = 1)
-wald.test(b = coef(nac.ar3), Sigma = vcov(nac.ar3), Terms = 2)
-wald.test(b = coef(nac.ar3), Sigma = vcov(nac.ar3), Terms = 3)
-wald.test(b = coef(nac.ar3), Sigma = vcov(nac.ar3), Terms = 4)
-wald.test(b = coef(nac.ar3), Sigma = vcov(nac.ar3), Terms = 5)
-wald.test(b = coef(nac.ar3), Sigma = vcov(nac.ar3), Terms = 6)
-wald.test(b = coef(nac.ar3), Sigma = vcov(nac.ar3), Terms = 7)
-wald.test(b = coef(nac.ar3), Sigma = vcov(nac.ar3), Terms = 8)
-wald.test(b = coef(nac.ar3), Sigma = vcov(nac.ar3), Terms = 9)
-
-# Estimación
-nac.ar4 <- Arima(nacimientos, 
-                 order = c(0, 1, 1),
-                 seasonal =  c(0, 1, 1),
-                 lambda = 0,
-                 xreg = cbind(DiasMes, SemanaSanta, 
-                              d1206, d12100111, d0416, d0616))
-nac.ar4
+coeftest(nac.ar3)
 
 # Error de ajuste
-accuracy(nac.ar4)
+accuracy(nac.ar3)
 
 # Hipotesis sobre el residuo
-error <- residuals(nac.ar4)
+error <- residuals(nac.ar3)
 
 Box.test(error, lag = 2,type = "Ljung-Box")
 Box.test(error, lag = 24,type = "Ljung-Box")
@@ -184,20 +185,22 @@ jarque.bera.test(error)
 ggAcf(error, lag = 36, ylim = c(-0.3, 0.3), main = "")
 
 # Predicción
-tmp <- ts(rep(0, 48), start = 2020, freq = 12)
+tmp <- ts(rep(0, 48), start = 2023, freq = 12)
 pdm <- monthdays(tmp)
 pss <- easter(tmp)
-pnac.ar4 <- forecast(nac.ar4, 
+pnac.ar3 <- forecast(nac.ar3, 
                      h = 48,
-                     xreg = cbind(pdm, pss, rep(0,48), rep(0,48), 
+                     xreg = cbind(pdm, pss, 
+                                  rep(0,48), rep(0,48), 
+                                  rep(0,48), rep(0,48),
                                   rep(0,48), rep(0,48)), 
                      level = 95)
-pnac.ar4
+pnac.ar3
 
-autoplot(pnac.ar4, 
+autoplot(pnac.ar3, 
          ylab = "Nacimientos",
          main = "") +
-  scale_x_continuous(breaks= seq(2000, 2024, 4)) 
+  scale_x_continuous(breaks= seq(2000, 2026, 4)) 
 
 # Error de predicción extra-muestral origen de prediccion movil
 k <- 120                   
@@ -207,38 +210,35 @@ s<-T - k - h
 
 mapeArima <- matrix(NA, s + 1, h)
 
-X <- data.frame(cbind(DiasMes, SemanaSanta, d1206, d1210, d0111, d0416, d0616))
+X <- data.frame(cbind(DiasMes, SemanaSanta, d1206, d12100111, 
+                      d0416, d1120, d1122, l12200221))
 
 for (i in 0:s) {
   train.set <- subset(nacimientos, start = i + 1, end = i + k)
   test.set <-  subset(nacimientos, start = i + k + 1, end = i + k + h) 
   
   X.train <- data.frame(X[(i + 1):(i + k),])
-  hay <- colSums(X.train)
-  X.train <- X.train[, hay>0]
-  
   X.test <- data.frame(X[(i + k + 1):(i + k + h),])
-  X.test <- X.test[, hay>0]
   
-  if (length(X.train) > 0) {
-    fit <- try(Arima(train.set, 
-                     order = c(0, 1, 1),
-                     seasonal = c(0, 1, 1),
-                     lambda = 0,
-                     xreg=as.matrix(X.train)))
+  hay <- colSums(X.train)  
+  
+  if(sum(hay) == 0) {
+    X.train <- NULL
+    X.test <- NULL
   } else {
-    fit <- try(Arima(train.set, 
-                     order = c(0, 1, 1),
-                     seasonal = c(0, 1, 1),
-                     lambda = 0))
+    X.train <- as.matrix(X.train[, hay>0])
+    X.test <- as.matrix(X.test[, hay>0])
   }
   
+  fit <- try(Arima(train.set, 
+                   order = c(0, 1, 1),
+                   seasonal = c(0, 1, 1),
+                   lambda = 0,
+                   xreg = X.train))
+  
   if(!is.element("try-error", class(fit))) {
-    if (length(X.train) > 0) 
-      fcast <- forecast(fit, h = h, xreg = as.matrix(X.test)) else
-        fcast <- forecast(fit, h = h)
-      
-      mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
+    fcast <- forecast(fit, h = h, xreg = X.test) 
+    mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
   }
 }
 
@@ -259,10 +259,17 @@ ggplot() +
 # Exportaciones
 #----------------------------------------------------------
 # Estacionariedad y ergodicidad
-ggAcf(log(exportaciones), lag = 48, xlab = "", ylab = "", main = "")
-ggAcf(diff(log(exportaciones)), lag = 48, xlab = "", ylab = "", main = "")
-ggAcf(diff(log(exportaciones), lag = 12), lag = 48, xlab = "", ylab = "", main = "")
-ggAcf(diff(diff(log(exportaciones), lag = 12)), lag = 48, xlab = "", ylab = "", main = "")
+ggAcf(log(exportaciones), lag = 48, ylim = c(-1, 1),
+      xlab = "", ylab = "", main = "")
+
+ggAcf(diff(log(exportaciones)), lag = 48, ylim = c(-1, 1),
+      xlab = "", ylab = "", main = "")
+
+ggAcf(diff(log(exportaciones), lag = 12), lag = 48, ylim = c(-1, 1),
+      xlab = "", ylab = "", main = "")
+
+ggAcf(diff(diff(log(exportaciones), lag = 12)), lag = 48, ylim = c(-1, 1),
+      xlab = "", ylab = "", main = "")
 
 ndiffs(log(exportaciones))
 nsdiffs(log(exportaciones))
@@ -276,7 +283,7 @@ auto.arima(exportaciones,
 
 summary(seas(exportaciones))
 
-# Estimación + intervencion
+# Estimación e intervencion
 DiasLaborables <- bizdays(exportaciones, FinCenter = "London")
 SemanaSanta <- easter(exportaciones)
 
@@ -286,7 +293,6 @@ l1208 <- 1*(trunc(time(exportaciones)) > 2008) +
 l0320 <- 1*(trunc(time(exportaciones)) > 2020) + 
   1*(cycle(exportaciones)   > 2 & trunc(time(exportaciones)) == 2020)
 
-d1207 <- 1*(cycle(exportaciones) == 12 & trunc(time(exportaciones)) == 2007)
 d0420 <- 1*(cycle(exportaciones) ==  4 & trunc(time(exportaciones)) == 2020)
 d0520 <- 1*(cycle(exportaciones) ==  5 & trunc(time(exportaciones)) == 2020)
 
@@ -295,7 +301,7 @@ exp.ar1 <- Arima(exportaciones,
                  seasonal = c(0, 1, 1),
                  lambda = 0,
                  xreg = cbind(DiasLaborables, SemanaSanta, 
-                              l1208, l0320, d1207, d0420, d0520))
+                              l1208, l0320, d0420, d0520))
 exp.ar1
 
 error <- residuals(exp.ar1)
@@ -312,18 +318,10 @@ autoplot(error, series="Error",
   scale_x_continuous(breaks= seq(1998, 2022, 2)) 
 
 # Validacion
-wald.test(b = coef(exp.ar1), Sigma = vcov(exp.ar1), Terms = 1)
-wald.test(b = coef(exp.ar1), Sigma = vcov(exp.ar1), Terms = 2)
-wald.test(b = coef(exp.ar1), Sigma = vcov(exp.ar1), Terms = 3)
-wald.test(b = coef(exp.ar1), Sigma = vcov(exp.ar1), Terms = 4)
-wald.test(b = coef(exp.ar1), Sigma = vcov(exp.ar1), Terms = 5)
-wald.test(b = coef(exp.ar1), Sigma = vcov(exp.ar1), Terms = 6)
-wald.test(b = coef(exp.ar1), Sigma = vcov(exp.ar1), Terms = 7)
-wald.test(b = coef(exp.ar1), Sigma = vcov(exp.ar1), Terms = 8)
-wald.test(b = coef(exp.ar1), Sigma = vcov(exp.ar1), Terms = 9)
+coeftest(exp.ar1)
 
 # Error de ajuste
-accuracy(nac.ar2)
+accuracy(exp.ar1)
 
 # Hipotesis sobre el residuo
 Box.test(error, lag = 2,type = "Ljung-Box")
@@ -338,44 +336,46 @@ jarque.bera.test(error)
 k <- 120                   
 h <- 12                    
 T <- length(exportaciones)   
-s<-T - k - h               
+s <- T - k - h               
 
 mapeArima <- matrix(NA, s + 1, h)
 
 X <- data.frame(cbind(DiasLaborables, SemanaSanta, 
-                      l1208, l0320, d1207, d0420, d0520))
+                      l1208, l0320, d0420, d0520))
 
 for (i in 0:s) {
   train.set <- subset(exportaciones, start = i + 1, end = i + k)
   test.set <-  subset(exportaciones, start = i + k + 1, end = i + k + h) 
   
   X.train <- data.frame(X[(i + 1):(i + k),])
-  hay <- colSums(X.train)
-  X.train <- X.train[, hay>0]
-  
   X.test <- data.frame(X[(i + k + 1):(i + k + h),])
-  X.test <- X.test[, hay>0]
   
-  if (length(X.train) > 0) {
-    fit <- try(Arima(train.set, 
-                     order = c(0, 1, 1),
-                     seasonal = c(0, 1, 1),
-                     lambda = 0,
-                     xreg=as.matrix(X.train),
-                     optim.method = "BFGS"))
-  } else {
-    fit <- try(Arima(train.set, 
-                     order = c(0, 1, 1),
-                     seasonal = c(0, 1, 1),
-                     lambda = 0))
+  hay <- colSums(X.train)  
+  
+  tmp <- which(hay == k | hay == 0)
+  if(length(tmp) > 0) {
+    X.train <- X.train[, -tmp]  
+    X.test <- X.test[, -tmp]  
+    hay <- hay[-tmp]
   }
   
+  if(length(hay) == 0) {
+    X.train <- NULL
+    X.test <- NULL
+  } else {
+    X.train <- as.matrix(X.train)
+    X.test <- as.matrix(X.test)
+  }
+  
+  fit <- try(Arima(train.set, 
+                   order = c(0, 1, 1),
+                   seasonal = c(0, 1, 1),
+                   lambda = 0,
+                   xreg = X.train))
+  
   if(!is.element("try-error", class(fit))) {
-    if (length(X.train) > 0) 
-      fcast <- forecast(fit, h = h, xreg = as.matrix(X.test)) else
-        fcast <- forecast(fit, h = h)
-      
-      mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
+    fcast <- forecast(fit, h = h, xreg = X.test) 
+    mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
   }
 }
 
@@ -390,14 +390,14 @@ ggplot() +
   scale_x_continuous(breaks= 1:12)
 
 # Predicción
-tmp <- ts(rep(0, 48), start = 2022, freq = 12)
+tmp <- ts(rep(0, 48), start = 2023, freq = 12)
 pdl <- bizdays(tmp, FinCenter = "London")
 pss <- easter(tmp)
 pexp.ar1 <- forecast(exp.ar1, 
                      h = 48,
                      xreg = cbind(pdl, pss, 
                                   rep(1,48), rep(1,48), 
-                                  rep(0,48), rep(0,48), rep(0,48)), 
+                                  rep(0,48), rep(0,48)), 
                      level = 95)
 pexp.ar1
 
@@ -406,7 +406,7 @@ autoplot(pexp.ar1,
          ylab = "Millones de euros",
          main = "",
          PI = FALSE) +
-  scale_x_continuous(breaks= seq(1998, 2026, 4)) 
+  scale_x_continuous(breaks= seq(1998, 2026, 4))
 #----------------------------------------------------------
 #
 #
@@ -423,9 +423,7 @@ ggAcf(diff(diff(log(chocolate), lag = 12)), lag = 48, xlab = "", ylab = "", main
 ndiffs(chocolate)
 nsdiffs(chocolate)
 
-ggtsdisplay(diff(diff(log(chocolate), lag = 12)), lag = 48)
-
-# Identificación
+# Identificación, Intervencion y Estimacion
 DiasLaborables <- bizdays(chocolate, FinCenter = "London")
 DiasLaborables
 
@@ -435,7 +433,6 @@ auto.arima(chocolate, d = 1, D = 1,
 
 summary(seas(diff(diff(log(chocolate), lag = 12))))
 
-# Estimacion + Intervencion
 choco.ar1 <- Arima(chocolate, order=c(1, 1, 1),
                    seasonal = c(0, 1, 1),
                    lambda = 0,
@@ -480,14 +477,7 @@ autoplot(error, series="Error",
   scale_x_continuous(breaks= seq(1958, 1994, 2)) 
 
 # Significatividad
-wald.test(b = coef(choco.ar2), Sigma = vcov(choco.ar2), Terms = 1)
-wald.test(b = coef(choco.ar2), Sigma = vcov(choco.ar2), Terms = 2)
-wald.test(b = coef(choco.ar2), Sigma = vcov(choco.ar2), Terms = 3)
-wald.test(b = coef(choco.ar2), Sigma = vcov(choco.ar2), Terms = 4)
-wald.test(b = coef(choco.ar2), Sigma = vcov(choco.ar2), Terms = 5)
-wald.test(b = coef(choco.ar2), Sigma = vcov(choco.ar2), Terms = 6)
-wald.test(b = coef(choco.ar2), Sigma = vcov(choco.ar2), Terms = 7)
-wald.test(b = coef(choco.ar2), Sigma = vcov(choco.ar2), Terms = 8)
+coeftest(choco.ar2)
 
 # Error de ajuste
 accuracy(choco.ar2)
@@ -531,31 +521,27 @@ for (i in 0:s) {
   test.set <-  subset(chocolate, start = i + k + 1, end = i + k + h) 
   
   X.train <- data.frame(X[(i + 1):(i + k),])
-  hay <- colSums(X.train)
-  X.train <- X.train[, hay>0]
-  
   X.test <- data.frame(X[(i + k + 1):(i + k + h),])
-  X.test <- X.test[, hay>0]
   
-  if (length(X.train) > 0) {
-    fit <- try(Arima(train.set, 
-                     order = c(1, 1, 1),
-                     seasonal = c(0, 1, 1),
-                     lambda = 0,
-                     xreg=as.matrix(X.train)))
+  hay <- colSums(X.train)  
+  
+  if(sum(hay) == 0) {
+    X.train <- NULL
+    X.test <- NULL
   } else {
-    fit <- try(Arima(train.set, 
-                     order = c(1, 1, 1),
-                     seasonal = c(0, 1, 1),
-                     lambda = 0))
+    X.train <- as.matrix(X.train[, hay>0])
+    X.test <- as.matrix(X.test[, hay>0])
   }
   
+  fit <- try(Arima(train.set, 
+                   order = c(1, 1, 1),
+                   seasonal = c(0, 1, 1),
+                   lambda = 0,
+                   xreg = X.train))
+  
   if(!is.element("try-error", class(fit))) {
-    if (length(X.train) > 0) 
-      fcast <- forecast(fit, h = h, xreg = as.matrix(X.test)) else
-        fcast <- forecast(fit, h = h)
-      
-      mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
+    fcast <- forecast(fit, h = h, xreg = X.test) 
+    mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
   }
 }
 

@@ -89,23 +89,23 @@ autoplot(diff(diff(log(nacimientos)), lag = 12))
 # Funcion de autocorrelacion
 #----------------------------------------------------------
 # Libros
-ggAcf(libros, lag = 10)
-ggAcf(diff(libros), lag = 10)
+ggAcf(libros, lag = 10, ylim = c(-1 ,1))
+ggAcf(diff(libros), lag = 10, ylim = c(-1 ,1))
  
 ggAcf(diff(libros), lag = 10, plot = FALSE)
 
 # Nacimientos
-ggAcf(nacimientos, lag = 48)
-ggAcf(log(nacimientos), lag = 48)
+ggAcf(nacimientos, lag = 48, ylim = c(-1 ,1))
+ggAcf(log(nacimientos), lag = 48, ylim = c(-1 ,1))
 
-ggAcf(diff(nacimientos), lag = 48)
-ggAcf(diff(log(nacimientos)), lag = 48)
+ggAcf(diff(nacimientos), lag = 48, ylim = c(-1 ,1))
+ggAcf(diff(log(nacimientos)), lag = 48, ylim = c(-1 ,1))
 
-ggAcf(diff(nacimientos, lag = 12), lag = 48)
-ggAcf(diff(log(nacimientos), lag = 12), lag = 48)
+ggAcf(diff(nacimientos, lag = 12), lag = 48, ylim = c(-1 ,1))
+ggAcf(diff(log(nacimientos), lag = 12), lag = 48, ylim = c(-1 ,1))
 
-ggAcf(diff(diff(nacimientos), lag = 12), lag = 48)
-ggAcf(diff(diff(log(nacimientos)), lag = 12), lag = 48)
+ggAcf(diff(diff(nacimientos), lag = 12), lag = 48, ylim = c(-1 ,1))
+ggAcf(diff(diff(log(nacimientos)), lag = 12), lag = 48, ylim = c(-1 ,1))
 
 ggAcf(diff(diff(nacimientos, lag=12)), lag = 24, plot = FALSE)
 #----------------------------------------------------------
@@ -116,16 +116,16 @@ ggAcf(diff(diff(nacimientos, lag=12)), lag = 24, plot = FALSE)
 # Funcion de autocorrelacion parcial
 #----------------------------------------------------------
 # Libros 
-ggPacf(libros, lag = 10)
-ggPacf(diff(libros), lag = 10)
+ggPacf(libros, lag = 10, ylim = c(-1 ,1))
+ggPacf(diff(libros), lag = 10, ylim = c(-1 ,1))
 
 ggPacf(diff(libros), lag = 10, plot = FALSE)
 
 ggtsdisplay(diff(libros))
 
 # Nacimientos  
-ggPacf(nacimientos, lag = 48)
-ggPacf(diff(diff(nacimientos), lag = 12), lag = 48)
+ggPacf(nacimientos, lag = 48, ylim = c(-1 ,1))
+ggPacf(diff(diff(nacimientos), lag = 12), lag = 48, ylim = c(-1 ,1))
 
 ggPacf(diff(diff(nacimientos), lag = 12), lag = 48, plot = FALSE)
 #----------------------------------------------------------

@@ -43,8 +43,8 @@ autoplot(nacimientos,
 
 # Demanda eléctrica
 electricidad <- read.csv2("./series/Consumo electrico.csv", header = TRUE)
-electricidad <- ts(electricidad[, 2],
-                   start = c(1, 5),
+electricidad <- ts(electricidad[, 1],
+                   start = c(1, 6),
                    frequency = 7)
 
 autoplot(electricidad,
@@ -116,7 +116,7 @@ autoplot(electricidadSemanal,
 # Estacionalidad
 #----------------------------------------------------------
 # Graficas
-nacimientosb <- window(nacimientos, start = 2000)
+nacimientosb <- window(nacimientos, start = 2000, end = c(2019, 12))
 
 ggsubseriesplot(nacimientosb) +
   ylab("Nacimientos") +
@@ -185,7 +185,7 @@ autoplot(electricidad, series="Demanda eléctrica",
 eleDesAdi$figure
 sum(eleDesAdi$figure)
 
-compEstacional <- eleDesAdi$figure[c(4:7, 1:3)]
+compEstacional <- eleDesAdi$figure[c(3:7, 1:2)]
 ggplot() +
   geom_line(aes(x = 1:7, y = compEstacional)) + 
   geom_hline(yintercept = 0, colour = "blue", lty = 2) +
@@ -239,10 +239,10 @@ sum(head(seasonal(eleStl), 7))
 round(as.numeric(componenteEstacional), 2)
 
 # decompose
-round(seasonal(eleDesAdi)[c(4:7, 1:3)], 2)
+round(seasonal(eleDesAdi)[c(3:7, 1:2)], 2)
 
 # stl
-round(seasonal(eleStl)[c(4:7, 1:3)], 2)
+round(seasonal(eleStl)[c(3:7, 1:2)], 2)
 
 
 # Estacionalidad no fija

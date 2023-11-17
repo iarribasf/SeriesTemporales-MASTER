@@ -14,16 +14,16 @@ DefEnfCer <- ts(DefEnfCer[,2],
                 freq = 12)
 
 DefEnfCer <- window(DefEnfCer, 
-                    start = 1988)
+                    start = 1990)
 
 autoplot(DefEnfCer,
          xlab = "",
          ylab = "Casos",
          main = "Defunciones causadas por enfermedades cerebrovasculares") +
-  scale_x_continuous(breaks= seq(1980, 2020, 2)) 
+  scale_x_continuous(breaks= seq(1990, 2022, 2)) 
 
 #- Ajuste por alisado
-DefEnfCerEts <- ets(DefEnfCer)
+DefEnfCerEts <- ets(DefEnfCer, damped = FALSE)
 
 summary(DefEnfCerEts) 
 
@@ -55,7 +55,7 @@ DefEnfCerEtsPre
 autoplot(DefEnfCerEtsPre,
          xlab = "",
          ylab = "Casos",
-         main = "Muertes por enf. cerebrovasculares (1998-2020) y predicción (2019-2023)",
+         main = "Muertes por enf. cerebrovasculares (1990-2021) y predicción (2022-2024)",
          PI = FALSE)
 
 #- Error

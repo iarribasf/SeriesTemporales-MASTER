@@ -15,13 +15,13 @@ DefEnfCer <- ts(DefEnfCer[,2],
                 freq = 12)
 
 DefEnfCer <- window(DefEnfCer, 
-                    start = 1988)
+                    start = 1990)
 
 autoplot(DefEnfCer,
          xlab = "",
          ylab = "Casos",
          main = "Defunciones causadas por enfermedades cerebrovasculares") +
-  scale_x_continuous(breaks= seq(1980, 2020, 2)) 
+  scale_x_continuous(breaks= seq(1990, 2022, 2)) 
 
 #- Transformacion logartimica
 (nl <- BoxCox.lambda(DefEnfCer))
@@ -37,10 +37,10 @@ autoplot(series,
          main = "Defunciones causadas por enfermedades cerebrovasculares")
 
 #- FAC
-ggAcf(log(DefEnfCer), lag = 48)
-ggAcf(diff(log(DefEnfCer)), lag = 48)
-ggAcf(diff(log(DefEnfCer), lag = 12),lag = 48)
-ggAcf(diff(diff(log(DefEnfCer), lag=12)), lag = 48)
+ggAcf(log(DefEnfCer), lag = 48, ylim = c(-1, 1))
+ggAcf(diff(log(DefEnfCer)), lag = 48, ylim = c(-1, 1))
+ggAcf(diff(log(DefEnfCer), lag = 12),lag = 48, ylim = c(-1, 1))
+ggAcf(diff(diff(log(DefEnfCer), lag=12)), lag = 48, ylim = c(-1, 1))
 
 ndiffs(log(DefEnfCer))
 nsdiffs(log(DefEnfCer))

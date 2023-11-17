@@ -17,7 +17,7 @@ autoplot(DefEnfCer,
          xlab = "",
          ylab = "Casos",
          main = "Defunciones causadas por enfermedades cerebrovasculares") +
-  scale_x_continuous(breaks= seq(1980, 2020, 2)) 
+  scale_x_continuous(breaks= seq(1980, 2022, 2)) 
 
 #- Tipo de esquema
 CasosAnual = aggregate(DefEnfCer, FUN = sum)
@@ -38,7 +38,6 @@ autoplot(aggregate(DefEnfCer, FUN = sum),
 
 #- Estacionalidad
 ggsubseriesplot(DefEnfCer, 
-             polar=TRUE,
              xlab = "",
              ylab = "",
              main = "Gráfico estacional: defunciones por enfermedades cerebrovasculares") +
@@ -71,7 +70,7 @@ ggplot() +
   theme(legend.position=c(0.2,0.1))
 
 #- Analisis descriptivo del error
-error <- remainder(DefEnfCerDesMul) - 1
+error <- log(remainder(DefEnfCerDesMul))
 sderror <- sd(error, na.rm = TRUE)
 
 autoplot(error,

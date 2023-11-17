@@ -41,15 +41,29 @@ autoplot(nacimientos,
          ylab = "Nacimientos",
          main = "")
 
+nacimientosb <- window(nacimientos, start = 2000)
+
+autoplot(nacimientosb,
+         xlab = "",
+         ylab = "Nacimientos",
+         main = "")
+
 # Demanda electrica
 electricidad <- read.csv2("./series/Consumo electrico.csv", 
                           header = TRUE)
 
-electricidad <- ts(electricidad[, 2],
-                   start = c(1, 5),
+electricidad <- ts(electricidad[, 1],
+                   start = c(1, 6),
                    frequency = 7)
 
 autoplot(electricidad,
+         xlab = "",
+         ylab = "GWh",
+         main = "")
+
+electricidadSemanal <- aggregate(electricidad, FUN = sum)
+
+autoplot(electricidadSemanal,
          xlab = "",
          ylab = "GWh",
          main = "")
@@ -97,7 +111,8 @@ autoplot(snaive.nacimientos,
          xlab = "",
          ylab = "Nacimientos",
          main = "",
-         PI = FALSE)
+         PI = FALSE,
+         xlim = c(2000, 2025))
 
 # Demanda electrica
 snaive.electricidad <- snaive(electricidad, 
@@ -184,7 +199,6 @@ for (i in 0:s) {
 
 rmseRwf <- sqrt(colMeans(rmseRwf))
 round(rmseRwf, 2)
-
 #----------------------------------------------------------
 #
 #
@@ -251,6 +265,7 @@ autoplot(librosfD,
 electricidadEts <- ets(electricidad, 
                        model = "AAA", 
                        damped = FALSE)
+
 summary(electricidadEts)
 
 TT <- nrow(electricidadEts$states)
@@ -340,7 +355,7 @@ autoplot(librosEtsPre,
          main = "")
 
 # Analisis error
-error <- residuals(librosEts, type = "response")
+error <- residuals(librosEts)
 sderror <- sd(error)
 
 autoplot(error, series="Error",
@@ -392,11 +407,11 @@ nacimientosEtsPre
 
 autoplot(nacimientosEtsPre,
          xlab = "",
-         ylab = "Bebés",
+         ylab = "Nacimientos",
          main = "")
 
 # Analisis del error
-error <- residuals(nacimientosEts, type = "response")
+error <- residuals(nacimientosEts)
 sderror <- sd(error)
 
 autoplot(error, series="Error",
@@ -406,10 +421,14 @@ autoplot(error, series="Error",
          main = "") +
   geom_hline(yintercept = c(-3, -2, 2 ,3)*sderror, 
              colour = c("red", "blue", "blue", "red"), lty = 2) + 
-  scale_x_continuous(breaks= seq(2000, 2019, 2)) 
+  scale_x_continuous(breaks= seq(2000, 2022, 2)) 
 
 abs(error) > 3 * sderror
 time(error)[abs(error) > 3 * sderror]
+
+# Prueba de Tukey
+atipicos <- tsoutliers(error)
+time(error)[atipicos$index]
 
 # Error extramuestral: origen de prediccion movil
 k <- 120                 
@@ -422,7 +441,7 @@ for (i in 0:s) {
   train.set <- subset(nacimientosb, start = i + 1, end = i + k)
   test.set <-  subset(nacimientosb, start = i + k + 1, end = i + k + h)
   
-  fit <- ets(train.set, model = "MAA", damped = FALSE)
+  fit <- ets(train.set, model = "AAA", damped = FALSE)
   fcast<-forecast(fit, h = h)
   mapeAlisado[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
 }
@@ -476,18 +495,26 @@ autoplot(error, series="Error",
              colour = c("red", "blue", "blue", "red"), lty = 2) + 
   scale_x_continuous(breaks= seq(6, 26, 2)) 
 
+abs(error) > 3 * sderror
+time(error)[abs(error) > 3 * sderror]
+
+# Prueba de Tukey.
+
+atipicos <- tsoutliers(error)
+time(error)[atipicos$index]
+
 # Error extramuestral: origen de prediccion movil
-k <- 120                 
-h <- 12                  
-TT <- length(nacimientosb)
+k <- 70                
+h <- 14                  
+TT <- length(electricidad)
 s <- TT - k - h          
 
 mapeAlisado <- matrix(NA, s + 1, h)
 for (i in 0:s) {
-  train.set <- subset(nacimientosb, start = i + 1, end = i + k)
-  test.set <-  subset(nacimientosb, start = i + k + 1, end = i + k + h)
+  train.set <- subset(electricidad, start = i + 1, end = i + k)
+  test.set <-  subset(electricidad, start = i + k + 1, end = i + k + h)
   
-  fit <- ets(train.set, model = "MAA", damped = FALSE)
+  fit <- ets(train.set, model = "ANA", damped = FALSE)
   fcast<-forecast(fit, h = h)
   mapeAlisado[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
 }
@@ -496,11 +523,11 @@ errorAlisado <- colMeans(mapeAlisado)
 errorAlisado
 
 ggplot() +
-  geom_line(aes(x = 1:12, y = errorAlisado)) +
+  geom_line(aes(x = 1:14, y = errorAlisado)) +
   ggtitle("") +
   xlab("Horizonte temporal de predicción") +
   ylab("MAPE") +
-  scale_x_continuous(breaks= 1:12)
+  scale_x_continuous(breaks= 1:14)
 
 #----------------------------------------------------------
 #

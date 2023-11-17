@@ -7,7 +7,7 @@
 library(forecast)
 library(ggplot2)
 library(tseries)
-library(aod)
+library(lmtest)
 library(seasonal)
 
 #- Cargamos el ejemplo
@@ -19,7 +19,7 @@ DefEnfCer <- ts(DefEnfCer[,2],
                 freq = 12)
 
 DefEnfCer <- window(DefEnfCer, 
-                    start = 1988)
+                    start = 1990)
 
 #- Identificacion
 ggtsdisplay(diff(diff(log(DefEnfCer), lag = 12)), 
@@ -37,7 +37,8 @@ auto.arima(DefEnfCer,
            lambda = 0,
            xreg = cbind(d0299, d0603, d0803, d0212))
 
-summary(seas(DefEnfCer))
+summary(seas(DefEnfCer,
+             arima.model = c(1, 1, 1, 1, 1, 1)))
 
 #- Estimacion
 DefEnfCerArima1 <- Arima(DefEnfCer, 
@@ -60,22 +61,25 @@ autoplot(error, series="Error",
   geom_hline(yintercept = c(-3, -2, 2, 3)*sderror, 
              colour = c("red", "green", "green", "red"), 
              lty = 2) + 
-  scale_x_continuous(breaks= seq(1988, 2020, 2)) 
+  scale_x_continuous(breaks= seq(1990, 2022, 2)) 
 
-d0501 <- 1*(cycle(DefEnfCer) == 5 & trunc(time(DefEnfCer)) == 2001)
-d0115 <- 1*(cycle(DefEnfCer) == 1 & trunc(time(DefEnfCer)) == 2015)
-d0389 <- 1*(cycle(DefEnfCer) == 3 & trunc(time(DefEnfCer)) == 1989)
+d1291 <- 1*(cycle(DefEnfCer) ==12 & trunc(time(DefEnfCer)) == 1991)
 d0793 <- 1*(cycle(DefEnfCer) == 7 & trunc(time(DefEnfCer)) == 1993)
+d0501 <- 1*(cycle(DefEnfCer) == 5 & trunc(time(DefEnfCer)) == 2001)
 d0105 <- 1*(cycle(DefEnfCer) == 1 & trunc(time(DefEnfCer)) == 2005)
+d0115 <- 1*(cycle(DefEnfCer) == 1 & trunc(time(DefEnfCer)) == 2015)
 d0215 <- 1*(cycle(DefEnfCer) == 2 & trunc(time(DefEnfCer)) == 2015)
+d0221 <- 1*(cycle(DefEnfCer) == 2 & trunc(time(DefEnfCer)) == 2021)
+
 
 #- Segunda estimacion
 DefEnfCerArima2 <- Arima(DefEnfCer, 
                          order = c(1, 1, 1),  
                          seasonal = c(1, 1, 1),
                          lambda = 0,
-                         xreg = cbind(d0389, d0793, d0299, d0501, d0603, 
-                                      d0803, d0105, d0212, d0115, d0215))
+                         xreg = cbind(d1291, d0793, d0299, d0501, d0603, 
+                                      d0803, d0105, d0212, d0115, d0215,
+                                      d0221))
 DefEnfCerArima2
 
 #- Valores extremos
@@ -89,7 +93,7 @@ autoplot(error, series="Error",
   geom_hline(yintercept = c(-3, -2, 2, 3)*sderror, 
              colour = c("red", "green", "green", "red"), 
              lty = 2) + 
-  scale_x_continuous(breaks= seq(1988, 2020, 2)) 
+  scale_x_continuous(breaks= seq(1990, 2022, 2)) 
 
 #- Agrupamos meses atípicos
 d01aa <- d0105 + d0115
@@ -100,17 +104,12 @@ DefEnfCerArima3 <- Arima(DefEnfCer,
                          seasonal = c(1, 1, 1),
                          lambda = 0,
                          xreg = cbind(d01aa, d02aa, 
-                                      d0389, d0793, d0501, d0603, d0803))
+                                      d0793, d0501, d0603, d0803,
+                                      d0221))
 DefEnfCerArima3
 
 #- Coeficientes significativos
-for(i in 1:length(coef(DefEnfCerArima3))) {
-  wt <- wald.test(b = coef(DefEnfCerArima3), 
-                  Sigma = vcov(DefEnfCerArima3), 
-                  Terms = i)
-  cat("\nCoeficiente: ", names(coef(DefEnfCerArima3))[i], "\tvalor de p: ", 
-      formatC(wt$result$chi2[3], digits = 4, format = "f"))
-}
+coeftest(DefEnfCerArima3)
 
 accuracy(DefEnfCerArima3)
 
@@ -135,8 +134,8 @@ pDefEnfCerArima3 <- forecast(DefEnfCerArima3,
 autoplot(pDefEnfCerArima3, 
          xlab = "",
          ylab = 'Defunciones',
-         main = 'Defunciones (1988-2020) y predicción (2021-2025)') +
-  scale_x_continuous(breaks= seq(1988, 2026, 4)) 
+         main = 'Defunciones (1990-2021) y predicción (2022-2026)') +
+  scale_x_continuous(breaks= seq(1990, 2026, 4)) 
 
 
 #- Comparacion con alisado
@@ -151,38 +150,37 @@ s <- T - k - h
 mapeArima <- matrix(NA, s + 1, h)
 mapeAlisado <- matrix(NA, s + 1, h)
 
-X <- data.frame(cbind(d01aa, d02aa, d0389, d0793, d0501, d0603, d0803))
+X <- data.frame(cbind(d01aa, d02aa, d0793, d0501, d0603, d0803, d0221))
 
 for (i in 0:s) {
   train.set <- subset(DefEnfCer, start = i + 1, end = i + k)
   test.set <-  subset(DefEnfCer, start = i + k + 1, end = i + k + h) 
   
   X.train <- data.frame(X[(i + 1):(i + k),])
-  hay <- colSums(X.train)
-  X.train <- X.train[, hay>0]
-  
   X.test <- data.frame(X[(i + k + 1):(i + k + h),])
-  X.test <- X.test[, hay>0]
   
-  if (length(X.train) > 0) {
-    fit <- try(Arima(train.set, 
-                     order = c(1, 1, 1),
-                     seasonal = c(1, 1, 1), 
-                     lambda = 0,
-                     xreg = as.matrix(X.train)), silent = TRUE)
+  hay <- colSums(X.train)
+  
+  if(sum(hay) == 0){
+    X.train <- NULL
+    X.test <- NULL
   } else {
-    fit <- try(Arima(train.set, 
-                     order = c(1, 1, 1),
-                     seasonal =  c(1, 1, 1),
-                     lambda = 0), silent = TRUE)
+    X.train <- as.matrix(X.train[, hay>0])
+    X.test <- as.matrix(X.test[, hay>0])
   }
   
+  fit <- try(Arima(train.set, 
+                   order = c(1, 1, 1),
+                   seasonal = c(1, 1, 1), 
+                   lambda = 0,
+                   xreg = X.train), 
+             silent = TRUE)
+  
+  
   if (!is.element("try-error", class(fit))) {
-    if (length(X.train) > 0) 
-      fcast <- forecast(fit, h = h, xreg = as.matrix(X.test)) 
-    else
-      fcast <- forecast(fit, h = h)
-    
+    fcast <- forecast(fit, 
+                      h = h, 
+                      xreg = X.test)
     mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
   }
   

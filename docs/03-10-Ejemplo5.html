@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.0.36">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,16 @@
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-span.underline{text-decoration: underline;}
-div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -42,43 +48,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -108,6 +84,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
@@ -119,160 +96,176 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
-      <a class="navbar-brand" href="./index.html">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Series Temporales</span>
-  </a>
+    </a>
+  </div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html">Inicio</a>
+    <a class="nav-link" href="./index.html" rel="" target="">
+ <span class="menu-text">Inicio</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html">About</a>
+    <a class="nav-link" href="./about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./01-Guia-curso.html">Guía del curso</a>
+    <a class="nav-link" href="./01-Guia-curso.html" rel="" target="">
+ <span class="menu-text">Guía del curso</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./02-Logistica.html">Logística</a>
+    <a class="nav-link" href="./02-Logistica.html" rel="" target="">
+ <span class="menu-text">Logística</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-diapos" role="button" data-bs-toggle="dropdown" aria-expanded="false">Diapos</a>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-diapos" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Diapos</span>
+    </a>
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-diapos">    
         <li class="dropdown-header">Teoría</li>
         <li>
-    <a class="dropdown-item" href="./03-01-Tema1.html">
+    <a class="dropdown-item" href="./03-01-Tema1.html" rel="" target="">
  <span class="dropdown-text">Tema 1: Definicion y Componentes</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./03-02-Tema2.html">
+    <a class="dropdown-item" href="./03-02-Tema2.html" rel="" target="">
  <span class="dropdown-text">Tema 2: Alisado</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./03-03-Tema3.html">
+    <a class="dropdown-item" href="./03-03-Tema3.html" rel="" target="">
  <span class="dropdown-text">Tema 3: Procesos estocásticos</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./03-04-Tema4.html">
+    <a class="dropdown-item" href="./03-04-Tema4.html" rel="" target="">
  <span class="dropdown-text">Tema 4: ARIMA</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./03-05-Tema5.html">
+    <a class="dropdown-item" href="./03-05-Tema5.html" rel="" target="">
  <span class="dropdown-text">Tema 5: SARIMA</span></a>
   </li>  
         <li><hr class="dropdown-divider"></li>
         <li class="dropdown-header">Ejemplo de aplicación</li>
         <li>
-    <a class="dropdown-item" href="./03-06-Ejemplo1.html">
+    <a class="dropdown-item" href="./03-06-Ejemplo1.html" rel="" target="">
  <span class="dropdown-text">Ejemplo Tema 1</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./03-07-Ejemplo2.html">
+    <a class="dropdown-item" href="./03-07-Ejemplo2.html" rel="" target="">
  <span class="dropdown-text">Ejemplo Tema 2</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./03-08-Ejemplo3.html">
+    <a class="dropdown-item" href="./03-08-Ejemplo3.html" rel="" target="">
  <span class="dropdown-text">Ejemplo Tema 3</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./03-09-Ejemplo4.html">
+    <a class="dropdown-item" href="./03-09-Ejemplo4.html" rel="" target="">
  <span class="dropdown-text">Ejemplo Tema 4</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./03-10-Ejemplo5.html">
+    <a class="dropdown-item" href="./03-10-Ejemplo5.html" rel="" target="">
  <span class="dropdown-text">Ejemplo Tema 5</span></a>
   </li>  
         <li><hr class="dropdown-divider"></li>
         <li class="dropdown-header">Otro ejemplo</li>
         <li>
-    <a class="dropdown-item" href="./03-11-Ejemplo-Pasajeros.html">
+    <a class="dropdown-item" href="./03-11-Ejemplo-Pasajeros.html" rel="" target="">
  <span class="dropdown-text">Ejemplo de Pasajeros</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-píldoras" role="button" data-bs-toggle="dropdown" aria-expanded="false">Píldoras</a>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-píldoras" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Píldoras</span>
+    </a>
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-píldoras">    
         <li>
-    <a class="dropdown-item" href="./04-01-Bootstrapping.html">
+    <a class="dropdown-item" href="./04-01-Bootstrapping.html" rel="" target="">
  <span class="dropdown-text">Bootstrapping para IC</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./04-02-Multiples_CS.html">
+    <a class="dropdown-item" href="./04-02-Multiples_CS.html" rel="" target="">
  <span class="dropdown-text">Múltiples componentes estacionales</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./04-03-Redes_neuronales.html">
+    <a class="dropdown-item" href="./04-03-Redes_neuronales.html" rel="" target="">
  <span class="dropdown-text">Predicción con Redes Neuronales</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./04-04-Series_acotadas.html">
+    <a class="dropdown-item" href="./04-04-Series_acotadas.html" rel="" target="">
  <span class="dropdown-text">Series acotadas</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./04-05-Valores_perdidos_Outliers.html">
+    <a class="dropdown-item" href="./04-05-Valores_perdidos_Outliers.html" rel="" target="">
  <span class="dropdown-text">Valores perdidos y outliers</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./04-06-Covid_Nacimientos.html">
+    <a class="dropdown-item" href="./04-06-Covid_Nacimientos.html" rel="" target="">
  <span class="dropdown-text">Efecto de la Covid-19 en Nacimientos</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="./05-Recursos-R.html">Recursos de la asignatura</a>
+    <a class="nav-link" href="./05-Recursos-R.html" rel="" target="">
+ <span class="menu-text">Recursos de la asignatura</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./06-Practica.html">Practica</a>
+    <a class="nav-link" href="./06-Practica.html" rel="" target="">
+ <span class="menu-text">Practica</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-más" role="button" data-bs-toggle="dropdown" aria-expanded="false">Más</a>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-más" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Más</span>
+    </a>
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-más">    
         <li class="dropdown-header">R</li>
         <li>
-    <a class="dropdown-item" href="https://cran.r-project.org">
+    <a class="dropdown-item" href="https://cran.r-project.org" rel="" target="">
  <span class="dropdown-text">Dónde está R</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://rstudio.com">
+    <a class="dropdown-item" href="https://rstudio.com" rel="" target="">
  <span class="dropdown-text">Donde está RStudio</span></a>
   </li>  
         <li><hr class="dropdown-divider"></li>
         <li class="dropdown-header">Markdown</li>
         <li>
-    <a class="dropdown-item" href="https://bookdown.org/yihui/rmarkdown/">
+    <a class="dropdown-item" href="https://bookdown.org/yihui/rmarkdown/" rel="" target="">
  <span class="dropdown-text">Markdown</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://rmarkdown.rstudio.com/lesson-1.html">
+    <a class="dropdown-item" href="https://rmarkdown.rstudio.com/lesson-1.html" rel="" target="">
  <span class="dropdown-text">R Markdown</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf">
+    <a class="dropdown-item" href="https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf" rel="" target="">
  <span class="dropdown-text">R Markdown (pdf)</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://quarto.org/docs/tools/rstudio.html">
+    <a class="dropdown-item" href="https://quarto.org/docs/tools/rstudio.html" rel="" target="">
  <span class="dropdown-text">Quatro</span></a>
   </li>  
         <li><hr class="dropdown-divider"></li>
         <li class="dropdown-header">Otros</li>
         <li>
-    <a class="dropdown-item" href="https://www.r-bloggers.com">
+    <a class="dropdown-item" href="https://www.r-bloggers.com" rel="" target="">
  <span class="dropdown-text">Blog sobre R</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://bookdown.org">
+    <a class="dropdown-item" href="https://bookdown.org" rel="" target="">
  <span class="dropdown-text">Libros online que debes conocer</span></a>
   </li>  
     </ul>
   </li>
 </ul>
+            <div class="quarto-navbar-tools">
+</div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
@@ -282,20 +275,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc">
+        <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Índice</h2>
    
   <ul>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"> <span class="header-section-number">1</span> Introducción</a></li>
-  <li><a href="#identificación" id="toc-identificación" class="nav-link" data-scroll-target="#identificación"> <span class="header-section-number">2</span> Identificación</a></li>
-  <li><a href="#estimación" id="toc-estimación" class="nav-link" data-scroll-target="#estimación"> <span class="header-section-number">3</span> Estimación</a></li>
-  <li><a href="#validación" id="toc-validación" class="nav-link" data-scroll-target="#validación"> <span class="header-section-number">4</span> Validación</a>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">1</span> Introducción</a></li>
+  <li><a href="#identificación" id="toc-identificación" class="nav-link" data-scroll-target="#identificación"><span class="header-section-number">2</span> Identificación</a></li>
+  <li><a href="#estimación" id="toc-estimación" class="nav-link" data-scroll-target="#estimación"><span class="header-section-number">3</span> Estimación</a></li>
+  <li><a href="#validación" id="toc-validación" class="nav-link" data-scroll-target="#validación"><span class="header-section-number">4</span> Validación</a>
   <ul class="collapse">
   <li><a href="#incorrelación-homocedasticidad-y-normalidad" id="toc-incorrelación-homocedasticidad-y-normalidad" class="nav-link" data-scroll-target="#incorrelación-homocedasticidad-y-normalidad">Incorrelación, Homocedasticidad y Normalidad</a></li>
   </ul></li>
-  <li><a href="#ecuación-del-modelo-identificado" id="toc-ecuación-del-modelo-identificado" class="nav-link" data-scroll-target="#ecuación-del-modelo-identificado"> <span class="header-section-number">5</span> Ecuación del modelo identificado</a></li>
-  <li><a href="#predicción-de-las-defunciones-por-enfermedad-cerebrovascular" id="toc-predicción-de-las-defunciones-por-enfermedad-cerebrovascular" class="nav-link" data-scroll-target="#predicción-de-las-defunciones-por-enfermedad-cerebrovascular"> <span class="header-section-number">6</span> Predicción de las defunciones por enfermedad cerebrovascular</a></li>
-  <li><a href="#comparación-con-alisado-exponencial" id="toc-comparación-con-alisado-exponencial" class="nav-link" data-scroll-target="#comparación-con-alisado-exponencial"> <span class="header-section-number">7</span> Comparación con Alisado Exponencial</a></li>
+  <li><a href="#ecuación-del-modelo-identificado" id="toc-ecuación-del-modelo-identificado" class="nav-link" data-scroll-target="#ecuación-del-modelo-identificado"><span class="header-section-number">5</span> Ecuación del modelo identificado</a></li>
+  <li><a href="#predicción-de-las-defunciones-por-enfermedad-cerebrovascular" id="toc-predicción-de-las-defunciones-por-enfermedad-cerebrovascular" class="nav-link" data-scroll-target="#predicción-de-las-defunciones-por-enfermedad-cerebrovascular"><span class="header-section-number">6</span> Predicción de las defunciones por enfermedad cerebrovascular</a></li>
+  <li><a href="#comparación-con-alisado-exponencial" id="toc-comparación-con-alisado-exponencial" class="nav-link" data-scroll-target="#comparación-con-alisado-exponencial"><span class="header-section-number">7</span> Comparación con Alisado Exponencial</a></li>
   </ul>
 </nav>
     </div>
@@ -319,25 +312,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
   </div>
     
+  
     
   </div>
   
 
 </header>
 
-<div class="cell">
-
-</div>
-<div class="cell" data-layout-align="center">
-
-</div>
 <p><br>
 <br>
 </p>
 <section id="introducción" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introducción</h1>
-<p>Consideremos de nuevo la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares, Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2020, un total de 41 años o 492 meses</p>
-<p>En la descriptiva vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para su análisis por modelos ARIMA vamos a recortar la serie, que empezará el enero de 1988.</p>
+<p>Consideremos de nuevo la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares, Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2021, un total de 42 años o 504 meses</p>
+<p>En la descriptiva vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para su análisis por modelos ARIMA vamos a recortar la serie, que empezará el enero de 1990.</p>
 <p>También hemos visto que para alcanzar la estacionariedad y verificar la hipótesis de ergodicidad es necesario diferenciar la serie tanto en la parte regular como estacional y decidimos usar la transformación logarítmica para linealizar la serie y ganar en interpretabilidad.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>DefEnfCer <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">"./series/Enfermedades cerebrovasculares.csv"</span>, </span>
@@ -348,7 +336,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">freq =</span> <span class="dv">12</span>)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>DefEnfCer <span class="ot">&lt;-</span> <span class="fu">window</span>(DefEnfCer, </span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">start =</span> <span class="dv">1988</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">start =</span> <span class="dv">1990</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><br>
 <br>
@@ -356,20 +344,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="identificación" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Identificación</h1>
-<p>Vamos a identificar los valores de <span class="math inline">\(p\)</span>, <span class="math inline">\(q\)</span>, <span class="math inline">\(P\)</span> y <span class="math inline">\(Q\)</span>. Para ello, analizaremos la FAC y la FACP, y solicitaremos con <code>auto.arima</code> y <code>seas</code> una identificación automática. Con <code>auto.arima</code> incluiremos variables ficticias para los cuatro valores atípicos ya identificados cuando aplicamos Alisado Exponencial: febrero de 1999, junio y agosto de 2003, y febrero de 2012.</p>
+<p>Vamos a identificar los valores de <span class="math inline">\(p\)</span>, <span class="math inline">\(q\)</span>, <span class="math inline">\(P\)</span> y <span class="math inline">\(Q\)</span>. Para ello, analizaremos la FAC y la FACP, y solicitaremos con <code>auto.arima</code> y <code>seas</code> una identificación automática.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtsdisplay</span>(<span class="fu">diff</span>(<span class="fu">diff</span>(<span class="fu">log</span>(DefEnfCer), <span class="at">lag =</span> <span class="dv">12</span>)), <span class="at">lag =</span> <span class="dv">48</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-ECBDisplay" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-10-Ejemplo5_files/figure-html/fig-ECBDisplay-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura 1: Defunciones anuales por enfermedades cerebrovasculares, FAC y FACP de la serie transformada</figcaption><p></p>
+<figcaption class="figure-caption">Figura&nbsp;1: Defunciones anuales por enfermedades cerebrovasculares, FAC y FACP de la serie transformada</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>En la parte regular, la FAC muestra que la primera autocorrelación está por encima del IC95 y en la FACP se observa decrecimiento. En la parte estacional, la FAC muestra una autocorrelación significativa en el orden 12 y la FACP muestra decrecimiento. Así, podemos identificar el proceso como <span class="math inline">\(log(DefEnfCer_t) \sim ARIMA_{12}(0,1,1)(0,1,1)\)</span>.</p>
-<p>Veamos ahora <code>auto.arima</code></p>
+<p>Veamos ahora <code>auto.arima</code>, al que incluiremos variables ficticias para los cuatro valores atípicos ya identificados cuando aplicamos Alisado Exponencial: febrero de 1999, junio y agosto de 2003, y febrero de 2012.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d0299 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">*</span>(<span class="fu">cycle</span>(DefEnfCer) <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;</span> <span class="fu">trunc</span>(<span class="fu">time</span>(DefEnfCer)) <span class="sc">==</span> <span class="dv">1999</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>d0603 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">*</span>(<span class="fu">cycle</span>(DefEnfCer) <span class="sc">==</span> <span class="dv">6</span> <span class="sc">&amp;</span> <span class="fu">trunc</span>(<span class="fu">time</span>(DefEnfCer)) <span class="sc">==</span> <span class="dv">2003</span>)</span>
@@ -383,46 +371,45 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">xreg =</span> <span class="fu">cbind</span>(d0299, d0603, d0803, d0212))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Series: DefEnfCer 
-Regression with ARIMA(3,1,2)(2,1,2)[12] errors 
+Regression with ARIMA(1,1,2)(1,1,1)[12] errors 
 Box Cox transformation: lambda= 0 
 
 Coefficients:
-          ar1     ar2     ar3      ma1      ma2     sar1     sar2     sma1
-      -0.6227  0.1144  0.0338  -0.0996  -0.7886  -0.8659  -0.2257  -0.1695
-s.e.   0.1119  0.0748  0.0603   0.0992   0.0909   0.1714   0.0648   0.1681
-         sma2   d0299   d0603   d0803   d0212
-      -0.5279  0.1964  0.1560  0.1524  0.2252
-s.e.   0.1449  0.0409  0.0403  0.0407  0.0407
+         ar1      ma1     ma2     sar1     sma1   d0299   d0603   d0803   d0212
+      0.3667  -1.0827  0.1224  -0.1625  -0.8355  0.1859  0.1525  0.1445  0.2187
+s.e.  0.3038   0.3259  0.3032   0.0623   0.0444  0.0418  0.0416  0.0417  0.0415
 
-sigma^2 = 0.002055:  log likelihood = 637.19
-AIC=-1246.38   AICc=-1245.24   BIC=-1191.11</code></pre>
+sigma^2 = 0.002059:  log likelihood = 615.2
+AIC=-1210.4   AICc=-1209.79   BIC=-1171.23</code></pre>
 </div>
 </div>
-<p>La función <code>auto.arima</code> identifica un complejo proceso <span class="math inline">\(ARIMA_{12}(3,1,2)(2,1,2)\)</span>. La identificación alcanzada por <code>seas</code> es un proceso <span class="math inline">\(ARIMA_{12}(1,1,1)(1,1,1)\)</span>, con dos intervenciones en febrero de 1999 y 2012.</p>
+<p>La función <code>auto.arima</code> identifica un proceso <span class="math inline">\(ARIMA_{12}(1,1,2)(1,1,1)\)</span>, donde el coeficiente <code>ma2</code> no es significativo.</p>
+<p>Esta vez la función <code>seas</code> falla a la hora de converger e identificar un proceso, por ello se ha pedido directamente que estime el proceso <span class="math inline">\(ARIMA_{12}(1,1,1)(1,1,1)\)</span>. El resultado muestra la conveniencia de la transformación logarítmica y dos intervenciones en febrero de 1999 y 2012.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">seas</span>(DefEnfCer))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">seas</span>(DefEnfCer,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">arima.model =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-seas(x = DefEnfCer)
+seas(x = DefEnfCer, arima.model = c(1, 1, 1, 1, 1, 1))
 
 Coefficients:
                   Estimate Std. Error z value Pr(&gt;|z|)    
-AO1999.Feb         0.18988    0.04252   4.466 7.97e-06 ***
-AO2012.Feb         0.21523    0.04261   5.051 4.39e-07 ***
-AR-Nonseasonal-01  0.23806    0.05382   4.423 9.72e-06 ***
-AR-Seasonal-12    -0.19430    0.05499  -3.533  0.00041 ***
-MA-Nonseasonal-01  0.94119    0.01958  48.071  &lt; 2e-16 ***
-MA-Seasonal-12     0.83840    0.03088  27.151  &lt; 2e-16 ***
+AO1999.Feb         0.18572    0.04216   4.405 1.06e-05 ***
+AO2012.Feb         0.21788    0.04216   5.168 2.36e-07 ***
+AR-Nonseasonal-01  0.25942    0.05284   4.909 9.13e-07 ***
+AR-Seasonal-12    -0.17311    0.05598  -3.092  0.00199 ** 
+MA-Nonseasonal-01  0.94598    0.01813  52.182  &lt; 2e-16 ***
+MA-Seasonal-12     0.83113    0.03402  24.431  &lt; 2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-SEATS adj.  ARIMA: (1 1 1)(1 1 1)  Obs.: 396  Transform: log
-AICc:  4854, BIC:  4881  QS (no seasonality in final):    0  
-Box-Ljung (no autocorr.): 17.24   Shapiro (normality): 0.987 **</code></pre>
+SEATS adj.  ARIMA: (1 1 1)(1 1 1)  Obs.: 384  Transform: log
+AICc:  4678, BIC:  4705  QS (no seasonality in final):    0  
+Box-Ljung (no autocorr.): 22.03   Shapiro (normality): 0.9841 ***</code></pre>
 </div>
 </div>
-<p>Vamos a partir de la identificación obtenida por <code>seas</code> (más parsimoniosa que la de <code>auto.arima</code>), incluyendo las variables ficticias que afectan un único mes: <span class="math inline">\(log(DefEnfCer) \sim ARIMA_{12}(1,1,1)(1,1,1) + AI\)</span>.</p>
+<p>Vamos a partir de la identificación <span class="math inline">\(ARIMA_{12}(1,1,1)(1,1,1)\)</span> incluyendo las variables ficticias que afectan un único mes: <span class="math inline">\(log(DefEnfCer) \sim ARIMA_{12}(1,1,1)(1,1,1) + AI\)</span>.</p>
 <p><br>
 <br>
 </p>
@@ -444,11 +431,11 @@ Box Cox transformation: lambda= 0
 
 Coefficients:
          ar1      ma1     sar1     sma1   d0299   d0603   d0803   d0212
-      0.2216  -0.9459  -0.1874  -0.8429  0.1908  0.1551  0.1439  0.2155
-s.e.  0.0560   0.0195   0.0605   0.0384  0.0422  0.0417  0.0420  0.0419
+      0.2423  -0.9507  -0.1633  -0.8374  0.1866  0.1541  0.1441  0.2185
+s.e.  0.0563   0.0191   0.0621   0.0437  0.0418  0.0413  0.0416  0.0415
 
-sigma^2 = 0.002085:  log likelihood = 631.98
-AIC=-1245.96   AICc=-1245.48   BIC=-1210.43</code></pre>
+sigma^2 = 0.002054:  log likelihood = 615.13
+AIC=-1212.26   AICc=-1211.76   BIC=-1177.01</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
@@ -463,50 +450,52 @@ AIC=-1245.96   AICc=-1245.48   BIC=-1210.43</code></pre>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>)<span class="sc">*</span>sderror, </span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">colour =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"green"</span>, <span class="st">"green"</span>, <span class="st">"red"</span>), </span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span> </span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span> <span class="fu">seq</span>(<span class="dv">1988</span>, <span class="dv">2020</span>, <span class="dv">2</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span> <span class="fu">seq</span>(<span class="dv">1990</span>, <span class="dv">2022</span>, <span class="dv">2</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-ECBError" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-10-Ejemplo5_files/figure-html/fig-ECBError-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura 2: Error + Intervención</figcaption><p></p>
+<figcaption class="figure-caption">Figura&nbsp;2: Error + Intervención</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Se observan dos valores claramente atípicos en mayo de 2001 y enero de 2015. Además, hay otros candidatos a valor extremo, entre los que destacan marzo de 1989, julio de 1993, enero de 2005 y febrero de 2015. Procederemos a incluirlos en el modelo.</p>
+<p>Se observan dos valores claramente atípicos en mayo de 2001 y enero de 2015. Además, hay otros candidatos a valor extremo, entre los que destacan diciembre de 1991, julio de 1993, enero de 2005, febrero de 2015 y febrero de 2021. Procederemos a incluirlos en el modelo.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>d0501 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">*</span>(<span class="fu">cycle</span>(DefEnfCer) <span class="sc">==</span> <span class="dv">5</span> <span class="sc">&amp;</span> <span class="fu">trunc</span>(<span class="fu">time</span>(DefEnfCer)) <span class="sc">==</span> <span class="dv">2001</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>d0115 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">*</span>(<span class="fu">cycle</span>(DefEnfCer) <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> <span class="fu">trunc</span>(<span class="fu">time</span>(DefEnfCer)) <span class="sc">==</span> <span class="dv">2015</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>d0389 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">*</span>(<span class="fu">cycle</span>(DefEnfCer) <span class="sc">==</span> <span class="dv">3</span> <span class="sc">&amp;</span> <span class="fu">trunc</span>(<span class="fu">time</span>(DefEnfCer)) <span class="sc">==</span> <span class="dv">1989</span>)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>d0793 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">*</span>(<span class="fu">cycle</span>(DefEnfCer) <span class="sc">==</span> <span class="dv">7</span> <span class="sc">&amp;</span> <span class="fu">trunc</span>(<span class="fu">time</span>(DefEnfCer)) <span class="sc">==</span> <span class="dv">1993</span>)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>d0105 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">*</span>(<span class="fu">cycle</span>(DefEnfCer) <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> <span class="fu">trunc</span>(<span class="fu">time</span>(DefEnfCer)) <span class="sc">==</span> <span class="dv">2005</span>)</span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>d1291 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">*</span>(<span class="fu">cycle</span>(DefEnfCer) <span class="sc">==</span><span class="dv">12</span> <span class="sc">&amp;</span> <span class="fu">trunc</span>(<span class="fu">time</span>(DefEnfCer)) <span class="sc">==</span> <span class="dv">1991</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>d0793 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">*</span>(<span class="fu">cycle</span>(DefEnfCer) <span class="sc">==</span> <span class="dv">7</span> <span class="sc">&amp;</span> <span class="fu">trunc</span>(<span class="fu">time</span>(DefEnfCer)) <span class="sc">==</span> <span class="dv">1993</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>d0501 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">*</span>(<span class="fu">cycle</span>(DefEnfCer) <span class="sc">==</span> <span class="dv">5</span> <span class="sc">&amp;</span> <span class="fu">trunc</span>(<span class="fu">time</span>(DefEnfCer)) <span class="sc">==</span> <span class="dv">2001</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>d0105 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">*</span>(<span class="fu">cycle</span>(DefEnfCer) <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> <span class="fu">trunc</span>(<span class="fu">time</span>(DefEnfCer)) <span class="sc">==</span> <span class="dv">2005</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>d0115 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">*</span>(<span class="fu">cycle</span>(DefEnfCer) <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> <span class="fu">trunc</span>(<span class="fu">time</span>(DefEnfCer)) <span class="sc">==</span> <span class="dv">2015</span>)</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>d0215 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">*</span>(<span class="fu">cycle</span>(DefEnfCer) <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;</span> <span class="fu">trunc</span>(<span class="fu">time</span>(DefEnfCer)) <span class="sc">==</span> <span class="dv">2015</span>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>DefEnfCerArima2 <span class="ot">&lt;-</span> <span class="fu">Arima</span>(DefEnfCer, </span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>),  </span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">lambda =</span> <span class="dv">0</span>,</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">xreg =</span> <span class="fu">cbind</span>(d0389, d0793, d0299, d0501, d0603, </span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>                                      d0803, d0105, d0212, d0115, d0215))</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>DefEnfCerArima2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>d0221 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">*</span>(<span class="fu">cycle</span>(DefEnfCer) <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;</span> <span class="fu">trunc</span>(<span class="fu">time</span>(DefEnfCer)) <span class="sc">==</span> <span class="dv">2021</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>DefEnfCerArima2 <span class="ot">&lt;-</span> <span class="fu">Arima</span>(DefEnfCer, </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>),  </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">lambda =</span> <span class="dv">0</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>                         <span class="at">xreg =</span> <span class="fu">cbind</span>(d1291, d0793, d0299, d0501, d0603, </span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                                      d0803, d0105, d0212, d0115, d0215,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>                                      d0221))</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>DefEnfCerArima2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Series: DefEnfCer 
 Regression with ARIMA(1,1,1)(1,1,1)[12] errors 
 Box Cox transformation: lambda= 0 
 
 Coefficients:
-         ar1      ma1     sar1     sma1    d0389    d0793   d0299   d0501
-      0.1950  -0.9429  -0.1561  -0.8098  -0.0757  -0.0814  0.1929  0.1124
-s.e.  0.0581   0.0203   0.0650   0.0432   0.0415   0.0403  0.0404  0.0395
-       d0603   d0803   d0105   d0212   d0115   d0215
-      0.1525  0.1506  0.1273  0.2298  0.1136  0.1611
-s.e.  0.0399  0.0402  0.0403  0.0402  0.0411  0.0409
+         ar1      ma1     sar1     sma1    d1291    d0793   d0299   d0501
+      0.2089  -0.9449  -0.1385  -0.8067  -0.0594  -0.0802  0.1889  0.1118
+s.e.  0.0596   0.0205   0.0660   0.0465   0.0406   0.0401  0.0396  0.0387
+       d0603   d0803   d0105   d0212   d0115   d0215    d0221
+      0.1518  0.1508  0.1280  0.2284  0.1171  0.1615  -0.0957
+s.e.  0.0391  0.0394  0.0394  0.0394  0.0403  0.0401   0.0413
 
-sigma^2 = 0.001919:  log likelihood = 652.5
-AIC=-1275   AICc=-1273.69   BIC=-1215.78</code></pre>
+sigma^2 = 0.001855:  log likelihood = 639.03
+AIC=-1246.06   AICc=-1244.52   BIC=-1183.4</code></pre>
 </div>
 </div>
-<p>Aparentemente las variables de intervención incluidas son significativas, exceptuando la de marzo de 1989. Este hecho lo contrastaremos más adelante.</p>
+<p>Aparentemente las variables de intervención incluidas son significativas, exceptuando la de diciembre de 1991 que eliminaremos.</p>
 <p>El análisis gráfico del residuo indica que aún hay candidatos a valores atípicos (véase <a href="#fig-ECBError2">Figura&nbsp;3</a>). Aunque ninguno alcanza las tres desviaciones típicas, al menos dos de ellos están muy cerca. Sin embargo, vamos a dar por concluido este proceso.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>error <span class="ot">&lt;-</span> <span class="fu">residuals</span>(DefEnfCerArima2)</span>
@@ -520,17 +509,17 @@ AIC=-1275   AICc=-1273.69   BIC=-1215.78</code></pre>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>)<span class="sc">*</span>sderror, </span>
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">colour =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"green"</span>, <span class="st">"green"</span>, <span class="st">"red"</span>), </span>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span> </span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span> <span class="fu">seq</span>(<span class="dv">1988</span>, <span class="dv">2020</span>, <span class="dv">2</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span> <span class="fu">seq</span>(<span class="dv">1990</span>, <span class="dv">2022</span>, <span class="dv">2</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-ECBError2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-10-Ejemplo5_files/figure-html/fig-ECBError2-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura 3: Error + Intervención</figcaption><p></p>
+<figcaption class="figure-caption">Figura&nbsp;3: Error + Intervención</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Se observa que tres de los valores atípicos corresponden al mes de febrero y que sus coeficientes estimados toman valores parecidos. También has dos meses de enero atípicos con similar efecto. Vamos a asumir que la causa que hay detrás del valor anómalo en los meses de febrero es la misma, posiblemente un invierno más frío de lo usual. Lo mismo asumiremos para los valores atípicos en enero. Esto nos permite <em>agrupar</em> variables de intervención y simplificar el modelo.</p>
+<p>Se observa que para tres de los valores atípicos corresponden al mes de febrero sus coeficientes estimados toman valores parecidos. También has dos meses de enero atípicos con similar efecto. Vamos a asumir que la causa que hay detrás del valor anómalo en los meses de febrero es la misma, posiblemente un invierno más frío de lo usual. Lo mismo asumiremos para los valores atípicos en enero. Esto nos permite <em>agrupar</em> variables de intervención y simplificar el modelo.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>d01aa <span class="ot">&lt;-</span> d0105 <span class="sc">+</span> d0115</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>d02aa <span class="ot">&lt;-</span> d0299 <span class="sc">+</span> d0212 <span class="sc">+</span> d0215</span>
@@ -540,7 +529,7 @@ AIC=-1275   AICc=-1273.69   BIC=-1215.78</code></pre>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">lambda =</span> <span class="dv">0</span>,</span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">xreg =</span> <span class="fu">cbind</span>(d01aa, d02aa, </span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                                      d0389, d0793, d0501, d0603, d0803))</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                                      d0793, d0501, d0603, d0803, d0221))</span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>DefEnfCerArima3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Series: DefEnfCer 
@@ -548,59 +537,54 @@ Regression with ARIMA(1,1,1)(1,1,1)[12] errors
 Box Cox transformation: lambda= 0 
 
 Coefficients:
-         ar1      ma1     sar1     sma1   d01aa   d02aa    d0389    d0793
-      0.2005  -0.9445  -0.1533  -0.8093  0.1246  0.1948  -0.0758  -0.0817
-s.e.  0.0570   0.0199   0.0647   0.0433  0.0290  0.0244   0.0416   0.0403
-       d0501   d0603   d0803
-      0.1126  0.1522  0.1504
-s.e.  0.0395  0.0399  0.0402
+         ar1      ma1     sar1     sma1   d01aa   d02aa    d0793   d0501
+      0.2068  -0.9462  -0.1403  -0.8083  0.1262  0.1936  -0.0795  0.1116
+s.e.  0.0582   0.0199   0.0657   0.0465  0.0285  0.0241   0.0404  0.0389
+       d0603   d0803    d0221
+      0.1522  0.1509  -0.0953
+s.e.  0.0394  0.0396   0.0415
 
-sigma^2 = 0.001911:  log likelihood = 651.69
-AIC=-1279.39   AICc=-1278.55   BIC=-1232.01</code></pre>
+sigma^2 = 0.001852:  log likelihood = 637.16
+AIC=-1250.32   AICc=-1249.45   BIC=-1203.32</code></pre>
 </div>
 </div>
-<p>Por último, veamos si todos los coeficientes del modelo son significativos.</p>
+<p>Por último, vemos que todos los coeficientes del modelo son significativos.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>ancho <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">nchar</span>(<span class="fu">names</span>(<span class="fu">coef</span>(DefEnfCerArima3)))) <span class="sc">+</span> <span class="dv">2</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">coef</span>(DefEnfCerArima3))) {</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  wt <span class="ot">&lt;-</span> <span class="fu">wald.test</span>(<span class="at">b =</span> <span class="fu">coef</span>(DefEnfCerArima3), </span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Sigma =</span> <span class="fu">vcov</span>(DefEnfCerArima3), </span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Terms =</span> i)</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Coeficiente: "</span>, </span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">format</span>(<span class="fu">names</span>(<span class="fu">coef</span>(DefEnfCerArima3))[i], <span class="at">width =</span> ancho), </span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">"valor de p: "</span>,</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">formatC</span>(wt<span class="sc">$</span>result<span class="sc">$</span>chi2[<span class="dv">3</span>], <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">format =</span> <span class="st">"f"</span>))</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftest</span>(DefEnfCerArima3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Coeficiente:  ar1     valor de p:  0.0004
-Coeficiente:  ma1     valor de p:  0.0000
-Coeficiente:  sar1    valor de p:  0.0179
-Coeficiente:  sma1    valor de p:  0.0000
-Coeficiente:  d01aa   valor de p:  0.0000
-Coeficiente:  d02aa   valor de p:  0.0000
-Coeficiente:  d0389   valor de p:  0.0681
-Coeficiente:  d0793   valor de p:  0.0428
-Coeficiente:  d0501   valor de p:  0.0044
-Coeficiente:  d0603   valor de p:  0.0001
-Coeficiente:  d0803   valor de p:  0.0002</code></pre>
+z test of coefficients:
+
+       Estimate Std. Error  z value  Pr(&gt;|z|)    
+ar1    0.206803   0.058205   3.5530 0.0003809 ***
+ma1   -0.946189   0.019933 -47.4678 &lt; 2.2e-16 ***
+sar1  -0.140278   0.065725  -2.1343 0.0328166 *  
+sma1  -0.808330   0.046472 -17.3939 &lt; 2.2e-16 ***
+d01aa  0.126237   0.028522   4.4259 9.603e-06 ***
+d02aa  0.193588   0.024068   8.0435 8.732e-16 ***
+d0793 -0.079482   0.040377  -1.9685 0.0490075 *  
+d0501  0.111603   0.038906   2.8685 0.0041243 ** 
+d0603  0.152203   0.039365   3.8665 0.0001104 ***
+d0803  0.150900   0.039612   3.8094 0.0001393 ***
+d0221 -0.095261   0.041459  -2.2977 0.0215780 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>Aunque el coeficiente del efecto de marzo de 1989 no es significativo al 5%, si los es al 10% así que optamos por dejarlo.</p>
 <p><br>
 <br>
 </p>
 </section>
 <section id="validación" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Validación</h1>
-<p>Analizando los criterios de bondad de ajuste se tiene que el error medio (ME), igual a -5.77, es prácticamente cero por lo que no parece que haya sesgo en las predicciones; en media nos equivocamos en 131 defunciones (RMSE); y el error porcentual medio es 3.3%, muy bajo.</p>
+<p>Analizando los criterios de bondad de ajuste se tiene que el error medio (ME), igual a -3.11, es prácticamente cero por lo que no parece que haya sesgo en las predicciones; en media nos equivocamos en 125 defunciones (RMSE); y el error porcentual medio es 3.2%, muy bajo.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">accuracy</span>(DefEnfCerArima3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output cell-output-stdout">
 <pre><code>                ME   RMSE   MAE   MPE MAPE MASE ACF1
-Training set -5.77 131.04 96.91 -0.25 3.29 0.58    0</code></pre>
+Training set -3.11 125.08 91.43 -0.16  3.2 0.56 0.01</code></pre>
 </div>
 </div>
 <p><br>
@@ -616,7 +600,7 @@ Training set -5.77 131.04 96.91 -0.25 3.29 0.58    0</code></pre>
     Box-Ljung test
 
 data:  error
-X-squared = 0.63976, df = 2, p-value = 0.7262</code></pre>
+X-squared = 0.20799, df = 2, p-value = 0.9012</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(error, <span class="at">lag =</span> <span class="dv">24</span>,<span class="at">type =</span> <span class="st">"Ljung-Box"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -624,7 +608,7 @@ X-squared = 0.63976, df = 2, p-value = 0.7262</code></pre>
     Box-Ljung test
 
 data:  error
-X-squared = 15.856, df = 24, p-value = 0.8932</code></pre>
+X-squared = 18.787, df = 24, p-value = 0.7633</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(error<span class="sc">^</span><span class="dv">2</span>, <span class="at">lag =</span> <span class="dv">2</span>, <span class="at">type =</span> <span class="st">"Ljung-Box"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -632,7 +616,7 @@ X-squared = 15.856, df = 24, p-value = 0.8932</code></pre>
     Box-Ljung test
 
 data:  error^2
-X-squared = 0.42582, df = 2, p-value = 0.8082</code></pre>
+X-squared = 1.0042, df = 2, p-value = 0.6052</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(error<span class="sc">^</span><span class="dv">2</span>, <span class="at">lag =</span> <span class="dv">24</span>, <span class="at">type =</span> <span class="st">"Ljung-Box"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -640,7 +624,7 @@ X-squared = 0.42582, df = 2, p-value = 0.8082</code></pre>
     Box-Ljung test
 
 data:  error^2
-X-squared = 25.784, df = 24, p-value = 0.3642</code></pre>
+X-squared = 18.701, df = 24, p-value = 0.7678</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jarque.bera.test</span>(error) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -648,7 +632,7 @@ X-squared = 25.784, df = 24, p-value = 0.3642</code></pre>
     Jarque Bera Test
 
 data:  error
-X-squared = 0.67287, df = 2, p-value = 0.7143</code></pre>
+X-squared = 1.5507, df = 2, p-value = 0.4605</code></pre>
 </div>
 </div>
 <p>El error muestra ser incorrelado, homocedástico y seguir una distribución normal.</p>
@@ -660,14 +644,12 @@ X-squared = 0.67287, df = 2, p-value = 0.7143</code></pre>
 <section id="ecuación-del-modelo-identificado" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Ecuación del modelo identificado</h1>
 <p>Ahora que ya hemos dado por válido el modelo, veamos cuál es su ecuación.</p>
-<p>El <strong>modelo teórico</strong> es</p>
-<p><span class="math display">\[(1 - \phi_1 L)(1 - \phi_{12}L^{12})(1-L)(1-L^{12})log(DefEnfCer_t) =(1+\theta_1 L)(1 + \theta_{12}L^{12})\varepsilon_t +AI.\]</span></p>
-<p>Debido a la complejidad del modelo, no vamos a desarrollarlo ni interpretarlo en su parte estructural. Respecto de la intervención:</p>
+<p>El <strong>modelo teórico</strong> es <span class="math display">\[(1 - \phi_1 L)(1 - \phi_{12}L^{12})(1-L)(1-L^{12})log(DefEnfCer_t) =(1+\theta_1 L)(1 + \theta_{12}L^{12})\varepsilon_t +AI.\]</span> Debido a la complejidad del modelo, no vamos a desarrollarlo ni interpretarlo en su parte estructural. Respecto de la intervención:</p>
 <ul>
-<li><p>En los dos meses de enero atípicos, la defunciones fueron 12.5% mayores que las observadas en otros meses de enero.</p></li>
-<li><p>De la misma forma, en los tres meses de febrero atípicos, la defunciones fueron un 19.5% mayores que las observadas en otros meses de febrero.</p></li>
-<li><p>En mayo de 2001 hubo un aumento en las defunciones del 11.3% respecto de lo esperado; en junio de 2003 del 15.2% y en agosto de 2003 del 15%.</p></li>
-<li><p>En marzo de 1989, las defunciones fueron un 7.6% menores de lo esperado y en julio de 1993 un 8.2% menor de los esperado.</p></li>
+<li><p>En los dos meses de enero atípicos, la defunciones fueron 12.6% mayores que las observadas en otros meses de enero.</p></li>
+<li><p>De la misma forma, en los tres meses de febrero atípicos, la defunciones fueron un 19.4% mayores que las observadas en otros meses de febrero.</p></li>
+<li><p>En mayo de 2001 hubo un aumento en las defunciones del 11.2% respecto de lo esperado; en junio de 2003 del 15.2% y en agosto de 2003 del 15.1%.</p></li>
+<li><p>En julio de 1993, las defunciones fueron un 7.9% menores de lo esperado y en febrero de 2021 un 9.5% menor de los esperado.</p></li>
 </ul>
 <p><br>
 <br>
@@ -687,10 +669,10 @@ X-squared = 0.67287, df = 2, p-value = 0.7143</code></pre>
 <span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(pDefEnfCerArima3<span class="sc">$</span>mean, <span class="at">FUN =</span> sum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Time Series:
-Start = 2021 
-End = 2025 
+Start = 2022 
+End = 2026 
 Frequency = 1 
-[1] 25125.74 24771.38 24372.46 23987.53 23607.54</code></pre>
+[1] 24809.90 24392.16 24015.49 23639.97 23270.96</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
@@ -698,24 +680,24 @@ Frequency = 1
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">""</span>,</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">ylab =</span> <span class="st">"Defunciones"</span>,</span>
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span> <span class="fu">seq</span>(<span class="dv">1988</span>, <span class="dv">2026</span>, <span class="dv">4</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span> <span class="fu">seq</span>(<span class="dv">1990</span>, <span class="dv">2026</span>, <span class="dv">4</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-ECBPredicción" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-10-Ejemplo5_files/figure-html/fig-ECBPredicción-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura 4: Defunciones (1988-2020) y predicción (2021-2025)</figcaption><p></p>
+<figcaption class="figure-caption">Figura&nbsp;4: Defunciones (1990-2021) y predicción (2022-2026)</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>A partir de 2022 se espera que el total de defunciones por enfermedad cerebrovascular caiga por debajo de los 25000 casos.</p>
+<p>A partir de 2025 se espera que el número de defunciones por enfermedad cerebrovascular caiga por debajo de los 23000 casos.</p>
 <p><br>
 <br>
 </p>
 </section>
 <section id="comparación-con-alisado-exponencial" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> Comparación con Alisado Exponencial</h1>
-<p>El método de Alisado exponencial, aplicado sobre el logaritmo de las defunciones identifica un proceso (A,A,A) con <span class="math inline">\(\alpha=0.089\)</span> y <span class="math inline">\(\beta = \gamma = 0\)</span>. La raíz del error cuadrático medio (RMSE) es de 156 casos y el error porcentual (MAPE) del 3.7%. Estos valores son algo superiores a los obtenidos con el modelo Arima (131 y 3.3%, respectivamente).</p>
+<p>El método de Alisado exponencial, aplicado sobre el logaritmo de las defunciones identifica un proceso (A,A,A) con <span class="math inline">\(\alpha=0.148\)</span> y <span class="math inline">\(\beta = \gamma = 0\)</span>. La raíz del error cuadrático medio (RMSE) es de 151 casos y el error porcentual (MAPE) del 3.7%. Estos valores son superiores a los obtenidos con el modelo Arima (125 y 3.2%, respectivamente).</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">ets</span>(DefEnfCer, <span class="at">lambda =</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -727,24 +709,26 @@ Call:
   Box-Cox transformation: lambda= 0 
 
   Smoothing parameters:
-    alpha = 0.0893 
+    alpha = 0.1482 
     beta  = 1e-04 
-    gamma = 1e-04 
+    gamma = 2e-04 
 
   Initial states:
-    l = 8.2282 
-    b = -0.0014 
-    s = 0.1321 -0.0034 -0.0439 -0.1616 -0.0914 -0.0524
-           -0.1076 -0.0407 -0.0269 0.0931 0.0836 0.219
+    l = 8.1968 
+    b = -0.0012 
+    s = 0.1235 -0.0026 -0.0439 -0.1579 -0.0825 -0.0556
+           -0.1005 -0.0339 -0.024 0.0856 0.0816 0.2101
 
   sigma:  0.0505
 
-     AIC     AICc      BIC 
-22.01631 23.63536 89.70035 
+      AIC      AICc       BIC 
+ 9.733106 11.405237 76.894029 
 
 Training set error measures:
-                   ME     RMSE      MAE        MPE     MAPE      MASE      ACF1
-Training set 2.244036 155.9707 110.6407 -0.1694108 3.679888 0.6601516 0.2235112</code></pre>
+                    ME     RMSE      MAE        MPE     MAPE      MASE
+Training set 0.1931249 150.9941 106.8758 -0.2663017 3.672719 0.6570562
+                  ACF1
+Training set 0.1960585</code></pre>
 </div>
 </div>
 <p>Vamos a determinar si la aplicación de modelos Arima mejora la calidad de las predicciones lo suficiente como para justificar su uso –frente a los métodos de alisado, mucho más sencillos. Para ello, aplicaremos la metodología de origen de predicción móvil para estimar la capacidad predictiva del modelo Arima y compararla con el modelo de Alisado.</p>
@@ -757,57 +741,56 @@ Training set 2.244036 155.9707 110.6407 -0.1694108 3.679888 0.6601516 0.2235112<
 <span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>mapeArima <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, s <span class="sc">+</span> <span class="dv">1</span>, h)</span>
 <span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>mapeAlisado <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, s <span class="sc">+</span> <span class="dv">1</span>, h)</span>
 <span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">cbind</span>(d01aa, d02aa, d0389, d0793, d0501, d0603, d0803))</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">cbind</span>(d01aa, d02aa, d0793, d0501, d0603, d0803, d0221))</span>
 <span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>s) {</span>
 <span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  train.set <span class="ot">&lt;-</span> <span class="fu">subset</span>(DefEnfCer, <span class="at">start =</span> i <span class="sc">+</span> <span class="dv">1</span>, <span class="at">end =</span> i <span class="sc">+</span> k)</span>
 <span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  test.set <span class="ot">&lt;-</span>  <span class="fu">subset</span>(DefEnfCer, <span class="at">start =</span> i <span class="sc">+</span> k <span class="sc">+</span> <span class="dv">1</span>, <span class="at">end =</span> i <span class="sc">+</span> k <span class="sc">+</span> h) </span>
 <span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  X.train <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(X[(i <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span>(i <span class="sc">+</span> k),])</span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  hay <span class="ot">&lt;-</span> <span class="fu">colSums</span>(X.train)</span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>  X.train <span class="ot">&lt;-</span> X.train[, hay<span class="sc">&gt;</span><span class="dv">0</span>]</span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>  X.test <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(X[(i <span class="sc">+</span> k <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span>(i <span class="sc">+</span> k <span class="sc">+</span> h),])</span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>  X.test <span class="ot">&lt;-</span> X.test[, hay<span class="sc">&gt;</span><span class="dv">0</span>]</span>
-<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(X.train) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">try</span>(<span class="fu">Arima</span>(train.set, </span>
-<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>                     <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
-<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>                     <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), </span>
-<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lambda =</span> <span class="dv">0</span>,</span>
-<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>                     <span class="at">xreg =</span> <span class="fu">as.matrix</span>(X.train)), <span class="at">silent =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">try</span>(<span class="fu">Arima</span>(train.set, </span>
-<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>                     <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
-<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>                     <span class="at">seasonal =</span>  <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
-<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lambda =</span> <span class="dv">0</span>), <span class="at">silent =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  X.test <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(X[(i <span class="sc">+</span> k <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span>(i <span class="sc">+</span> k <span class="sc">+</span> h),])</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  hay <span class="ot">&lt;-</span> <span class="fu">colSums</span>(X.train)</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">sum</span>(hay) <span class="sc">==</span> <span class="dv">0</span>){</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>    X.train <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>    X.test <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>    X.train <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(X.train[, hay<span class="sc">&gt;</span><span class="dv">0</span>])</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>    X.test <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(X.test[, hay<span class="sc">&gt;</span><span class="dv">0</span>])</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">try</span>(<span class="fu">Arima</span>(train.set, </span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>                   <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>                   <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), </span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>                   <span class="at">lambda =</span> <span class="dv">0</span>,</span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>                   <span class="at">xreg =</span> X.train), </span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>             <span class="at">silent =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.element</span>(<span class="st">"try-error"</span>, <span class="fu">class</span>(fit))) {</span>
-<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">length</span>(X.train) <span class="sc">&gt;</span> <span class="dv">0</span>) </span>
-<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>      fcast <span class="ot">&lt;-</span> <span class="fu">forecast</span>(fit, <span class="at">h =</span> h, <span class="at">xreg =</span> <span class="fu">as.matrix</span>(X.test)) </span>
-<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
-<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>      fcast <span class="ot">&lt;-</span> <span class="fu">forecast</span>(fit, <span class="at">h =</span> h)</span>
-<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>    mapeArima[i <span class="sc">+</span> <span class="dv">1</span>,] <span class="ot">&lt;-</span> <span class="dv">100</span><span class="sc">*</span><span class="fu">abs</span>(test.set <span class="sc">-</span> fcast<span class="sc">$</span>mean)<span class="sc">/</span>test.set</span>
-<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">ets</span>(train.set, <span class="at">lambda =</span> <span class="dv">0</span>, <span class="at">model =</span> <span class="st">"AAA"</span>, <span class="at">damped =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a>  fcast<span class="ot">&lt;-</span><span class="fu">forecast</span>(fit, <span class="at">h =</span> h)</span>
-<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a>  mapeAlisado[i <span class="sc">+</span> <span class="dv">1</span>,] <span class="ot">&lt;-</span> <span class="dv">100</span><span class="sc">*</span><span class="fu">abs</span>(test.set <span class="sc">-</span> fcast<span class="sc">$</span>mean)<span class="sc">/</span>test.set</span>
-<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a>errorArima <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(mapeArima, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a>errorArima</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.element</span>(<span class="st">"try-error"</span>, <span class="fu">class</span>(fit))) {</span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>    fcast <span class="ot">&lt;-</span> <span class="fu">forecast</span>(fit, </span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>                      <span class="at">h =</span> h, </span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>                      <span class="at">xreg =</span> X.test)</span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>    mapeArima[i <span class="sc">+</span> <span class="dv">1</span>,] <span class="ot">&lt;-</span> <span class="dv">100</span><span class="sc">*</span><span class="fu">abs</span>(test.set <span class="sc">-</span> fcast<span class="sc">$</span>mean)<span class="sc">/</span>test.set</span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">ets</span>(train.set, <span class="at">lambda =</span> <span class="dv">0</span>, <span class="at">model =</span> <span class="st">"AAA"</span>, <span class="at">damped =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>  fcast<span class="ot">&lt;-</span><span class="fu">forecast</span>(fit, <span class="at">h =</span> h)</span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a>  mapeAlisado[i <span class="sc">+</span> <span class="dv">1</span>,] <span class="ot">&lt;-</span> <span class="dv">100</span><span class="sc">*</span><span class="fu">abs</span>(test.set <span class="sc">-</span> fcast<span class="sc">$</span>mean)<span class="sc">/</span>test.set</span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a>errorArima <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(mapeArima, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a>errorArima</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 3.500559 3.717206 3.737817 3.814593 3.866561 3.847458 3.693418 3.792541
- [9] 3.836325 3.770663 3.796191 3.891282</code></pre>
+<pre><code> [1] 3.527960 3.694258 3.765987 3.803864 3.882822 3.868038 3.816478 3.856996
+ [9] 3.835379 3.777465 3.778096 3.817296</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>errorAlisado <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(mapeAlisado)</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>errorAlisado</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 3.831531 4.290697 4.411337 4.497644 4.580066 4.730074 4.778655 4.851094
- [9] 4.659138 4.570610 4.559090 4.560527</code></pre>
+<pre><code> [1] 3.912254 4.366265 4.498953 4.498338 4.619338 4.802967 4.906582 4.942407
+ [9] 4.736754 4.581558 4.503139 4.449578</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
@@ -829,12 +812,12 @@ Training set 2.244036 155.9707 110.6407 -0.1694108 3.679888 0.6601516 0.2235112<
 <div id="fig-ECBRW" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="03-10-Ejemplo5_files/figure-html/fig-ECBRW-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<p></p><figcaption class="figure-caption">Figura 5: Error de predicción (MAPE) según horizonte temporal</figcaption><p></p>
+<figcaption class="figure-caption">Figura&nbsp;5: Error de predicción (MAPE) según horizonte temporal</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>La <a href="#fig-ECBRW">Figura&nbsp;5</a> revela que Arima siempre es superior a Alisado en calidad de predicciones, con un error inferior en promedio de 0.75 puntos porcentuales. Además, en el modelo Arima el error se mantiene prácticamente constante.</p>
+<p>La <a href="#fig-ECBRW">Figura&nbsp;5</a> revela que Arima siempre es superior a Alisado en calidad de predicciones, con un error inferior en promedio de 0.78 puntos porcentuales. Además, en el modelo Arima el error se mantiene prácticamente constante.</p>
 <p><br>
 <br>
 <br>
@@ -872,9 +855,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -886,7 +883,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
     setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -914,38 +928,146 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      let href = ref.getAttribute('href');
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-    tippyHover(ref, function() {
-      var popup = window.document.createElement('div');
-      cites.forEach(function(cite) {
-        var citeDiv = window.document.createElement('div');
-        citeDiv.classList.add('hanging-indent');
-        citeDiv.classList.add('csl-entry');
-        var biblioDiv = window.document.getElementById('ref-' + cite);
-        if (biblioDiv) {
-          citeDiv.innerHTML = biblioDiv.innerHTML;
-        }
-        popup.appendChild(citeDiv);
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
       });
-      return popup.innerHTML;
-    });
+    }
   }
 });
 </script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left">© Copyright 2022, Iván Arribas. If you find any bugs please report them to <a href="mailto:ivan.arribas@uv.es">ivan.arribas@uv.e</a></div>   
+    <div class="nav-footer-left">© Copyright 2023, Iván Arribas. If you find any bugs please report them to <a href="mailto:ivan.arribas@uv.es">ivan.arribas@uv.es</a></div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
     <div class="nav-footer-right">This page is built with <a href="https://quarto.org/">Quarto</a></div>
   </div>
 </footer>
