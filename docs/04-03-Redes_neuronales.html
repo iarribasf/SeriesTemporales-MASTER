@@ -379,9 +379,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">accuracy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                     ME     RMSE      MAE        MPE     MAPE      MASE
-Training set -0.0191853 17.40178 11.51486 -0.1154172 1.776308 0.4543937
+Training set 0.01306282 17.22808 11.59794 -0.1136446 1.787269 0.4576719
                   ACF1
-Training set 0.3313777</code></pre>
+Training set 0.3636132</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pfit <span class="ot">&lt;-</span> <span class="fu">forecast</span>(fit, <span class="at">h =</span> <span class="dv">14</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -407,25 +407,25 @@ Training set 0.3313777</code></pre>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.time</span>() <span class="sc">-</span> tiempo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 12.80923 secs</code></pre>
+<pre><code>Time difference of 12.82764 secs</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pfit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         Point Forecast    Lo 95    Hi 95
-23.00000       676.1714 643.0995 712.6879
-23.14286       702.6288 663.1254 741.8395
-23.28571       705.5958 648.7661 745.6655
-23.42857       699.0136 614.9799 765.2962
-23.57143       682.7858 635.5987 748.9802
-23.71429       619.4747 584.8270 707.7319
-23.85714       576.1676 537.1360 654.9509
-24.00000       665.8814 553.7381 716.4748
-24.14286       694.1182 637.4935 747.0747
-24.28571       699.9728 631.9524 758.4210
-24.42857       693.1525 605.2606 769.1395
-24.57143       674.7302 589.2563 773.2578
-24.71429       613.9087 575.1529 736.0799
-24.85714       572.4021 529.7143 695.5558</code></pre>
+23.00000       672.1086 636.7348 706.9008
+23.14286       699.8713 658.6601 738.3702
+23.28571       695.1924 642.5071 742.7077
+23.42857       687.1477 635.6978 744.9025
+23.57143       675.2580 622.5614 738.6150
+23.71429       619.2553 581.3622 688.9413
+23.85714       572.1391 538.9015 639.2207
+24.00000       638.4878 543.5093 721.3124
+24.14286       674.7170 599.9931 743.4269
+24.28571       682.6301 605.0838 742.6538
+24.42857       680.7949 597.6691 741.8043
+24.57143       669.4415 598.8369 747.7143
+24.71429       613.9334 567.3359 722.5801
+24.85714       568.2563 540.5540 674.0152</code></pre>
 </div>
 </div>
 <p>La función <code>nnetar</code> admite la inclusión de variables de intervención de la forma usual a través del argumento <code>xreg</code>.</p>
