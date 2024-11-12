@@ -1,0 +1,11 @@
+---
+title: "Iván Arribas"
+about:
+  template: jolla
+  links:
+    - icon: building
+      text: Universitat de València
+      href: https://www.uv.es/iarribas
+---
+
+Iván Arribas es licenciado en Ciencias Matemáticas con la especialidad de Estadística e Investigación Operativa, y doctor en Ciencias Económicas. Actualmente es Profesor Titular en el Departamento de Análisis Económico de la Universitat de València, donde lleva más de 25 años como docente e investigador.

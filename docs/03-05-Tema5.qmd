@@ -1,0 +1,1393 @@
+---
+title: "Series Temporales: Procesos ARIMA con estacionalidad"
+subtitle: "Máster de Bioestadística (Modelización Estadística)"
+author: "Iván Arribas (Depto. Análisis Económico. Universitat de València)"
+toc: true
+toc-title: Índice
+number-sections: true
+bibliography: references.bib
+crossref:
+  fig-title: Figura
+  tbl-title: Tabla
+  fig-prefix: Figura
+  tbl-prefix: Tabla
+---
+
+```{r}
+#| label: chunk_setup
+#| echo: false
+knitr::opts_chunk$set(warning = FALSE, 
+                      message = FALSE, 
+                      comment = "",
+                      fig.align = "center", 
+                      fig.show = "hold",
+                      fig.height = 4,
+                      fig.width = 8,
+                      out.width = "80%") 
+```
+
+
+```{r}
+#| label: librerias
+#| echo: false
+library(forecast)
+library(ggplot2); theme_set(theme_bw())
+library(tseries)
+library(lmtest)
+library(seasonal)
+```
+
+# Introducción
+
+En general, la capacidad de toma de datos posibilita que el fechado de las series sea inferior al año, apareciendo la componente estacional. No es difícil disponer de series mensuales, trimestrales, diarias o incluso con frecuencia superior.
+
+En este tema se revisan los conocimientos del tema previo, ampliándolos a fin de contemplar la presencia de estacionalidad en las series temporales
+
+Se mantienen las hipótesis sobre el proceso generador de datos (*estacionario* y *ergódico*) y el vector de residuos (*ruido blanco*).
+
+Recuerda que $m$ es el orden estacional.
+
+\
+\
+
+# Procesos ARIMA con estacionalidad
+
+\
+
+## Procesos autorregresivos $AR_m(P)$
+
+### Definición {-}
+
+El modelo general **autorregresivo estacional de orden P**, $y_t \sim AR_m(P)$ viene definido por
+$$y_t=c + \phi_m y_{t-m} + \phi_{2m} y_{t-2m} + \ldots + \phi_{Pm} y_{t-Pm} + \varepsilon_t,$$
+\noindent que usando el operador retardo queda
+  $$(1 - \phi_m L^m - \phi_{2m} L^{2m} - \ldots - \phi_{Pm} L^{Pm})y_t = c + \varepsilon_t.$$
+
+### Propiedades {-}
+
+El proceso es **estacionario** si quedan fuera del círculo de radio unidad todas las raíces del polinomio
+$$\Phi_P(z) = 1 - \phi_m z^m - \phi_{2m} z^{2m} - \ldots - \phi_{Pm} z^{Pm}.$$
+
+Es **invertible** siempre.
+
+**Sobre todo**,
+
+* En la FAC las autocorrelaciones de **orden múltiplo de m** $(m,2m,\ldots)$ decaen exponencialmente a partir del orden P.
+* En la FACP las autocorrelaciones parciales de **orden múltiplo de m** verifican que los P primeros valores son no nulos y todos los demás valen cero.
+
+### Ejemplos {-}
+
+* $y_t \sim AR_{12}(1):\;\;y_t = c + \phi_{12} y_{t-12} + \varepsilon_t$ o $(1 - \phi_{12} L^{12})y_t = c + \varepsilon_t$
+
+* $y_t \sim AR_7(2):\;\;y_t = c + \phi_7 y_{t-7} + \phi_{14} y_{t-14} + \varepsilon_t$ o $(1 - \phi_7 L^7 - \phi_{14} L^{14})y_t = c + \varepsilon_t$
+
+### Simulaciones de procesos autorregresivos $AR_m(P)$ {-}
+
+La @fig-simulAR muestra una simulación del proceso $AR_{4}(2)$ $y_t = 0.7y_{t-4} - 0.7y_{t-8} + \varepsilon_t$ (panel superior), y del proceso $AR_{12}(1)$ $y_t = 0.6y_{t-12} + \varepsilon_t$ (panel inferior). En ambos casos la muestra es de tamaño 500 y $\varepsilon_t$ se distribuye como una normal con media cero y varianza la unidad. (Todas las simulaciones se han realizado con la función `arima.sim` de la librería `stats`.)
+
+
+```{r}
+#| echo: false
+#| fig-height: 4
+#| label: fig-simulAR
+#| fig-cap: "Simulación de dos procesos AR estacionales con diferente orden estacional"
+#| fig-subcap: 
+#|   - "AR(2) - m = 4"
+#|   - "AR(1) - m = 12"
+#| layout-nrow: 2
+set.seed(31416592)
+yar4_2 <- arima.sim(n = 500, model = list(order = c(8,0,0), ar = c(0,0,0,0.7,0,0,0,-0.7)), innov = rnorm(500))
+ggtsdisplay(yar4_2, lag = 20)
+
+yar12_1 <- arima.sim(n = 500, model = list(order = c(12,0,0), ar = c(0,0,0,0,0,0,0,0,0,0,0,0.6)), innov = rnorm(500))
+ggtsdisplay(yar12_1, lag = 48)
+```
+
+\
+
+## Procesos en medias móviles $MA_m(Q)$
+
+### Definición {-}
+
+El modelo general **en medias móviles estacional de orden Q**, $y_t \sim MA_m(Q)$ viene definido por
+$$y_t=c + \varepsilon_t + \theta_m \varepsilon_{t-m} + \theta_{2m} \varepsilon_{t-2m} + \ldots +
+  \theta_{Qm} \varepsilon_{t-Qm},$$
+\noindent que usando el operador retardo queda
+$$y_t = c + (1 + \theta_m L^m + \theta_{2m} L^{2m} + \ldots + \theta_{Qm} L^{Qm}) \varepsilon_t.$$
+  
+### Propiedades {-}
+  
+El proceso es **invertible** si quedan fuera del círculo de radio unidad todas las raíces del polinomio
+$$\Theta_Q(z) = 1 + \theta_m z^m + \theta_{2m} z^{2m} + \ldots + \theta_{Qm} z^{Qm}.$$
+  
+Es **estacionario** siempre.
+
+**Sobre todo**,
+
+* En la FAC las autocorrelaciones de **orden múltiplo de m** verifican que los Q primeros valores son no nulos y todos los demás valen cero.
+* En la FACP las autocorrelaciones parciales de **orden múltiplo de m** decaen exponencialmente a partir del orden Q.
+
+### Ejemplos {-}
+
+* $y_t \sim MA_7(1):\;\;y_t = c + \varepsilon_t + \theta_7 \varepsilon_{t-7}$ o $y_t = c + (1 + \theta_7 L^7)\varepsilon_t$
+
+* $y_t \sim MA_{12}(2):\;\;y_t=c + \varepsilon_t + \theta_{12} \varepsilon_{t-12} + \theta_{24} \varepsilon_{t-24}$ o $y_t = c + (1 + \theta_{12} L^{12} + \theta_{24} L^{24})\varepsilon_t$
+
+### Simulaciones de procesos en medias móviles $MA_m(Q)$ {-}
+
+La @fig-simulMA muestra una simulación del proceso $MA_{4}(2)$ $y_t = 0.7\varepsilon_{t-4} - 0.7\varepsilon_{t-8} + \varepsilon_t$ (panel superior), y del proceso $MA_{12}(1)$ $y_t = 0.6\varepsilon_{t-12} + \varepsilon_t$ (panel inferior). En ambos casos la muestra es de tamaño 500 y $\varepsilon_t$ se distribuye como una normal con media cero y varianza la unidad.
+
+```{r}
+#| echo: false
+#| fig-height: 4
+#| label: fig-simulMA
+#| fig-cap: "Simulación de dos procesos MA estacionales con diferente orden estacional"
+#| fig-subcap: 
+#|   - "MA(2) - m = 4"
+#|   - "MA(1) - m = 12"
+#| layout-nrow: 2
+set.seed(31416592)
+yma4_2 <- arima.sim(n = 500, model = list(order = c(0,0,8), ma = c(0,0,0,0.7,0,0,0,-0.7)), innov = rnorm(500))
+ggtsdisplay(yma4_2, lag = 20)
+
+yma12_1 <- arima.sim(n = 500, model = list(order = c(0,0,12), ma = c(0,0,0,0,0,0,0,0,0,0,0,0.6)), innov = rnorm(500))
+ggtsdisplay(yma12_1, lag = 48)
+```
+
+\
+
+## Procesos $ARMA_m(P,Q)$
+
+### Definición {-}
+
+El modelo general **$y_t \sim ARMA_m(P,Q)$** viene definido por
+
+$$y_t = c + \phi_m y_{t-m} + \phi_{2m} y_{t-2m} + \ldots + \phi_{Pm} y_{t-Pm}  + 
+  \varepsilon_t + \theta_m \varepsilon_{t-m} + \theta_{2m} \varepsilon_{t-2m} + \ldots +
+  \theta_{Qm} \varepsilon_{t-Qm},$$
+que usando el operador retardo queda
+
+$$(1 - \phi_m L^m - \ldots - \phi_{Pm} L^{Pm})y_t = c + (1 + \theta_m L^m + \ldots + \theta_{Qm} L^{Qm}) \varepsilon_t.$$
+  
+El proceso más simple es el $ARMA_m(1,1)$: $y_t = c  + \phi_m y_{t-m} + \theta_m \varepsilon_{t-m} + \varepsilon_{t}.$
+  
+### Propiedades {-}
+  
+El proceso es **estacionario** si quedan fuera del círculo de radio unidad todas las raíces del polinomio
+$$\Phi_P(z) = 1 - \phi_m z^m - \phi_{2m} z^{2m} - \ldots - \phi_{Pm} z^{Pm}.$$
+
+El proceso es **invertible** si quedan fuera del círculo de radio unidad todas las raíces del polinomio
+$$\Theta_Q(z) = 1 + \theta_m z^m + \theta_{2m} z^{2m} + \ldots + \theta_{Qm} z^{Qm}.$$
+
+
+**Sobre todo**,
+
+* En la FAC las autocorrelaciones de **orden múltiplo de m** decaen exponencialmente a partir del orden P.
+* En la FACP las autocorrelaciones parciales de **orden múltiplo de m** decaen exponencialmente a partir del orden Q.
+
+### Ejemplos {-}
+
+* $y_t \sim ARMA_7(1, 1):\;\;y_t = c  + \phi_7 y_{t-7} + \theta_7 \varepsilon_{t-7} + \varepsilon_{t}$ o $(1 - \phi_7 L^7)y_t = c + (1 + \theta_7 L^7)\varepsilon_t$.
+
+* $y_t \sim ARMA_{12}(1, 1):\;\;y_t = c  + \phi_{12} y_{t-12} + \theta_{12} \varepsilon_{t-12} + \varepsilon_{t}$ o $(1 - \phi_{12} L^{12})y_t = c + (1 + \theta_{12} L^{12})\varepsilon_t$.
+
+### Simulación de un proceso $ARMA_m(P,Q)$ {-}
+
+La @fig-simulARMA muestra una simulación de tamaño 500 para el proceso $ARMA_7(1,1)$ $y_t = 0.7y_{t-7} - 0.5\varepsilon_{t-7} + \varepsilon_t$.
+
+```{r}
+#| echo: false
+#| fig-height: 4
+#| label: fig-simulARMA
+#| fig-cap: "Simulación de un proceso ARMA(1,1) estacional con m = 7"
+set.seed(31416592)
+yarma7_1_1 <- arima.sim(n = 500, model = list(order = c(7,0,7), ar = c(0,0,0,0,0,0,0.7), ma = c(0,0,0,0,0,0,-0.5)), innov = rnorm(500))
+ggtsdisplay(yarma7_1_1, lag = 35)
+```
+
+\
+
+## Procesos $ARIMA_m(P,D,Q)$
+
+**Si la serie $y_t$ no es estacionaria en su parte estacional, pero tras diferenciarla $D$ veces se hace estacionaria, diremos que la serie es integrada estacionalmente de orden $D$**: $y_t \sim I_m(D)$. Por tanto,
+
+* una serie estacionaria estacionalmente se indicará como $y_t \sim I_m(0)$.
+* $y_t \sim I_m(1)$ es equivalente a $\nabla_m y_t = (1 - L^m)y_t \sim I_m(0)$ 
+
+Una serie $y_t$ sigue un proceso **$ARIMA_m(P,D,Q)$** si:
+
+1.  hay que diferenciarla estacionalmente $D$ veces para hacerla estacionaria, $y_t \sim I_m(D)$; y
+2.  la serie diferenciada sigue un proceso ARMA(P, Q), $\nabla_m^D y_t \sim ARMA_m(P,Q)$.
+
+Entonces, podemos escribir $y_t \sim ARIMA_m(P,D,Q)$ como
+\begin{equation*}
+\begin{array}{c@{\quad}ccc}
+  (1 - \phi_m L^m - \ldots - \phi_{Pm} L^{Pm}) & (1- L^m)^D y_t & = & c + (1 + \theta_m L^m + \ldots + \theta_{Qm} L^{Qm}) \varepsilon_t \\ 
+  \uparrow                                     & \uparrow       &   & \uparrow \\
+   AR_m(P)                                     & I_m(D)         &   & MA_m(Q) 
+\end{array}
+\end{equation*}
+
+
+### Ejemplo {-} 
+
+* $y_t \sim ARIMA_{12}(1, 1, 1)$:
+$$
+\begin{aligned}
+(1 - \phi_{12} L^{12})(1- L^{12}) y_t & = c + (1 + \theta_{12} L^{12}) \varepsilon_t \\
+y_t & = c + y_{t-12} + \phi_{12}(y_{t-12} - y_{t-24}) + \theta_{12} \varepsilon_{t-12} + \varepsilon_t
+\end{aligned}
+$$
+
+
+* $log(y_t) \sim ARIMA_{12}(1, 1, 1)$:
+$$
+\begin{aligned}
+(1 - \phi_{12} L^{12})(1- L^{12}) log(y_t) & = (1 - \phi_{12} L^{12})TVAy_t  = c + (1 + \theta_{12} L^{12}) \varepsilon_t \\
+TVAy_t & = c + \phi_{12}TVAy_{t-12} + \theta_{12} \varepsilon_{t-12} + \varepsilon_t
+\end{aligned}
+$$
+
+\
+
+## Proceso $ARIMA_m(p,d,q)(P,D,Q)$
+  
+La realidad nos muestra que la mayoría de las series con estacionalidad se ajustan a una combinación de *procesos regulares y estacionales_.
+
+El proceso $ARIMA_m(p, d, q)(P, D, Q)$ puede ser expresado de forma abreviada como
+$$\Phi_p(L)\Phi_P(L^m)\nabla^d\nabla_m^D  y_t = c + \Theta_q(L)\Theta_Q(L^m)\varepsilon_t,$$  
+\noindent o menos sucintamente como
+\begin{equation*}
+\begin{array}{ccccc}
+  AR(p) & AR_m(P) & I(d) & I_m(D) &  \\
+  \downarrow & \downarrow & \downarrow & \downarrow  &  \\
+  (1 - \phi_1 L - \ldots - \phi_p L^p) & (1 - \phi_m L^m - \ldots - \phi_{Pm} L^{Pm}) & (1 - L)^d & (1- L^m)^Dy_t & = \\
+  c + (1 + \theta_1 L + \ldots + \theta_q L^q) & (1 + \theta_m L^m + \ldots + \theta_{Qm} L^{Qm}) \varepsilon_t & & & \\
+  \uparrow & \uparrow & & & \\
+  MA(q) & MA_m(Q)  & & & 
+\end{array}
+\end{equation*}
+
+  
+Por ejemplo, entre las series mensuales uno de los procesos más comunes es $ARIMA_{12}(0, 1, 1)(0, 1, 1)$, denominado *modelo de las aerolíneas* por ser el proceso generador de datos de muchas series mensuales de transporte de pasajeros, en concreto la serie mensual de pasajeros de avión. La ecuación de este modelo es
+
+$$(1-L)(1-L^{12})y_t = (1+ \theta_1L)(1 + \theta_{12}L^{12})\varepsilon_t$$ que si desarrollamos queda $$y_t = y_{t-1} + (y_{t-12} - y_{t-13}) + \theta_1 \varepsilon_{t-1} + \theta_{12} \varepsilon_{t-12} + \theta_{1}\theta_{12} \varepsilon_{t-13} + \varepsilon_t $$
+
+-   El número de pasajeros del mes $t$ es el mismo que el del mes previo $t-1$, más la diferencia entre estos meses observada el año pasado.
+-   Si en los meses usados para la predicción ($t-1$, $t-12$ y $t-13$) ha ocurrido algo extraordinario, hay que tenerlo en cuenta a la hora de afinar la predicción.
+
+Si usamos la **transformación logarítmica**, tendríamos $$(1-L)(1-L^{12})\log(y_t) = (1+ \theta_1L)(1 + \theta_{12}L^{12})\varepsilon_t$$ o $$(1-L)TVAy_t = (1+ \theta_1L)(1 + \theta_{12}L^{12})\varepsilon_t$$ que desarrollando queda $$TVAy_t = TVAy_{t-1} + \theta_1 \varepsilon_{t-1} + \theta_{12} \varepsilon_{t-12} + \theta_{1}\theta_{12} \varepsilon_{t-13} + \varepsilon_t $$
+
+-   La tasa de variación anual en el número de pasajeros del mes $t$ es la misma que la del mes previo $t-1$.
+-   Si en los meses usados para la predicción ($t-1$, $t-12$ y $t-13$) ha ocurrido algo extraordinario, hay que tenerlo en cuenta a la hora de afinar la predicción.
+
+
+### Simulaciones de un proceso $ARIMA_m(p,d,q)(P,D,Q)$ {-}
+
+La @fig-simulARIMA muestra una simulación de tamaño 1000 para el modelo de las aerolíneas, donde se ha supuesto que $\theta_1=0.7$ y $\theta_{12}=-0.5$.
+
+```{r}
+#| echo: false
+#| fig-height: 4
+#| label: fig-simulARIMA
+#| fig-cap: "Simulación del proceso de las aerolineas ARIMA(0, 1, 1)(0, 1, 1), m = 12"
+set.seed(11223344)
+error <- rnorm(2000)
+y <- rep(0, 2000) 
+t1 <- 0.7
+t2 <- -0.5
+
+for (i in 14:2000) y[i] <- y[i-1] + y[i-12] - y[i-13] + t1*error[i-1] + t2*error[i-12] + t1*t2*error[i-13] + error[i]
+y <- ts(y, start = c(1,1), freq = 12)
+y <- y[1001:2000]
+
+ggtsdisplay(diff(diff(y), lag = 12), lag = 48)
+```
+
+\
+\
+
+# Ejemplos
+
+\
+
+## Nacimientos
+  
+Vamos a aplicar la metodología de Box-Jenkins a la serie mensual de **nacimientos en España** desde el año 2000 (véase @fig-Nacimientos).
+
+```{r}
+#| label: fig-Nacimientos
+#| fig-cap: "Nacimientos mensuales"
+nacimientos <- read.csv2("./series/nacimientos.csv", 
+                         header = TRUE)
+
+nacimientos <- ts(nacimientos[, 2],
+                  start = c(1975, 1),
+                  freq = 12)
+
+nacimientos <- window(nacimientos, start = 2000)
+
+autoplot(nacimientos,
+         xlab = "",
+         ylab = "Nacimientos",
+         main = "")
+```
+
+
+### Transformación de la serie {-}
+
+Ya vimos en el [Tema 3](https://iarribasf.github.io/PrediccionSeriesTemporales-GBIA/03-03-Tema3.html)) que para que la serie sea estacionaria y ergódica había que diferenciarla tanto regular como estacionalmente (d = D = 1). Además, trabajaremos con el logaritmo de la serie para reducir la posible heterocedasticidad y ganar en interpretabilidad. Es decir, trabajaremos con la siguiente serie transformada 
+
+$$\nabla\nabla_{12}\log(nacimientos_t) \sim I(0)I_{12}(0).$$
+
+
+### Identificación {-}
+
+Tras transformar la serie, vamos a identificar los valores de $p$, $q$, $P$ y $Q$ a partir de la FAC y la FACP.
+  
+```{r} 
+#| label: fig-NacimientosFAC
+#| fig-cap: "Nacimientos mensuales"
+ggtsdisplay(diff(diff(log(nacimientos), lag = 12)), lag = 48)
+```
+
+Analizando la FAC y la FACP (@fig-NacimientosFAC) observamos que no es fácil la identificación.
+
+\
+
+¿Qué nos indica `auto.arima`? Primero vamos a generar e incluir en el proceso de autoidentificación las variables asociadas a los efectos de intervención que hemos detectado en los temas previos. En concreto, hemos visto que el número de días del mes explica el número de nacimientos. Este efecto era muy claro para los meses de febrero bisiestos. Para el calculo de la variable que recoge el número de días del mes usaremos la función `monthdays` de la librería `forecast` que devuelve el número de días de cada mes o trimestre de una serie.
+
+```{r}
+#| eval: false
+monthdays(nacimientos)
+```
+
+```{r}
+#| echo: false
+tail(monthdays(nacimientos), n = 60)
+```
+
+Por otro lado, los periodos vacacionales pueden afectar la programación de las cesáreas e influir en el número de nacimientos. Como la Semana Santa es un periodo festivo que puede caer en marzo o abril, dependiendo del año, los nacimientos en estos dos meses pueden variar según como cae la Semana Santa. Para capturar este efecto, usaremos la función `easter` de la librería `forecast` que devuelve para cada mes la proporción de días de la Semana Santa que contiene (considerando solo del Viernes Santo al Domingo de Resurrección, tres días).
+
+```{r}
+#| eval: false
+easter(nacimientos)
+```
+
+```{r}
+#| echo: false
+tail(easter(nacimientos), n = 60)
+```
+
+Además, vimos en el tema de alisado que en enero de 2011, diciembre de 2020 y febrero y marzo de 2021 el número de nacimientos era atípico.
+
+```{r}
+DiasMes <- monthdays(nacimientos)
+SemanaSanta <- easter(nacimientos)
+d0111 <- 1*(cycle(nacimientos) == 1  & trunc(time(nacimientos)) == 2011)
+d1220 <- 1*(cycle(nacimientos) == 12 & trunc(time(nacimientos)) == 2020)
+d0221 <- 1*(cycle(nacimientos) == 2  & trunc(time(nacimientos)) == 2021)
+d0321 <- 1*(cycle(nacimientos) == 3  & trunc(time(nacimientos)) == 2021)
+
+auto.arima(nacimientos, 
+           d = 1, 
+           D = 1, 
+           lambda = 0,
+           xreg = cbind(DiasMes, SemanaSanta, d0111, d1220, d0221, d0321))
+```
+
+Indica el modelo, $ARIMA_{12}(0,1,2)(0,1,2)$, donde los coeficiente `ma2` y `sma2` no parecen ser significativos. Si esto es así, estaríamos ante el modelo de la aerolíneas. Por otro lado, parece que los coeficientes del modelo asociados a las variables de intervención son significativas.
+
+\
+
+Una alternativa a `auto.arima` es la función `seas` de la librería `seasonal`. La función `seas` tiene como ventajas que también analiza la conveniencia de usar la transformación logarítmica, que identifica posibles efectos calendario y valores extremos, y que suele ser más parsimoniosa que `auto.arima`. Su desventaja es que sólo se puede aplicar para series mensuales o trimestrales. 
+
+La aplicación de `seas` sobre la serie indica que no es necesaria la transformación logarítmica así que solicitamos la identificación automática forzando la transformación. Veamos que identificación ofrece `seas`:
+
+```{r}
+#summary(seas(nacimientos))
+summary(seas(nacimientos, transform.function = "log"))
+```
+
+En primer lugar, la función identifica el modelo de las aerolíneas con la transformación logarítmica de Nacimientos. Además, un efecto calendario Semana Santa, un efecto calendario días laborables del mes (que podemos entender similar a nuestro efecto días del mes) y cuatro meses atípicos en diciembre de 2010, noviembre y diciembre de 2020 y enero de 2021.
+
+Tras las dos autoidentificaciones complementarias, decidimos que la identificación de partida es $ARIMA_{12}(0,1,1)(0,1,1) + AI$, 
+$$(1 - L)(1 - L^{12})\log(nacimientos_t) = (1 + \theta_1 L)(1 + \theta_{12} L^{12})\varepsilon_t + AI.$$ 
+donde *AI* recoge las variables de intervención incluidas en `auto.arima` y `seas`.
+
+### Estimación (y valores extremos) {.unnumbered}
+
+Vamos a estimar el modelo identificado, incluidas las nuevas variables de intervención identificadas con la función `seas`.
+
+```{r}
+d1210 <- 1*(cycle(nacimientos) == 12 & trunc(time(nacimientos)) == 2010)
+d1120 <- 1*(cycle(nacimientos) == 11 & trunc(time(nacimientos)) == 2020)
+d0121 <- 1*(cycle(nacimientos) ==  1 & trunc(time(nacimientos)) == 2021)
+
+nac.ar1 <- Arima(nacimientos, 
+                 order = c(0, 1, 1),
+                 seasonal = c(0, 1, 1),
+                 lambda = 0,
+                 xreg = cbind(DiasMes, SemanaSanta, 
+                              d1210,  d0111, d1120, d1220, d0121, d0221, d0321)) 
+nac.ar1
+```
+
+Ya tenemos un modelo de partida, aunque parece que el coeficiente de la intervención en marzo de 2021 no es significativo. Veamos si es necesaria más intervención.
+
+```{r}
+#| label: fig-NacError
+#| fig-cap: "Error + Intervención"
+error <- residuals(nac.ar1)
+sderror <- sd(error)
+
+autoplot(error, series="Error",
+         colour = "black",
+         xlab = "",
+         ylab = "Error",
+         main = "") +
+  geom_hline(yintercept = c(-3, -2,2, 3)*sderror, 
+             colour = c("red", "green", "green", "red"), 
+             lty = 2) + 
+  scale_x_continuous(breaks= seq(2000, 2024, 2)) 
+
+fechas <- format(seq(as.Date("2000-1-1"), as.Date("2023-12-1"), "month"), "%Y-%m")
+fechas[abs(error) > 2.5 * sderror]
+```
+
+Se observa que hay cuatro candidatos a valores atípicos en diciembre de 2006, abril y junio de 2016 y noviembre de 2022, dado que los errores asociados se acercan o superan las 3 desviaciones típicas. En junio de 2016 no hay evidencia de que ocurriera nada atípico en los nacimientos y el coeficiente de esta variable resulta no ser significativo si lo incluimos en el modelo. Por tanto, no crearemos una variable asociada a este mes. Para los otros tres meses:
+
+-   Se crea una variable de intervención para cada caso
+-   Se estima de nuevo el modelo incluyendo estas variables (`auto.arima` identifica el mismo modelo).
+-   Se vuelve a analizar si quedan valores atípicos
+
+Además, aprovechamos para excluir la variable de intervención de marzo de 2021 que no era significativa
+
+```{r}
+#| label: fig-NacError2
+#| fig-cap: "Error + Intervención"
+d1206 <- 1*(cycle(nacimientos) == 12 & trunc(time(nacimientos)) == 2006)
+d0416 <- 1*(cycle(nacimientos) ==  4 & trunc(time(nacimientos)) == 2016)
+d1122 <- 1*(cycle(nacimientos) == 11 & trunc(time(nacimientos)) == 2022)
+
+nac.ar2 <- Arima(nacimientos, 
+                 order = c(0, 1, 1),
+                 seasonal = c(0, 1, 1),
+                 lambda = 0,
+                 xreg = cbind(DiasMes, SemanaSanta, 
+                              d1206, d1210, d0111, d0416,
+                              d1120, d1220, d0121, d0221, d1122))
+nac.ar2
+ 
+error <- residuals(nac.ar2)
+sderror <- sd(error)
+
+autoplot(error, series="Error",
+         colour = "black",
+         xlab = "",
+         ylab = "Error",
+         main = "") +
+  geom_hline(yintercept = c(-3, -2, 2, 3)*sderror, 
+             colour = c("red", "green", "green", "red"), 
+             lty = 2) + 
+  scale_x_continuous(breaks= seq(2000, 2022, 2)) 
+
+# fechas[abs(error) > 2.5 * sderror]
+```
+
+No se observan errores elevados, así que vamos a asumir que ya no hay valores extremos.
+
+### Compensación {.unnumbered}
+
+Podemos observar que en todos los modelos estimados los coeficientes de las variables de intervención de los **meses consecutivos** diciembre de 2010 y enero de 2011 son similares pero de signo opuesto. A este tipo de intervención se le denomina compensación: el efecto extraordinario en un periodo se compensa con un efecto de similar magnitud pero signo opuesto en el periodo siguiente. La causa detrás de esta compensación puede ser tan prosaica como que por error muchos nacimientos ocurridos en enero de 2011 se asignaron informaticamente a diciembre de 2010. O quizás algo pasó en esos meses que adelantó un número considerable de nacimientos.
+
+Vamos a crear una variable de intervención asociada a esta compensación. Es tan sencillo como definir una variable ficticia que valga cero siempre excepto para los meses de diciembre de 2010 y enero de 2011 que valdrá 1 y - 1 respectivamente.
+
+```{r}
+# Creacion del la compensacion
+d12100111 <- d1210 - d0111
+```
+
+Respecto del efecto de la pandemia en la serie, las dos intervenciones asociadas al inicio y final del efecto (noviembre de 2020 y febrero de 2021) tienen un valor similar, y las dos intervenciones asociadas al corazón del efecto (diciembre de 2020 y enero de 2021) también tienen un valor parecido. En este caso las dos variables ficticias que vamos a crear deben valer cero siempre excepto para dos meses que valdrán 1. La primera variable valdrá 1 en noviembre de 2020 y febrero de 2021, y la segunda variable valdrá 1 en diciembre de 2020 y enero de 2021.
+
+```{r}
+# Variables de intervencion asociadas a la Covid-19
+d11200221 <- d1120 + d0221
+d12200121 <- d1220 + d0121
+```
+
+Ahora vamos a sustituir las seis variables ficticias `d1210`, `d0111`, `d1120`, `d1220`, `d0121` y `d0221` del modelo por las nuevas variables  `d12100111`, `d11200221` y `d12200121`.
+
+```{r}
+nac.ar3 <- Arima(nacimientos, 
+                 order = c(0, 1, 1),
+                 seasonal = c(0, 1, 1),
+                 lambda = 0,
+                 xreg = cbind(DiasMes, SemanaSanta, 
+                              d1206, d12100111, d0416,
+                              d11200221, d12200121, d1122))
+
+nac.ar3
+```
+
+Los coeficientes estimados en este modelo son prácticamente iguales a los obtenidos en el modelo previo.
+
+### Validación {-}
+
+**Coeficientes **
+
+Veamos si todos los coeficientes del modelo son significativos.
+
+```{r}
+coeftest(nac.ar3)
+```
+
+Todos los coeficientes son significativos.
+
+**Error de estimación**
+
+El error medio de `r round(accuracy(nac.ar3)[1],0)`, muy bajo en comparación con el valor medio de la serie, y el MPE de `r round(accuracy(nac.ar3)[4], 2)` indican que no hay sesgo. Además, el valor tan reducido de ACF1 indica que las previsiones por intervalo estarán correctamente calculadas.
+
+En media nos equivocamos en `r round(accuracy(nac.ar3)[2],0)` nacimientos (RMSE) y el error porcentual medio es del `r round(accuracy(nac.ar3)[5],1)`%.
+
+```{r,eval=FALSE}
+accuracy(nac.ar3)
+```
+
+```{r,echo=FALSE}
+round(accuracy(nac.ar3),2)
+```
+
+\
+
+**Incorrelación, Homocedasticidad y Normalidad**
+
+Veamos ahora si el residuo es ruido blanco.
+
+```{r}
+#| label: fig-ErrorNAC
+#| fig-cap: "FAC del error del modelo"
+error <- residuals(nac.ar3)
+Box.test(error, lag = 2,type = "Ljung-Box")
+Box.test(error, lag = 24,type = "Ljung-Box")
+Box.test(error^2, lag = 2, type = "Ljung-Box")
+Box.test(error^2, lag = 24, type = "Ljung-Box")
+jarque.bera.test(error) 
+ggAcf(error, lag = 36, ylim = c(-0.3, 0.3), main = "")
+```
+
+Claramente hay autocorrelaciones significativas, pero en retardos no relevantes (véase @fig-ErrorNAC). El error muestra ser homocedástico y seguir una distribución normal.
+
+### Interpretación {-}
+
+El *modelo teórico* es $log(nacimientos) \sim ARIMA_{12}(0, 1, 1)(0, 1, 1) + AI$, 
+
+$$(1 - L^{12})(1 - L)\log(nacimientos_t) = (1 + \theta_1 L)(1 + \theta_{12} L^{12})\varepsilon_t + AI.$$
+
+Si sustituimos $(1 - L^{12})\log(nacimientos_t)$ por $TVA_{nacimientos_t}$, la tasa de variación anual de los nacimientos, y desarrollamos queda 
+$$
+\begin{aligned}
+TVA\_nac_t  = & TVA\_nac_{t - 1} + \theta_1 \varepsilon_{t-1} + \theta_{12} \varepsilon_{t-12} + \theta_1\theta_{12} \varepsilon_{t-13} +  \varepsilon_{t}+ \\
+& \gamma_1 \cdot DiasMes_t + \gamma_2 \cdot SemanaSanta +\gamma_3 \cdot d1206_t + \gamma_4 \cdot d12100111_t + \\
+& \gamma_5 \cdot d0416_t + \gamma_6 \cdot d11200221_t + \gamma_7 \cdot d12200121_t + \gamma_8 \cdot d1122_t.
+\end{aligned}
+$$
+
+Finalmente, el *modelo estimado* es, 
+$$
+\begin{aligned}
+\widehat{TVA}\_nac_t = & TVA\_nac_{t-1}  - 0.51\varepsilon_{t-1} - 0.76\varepsilon_{t-12} + 0.39\varepsilon_{t-13} + \\
+& 0.028 \cdot DiasMes_t - 0.022 \cdot SemanaSanta - 0.046 \cdot d1206_t + 0.058 \cdot d12100111_t \\ 
+& - 0.054 \cdot d0416_t - 0.071 \cdot d11200221_t - 0.20  \cdot d12200121_t + 0.042 \cdot d1122.
+\end{aligned}
+$$
+
+- En cada mes, **la tasa de variación anual de los nacimientos es la misma que la del mes pasado** ($\widehat{TVA}\_nac_t = TVA\_nac_{t-1}$).
+
+- Además, si algunos de los meses necesarios para predecir fue anómalo, el error hay que tenerlo en cuenta para afinar la previsión.
+
+- Respecto de los efectos calendario, cada día adicional de un mes nacen un 2.8% más de bebés. El mes en que cae la Semana Santa los nacimientos caen un 2.2%.
+
+- Por alguna razón, en diciembre de 2006 hubo un 4.6% menos de nacimientos de lo esperado; en diciembre de 2010 hubo un 5.8% más de nacimientos de lo esperado que fue compensado en enero de 2011; en abril de 2016 hubo un 5.4% menos de nacimientos de lo esperado; y en noviembre de 2022 hubo un 4.1% más de nacimientos.
+
+- Respecto de la pandemia, nueve meses después del confinamiento hubo una reducción transitoria en el número de nacimientos. En concreto, en noviembre de 2020 se redujeron un 7.1% y en los dos meses siguientes la caída fue de un 20%. En febrero de 2021 los nacimientos se recuperaron parcialmente y la caída fue del 7.1%. A partir de marzo de 2021 los nacimientos recuperaron los valores prepandemia.
+
+### Predicción de la serie {-}
+
+Una vez dado por válido el modelo podemos pasar a realizar predicciones. Hay que tener en cuenta que hay siete variables de intervención, dos de ellas son efectos calendario (DiasMes y SemanaSanta), para las que debemos indicar qué valores tomarán en el periodo de predicción. Vamos a fijar el horizonte de predicción en cuatro años y mostrar los resultados numéricamente (solo para el primer año) y gráficamente (@fig-NacPre).
+
+```{r}
+#| results: hide
+tmp <- ts(rep(0, 48), start = 2024, freq = 12)
+pdm <- monthdays(tmp)
+pss <- easter(tmp)
+pnac.ar3 <- forecast(nac.ar3, 
+                     h = 48,
+                     xreg = cbind(pdm, pss, 
+                                  rep(0,48), rep(0,48), rep(0,48),
+                                  rep(0,48), rep(0,48), rep(0,48)), 
+                     level = 95)
+pnac.ar3
+```
+
+```{r}
+#| echo: false 
+forecast(nac.ar3, 
+         h = 12,
+         xreg = cbind(pdm[1:12], pss[1:12], rep(0,12), rep(0,12), rep(0,12), rep(0,12), rep(0,12), rep(0,12)), 
+         level = 95)
+```
+
+```{r}
+#| label: fig-NacPre
+#| fig-cap: "Nacimientos (2000-2023) y predicción (2024-2027)"
+autoplot(pnac.ar3, 
+     ylab = "Nacimientos",
+     main = "") +
+  scale_x_continuous(breaks= seq(2000, 2028, 2)) 
+```
+
+### Error de predicción extra-muestral según horizonte temporal {-}
+
+Asumimos que se precisan quince años para hacer una buena estimación, $k = 180$, y fijaremos el horizonte temporal en un año, $h = 12$ meses.
+
+El código es aun más complejo que el visto en el tema previo. Por un lado, hemos de tener en cuenta que hay variables de intervención y por otro lado que la función `Arima` podría fallar en el proceso de estimación.
+
+```{r}
+k <- 180                   
+h <- 12                    
+T <- length(nacimientos)   
+s<-T - k - h               
+
+mapeArima <- matrix(NA, s + 1, h)
+
+X <- data.frame(cbind(DiasMes, SemanaSanta))
+
+for (i in 0:s) {
+  train.set <- subset(nacimientos, start = i + 1, end = i + k)
+  test.set <-  subset(nacimientos, start = i + k + 1, end = i + k + h) 
+  
+  X.train <- as.matrix(X[(i + 1):(i + k),])
+  X.test <- as.matrix(X[(i + k + 1):(i + k + h),])
+  
+  fit <- try(Arima(train.set, 
+                   order = c(0, 1, 1),
+                   seasonal = c(0, 1, 1),
+                   lambda = 0,
+                   xreg = X.train))
+  
+  if(!is.element("try-error", class(fit))) {
+    fcast <- forecast(fit, h = h, xreg = X.test) 
+    mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
+  }
+}
+```
+
+Como para el cálculo de los errores de predicción no se ha tenido en cuenta la intervención no sujeta a afectos calendario (la compensación a finales de 2010, la Covid-19...), vamos a obtener el error mediano como medida de precisión.
+
+```{r}
+errorArima <- apply(mapeArima, MARGIN = 2, FUN = median, na.rm = TRUE)
+errorArima
+```
+
+```{r}
+#| label: fig-NacMAPE
+#| fig-cap: "Error de predicción (MedAPE) según horizonte temporal"
+ggplot() +
+  geom_line(aes(x = 1:12, y = errorArima), colour = "Blue") +
+  ggtitle("") +
+  xlab("Horizonte temporal de predicción") +
+  ylab("%") +
+  scale_x_continuous(breaks= 1:12)
+```
+
+La @fig-NacMAPE revela que el error de predicción aumenta según aumenta el horizonte de predicción, pero incluso a un año vista, se mantiene cercano al 2%.
+
+\
+
+## Exportaciones
+
+Consideremos las serie de **exportaciones de bienes desde España hacía la UE27** (conjunto de 27 países de la Unión Europea, con Reino Unido ya ha excluido). La serie va de enero de 1999 hasta diciembre de 2023 y está en millones de euros.
+
+```{r}
+#| label: fig-Exportaciones
+#| fig-cap: "Exportaciones de España a la EU27"
+exportaciones <- read.csv2("./series/Exportaciones.csv", 
+                           header = TRUE)
+
+exportaciones <- ts(exportaciones,
+                    start = c(1999, 1),
+                    freq = 12)
+
+autoplot(exportaciones,
+         xlab = "",
+         ylab = "Millones de €",
+         main = "")
+```
+
+### Transformación de la serie {.unnumbered}
+
+La @fig-Exportaciones deja claro que la serie debe ser diferenciada para ser estacionaria. También muestra dos periodos con una marcada intervención: al inicio de la Gran Recesión (2008-2014) y durante el periodo más duro de la Covid-19 en el año 2020. Además, por la naturaleza de la serie es previsible que exista un efecto días del mes o días laborables y un efecto Semana Santa.
+
+Por otro lado, la @fig-Exportaciones muestra que la serie tiene un esquema multiplicativa, así que trabajaremos con la transformación logarítmica.
+
+```{r}
+#| eval: false
+ggAcf(log(exportaciones), lag = 48, ylim = c(-1, 1),
+      xlab = "", ylab = "", main = "")
+ggAcf(diff(log(exportaciones)), lag = 48, ylim = c(-1, 1),
+      xlab = "", ylab = "", main = "")
+ggAcf(diff(log(exportaciones), lag = 12), lag = 48, ylim = c(-1, 1),
+      xlab = "", ylab = "", main = "")
+ggAcf(diff(diff(log(exportaciones), lag = 12)), lag = 48, ylim = c(-1, 1),
+      xlab = "", ylab = "", main = "")
+```
+
+```{r}
+#| echo: false
+#| label: fig-ExpFAC
+#| fig-cap: "FAC para Exportaciones (log)"
+#| fig-subcap: 
+#|   - "Serie"
+#|   - "Diferencia regular"
+#|   - "Diferencia estacional"
+#|   - "Diferencia regular y estacional"
+#| layout: [[50, 50], [50, 50]]
+ggAcf(log(exportaciones), lag = 48, xlab = "", ylab = "", main = "",ylim = c(-1,1))
+ggAcf(diff(log(exportaciones)), lag = 48, xlab = "", ylab = "", main = "",ylim = c(-1,1))
+ggAcf(diff(log(exportaciones), lag = 12), lag = 48, xlab = "", ylab = "", main = "",ylim = c(-1,1))
+ggAcf(diff(diff(log(exportaciones), lag = 12)), lag = 48, xlab = "", ylab = "", main = "",ylim = c(-1,1))
+```
+
+```{r}
+ndiffs(log(exportaciones))
+nsdiffs(log(exportaciones))       
+```
+
+El análisis de la @fig-ExpFAC revela la necesidad de la doble diferenciación, que es confirmada por las funciones `ndiffs` y `nsdiffs`. Concluimos que para que la serie sea estacionaria y ergódica es necesaria la doble diferenciación regular y estacional. Es decir, trabajaremos con la siguiente serie transformada $$\nabla\nabla_{12}\log(exportaciones_t) \sim I(0)I_{12}(0).$$
+
+### Identificación {.unnumbered}
+
+Si probamos con la función `auto.arima`, indicando la doble diferenciación y añadiendo el efecto de los días del mes y la Semana Santa, nos sugiere $ARIMA_{12}(2,1,2)(2,1,2)$. Demasiado complejo.
+
+Veamos qué nos indica `seas`.
+
+```{r}
+summary(seas(exportaciones))
+```
+
+El modelo identificado es el de las aerolíneas para la transformación logarítmica de Exportaciones. Respecto de la intervención, identifica dos efectos calendario: uno por cada día laboral y Semana Santa. También se identifican cinco intervenciones no asociadas a efectos calendario: tres pulsos --intervenciones que afectan un solo mes (AO)-- y dos cambios permanentes --intervenciones que afectan todos los meses a partir de uno dado (LS):
+
+- Un cambio permanente (*level shift* o LS) empieza en diciembre de 2008 y el coeficiente estimado es negativo. Es decir, la Gran Recesión generó una caída permanente de las exportaciones españolas a la UE27.
+- El otro cambio permanente, también de signo negativo, empieza en abril de 2023 y corrige a la baja el elevado nivel de las exportaciones observado tras la pandemia.
+- También asociado a la Covid-19 están los pulsos de marzo, abril y mayo de 2020.
+
+### Estimación (y valores extremos) {.unnumbered}
+
+Vamos a estimar el modelo identificado con `seas`, incluidas las variables de intervención. A este respecto unas palabras sobre como obtener los días laborables de un mes.
+
+Entenderemos por días laborables los lunes a viernes de cada mes, menos los días festivos. Un inconveniente de este efecto es que los festivos que afectan a una serie dependen de su naturaleza y ámbito geográfico. Por ejemplo, en Estados Unidos el día del trabajador se celebra el primer lunes de septiembre, en Reino Unido el primer lunes de mayo y en España el 1 de mayo. Además, para la serie de transporte de pasajeros urbanos de Valencia los festivos relevantes serán diferentes que para la misma serie para Madrid. 
+
+Para el ámbito geográfico nacional, los días laborables se puede obtener con la función `bizdays`. Esta función devuelve el número de días laborables de cada mes para determinados centros financieros (equivalentes a países). Por proximidad *geográfica*, usaremos el calendario de Londres para España.[^1]
+
+[^1]: `R` permite crear tu propio calendario de festivos y existen otras librerías que extienden las opciones de `bizdays`. En el ejemplo de Pasajeros puedes ver como construir la serie de días laborables del mes para España paso a paso.
+
+```{r}
+DiasLaborables <- bizdays(exportaciones, FinCenter = "London")
+SemanaSanta <- easter(exportaciones)
+```
+
+Para los pulsos, que solo afectan un mes, se crea una variable que vale cero excepto para el mes a intervenir que vale 1.
+
+```{r}
+d0320 <- 1*(cycle(exportaciones) ==  3 & trunc(time(exportaciones)) == 2020)
+d0420 <- 1*(cycle(exportaciones) ==  4 & trunc(time(exportaciones)) == 2020)
+d0520 <- 1*(cycle(exportaciones) ==  5 & trunc(time(exportaciones)) == 2020)
+```
+
+Para los cambios permanentes que afectan desde un mes en adelante, se crea una variable que vale cero antes del mes de inicio de la intervención y 1 desde ese mes en adelante.
+
+```{r}
+l1208 <- 1*(trunc(time(exportaciones)) > 2008) + 
+  1*(cycle(exportaciones) >= 12 & trunc(time(exportaciones)) == 2008)
+
+l0423 <- 1*(trunc(time(exportaciones)) > 2023) + 
+  1*(cycle(exportaciones) >= 4 & trunc(time(exportaciones)) == 2023)
+```
+
+Estimamos el modelo de partida, en el que parece que todos los coeficientes son significativos.
+
+```{r}
+exp.ar1 <- Arima(exportaciones, 
+                 order = c(0, 1, 1),
+                 seasonal = c(0, 1, 1),
+                 lambda = 0,
+                 xreg = cbind(DiasLaborables, SemanaSanta, 
+                              l1208, d0320, d0420, d0520, l0423))
+exp.ar1
+```
+
+Veamos si es necesaria más intervención.
+
+```{r}
+#| label: fig-ExpError
+#| fig-cap: "Error + Intervención"
+error <- residuals(exp.ar1)
+sderror <- sd(error)
+
+autoplot(error, series="Error",
+         colour = "black",
+         xlab = "",
+         ylab = "Error",
+         main = "") +
+  geom_hline(yintercept = c(-3, -2,2, 3)*sderror, 
+             colour = c("red", "green", "green", "red"), 
+             lty = 2) + 
+  scale_x_continuous(breaks= seq(1998, 2022, 2)) 
+
+fechas <- format(seq(as.Date("1999-1-1"), as.Date("2023-12-1"), "month"), "%Y-%m")
+fechas[abs(error) > 2.5 * sderror]
+```
+
+Se observan algunos candidatos a valores atípicos por superar el error las 2.5 desviaciones típicas, pero ninguna alcanza las 3 desviaciones típicas. A fin de aligerar este ejemplo no se van a incluir más variables de intervención.
+
+
+### Validación {.unnumbered}
+
+**Coeficientes significativos**
+
+Veamos si los coeficientes del modelo son significativos. Para ello, aplicamos la prueba z.
+
+```{r}
+coeftest(exp.ar1)
+```
+
+Todos los coeficientes son significativos.
+
+**Error de estimación**
+
+En media nos equivocamos en `r round(accuracy(exp.ar1)[2],0)` millones de euros (RMSE) y el error porcentual medio es del `r round(accuracy(exp.ar1)[5],1)`%, muy reducido.
+
+La serie no presenta sesgo y el intervalo de confianza para las predicciones es válido.
+
+```{r}
+#| eval: false
+accuracy(exp.ar1)
+```
+
+```{r}
+#| echo: false
+round(accuracy(exp.ar1),2)
+```
+
+\
+
+**Incorrelación, Homocedasticidad y Normalidad**
+
+Veamos ahora si el residuo es ruido blanco.
+
+```{r}
+#| label: fig-ErrorEXP
+#| fig-cap: "FAC del error del modelo"
+Box.test(error, lag = 2,type = "Ljung-Box")
+Box.test(error, lag = 24,type = "Ljung-Box")
+Box.test(error^2, lag = 2, type = "Ljung-Box")
+Box.test(error^2, lag = 24, type = "Ljung-Box")
+jarque.bera.test(error) 
+```
+
+El error muestra ser incorrelado y seguir una distribución normal. Sin embargo, el error es heterocedástico. Es posible que un análisis más detallado de la intervención corrija este problema. Si no es así, habría que optar por un modelo que no asuma la hipótesis de homocedasticidad.
+
+### Error de predicción extra-muestral según horizonte temporal {.unnumbered}
+
+Asumimos que se precisan diez años para hacer una buena estimación, $k = 120$, y fijaremos el horizonte temporal en un año, $h = 12$ meses. Usaremos como criterio de calidad el MedAPE
+
+```{r}
+k <- 120                   
+h <- 12                    
+T <- length(exportaciones)   
+s <- T - k - h               
+
+mapeArima <- matrix(NA, s + 1, h)
+
+X <- data.frame(cbind(DiasLaborables, SemanaSanta))
+
+for (i in 0:s) {
+  train.set <- subset(exportaciones, start = i + 1, end = i + k)
+  test.set <-  subset(exportaciones, start = i + k + 1, end = i + k + h) 
+  
+  X.train <- as.matrix(X[(i + 1):(i + k),])
+  X.test <- as.matrix(X[(i + k + 1):(i + k + h),])
+  
+  fit <- try(Arima(train.set, 
+                   order = c(0, 1, 1),
+                   seasonal = c(0, 1, 1),
+                   lambda = 0,
+                   xreg = X.train))
+  
+  if(!is.element("try-error", class(fit))) {
+    fcast <- forecast(fit, h = h, xreg = X.test) 
+    mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
+  }
+}
+
+errorArima <- apply(mapeArima, MARGIN = 2, FUN = median, na.rm = TRUE)
+errorArima
+```
+
+Para evitar el efecto sobre los errores de predicción de la no inclusión de las variables ficticias se ha calculado el error mediano. La @fig-ExpMAPE revela que el error de predicción aumenta lentamente según aumenta el horizonte de predicción, pasando del 2.5% a un mes vista hasta el 5.4% a 12 meses vista.
+
+
+```{r}
+#| label: fig-ExpMAPE
+#| fig-cap: "Error de predicción (MedAPE) según horizonte temporal"
+ggplot() +
+  geom_line(aes(x = 1:12, y = errorArima), colour = "Blue") +
+  ggtitle("") +
+  xlab("Horizonte temporal de predicción") +
+  ylab("%") +
+  scale_x_continuous(breaks= 1:12)
+```
+
+### Interpretación {.unnumbered}
+
+La parte regular del modelo estimado es la misma que la obtenida para la serie Nacimientos y su interpretación es, por tanto, idéntica: en cada mes, **la tasa de variación anual de las exportaciones es la misma que la del mes pasado**. Además, si algunos de los meses necesarios para predecir fue anómalo, el error hay que tenerlo en cuenta para afinar la previsión.
+
+Vamos por tanto a centrarnos en la interpretación de la intervención:
+
+-   Cada día laborable adicional en un mes aumenta las exportaciones en un 3.1% (coeficiente $0.0315$ de `DiasLAborables`)
+-   El mes en que cae la Semana Santa las exportaciones caen un 2.1%. (coeficiente $-0.0206$ de `SemanaSanta`)
+-   A raíz de la Gran Recesión, las exportaciones se redujeron de forma permanente un 19.6% desde diciembre de 2008. Es decir, sin la Gran Recesión, las exportaciones ahora serían un 19.6% superiores (coeficiente $-0.1956$ de `l1208`)
+-   A raíz de la Covid-19, las exportaciones se redujeron de forma temporal en los meses de marzo, abril y mayo de 2020 un 18%, 51% y 27%, respectivamente.
+-   Además, el nivel de las exportaciones se ha corregido a la baja desde abril de 2023 un 12.8% (coeficiente $-0.1277$ de `l0423`).
+
+### Predicción de la serie {.unnumbered}
+
+Una vez dado por válido el modelo, podemos pasar a realizar predicciones teniendo en cuenta las siete variables de intervención:
+
+-   Dos de ellas son efectos calendario (DiasLaborables y SemanaSanta), para las que debemos indicar qué valores tomarán en el periodo de predicción
+-   Otras dos son cambios permanentes y su valor debe ser 1 en el futuro.
+-   Solo para los pulsos, se fijará un valor futuro de 0.
+
+Vamos a fijar el horizonte de predicción en cuatro años y mostrar los resultados numérica (solo para el primer año) y gráficamente (@fig-ExpPre).
+
+Recuerda siempre incluir las variables ficticias en la función `forecast` en el mismo orden que aparecen en la estimación con `Arima`.
+
+```{r}
+#| results: hide
+tmp <- ts(rep(0, 48), start = 2024, freq = 12)
+pdl <- bizdays(tmp, FinCenter = "London")
+pss <- easter(tmp)
+pexp.ar1 <- forecast(exp.ar1, 
+                     h = 48,
+                     xreg = cbind(pdl, pss, 
+                                  rep(1,48), 
+                                  rep(0,48), rep(0,48), rep(0,48),
+                                  rep(1,48)), 
+                     level = 95)
+pexp.ar1
+```
+
+```{r}
+#| echo: false 
+forecast(exp.ar1, 
+         h = 12,
+         xreg = cbind(pdl[1:12], pss[1:12], rep(1,12), rep(0,12), rep(0,12), rep(0,12), rep(1,12)), 
+         level = 95)
+```
+
+```{r}
+#| label: fig-ExpPre
+#| fig-cap: "Exportaciones (1999-2023) y predicción (2024-2027)"
+autoplot(pexp.ar1, 
+         xlab = "",
+         ylab = "Millones de euros",
+         main = "",
+         PI = FALSE) +
+  scale_x_continuous(breaks= seq(1998, 2028, 2)) 
+```
+
+\
+
+## Demanda eléctrica
+
+Consideremos las serie diaria de **demanda eléctrica** (GWh) en España durante 2023.
+
+```{r}
+#| label: fig-Electricidad
+#| fig-cap: "Demanda eléctrica en España en 2023"
+electricidad <- read.csv("./series/Consumo electrico.csv", 
+                         header = TRUE)
+
+electricidad <- ts(electricidad[, 1],
+                   start = c(1, 7),
+                   frequency = 7)
+
+autoplot(electricidad,
+         xlab = "",
+         ylab = "GWh",
+         main = "")
+```
+
+### Transformación de la serie {.unnumbered}
+
+Estrictamente hablando la serie no muestra tendencia, porque solo podemos observar un año. Sin embargo, se observan cambios de nivel en la demanda eléctrica que se pueden confundir con la presencia de tendencia, pero que realmente están asociados a los cambios de temperatura y el uso de los sistemas de climatización. Estos cambios de nivel se repiten cada año y se deberían incorporar en la estructura de la serie como una segunda componente estacional. Ahora bien, dado que solo se está analizando un año de la serie, vamos a asimilar los cambios de nivel a la presencia de tendencia y a considerar, por tanto, la serie como no estacionaria.
+
+```{r}
+#| eval: false
+ggAcf(electricidad, lag = 42, ylim = c(-1, 1),
+      xlab = "", ylab = "", main = "")
+ggAcf(diff(electricidad), lag = 42, ylim = c(-1, 1),
+      xlab = "", ylab = "", main = "")
+ggAcf(diff(electricidad, lag = 7), lag = 42, ylim = c(-1, 1),
+      xlab = "", ylab = "", main = "")
+ggAcf(diff(diff(electricidad, lag = 7)), lag = 42, ylim = c(-1, 1),
+      xlab = "", ylab = "", main = "")
+```
+
+```{r}
+#| echo: false
+#| label: fig-EleFAC
+#| fig-cap: "FAC para Electricidad"
+#| fig-subcap: 
+#|   - "Serie"
+#|   - "Diferencia regular"
+#|   - "Diferencia estacional"
+#|   - "Diferencia regular y estacional"
+#| layout: [[50, 50], [50, 50]]
+ggAcf(electricidad, lag = 42, ylim = c(-1, 1), xlab = "", ylab = "", main = "")
+ggAcf(diff(electricidad), lag = 42, ylim = c(-1, 1), xlab = "", ylab = "", main = "")
+ggAcf(diff(electricidad, lag = 7), lag = 42, ylim = c(-1, 1), xlab = "", ylab = "", main = "")
+ggAcf(diff(diff(electricidad, lag = 7)), lag = 42, ylim = c(-1, 1), xlab = "", ylab = "", main = "")
+```
+
+```{r}
+ndiffs(electricidad)
+nsdiffs(electricidad)       
+```
+
+La FAC muestra que para que la serie sea estacionaria y ergódica es necesaria la doble diferenciación regular y estacional, aunque la función `ndiffs` no indica que la diferenciación regular sea necesaria. Trabajaremos con la siguiente serie transformada $$\nabla\nabla_{12}electricidad_t \sim I(0)I_{12}(0).$$
+
+### Identificación {.unnumbered}
+
+Antes de proceder con la primera autoidentifación, vamos a analizar que intervención puede ser necesaria para estimar y predecir adecuadamente la serie.
+
+**Efectos calendario**
+
+La @fig-Electricidad muestra días con una marcada intervención asociada a la caída de la demanda de electricidad los días festivo (véase el análisis de esta serie realizada en el [Tema 2](https://iarribasf.github.io/PrediccionSeriesTemporales-GBIA/03-02-Tema2.html)). Por ejemplo, destaca el bajo consumo el 1 de enero (primer dato de la serie), en Navidades o en Semana Santa (semana 14 del año).
+
+La caída en el consumo dependerá del día de la semana. Es decir, cabe esperar que en un martes festivo la caída del consumo sea mayor que la de un domingo festivo porque en el segundo caso el consumo ya es de por si muy bajo.
+
+Por tanto, para realizar un análisis detallado de la serie vamos crear variables ficticias que identifiquen los días festivos del calendario. Además, vamos a distinguir si el festivo ha sido entre semana (de lunes a viernes), en sábado o en domingo. 
+
+Un repaso por el calendario para el año 2023 nos indica que ningún festivo nacional[^2] ha caído en sábado así que solo podremos estimar el efecto de los festivos entre semana y en domingo sobre el consumo de electricidad.
+
+[^2]: Para este análisis solo se van a considerar los festivos nacionales en 2023 al que añadiremos el lunes de Semana Santa. Es posible que algunos festivos autonómicos en comunidades muy pobladas tengan un efecto sobre el consumo eléctrico, pero esto es un ejercicio y hay que limitar el alcance del análisis.
+
+El siguiente código hace todo el trabajo.
+
+- La primera línea crea una serie que identifica cada fecha del año 2023. La función `seq` devuelve un objeto `date` donde cada fecha no se guarda como un texto (aunque se muestre así) sino de una forma mas compleja.
+
+- En la segunda línea en el objeto `fiestas` identificamos los 13 días festivos del año: 12 fiestas nacionales y el lunes 10 de abril, festivo un muchas comunidades.
+
+- En estas dos primeras líneas, la función `as.Date` se usa para que R identifique una secuencia de caracteres como una fecha tipo "aaaa-mm-dd".
+
+- La línea 3 genera una serie ficticia para identificar los festivos entre semana. Primero se identifican que fechas del año aparecen incluidas entre las fiestas (`fechas %in% fiestas`), generándose un vector booleano (TRUE/FALSE) de longitud 365. Luego se identifican que días del año han caído entre semana (`cycle(electricidad) < 6`), generandose otro vector booleano de longitud 365. El producto de estos dos vectores solo valdrá 1 (TRUE) si simultáneamente una fecha es festiva y ha caído entre semana.
+
+- La linea 4 usa las mismas ideas para generar una serie ficticia que identifica los festivos en domingo.
+
+```{r}
+fechas <- seq(as.Date("2023-1-1"), as.Date("2023-12-31"), "day")
+
+fiestas <- as.Date(c("2023-01-01", "2023-01-02", "2023-01-06", 
+                     "2023-04-06", "2023-04-07", "2023-04-10", 
+                     "2023-05-01", "2023-08-15", "2023-10-12", "2023-11-01", 
+                     "2023-12-06", "2023-12-08", "2023-12-25"))
+
+festivosEntreSemana <- (fechas %in% fiestas) * (cycle(electricidad) < 6)
+festivosDomingo <- (fechas %in% fiestas) * (cycle(electricidad) == 7)
+```
+
+Al final el código nos devuelve dos variables ficticias: `festivosEntreSemana` valdrá 1 en la posición del año correspondiente a un día festivo entre semana y 0 en otro caso; `festivosDomingo` valdrá 1 en la posición del año correspondiente a un domingo festivo y 0 en otro caso.
+
+Como ningún festivo en 2023 cayó en sábado, no es posible estimar su efecto sobre el consumo eléctrico y no se ha creado la variable ficticia correspondiente.
+
+**Efecto temperatura**
+
+El consumo de electricidad está fuertemente relacionado con la temperatura. En concreto, cuanto más se aleja la temperatura de un día de la media anual (por exceso de frío o de calor) mayor es el consumo eléctrico (véase la @fig-ElectricidadTempreratura).
+
+```{r}
+#| label: fig-ElectricidadTempreratura
+#| fig-cap: "Relación entre exceso de temperatura y consumo eléctrico"
+temperatura <- read.csv("./series/Temperatura.csv")
+temperatura <- temperatura[, 1]
+
+excesotemperatura <- abs(temperatura - mean(temperatura))
+
+ggplot() +
+  geom_point(aes(x = excesotemperatura, y = electricidad), size = 2) +
+  xlab("Exceso de temperatura (ºC)") + 
+  ylab("Demanda eléctrica (GWh)")
+```
+
+Usaremos la variable `excesotemperatura` como otra variable de intervencion.
+
+**Identificación**
+
+Si probamos con la función `auto.arima`, indicando la doble diferenciación, los días festivos entre semana, los festivos en domingo y el exceso de temperatura.
+
+```{r}
+auto.arima(electricidad,
+           d = 1,
+           D = 1,
+           xreg = cbind(festivosEntreSemana, festivosDomingo, 
+                        excesotemperatura))
+```
+
+El modelo identificado es ARIMA(1, 1, 0)(1, 1, 0), pero el coeficiente del proceso AR(1) claramente no es significativo.
+
+Respecto de la intervención, las tres variables de intervención parece ser significativas. Además, el efecto estimado para los días festivos por las dos variables ficticias es muy similar. Parece que la caída del consumo eléctrico en un festivo no depende del día de la semana. Ojo, no estamos diciendo que un lunes festivo, por ejemplo, se consume lo mismo que un domingo festivo. Dado que un lunes no festivo se consume más que un domingo no festivo, si la caída asociada a festividad es la misma, el lunes festivo se seguirá consumiendo más que un domingo festivo. Por tanto, vamos a crear una única variable ficticia que identifique los festivos independientemente del día de la semana en que caen.
+
+```{r}
+festivos <- festivosEntreSemana + festivosDomingo
+```
+
+### Estimación (y valores extremos) {.unnumbered}
+
+Estimamos el modelo de partida, excluyendo el proceso AR(1).
+
+```{r}
+ele.ar1 <- Arima(electricidad, 
+                 order = c(0, 1, 0),
+                 seasonal = c(1, 1, 0),
+                 xreg = cbind(festivos, excesotemperatura))
+ele.ar1
+```
+
+Veamos si es necesaria más intervención.
+
+```{r}
+#| label: fig-ExpError2
+#| fig-cap: "Error + Intervención"
+error <- residuals(ele.ar1)
+sderror <- sd(error)
+
+autoplot(error, series="Error",
+         colour = "black",
+         xlab = "",
+         ylab = "Error",
+         main = "") +
+  geom_hline(yintercept = c(-3, -2,2, 3)*sderror, 
+             colour = c("red", "green", "green", "red"), 
+             lty = 2) + 
+  scale_x_continuous(breaks= seq(1998, 2022, 2)) 
+
+fechas[abs(error) > 3 * sderror]
+```
+
+Se observan tres candidatos a valores atípicos por superar el error las 3 desviaciones típicas. 
+
+- 27 de julio: día de Santiago (patrón de España) y festivo en Galicia, Castilla y León, Navarra y País Vasco.
+- 27 de agosto: no se ha identificado nada especial este día
+- 25 de diciembre, Navidad: este día ya está incluido como festivo en la variable `festivos`, pero es tan festivo que el consumo cayó mucho más que en otro día festivo cualquiera.
+
+Deberíamos incluir el 27 de julio en nuestra lista de festivos y crear una variable ficticia especial para Navidad, pero a fin de aligerar este ejemplo no vamos a modificar el modelo actual.
+
+### Validación {.unnumbered}
+
+**Coeficientes significativos**
+
+Veamos si los coeficientes del modelo son significativos. Para ello, aplicamos la prueba z.
+
+```{r}
+coeftest(ele.ar1)
+```
+
+Todos los coeficientes son significativos.
+
+**Error de estimación**
+
+En media nos equivocamos en `r round(accuracy(ele.ar1)[2],0)` GWh (RMSE) y el error porcentual medio es del `r round(accuracy(ele.ar1)[5],1)`%, muy reducido.
+
+La serie no presenta sesgo y el intervalo de confianza para las predicciones es válido.
+
+```{r}
+#| eval: false
+accuracy(ele.ar1)
+```
+
+```{r}
+#| echo: false
+round(accuracy(ele.ar1),2)
+```
+
+**Incorrelación, Homocedasticidad y Normalidad**
+
+Veamos ahora si el residuo es ruido blanco.
+
+```{r}
+#| label: fig-ErrorELE
+#| fig-cap: "FAC del error del modelo"
+error <- residuals(ele.ar1)
+Box.test(error, lag = 2,type = "Ljung-Box")
+Box.test(error, lag = 14,type = "Ljung-Box")
+Box.test(error^2, lag = 2, type = "Ljung-Box")
+Box.test(error^2, lag = 14, type = "Ljung-Box")
+jarque.bera.test(error) 
+ggAcf(error, lag = 35, main = "")
+```
+
+Claramente hay autocorrelaciones significativas, además en retardos relevantes (véase @fig-ErrorELE), el error no muestra ser homocedástico ni seguir una distribución normal. 
+
+Una posible razón para la presencia de autocorrelación y heterocedasticidad puede ser una identificación del modelo incorrecta: igual la diferenciación regular no es precisa o igual hay que dejar el proceso AR(1) regular aunque su coeficiente sea no significativo. También la presencia de días atípicos sin intervención puede ser la causa del incumplimiento de las hipótesis.
+
+### Error de predicción estramuestral según horizonte temporal {.unnumbered}
+
+Asumimos que se precisan veinte semanas para hacer una buena estimación, $k = 140$, y fijaremos el horizonte temporal en una semana, $h = 7$ días. Como el modelo apenas presenta valores atípicos, podemos calcular como medida de precisión el valor medio en lugar del mediano.
+
+```{r}
+k <- 140               
+h <- 7                   
+T <- length(electricidad)   
+s <- T - k - h               
+
+mapeArima <- matrix(NA, s + 1, h)
+
+X <- data.frame(cbind(festivos, excesotemperatura))
+
+for (i in 0:s) {
+  train.set <- subset(electricidad, start = i + 1, end = i + k)
+  test.set <-  subset(electricidad, start = i + k + 1, end = i + k + h) 
+  
+  X.train <- as.matrix(X[(i + 1):(i + k),])
+  X.test <- as.matrix(X[(i + k + 1):(i + k + h),])
+  
+  fit <- try(Arima(train.set, 
+                   order = c(0, 1, 0),
+                   seasonal = c(1, 1, 0),
+                   xreg = X.train))
+  
+  if(!is.element("try-error", class(fit))) {
+    fcast <- forecast(fit, h = h, xreg = X.test) 
+    mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
+  }
+}
+
+errorArima <- apply(mapeArima, MARGIN = 2, FUN = median, na.rm = TRUE)
+errorArima
+```
+
+El error de predicción parte del 1.3% para previsiones a un día vista (algo inferior al error de ajuste) y aumenta progresivamente según aumenta el horizonte de predicción, pasando al 3.2% a 7 días vista.
+
+### Interpretación {.unnumbered}
+
+El *modelo teórico* es $electricidad_t \sim ARIMA_{7}(0, 1, 0)(1, 1, 0) + AI$, 
+$$(1 - L^{7})(1 - L)electricidad_t = (1 + \theta_{7} L^{7})\varepsilon_t + AI.$$
+
+Si desarrollamos queda 
+$$
+\begin{aligned}
+electricidad_t & = electricidad_{t-1} + (electricidad_{t-7} - electricidad_{t-8})  + \theta_{7} \varepsilon_{t-7} + \varepsilon_{t}+ \\
+& \gamma_1 \cdot festivos +\gamma_2 \cdot excesotemperatura_t
+\end{aligned}
+$$ 
+Finalmente, el *modelo estimado* es, 
+$$
+\begin{aligned}
+\widehat{electricidad_t} & = electricidad_{t-1} + (electricidad_{t-7} - electricidad_{t-8}) - 0.55 \varepsilon_{t-7}  \\
+& -74.2 \cdot festivos_t + 2.8 \cdot excesotemperatura_t 
+\end{aligned}
+$$
+
+- El consumo de electricidad de un día es el mismo que el del día anterior más la variación observada entre estos dos días la semana pasada. Por ejemplo, el consumo un miércoles es el del martes pasado más la variación observada entre el martes y el miércoles de la semana previa. 
+- Los días festivos el consumo cae en 74.2 GWh respecto de la demanda en un día no festivo.
+- Por cada grado centígrado de desviación de la temperatura sobre la media anual, el consumo aumenta en 2.8 GWh.
+
+### Predicción de la serie {.unnumbered}
+
+Una vez dado por válido el modelo, podemos pasar a realizar predicciones para los próximos siete días y mostrar los resultados numérica y gráficamente (@fig-ElePre).
+
+Teniendo en cuenta las dos variables de intervención:
+
+- Para el efecto calendario debemos indicar qué valores tomará en el periodo de predicción, es decir, que días son festivos. Como el rango de predicción abarca del 1 al 7 de enero de 2024, se marcarán como festivos el lunes día 1 (Año nuevo) y el sábado 6 (Reyes). 
+- Para el efecto de la temperatura deberíamos, primero obtener la temperatura prevista para el periodo de predicción y después calcular el exceso de temperatura. La previsión de la temperatura se puede obtener de AEMET o de cualquier otro servicio de metereología.
+
+Recuerda siempre incluir las variables ficticias en la función `forecast` en el mismo orden que aparecen en la estimación con `Arima`.
+
+```{r}
+pfestivos <- c(1, 0, 0, 0, 0, 1, 0)
+ptemperatura <- c(6.6, 4.0, 10.0, 9.2, 7.6, 5.4, 4.8)
+pexcesotemperatura <- ptemperatura - mean(temperatura)
+
+pele.ar1 <- forecast(ele.ar1, 
+                     h = 7,
+                     xreg = cbind(pfestivos, pexcesotemperatura), 
+                     level = 95)
+pele.ar1
+```
+
+
+```{r}
+#| label: fig-ElePre
+#| fig-cap: "Demanda eléctrica y predicción"
+autoplot(pele.ar1, 
+         xlab = "",
+         ylab = "GWh",
+         main = "") +
+  scale_x_continuous(breaks= seq(46, 56, 1)) 
+```
+
+La @fig-ElePre muestra la serie Electricidad y su predicción para la primera semana de 2024, junto con el intervalo de confianza. La calidad de ajuste es tan buena que el intervalo de confianza de las predicciones es muy estrecho.
+
+\
+
+# Comparación con el método de Alisado exponencial
+
+Veamos una comparativa, para los dos ejemplos vistos, entre los resultados obtenidos con ARIMA y con Alisado exponencial
+
+### Nacimientos (log) {.unnumbered}
+
+| Método  | Modelo                   |  MAPE  |             |             |              |
+|:-----------|:-----------|:----------:|:----------:|:----------:|:----------:|
+|         |                          | Ajuste | Extra h = 1 | Extra h = 6 | Extra h =12 |
+| ARIMA   | (0,1,1)(0,1,1)+AI        |  1.54  |    2.25     |    2.80     |     3.08     |
+| Alisado | (A,N,A)                  |  2.06  |    2.44     |    3.51     |     4.54     |
+
+Para Nacimientos, la mejora en los indicadores de calidad con ARIMA respecto de Alisado es muy reducida para predicciones a unos pocos meses vista, pero supera el punto porcentual para predicciones a 12 meses vista. El uso de un método u otro dependerá del horizonte temporal y la presencia de AI.
+
+### Exportaciones (log) {.unnumbered}
+
+| Método  | Modelo                   |  MAPE  |             |             |              |
+|:-----------|:-----------|:----------:|:----------:|:----------:|:----------:|
+|         |                          | Ajuste | Extra h = 1 | Extra h = 6 | Extra h =12 |
+| ARIMA   | (0,1,1)(0,1,1)+AI        |  2.86  |    2.53     |    4.10     |     5.41     |
+| Alisado | (A,A,A)                  |  5.00  |    5.30     |    7.02     |     9.57     |
+
+En el caso de Exportaciones, la mejora en la calidad del ajuste con ARIMA respecto de Alisado oscila entre 2 y 4 puntos porcentuales según el horizonte temporal. En este caso, ARIMA ofrece mejores resultados que Alisado.
+
+### Electricidad {.unnumbered}
+
+| Método  | Modelo                   |  MAPE  |             |             |              |
+|:-----------|:-----------|:----------:|:----------:|:----------:|:----------:|
+|         |                          | Ajuste | Extra h = 1 | Extra h = 4 | Extra h =7 |
+| ARIMA   | (0,1,0)(1,1,0)+AI        |  1.81  |    1.92     |    3.95     |     4.44     |
+| Alisado | (A,N,A)                  |  2.50  |    2.14     |    4.33     |     4.76     |
+
+En el caso de Electricidad, la mejora en la calidad del ajuste con ARIMA respecto de Alisado es inferior a medio punto porcentual. El uso de los modelos Arima no parece muy justificado, más allá de poder corregir las predicciones en los días festivos.
+
+\
+\
+
+# Resumen de los comandos utilizados
+
+| Función      | Paquete  | Descripción                                                 |
+|:------------------|:------------------|:-----------------------------------|
+| `mothdays `  | forecast | da el número de días de cada mes  |
+| `easter`     | forecast | da la proporción de días de Semana Santa que caen en Marzo y Abril |
+| `bizdays`    | forecast | da el número de días laborables de cada mes                |
+
+
+\
+\
+\
+\

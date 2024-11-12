@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Iván Arribas (Depto. Análisis Económico. Universitat de València)">
+
+<title>Series Temporales - Defunciones por Enfermedades Cerebrovasculares</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Series Temporales</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./01-Guia-curso.html"> 
+<span class="menu-text">Guía del curso</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./02-Logistica.html"> 
+<span class="menu-text">Logística</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-diapos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Diapos</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-diapos">    
+        <li class="dropdown-header">Teoría</li>
+        <li>
+    <a class="dropdown-item" href="./03-01-Tema1.html">
+ <span class="dropdown-text">Tema 1: Definicion y Componentes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-02-Tema2.html">
+ <span class="dropdown-text">Tema 2: Alisado</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-03-Tema3.html">
+ <span class="dropdown-text">Tema 3: Procesos estocásticos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-04-Tema4.html">
+ <span class="dropdown-text">Tema 4: ARIMA</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-05-Tema5.html">
+ <span class="dropdown-text">Tema 5: SARIMA</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Ejemplo de aplicación</li>
+        <li>
+    <a class="dropdown-item" href="./03-06-Ejemplo1.html">
+ <span class="dropdown-text">Ejemplo Tema 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-07-Ejemplo2.html">
+ <span class="dropdown-text">Ejemplo Tema 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-08-Ejemplo3.html">
+ <span class="dropdown-text">Ejemplo Tema 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-09-Ejemplo4.html">
+ <span class="dropdown-text">Ejemplo Tema 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-10-Ejemplo5.html">
+ <span class="dropdown-text">Ejemplo Tema 5</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Otro ejemplo</li>
+        <li>
+    <a class="dropdown-item" href="./03-11-Ejemplo-Pasajeros.html">
+ <span class="dropdown-text">Ejemplo de Pasajeros</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-píldoras" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Píldoras</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-píldoras">    
+        <li>
+    <a class="dropdown-item" href="./04-01-Bootstrapping.html">
+ <span class="dropdown-text">Bootstrapping para IC</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-02-Multiples_CS.html">
+ <span class="dropdown-text">Múltiples componentes estacionales</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-03-Redes_neuronales.html">
+ <span class="dropdown-text">Predicción con Redes Neuronales</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-04-Series_acotadas.html">
+ <span class="dropdown-text">Series acotadas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-05-Valores_perdidos_Outliers.html">
+ <span class="dropdown-text">Valores perdidos y outliers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-06-Covid_Nacimientos.html">
+ <span class="dropdown-text">Efecto de la Covid-19 en Nacimientos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-07-Combinando_predicciones.html">
+ <span class="dropdown-text">Combinación de predicciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-08-Series_interrumpidas.html">
+ <span class="dropdown-text">Series interrumpidas</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./05-Recursos-R.html"> 
+<span class="menu-text">Recursos de la asignatura</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./06-Practica.html"> 
+<span class="menu-text">Practica</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-más" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Más</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-más">    
+        <li class="dropdown-header">R</li>
+        <li>
+    <a class="dropdown-item" href="https://cran.r-project.org">
+ <span class="dropdown-text">Dónde está R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://rstudio.com">
+ <span class="dropdown-text">Donde está RStudio</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Markdown</li>
+        <li>
+    <a class="dropdown-item" href="https://bookdown.org/yihui/rmarkdown/">
+ <span class="dropdown-text">Markdown</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://rmarkdown.rstudio.com/lesson-1.html">
+ <span class="dropdown-text">R Markdown</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf">
+ <span class="dropdown-text">R Markdown (pdf)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://quarto.org/docs/tools/rstudio.html">
+ <span class="dropdown-text">Quatro</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Otros</li>
+        <li>
+    <a class="dropdown-item" href="https://www.r-bloggers.com">
+ <span class="dropdown-text">Blog sobre R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://bookdown.org">
+ <span class="dropdown-text">Libros online que debes conocer</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Índice</h2>
+   
+  <ul>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">1</span> Introducción</a></li>
+  <li><a href="#ajuste-por-alisado-exponencial-e-interpretación" id="toc-ajuste-por-alisado-exponencial-e-interpretación" class="nav-link" data-scroll-target="#ajuste-por-alisado-exponencial-e-interpretación"><span class="header-section-number">2</span> Ajuste por alisado exponencial e interpretación</a></li>
+  <li><a href="#predicción" id="toc-predicción" class="nav-link" data-scroll-target="#predicción"><span class="header-section-number">3</span> Predicción</a></li>
+  <li><a href="#análisis-del-error" id="toc-análisis-del-error" class="nav-link" data-scroll-target="#análisis-del-error"><span class="header-section-number">4</span> Análisis del error</a></li>
+  <li><a href="#validación-origen-de-predicción-móvil" id="toc-validación-origen-de-predicción-móvil" class="nav-link" data-scroll-target="#validación-origen-de-predicción-móvil"><span class="header-section-number">5</span> Validación: origen de predicción móvil</a></li>
+  <li><a href="#modelos-alternativos" id="toc-modelos-alternativos" class="nav-link" data-scroll-target="#modelos-alternativos"><span class="header-section-number">6</span> Modelos alternativos</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Defunciones por Enfermedades Cerebrovasculares</h1>
+<p class="subtitle lead">Alisado Exponencial</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Iván Arribas (Depto. Análisis Económico. Universitat de València) </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><br>
+<br>
+</p>
+<section id="introducción" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introducción</h1>
+<p>Consideremos la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares, Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2023, un total de 44 años o 528 meses.</p>
+<p>En la descriptiva vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para el análisis por técnicas de Alisado Exponencial vamos a recortar la serie y considerarla solo desde enero de 1990, 34 años o 408 meses.</p>
+<p>La serie presenta tendencia decreciente y estacionalidad de orden 12 en un claro esquema multiplicativo (véase <a href="#fig-ECB" class="quarto-xref">Figura&nbsp;1</a>). Ya vimos que el determinante principal del patrón estacional es la temperatura.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>DefEnfCer <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">"./series/Enfermedades cerebrovasculares.csv"</span>, </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>DefEnfCer <span class="ot">&lt;-</span> <span class="fu">ts</span>(DefEnfCer[,<span class="dv">2</span>], </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">start =</span> <span class="dv">1980</span>, </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>DefEnfCer <span class="ot">&lt;-</span> <span class="fu">window</span>(DefEnfCer, </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">start =</span> <span class="dv">1990</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(DefEnfCer,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">""</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">ylab =</span> <span class="st">"Defunciones"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span> <span class="fu">seq</span>(<span class="dv">1990</span>, <span class="dv">2024</span>, <span class="dv">2</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-ECB" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ECB-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-07-Ejemplo2_files/figure-html/fig-ECB-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ECB-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;1: Defunciones causadas por enfermedades cerebrovasculares
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><br>
+<br>
+</p>
+</section>
+<section id="ajuste-por-alisado-exponencial-e-interpretación" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Ajuste por alisado exponencial e interpretación</h1>
+<p>Vamos a aplicar la metodología de Alisado Exponencial a la serie de defunciones. Si se estima el modelo sin imponer ninguna restricción <code>ets</code> identifica como modelo óptimo ETS(M,Ad,M), con un valor de <span class="math inline">\(\phi = 0.98\)</span>, en su valor máximo. Por tanto, se opta por solicitar de nuevo el mejor modelo excluyendo aquellos con amortiguamiento.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>DefEnfCerEts <span class="ot">&lt;-</span> <span class="fu">ets</span>(DefEnfCer, </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">damped =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(DefEnfCerEts) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ETS(M,N,M) 
+
+Call:
+ets(y = DefEnfCer, damped = FALSE)
+
+  Smoothing parameters:
+    alpha = 0.3033 
+    gamma = 1e-04 
+
+  Initial states:
+    l = 3627.815 
+    s = 1.1257 0.9906 0.95 0.847 0.9137 0.9491
+           0.8957 0.9587 0.9676 1.089 1.0796 1.2334
+
+  sigma:  0.0518
+
+     AIC     AICc      BIC 
+6504.585 6505.809 6564.754 
+
+Training set error measures:
+                   ME     RMSE      MAE        MPE     MAPE      MASE
+Training set -13.7002 149.8581 109.4664 -0.7373514 3.879379 0.6820121
+                   ACF1
+Training set 0.08377251</code></pre>
+</div>
+</div>
+<p>El modelo estimado no tiene pendiente y tiene estacionalidad y error multiplicativos: <span class="math display">\[y_{t+1} = l_t \cdot s_{t+1-m} \cdot (1 + \varepsilon_{t+1}).\]</span></p>
+<p>El valor de <span class="math inline">\(\alpha\)</span> indica que el nivel de la serie ha ido variando en el tiempo. El valor de <span class="math inline">\(\gamma\)</span> es prácticamente cero e indica que la estacionalidad se mantienen constante en el tiempo (véase <a href="#fig-ECBDescomposicion" class="quarto-xref">Figura&nbsp;2</a>).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(DefEnfCerEts,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">""</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-ECBDescomposicion" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ECBDescomposicion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-07-Ejemplo2_files/figure-html/fig-ECBDescomposicion-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ECBDescomposicion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2: Descomposición por Alisado Exponencial para defunciones por enfermedades cerebrovasculares
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>La calidad del ajuste es bastante buena, con un MAPE de 3.9% y un RMSE de 150 defunciones (o 109 si usamos el MAE). Además, según el MASE, el modelo de Alisado supone una mejora del 32% respecto del método ingenuo con estacionalidad, el más sencillo que podríamos aplicar. La ACF1 indica que las estimaciones por intervalo de las previsiones serán correctas, y no hay sesgo.</p>
+<p>Los últimos valores estimados del nivel y la estacionalidad, que corresponden a diciembre de 2023, nos permiten mostrar gráficamente la componente estacional (<a href="#fig-ECBEstacionalidad" class="quarto-xref">Figura&nbsp;3</a>).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(DefEnfCerEts<span class="sc">$</span>states, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>               l   s1   s2   s3   s4   s5   s6  s7   s8   s9  s10  s11  s12
+Dec 2023 1906.82 1.13 0.99 0.95 0.85 0.91 0.95 0.9 0.96 0.97 1.09 1.08 1.23</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>componenteEstacional <span class="ot">&lt;-</span> <span class="fu">tail</span>(DefEnfCerEts<span class="sc">$</span>states, <span class="dv">1</span>)[<span class="dv">13</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">y =</span> componenteEstacional)) <span class="sc">+</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">1</span>, <span class="at">colour =</span> <span class="st">"blue"</span>, <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Efecto estacional"</span>) <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Ene"</span>, <span class="st">"Feb"</span>, <span class="st">"Mar"</span>, <span class="st">"Abr"</span>, <span class="st">"May"</span>, <span class="st">"Jun"</span>, </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"Jul"</span>, <span class="st">"Ago"</span>, <span class="st">"Sep"</span>, <span class="st">"Oct"</span>, <span class="st">"Nov"</span>, <span class="st">"Dic"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-ECBEstacionalidad" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ECBEstacionalidad-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-07-Ejemplo2_files/figure-html/fig-ECBEstacionalidad-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ECBEstacionalidad-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3: Componente estacional
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>El nivel de las defunciones por enfermedades cerebrovasculares en diciembre de 2023 (última observación) es de 1907 casos. La mayor incidencia de las defunciones por enfermedades cerebrovasculares tiene lugar en invierno, en los meses de diciembre a marzo. En concreto, destaca el mes enero con un incremento del 23% (<code>s12</code>) en las defunciones por enfermedades cerebrovasculares respecto de la media anual. La incidencia en verano es menor que la media anual, observándose en septiembre un 15% menos de casos (<code>s4</code>). El efecto estacional estimado por el método de Alisado es más acusado que el estimado durante la descriptiva de la serie.</p>
+<p><br>
+<br>
+</p>
+</section>
+<section id="predicción" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Predicción</h1>
+<p>Si pedimos los valores de predicción y su intervalo de confianza al 95% para los próximos tres años, tenemos (numéricamente sólo se muestra el primer año):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>DefEnfCerEtsPre <span class="ot">&lt;-</span> <span class="fu">forecast</span>(DefEnfCerEts, </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">h =</span> <span class="dv">36</span>, </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">level =</span> <span class="dv">95</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>DefEnfCerEtsPre</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Recuerda que las fórmulas usadas para el cálculo del intervalo de confianza de las predicciones no son adecuadas.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>         Point Forecast    Lo 95    Hi 95
+Jan 2024       2351.793 2112.967 2590.619
+Feb 2024       2058.506 1840.037 2276.976
+Mar 2024       2076.463 1846.971 2305.956
+Apr 2024       1845.134 1633.414 2056.853
+May 2024       1828.058 1610.849 2045.267
+Jun 2024       1707.885 1498.224 1917.545
+Jul 2024       1809.615 1580.556 2038.675
+Aug 2024       1742.180 1515.196 1969.164
+Sep 2024       1615.118 1398.864 1831.372
+Oct 2024       1811.504 1562.593 2060.415
+Nov 2024       1888.845 1622.836 2154.854
+Dec 2024       2146.398 1836.937 2455.858</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(DefEnfCerEtsPre,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">""</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">ylab =</span> <span class="st">"Casos"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-ECBPrediccion" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ECBPrediccion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-07-Ejemplo2_files/figure-html/fig-ECBPrediccion-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ECBPrediccion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4: Muertes por enf. cerebrovasculares (1990-2023) y predicción (2024-2026)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Las predicciones, acordes con el modelo estimado, no muestran tendencia y su nivel es constante en los tres años de predicción. (véase <a href="#fig-ECBPrediccion" class="quarto-xref">Figura&nbsp;4</a>).</p>
+<p><br>
+<br>
+</p>
+</section>
+<section id="análisis-del-error" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Análisis del error</h1>
+<p>La <a href="#fig-ECBError" class="quarto-xref">Figura&nbsp;5</a> muestra el residuo del modelo. Se aprecian cuatro meses en los que el residuo supera las tres desviaciones típicas porque el número de muertes por enfermedades cerebrovasculares fue muy superior al estimado por el modelo: febrero de 1999, junio 2003, enero de 2005 y febrero de 2012. El error en este último mes, febrero de 2012, es especialmente acusado —supera las 5 desviaciones típicas y es el único identificado por la prueba de Tukey. Durante ese mes se registraron temperaturas muy bajas en muchas partes del país, incluso algunas nevadas inusuales en zonas donde no era común ver nieve, y se reportaron mínimas récord en varias ciudades españolas. Estas temperaturas extremas causaron un incremento significativo en el número de defunciones por enfermedades cerebrovasculares.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>error <span class="ot">&lt;-</span> <span class="fu">residuals</span>(DefEnfCerEts)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>sderror <span class="ot">&lt;-</span> <span class="fu">sd</span>(error)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(error,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">""</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">ylab =</span> <span class="st">"Error"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">""</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">colour =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span> ,<span class="dv">3</span>)<span class="sc">*</span>sderror, </span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">colour =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"blue"</span>, <span class="st">"red"</span>), <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span> <span class="fu">seq</span>(<span class="dv">1990</span>, <span class="dv">2024</span>, <span class="dv">2</span>)) </span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>fechas <span class="ot">&lt;-</span> <span class="fu">format</span>(<span class="fu">seq</span>(<span class="fu">as.Date</span>(<span class="st">"1990-01-01"</span>), <span class="fu">as.Date</span>(<span class="st">"2023-12-01"</span>), <span class="st">"month"</span>), <span class="st">"%Y-%m"</span>)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>fechas[<span class="fu">abs</span>(error) <span class="sc">&gt;</span> <span class="dv">3</span> <span class="sc">*</span> sderror]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "1999-02" "2003-06" "2005-01" "2012-02"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>atipicos <span class="ot">&lt;-</span> <span class="fu">tsoutliers</span>(error)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>fechas[atipicos<span class="sc">$</span>index]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2012-02"</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-ECBError" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ECBError-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-07-Ejemplo2_files/figure-html/fig-ECBError-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ECBError-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;5: Error + Intervención
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><br>
+<br>
+</p>
+</section>
+<section id="validación-origen-de-predicción-móvil" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Validación: origen de predicción móvil</h1>
+<p>Asumimos que se precisan diez años para hacer una buena estimación, <span class="math inline">\(k=120\)</span>, y que el horizonte temporal es un año, <span class="math inline">\(h = 12\)</span> meses. La siguiente rutina permite obtener el MAPE para previsiones con un horizonte temporal desde 1 mes hasta 12 meses.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">120</span>                 </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="dv">12</span>                  </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>TT <span class="ot">&lt;-</span> <span class="fu">length</span>(DefEnfCer)  </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> TT <span class="sc">-</span> k <span class="sc">-</span> h          </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>mapeAlisado <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, s <span class="sc">+</span> <span class="dv">1</span>, h)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>s) {</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  train.set <span class="ot">&lt;-</span> <span class="fu">subset</span>(DefEnfCer, <span class="at">start =</span> i <span class="sc">+</span> <span class="dv">1</span>, <span class="at">end =</span> i <span class="sc">+</span> k)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  test.set <span class="ot">&lt;-</span>  <span class="fu">subset</span>(DefEnfCer, <span class="at">start =</span> i <span class="sc">+</span> k <span class="sc">+</span> <span class="dv">1</span>, <span class="at">end =</span> i <span class="sc">+</span> k <span class="sc">+</span> h)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">ets</span>(train.set, <span class="at">model =</span> <span class="st">"MAM"</span>, <span class="at">damped =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  fcast<span class="ot">&lt;-</span><span class="fu">forecast</span>(fit, <span class="at">h =</span> h)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  mapeAlisado[i <span class="sc">+</span> <span class="dv">1</span>,] <span class="ot">&lt;-</span> <span class="dv">100</span><span class="sc">*</span><span class="fu">abs</span>(test.set <span class="sc">-</span> fcast<span class="sc">$</span>mean)<span class="sc">/</span>test.set</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>errorAlisado <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(mapeAlisado)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>errorAlisado</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 4.152597 4.364142 4.503068 4.432977 4.526099 4.607606 4.668964 4.605134
+ [9] 4.567620 4.452289 4.496088 4.348938</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">y =</span> errorAlisado)) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Error de predicción según horizonte temporal"</span>) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Horizonte temporal de predicción"</span>) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"MAPE"</span>) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-ECBRW" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ECBRW-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-07-Ejemplo2_files/figure-html/fig-ECBRW-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ECBRW-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;6: Error de predicción según horizonte temporal
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>La <a href="#fig-ECBRW" class="quarto-xref">Figura&nbsp;6</a> muestra que aunque el error depende del horizonte temporal de previsión, se mueve en una banda muy estrecha: entre el 4.1% para previsiones a un mes vista y el 4.7% para previsiones a siete meses vista.</p>
+<p><br>
+<br>
+</p>
+</section>
+<section id="modelos-alternativos" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Modelos alternativos</h1>
+<p>¿Podemos reducir el error extramuestral de previsión si cambiamos las opciones por defecto de <code>ets</code> o la serie a analizar? La <a href="#fig-ECBRW2" class="quarto-xref">Figura&nbsp;7</a> muestra el error de previsión extramuestral según el horizonte de previsión para los siguientes modelos (todos sin amortiguamiento y en caso de transformación logarítmica, sin ajuste para insesgadez):</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Id</strong></th>
+<th style="text-align: left;"><strong>Transformación</strong></th>
+<th style="text-align: left;"><strong>Modelo</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Ninguna</td>
+<td style="text-align: left;">MNM</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">Ninguna</td>
+<td style="text-align: left;">MAM</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">Logaritmo</td>
+<td style="text-align: left;">ANA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">Logaritmo</td>
+<td style="text-align: left;">AAA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">Defunciones por día</td>
+<td style="text-align: left;">MNM</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">Defunciones por día</td>
+<td style="text-align: left;">MAM</td>
+</tr>
+</tbody>
+</table>
+<p>En concreto, los comandos utilizados han sido:</p>
+<ul>
+<li>Modelo 1: <code>ets(x, model = "MNM", damped = FALSE)</code></li>
+<li>Modelo 2: <code>ets(x, model = "MAM", damped = FALSE)</code></li>
+<li>Modelo 3: <code>ets(x, model = "ANA", lambda = 0, damped = FALSE)</code></li>
+<li>Modelo 4: <code>ets(x, model = "AAA", lambda = 0, damped = FALSE)</code></li>
+<li>Modelo 5: <code>ets(x/monthdays(x), model = "MNM", damped = FALSE)</code></li>
+<li>Modelo 6: <code>ets(x/monthdays(x), model = "MAM", damped = FALSE)</code></li>
+</ul>
+<p><br>
+</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ECBRW2" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ECBRW2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-07-Ejemplo2_files/figure-html/fig-ECBRW2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ECBRW2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;7: Errores de previsión extramuestral. Varios modelos
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>De la <a href="#fig-ECBRW2" class="quarto-xref">Figura&nbsp;7</a> deducimos que aunque todos los métodos resultan similares en la precisión de las predicciones extramuestrales en el corto plazo, al pasar al medio y largo plazo las diferencias pueden ser significativas: la mayor diferencia entre los modelos se da para la previsión a ocho y nueve meses vista y es de 0.75 puntos porcentuales.</p>
+<p>Si queremos entrar en matices:</p>
+<ul>
+<li>Globalmente el modelo que ofrece previsiones más precisas es el modelo 6, donde se ha forzado a que haya pendiente (<code>model = "MAM</code>) y se trabaja sobre las defunciones por día. El segundo mejor modelo, el modelo 2, sigue el mismo esquema que el modelo 6 pero sobre la serie original.</li>
+<li>Los modelos que tienen tendencia (modelos 2, 4 y 6) resultan mejores que sus homólogos sin tendencia (modelos 1, 3 y 5, respectivamente).</li>
+<li>El uso de logaritmo no mejora la precisión en las predicciones.</li>
+</ul>
+<p>Es decir, tanto la estrategia de predecir la serie de defunciones medias por día (en lugar de la serie original) como la de forzar a que el modelo tenga tendencia, que es lo que se observa gráficamente, mejoran la calidad de las previsiones extramuestrales. La combinación de estas dos estrategias es la óptima.</p>
+<p><br>
+<br>
+<br>
+<br>
+</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2023, Iván Arribas. If you find any bugs please report them to <a href="mailto:ivan.arribas@uv.es">ivan.arribas@uv.es</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>This page is built with <a href="https://quarto.org/">Quarto</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

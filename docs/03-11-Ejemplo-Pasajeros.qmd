@@ -1,0 +1,1103 @@
+---
+title: "Series Temporales: Análisis de la serie Pasajeros en transporte urbano"
+author: "Iván Arribas (Depto. Análisis Económico. Universitat de València)"
+toc: true
+toc-title: Índice
+number-sections: true
+bibliography: references.bib
+crossref:
+  fig-title: Figura
+  tbl-title: Tabla
+  fig-prefix: Figura
+  tbl-prefix: Tabla
+---
+
+```{r}
+#| label: chunk_setup
+#| echo: false
+knitr::opts_chunk$set(warning = FALSE, 
+                      message = FALSE, 
+                      comment = "",
+                      fig.align = "center", 
+                      fig.show = "hold",
+                      fig.height = 4,
+                      fig.width = 8,
+                      out.width = "80%") 
+```
+
+
+\
+\
+
+# Antecedentes {.unnumbered}
+
+En este curso hemos aprendido a describir una serie temporal, estimar su proceso generador de datos y realizar predicciones, tanto puntuales como por intervalo. Para ello, hemos estudiado los principales aspectos teóricos relacionados con las series temporales, sus componentes, modelos de ajuste, predicción, criterios de calidad, etc. También hemos practicado la aplicación de estos conceptos a través de diferentes series temporales: Títulos publicados, Nacimientos, Aforo de vehículos, Consumo de alimentos per cápita, Exportaciones y Pernoctaciones de turistas extranjeros, entre otras.
+
+El programa de estadística utilizado `R` ha servido con dos propósitos entremezclados durante el curso. En primer lugar, para ilustrar los aspectos teóricos que se iban presentando. En este caso, `R` tenía un uso más instrumental y en general se mostraba la salida obtenida sin enseñar el código. En segundo lugar, hemos aprendido a usar `R` para analizar y predecir una serie temporal real. Los ejemplos vistos en cada tema y el ejemplo transversal utilizado durante el curso de *Pernoctaciones en alojamientos turísticos de turistas extranjeros* son buenos exponentes de este uso de `R`.
+
+Ahora bien, ambos usos de `R` --ilustrar aspectos teóricos y analizar una serie-- han quedado distribuidos a lo largo de los temas. El ejemplo **Pasajeros en transporte urbano**, desarrollado aquí, tiene como objetivo disponer, en un único documento y de forma organizada, del análisis completo de una serie temporal. En este informe se mostrará siempre el código completo empleado para las salidas, se hará hincapié en la aplicación práctica de los conceptos teóricos, se insistirá en los diferentes enfoques que se pueden y deben emplear para analizar una serie temporal y se justificarán todas las decisiones adoptadas.
+
+Este es, por tanto, un ejemplo que se extiende más allá de lo que un informe de análisis de una serie temporal precisa.
+
+Para el código de este ejemplo se utilizarán funciones de las librerías básicas de `R` y de otras que se pueden encontrar en las siguientes librerías:
+
+```{r}
+library(forecast)
+library(ggplot2); theme_set(theme_bw())
+library(seasonal)
+library(lmtest)
+library(timeDate)
+library(knitr)
+library(tseries)
+```
+
+# Pasajeros en transporte urbano
+
+La serie que se va a analizar corresponde al número de pasajeros en transporte urbano en España. Es una serie mensual que puede ser consultada en el [Instituto Nacional de Estadística](\http://www.ine.es) y para la que se dispone de datos desde enero de 1996 hasta diciembre de 2023.
+
+Por transporte urbano de pasajeros se hace referencia a los servicios de transporte terrestre de pasajeros, urbano y suburbano, por itinerarios regulares, con horario establecido y con paradas fijas, realizados por autobuses, tranvías, trolebuses, metros y metros ligeros. También se incluyen las líneas de servicio al aeropuerto y a las estaciones y la explotación de funiculares y teleféricos si forman parte de los sistemas de tránsito urbanos e interurbanos.
+
+Los datos de la serie, que denominaremos de forma abreviada Pasajeros, han sido descargados en el fichero *Pasajeros.csv* y aunque en origen la unidad es miles de pasajeros, la cambiaremos a millones de pasajeros.
+
+```{r}
+meses <- c("Ene", "Feb", "Mar", "Abr", "May", "Jun", 
+           "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")
+
+Pasajeros <- read.csv2("./series/Pasajeros.csv",
+                       header = TRUE)
+
+Pasajeros <- ts(Pasajeros[, 1]/1000, 
+                start = 1996, 
+                freq = 12)
+```
+
+# Descriptiva
+
+La @fig-Pasajeros muestra la evolución de la serie Pasajeros en transporte urbano desde 1996 hasta 2023. Se observa que la tendencia de la serie ha seguido el ciclo económico. Durante el periodo de crecimiento de finales del siglo pasado y principios de este, el número de pasajeros en transporte urbano creció de forma sostenida. Con la Gran Recesión (2008 - 2014) se observa un cambio en la tendencia y el número de pasajeros se reduce. No es hasta el final la crisis, en 2014, que la tendencia vuelve a cambiar y pasar a ser creciente de nuevo. Al final del periodo se observa el tremendo efecto que tuvo sobre la serie el confinamiento por la Covid-19 (marzo a junio de 2020) y el incremento del trabajo en casa, con una brusca caída y lenta recuperación. Parece que en 2023 se ha recuperado el volumen de pasajeros prepandemia.
+
+```{r}
+#| label: fig-Pasajeros
+#| fig-cap: "Pasajeros en transporte urbano (datos mensuales)"
+autoplot(Pasajeros, colour = "darkblue",
+         xlab = "",
+         ylab = "Millones de pasajeros",
+         main = "") +
+  scale_x_continuous(breaks= seq(1996, 2024, 2)) 
+```
+
+La serie presenta una acusada estacionalidad, causada principalmente por la distribución de las vacaciones a lo largo de un año y el número de días laborables de cada mes. Pensemos que el principal uso del transporte urbano es el traslado hasta y desde el lugar de trabajo o estudio, seguido del ocio (ir de compras, al cine, a restaurantes, etc.). Cada año el mes con menor número de pasajeros es agosto (los valles en la @fig-Pasajeros) por estar la mayoría de la gente de vacaciones, fuera de su lugar de residencia habitual, y no usar tan intensamente el transporte urbano.
+
+El esquema parece ser aditivo porque no se aprecia que la amplitud estacional se amplíe conforme el número de pasajeros aumenta.
+
+En los siguientes epígrafes se hará una descriptiva de la tendencia y la estacionalidad más detallada.
+
+::: callout-important
+# Serie recortada
+
+Como el propósito de este ejemplo es didáctico, vamos a simplificar el análisis y *cortar* la serie Pasajeros hasta diciembre de 2019, antes de la Covid-19. A lo largo de los siguientes epígrafes usaremos la serie recortada.
+
+```{r}
+Pasajeros <- window(Pasajeros, end = c(2019, 12))
+```
+:::
+
+\
+
+## Análisis de la tendencia
+
+Si anualizamos la serie podemos, por un lado, identificar mejor en que años se producen los cambios en la tendencia y, por otro lado, poner cifras al volumen de pasajeros en transporte urbano.
+
+```{r}
+#| label: fig-PasajerosTendencia
+#| fig-cap: "Pasajeros en transporte urbano (datos anuales)"
+PasajerosAnual <- aggregate(Pasajeros, FUN = sum)
+
+autoplot(PasajerosAnual, colour = "darkblue",
+         xlab = "",
+         ylab = "Millones de pasajeros",
+         main = "") +
+  scale_x_continuous(breaks= seq(1996, 2020, 2))
+```
+
+La @fig-PasajerosTendencia muestra el volumen anual de pasajeros en transporte urbano. El crecimiento continuado, posiblemente iniciado antes de 1996 y que permitió superar los 3000 millones de pasajeros en 2007, se ve interrumpido con el inicio de la Gran Recesión. La caída en el número de pasajeros se interrumpe en 2014, año que marca la salida de esta crisis en España y el inicio de la recuperación en el serie. En 2019 se superaron los 3100 millones de pasajeros.
+
+El incremento en el uso del transporte urbano observado antes y después de la crisis puede tener distintas causas: un uso más intensivo del transporte urbano en detrimento de otros medios de transporte, una reorganización de los servicios de transporte urbano que haya mejorado la conectividad dentro de los municipios, o un aumento en el número de líneas de autobús, tranvía o metro en determinadas ciudades.
+
+La causa del repunte aislado observado el año 2011, en plena crisis, fue una ligera recuperación de la economía que tuvo lugar a finales de 2010 y principios de 2011.
+
+\
+
+## Análisis de la estacionalidad
+
+La principal causa de la estacionalidad observada en la serie es la estructura vacacional de la sociedad, especialmente caracterizada por las vacaciones de verano (julio a septiembre) y las vacaciones de Semana Santa (en marzo y/o abril, según el año). Además, debido a que el transporte urbano se usa principalmente para ir a trabajar o al centro de educación, también influye el número de días laborables del mes. Por ejemplo, en 2017 el mes de junio tuvo 22 días laborables, mientras que en 2019 tuvo 20 días laborables. Esta diferencia de dos días tendrá un efecto sobre el volumen de pasajeros.
+
+El número de días laborables de un mes viene marcado por los fines de semana del mes y por las festividades nacionales. Es cierto que el sábado se trabaja en diversos sectores (comercio, ocio, distribución) pero la caída en el número de trabajadores respecto de los días entre semana (lunes a viernes) es muy notable. También es cierto que, además de las festividades nacionales, hay muchas festividades autonómicas o municipales que podrían afectar al volumen de pasajeros en transporte urbano. Por ejemplo, las festividades regionales en comunidades como Madrid o Cataluña pueden tener un efecto significativo sobre la serie Pasajeros. Sin embargo, las festividades no nacionales no se van a tener en cuenta.
+
+Por tanto, para realizar un análisis detallado de la estacionalidad, es necesario crear una serie con el número de días laborables de cada mes. Además, esta serie se usará más adelante para modelizar y predecir la serie Pasajeros.
+
+### Días laborables de cada mes {.unnumbered}
+
+La librería `timeData` proporciona una serie de funciones que permiten definir un calendario de festividades, identificar los fines de semana y, a partir de aquí, crear la serie de días laborables (véase código más abajo).
+
+-   Con `timeCalendar` se definen las festividades nacionales que vamos a considerar: Año nuevo (1 de enero), Reyes (6 de enero), Viernes Santo (fecha variable), Día del Trabajo (1 de mayo), Día de la Asunción (15 de agosto), Día de la Hispanidad (12 de octubre), Día de Todos los Santos (1 de noviembre), la Constitución (6 de diciembre) la Inmaculada Concepción (8 de diciembre) y Navidad (25 de diciembre).
+
+    Por claridad, cada festivo se ha definido de forma independiente para después crear una variable con todas las festividades (*FestivosNacionales*).
+
+    El rango para todos los cálculos va desde 1996 hasta 2024, que incluye el rango de la serie Pasajeros más cinco años de predicción.
+
+    La función utilizada `Easter` de la librería `timeDate` difiere de la función `easter` de `forecast`.
+
+```{r}
+AnoNuevo <- timeCalendar(d = 1, m = 1, y = 1996:2024)
+Reyes <- timeCalendar(d = 6, m = 1, y = 1996:2024)
+ViernesSanto <- Easter(1996:2024, shift = -2)
+DiaTrabajo <- timeCalendar(d = 1, m = 5, y = 1996:2024)
+Asuncion <- timeCalendar(d = 15, m = 8, y = 1996:2024)
+Hispanidad <- timeCalendar(d = 12, m = 10, y = 1996:2024)
+TodoSantos <- timeCalendar(d = 1, m = 11, y = 1996:2024)
+Constitucion <- timeCalendar(d = 6, m = 12, y = 1996:2024)
+Inmaculada <- timeCalendar(d = 8, m = 12, y = 1996:2024)
+Navidad <- timeCalendar(d = 25, m = 12, y = 1996:2024)
+
+FestivosNacionales <- c(AnoNuevo, Reyes, ViernesSanto,
+                        DiaTrabajo, Asuncion,  Hispanidad, TodoSantos, 
+                        Constitucion, Inmaculada, Navidad)
+```
+
+-   A continuación, con `timeSequence` se crea una serie diaria desde el 1 de enero de 1996 hasta el 31 de diciembre de 2024.
+
+```{r}
+fechaDiaria <- timeSequence(from = "1996-01-01", to = "2024-12-31")
+```
+
+-   Las siguientes líneas eliminan de la serie diaria los festivos y los fines de semana, (función `isBizday`), para después dar a esta nueva serie el formato año-mes eliminando el día. De esta forma, la serie de días laborales tendrá el mismo identificador para todos los días del mismo mes.
+
+```{r}
+biz <- fechaDiaria[isBizday(fechaDiaria, holidays = FestivosNacionales)]
+bizdays <- format(biz, format = "%Y-%m")
+```
+
+-   Ahora se crea una tabla que, por la naturaleza de la serie de días laborales, tendrá para cada año-mes el numero de días laborables. Por último fechamos la tabla, que es nuestra serie de días laborables y mostramos algunos datos.
+
+```{r}
+DiasLaborables <- table(bizdays)
+```
+
+-   Las últimas líneas de código dividen la serie en el periodo muestral y el de predicción.
+
+```{r}
+DiasLaborables <- ts(DiasLaborables, start = 1996, frequency = 12)
+
+subset(DiasLaborables, start = 289) #Mostramos solo los 5 últimos años
+
+pDiasLaborables <- subset(DiasLaborables, start = length(DiasLaborables) - 59)
+DiasLaborables <- subset(DiasLaborables, end = length(DiasLaborables) - 60)
+```
+
+Es conveniente indicar que la identificación de las festividades nacionales dista de ser perfecta por varios motivos:
+
+-   algunos festivos nacionales si caen en domingo, se pasan a lunes (por ejemplo Reyes y la Inmaculada de 2019), aspecto que no se ha tenido en cuenta.
+-   algunos festivos nacionales pueden ser sustituidos por otros días por las Comunidades Autónomas, por ejemplo Reyes o Jueves Santo.
+
+\
+
+### Análisis gráfico de la estacionalidad {.unnumbered}
+
+Veamos ahora una descriptiva detallada de la estacionalidad de la serie Pasajeros, haciendo especial hincapié en el efecto de las vacaciones (verano y Semana Santa) y el número de días laborables. Para ello, mostraremos gráficamente las subseries definidas por el mes tanto para Pasajeros como para *Pasajeros por día laborable*, esta segunda resultado de dividir Pasajeros por DiasLaborables.
+
+```{r}
+#| label: fig-PasajerosEstacionalidad
+#| fig-cap: "Estacionalidad de la serie Pasajeros"
+#| fig-subcap: 
+#|   - "Pasajeros"
+#|   - "Pasajeros por día laborable"
+#| layout-nrow: 2
+
+PasajerosDL <- Pasajeros/DiasLaborables
+
+ggsubseriesplot(Pasajeros) +
+  ylab("Millones de pasajeros") +
+  xlab("") +
+  ggtitle("")
+
+ggsubseriesplot(PasajerosDL) +
+  ylab("Millones de pasajeros") +
+  xlab("") +
+  ggtitle("")
+```
+
+La @fig-PasajerosEstacionalidad muestra para cada mes la serie de pasajeros (total o por día laborable) y el valor medio (línea azul horizontal). En ambos paneles se identifica perfectamente el efecto de los periodos vacacionales sobre el transporte urbano de pasajeros. En las vacaciones de verano se observa una fuerte caída en el número de pasajeros, especialmente en agosto y, en menor medida, en julio y septiembre. Por otro lado, las subseries de marzo y abril muestran mucha más irregularidad que las de otros meses debido a que el volumen de pasajeros depende de cómo haya caído la Semana Santa. Cada año el mes en que caiga la Semana Santa presentará un volumen de pasajeros inferior al esperado. Diciembre, para ser un mes de 31 días, presenta también un reducido número de pasajeros debido a las vacaciones navideñas.
+
+La @fig-PasajerosEstacionalidad a) muestra el efecto estacional total debido al número de días del mes y de días laborales. Por ejemplo, en febrero, el mes con menos días y por tanto con menos días laborales, en media se transportan menos pasajeros, comparado con enero o marzo. Octubre, un mes con 31 días, muestra un volumen medio de pasajeros mayor que noviembre de 30 días.
+
+En la @fig-PasajerosEstacionalidad b) se ha eliminado el efecto de los días laborables al trabajar con la serie de pasajeros transportados por día laborable. Si la comparamos con la @fig-PasajerosEstacionalidad a), destaca que las diferencias entre las medias (lineas azules) se han reducido: prácticamente no hay diferencias entre los meses de enero a junio, o entre los meses de octubre a diciembre.
+
+Cabría pensar que al excluir de la serie de días laborables la Semana Santa, en la @fig-PasajerosEstacionalidad b) las subseries de marzo y abril serían tan suaves como las observadas para otro meses, pero no es así. Claramente la simple exclusión de los festivos nacionales de Semana Santa no es suficiente para recoger bien su efecto sobre el transporte urbano. La razón hay que buscarla en las vacaciones escolares de este periodo, que en algunas comunidades autónomas tiene lugar durante la propia semana de Semana Santa, mientras que en otras comunidades tiene lugar en la semana posterior. De esta forma, el efecto sobre el transporte urbano de Semana Santa no es homogéneo en el territorio nacional y resulta difícil incluirlo en el análisis de la serie Pasajeros.
+
+\
+
+### Descomposición y estimación de la estacionalidad {.unnumbered}
+
+Podemos obtener la componente estacional para poder valorarla numéricamente y ver que efecto tiene el número de días laborables. Previamente, debemos determinar el esquema, aditivo o multiplicativo, de la serie.
+
+La gráfica media-varianza (@fig-Esquema) refuerza la impresión que se obtenía de la gráfica de la serie (@fig-Pasajeros), que el esquema es aditivo.
+
+```{r}
+#| label: fig-Esquema
+#| fig-cap: "Identificación del tipo de esquema"
+MediaAnual <- aggregate(Pasajeros, FUN = sum)
+DesviacionAnual <- aggregate(Pasajeros, FUN = sd)
+
+ggplot() +
+  geom_point(aes(x = MediaAnual, y = DesviacionAnual), size = 2) +
+  xlab("Total pasajeros por año") + 
+  ylab("Desviación típica intraanual de pasajeros") + 
+  ggtitle("")
+```
+
+Ahora vamos a proceder a descomponer tanto la serie original como la serie de pasajeros por día laboral. Dado que la serie presenta un esquema aditivo, usaremos el método de descomposición por regresiones locales ponderadas, asumiendo una componente estacional constante y considerando la presencia de posibles valores extremos.
+
+La @tbl-EfectoEstacional pone en cifras el efecto estacional sobre los Pasajeros (primera columna): en agosto la caída en el número de pasajeros, respecto de la media anual, se cifra en 72 millones de pasajeros. En julio, septiembre y en menor medida abril también el uso del transporte urbano es inferior a la media anual, en el caso de los dos primeros meses por las vacaciones de verano y en abril debido a ser el mes en que con más frecuencia cae la Semana Santa. Por otro lado, destaca el elevado número de pasajeros en los meses de marzo, mayo y octubre, por tener 31 días.
+
+```{r}
+#| label: tbl-EfectoEstacional
+#| tbl-cap: "Efecto estacional"
+PasajerosStl <- stl(Pasajeros, 
+                    s.window = "periodic", 
+                    robust = TRUE)
+
+PasajerosDLStl <- stl(PasajerosDL, 
+                    s.window = "periodic", 
+                    robust = TRUE)
+
+datos <- cbind(seasonal(PasajerosStl)[1:12], seasonal(PasajerosDLStl)[1:12])
+colnames(datos) <- c("Pasajeros", "Pasajeros por día laborable")
+rownames(datos) <- meses
+
+kable(datos, 
+      digits = 2)
+```
+
+Tras la corrección por el número de días laborales, el efecto estacional es más suave (véase la segunda columna en la @tbl-EfectoEstacional). Ahora, los meses de febrero y marzo tienen un efecto similar, al igual que octubre y noviembre. También se observa que las diferencias entre marzo y abril se han reducido.
+
+### Análisis de la intervención {.unnumbered}
+
+Ya hemos realizado una descripción detallada de las principales componentes de la serie, tendencia y estacionalidad. Ahora vamos a analizar, aunque sea de forma gráfica, el error y tener ya una primera impresión sobre la relevancia de la componente de intervención en Pasajeros.
+
+```{r}
+#| label: fig-ErrorDescomposicion1
+#| fig-cap: "Error + Intervención. Descomposición de Pasajeros"
+error <- remainder(PasajerosStl)
+sderror <- sd(error)
+
+autoplot(error,
+         xlab = "",
+         ylab = "Error",
+         main = "",
+         colour = "darkblue") +
+  geom_hline(yintercept = c(3, 2, -2, -3)*sderror, 
+             colour = c("red", "green", "green", "red"),
+             lty = 2) + 
+  scale_x_continuous(breaks= seq(1996, 2020, 2))
+
+fechasMes <- format(seq(from = as.Date("1996-01-01"), 
+                        to = as.Date("2019-12-01"), 
+                        "month"), 
+                    "%Y-%m")
+fechasMes[abs(error) > 3 * sderror]
+```
+
+La @fig-ErrorDescomposicion1 muestra el error de la descomposición y los intervalos de confianza al 95% (líneas verdes) y el 99.7% (líneas rojas). Se aprecian claramente múltiples valores extremos (superan las tres desviaciones típicas) en forma de *compensación* (dos errores extremos consecutivos de signo opuesto) que corresponden a los meses de marzo y abril de 1997, 2002, 2008 y 2013, y otro valor extremo en abril de 2005. Además, en marzo y abril de 2016 hay dos valores atípicos. Todos los valores identificados corresponden a los meses de marzo y abril, y en todos los casos el error negativo tiene lugar en marzo y el positivo en abril. Si miramos un calendario, veremos que tienen lugar en los años en que la Semana Santa cayó en marzo.
+
+La prueba de Tukey solo identifica como meses atípicos los marzo de 2002 y 2008.
+
+```{r}
+atipicos <- tsoutliers(error)
+fechasMes[atipicos$index]
+```
+
+Si repetimos este análisis para la serie de Pasajeros por día laborable, los resultados son bien diferentes (véase @fig-ErrorDescomposicion2). Ahora solo se detectan dos valores extremos en diciembre de 2000 y 2006. También destaca el error de diciembre de 2017. Los errores en diciembre se dan cuando Navidad cae en lunes, de forma que la caída en el transporte urbano debida a la nochebuena coincide con la de cualquier domingo. Así, estos meses de diciembre presentan más transporte urbano que los meses de diciembre donde la nochebuena cae entre semana.
+
+```{r}
+#| label: fig-ErrorDescomposicion2
+#| fig-cap: "Error + Intervención. Descomposición de Pasajeros por día laborable"
+error <- remainder(PasajerosDLStl)
+sderror <- sd(error)
+
+autoplot(error,
+         xlab = "",
+         ylab = "Error",
+         main = "",
+         colour = "darkblue") +
+  geom_hline(yintercept = c(3, 2, -2, -3)*sderror, 
+             colour = c("red", "green", "green", "red"),
+             lty = 2) + 
+  scale_x_continuous(breaks= seq(1996, 2020, 2))
+
+fechasMes[abs(error) > 3 * sderror]
+```
+
+
+\
+
+## Conclusión
+
+La serie de pasajeros en transporte urbano muestra una tendencia creciente solo interrumpida entre 2008 y 2014 debido a la Gran Recesión.
+
+Los principales determinantes de la estacionalidad de la serie Pasajeros son los grandes periodos vacacionales en España (Semana Santa y verano) y el número de días laborales del mes. Así, en la serie Pasajeros corregida por días laborables la componente estacional se ha suavizado y prácticamente queda determinada por las vacaciones.
+
+La intervención tiene lugar en los meses de marzo y abril debido al carácter móvil de la Semana Santa, y en diciembre cuando el día de Navidad cae en lunes, de forma que la caída de pasajeros de nochebuena se solapa con la de cualquier domingo.
+
+\
+\
+
+# Un predicción rápida y sencilla
+
+En los siguientes epígrafes aplicaremos técnicas de predicción crecientes en complejidad conceptual y computacional, y que requerirán de más hipótesis para su correcta aplicación. Aunque actualmente más complejidad no siempre implica más recursos (temporales, humanos, informáticos), cabe preguntarse si vale la pena. Así, más por una cuestión teórica que práctica, veamos cual sería la calidad de las predicciones si aplicamos una metodología sencilla, en este caso el método ingenuo con estacionalidad.
+
+```{r}
+#| echo: false
+PasajerosSnaive <- snaive(Pasajeros, 
+                          h = 60)
+```
+
+Los indicadores de calidad de ajuste (predicción intramuestral a un periodo vista) indican que repetir la última observación del mismo mes puede ser suficiente para obtener una buena predicción a corto plazo. En media el error es de `r round(accuracy(PasajerosSnaive)[2], 1)` millones de pasajeros (RMSE), o un `r round(accuracy(PasajerosSnaive)[5], 1)`%. A largo plazo, las predicciones pueden perder calidad rápidamente puesto que no capturan ningún tipo de tendencia. La @fig-Sencillo muestra como la predicción del número de pasajeros para los años 2020 a 2024 se mantiene estacionaria y no refleja la tendencia creciente observada desde 2014.[^1]
+
+[^1]: Recordemos que hemos recortado la serie hasta 2019 y *vivimos en un mundo donde nada sabemos de la Covid-19*.
+
+```{r}
+#| label: fig-Sencillo
+#| fig-cap: "Pasajeros (1996-2019) y predicción (2020-2024). Método ingenuo con estacionalidad"
+PasajerosSnaive <- snaive(Pasajeros, 
+                          h = 60)
+
+accuracy(PasajerosSnaive)
+
+autoplot(PasajerosSnaive, 
+         PI = FALSE,
+         xlab = "",
+         ylab = "Millones de pasajeros",
+         main = "") +
+  scale_x_continuous(breaks= seq(1996, 2024, 2))
+```
+
+Este será nuestro punto de referencia. Cabe esperar que en los siguientes epígrafes, donde aplicaremos técnicas de Alisado exponencial y modelos Arima, se observe un incremento significativo en la calidad del ajuste.
+
+\
+\
+
+# Alisado exponencial
+
+En primer lugar analizaremos la capacidad predictiva del método de Alisado exponencial sobre la serie Pasajeros. Con este fin, ajustaremos el mejor modelo de Alisado y estimaremos los criterios de calidad para el ajuste y las predicciones extramuestrales según el horizonte temporal. Posteriormente veremos si es posible mejorar las predicciones aplicando la transformación logarítmica a Pasajeros y analizando la serie Pasajeros por día laborable.
+
+\
+
+## Análisis de la serie Pasajeros
+
+\
+
+### Estimación e interpretación {.unnumbered}
+
+El modelo óptimo, estimado con la función `ets` sin imponer ninguna restricción, es ETS(M,Ad,A): pendiente aditiva con amortiguamiento, estacionalidad aditiva y residuo multiplicativo. $$y_{t+1} = (l_t + \phi b_t + s_{t+1-m}) \cdot (1 + \varepsilon_{t+1}).$$
+
+```{r}
+PasajerosEts <- ets(Pasajeros)
+summary(PasajerosEts) 
+```
+
+El valor de $\phi=$ `r round(coef(PasajerosEts)[4], 2)` indica que la inclusión de amortiguamiento en el modelo mejora sensiblemente su ajuste a los datos. Por otro lado, $\gamma$ es técnicamente cero, indicando que el efecto estacional se mantiene constante en el tiempo. Sin embargo, el valor de $\beta$, reducido pero no nulo, indica que la pendiente cambia en el tiempo de forma muy lenta.
+
+La calidad del ajuste es bastante buena, con un error porcentual del `r round(accuracy(PasajerosEts)[5], 1)`% o un error de `r round(accuracy(PasajerosEts)[2], 1)` millones de pasajeros (RMSE). La aplicación del método de Alisado supone una reducción de un punto en el error porcentual respecto del método ingenuo, o una reducción del RMSE de 3.5 millones de pasajeros. Es decir, el modelo de Alisado exponencial supone una mejora en la calidad del ajuste del `r 100 - round(100*accuracy(PasajerosEts)[6], 0)`% respecto del método ingenuo con estacionalidad visto en el epígrafe previo (MASE). El indicador ACF1 revela que las fórmulas usadas para el intervalo de confianza no son válidas.
+
+El efecto estacional, que recordemos se mantiene constante en el tiempo, es prácticamente idéntico al estimado en la descriptiva y viene determinado por los periodos vacacionales y el número de días laborables. Véase la @fig-AlisadoComponente.
+
+En verano (julio a septiembre) el uso del transporte urbano es inferior a la media anual, destacando agosto con un descenso de 72 millones de pasajeros. Por el contrario, octubre destaca por ser el mes con mayor incremento en el volumen de pasajeros (27 millones) respecto de la media anual.
+
+```{r}
+#| label: fig-AlisadoComponente
+#| fig-cap: "Componente estacional estimada con Alisado exponencial"
+PasajerosEtsEst <- PasajerosEts$states[nrow(PasajerosEts$states), 14:3]
+names(PasajerosEtsEst) <- meses
+
+round(PasajerosEtsEst, 2)
+
+ggplot() +
+  geom_line(aes(x = 1:12, y = PasajerosEtsEst), colour = "darkblue") + 
+  geom_hline(yintercept = 0, colour = "black", lty = 2) +
+  ggtitle("") +
+  xlab("") +
+  ylab("Efecto estacional") +
+  scale_x_continuous(breaks= 1:12, 
+                     labels = meses)
+```
+
+\
+
+### Predicción {.unnumbered}
+
+Podemos ahora pedir los valores de predicción para los próximos cinco años. No mostramos los resultados numéricos, pero si gráficos (@fig-AlisadoPrediccion). Las predicciones muestran una tendencia creciente amortiguada y, por tanto, no tan acusada como la observada en los años precedentes.
+
+```{r}
+#| label: fig-AlisadoPrediccion
+#| fig-cap: "Pasajeros (1996-2019) y predicción (2020-2024). Método de Alisado exponencial"
+PasajerosEtsPre <- forecast(PasajerosEts, 
+                            h = 60)
+
+autoplot(PasajerosEtsPre,
+         xlab = "",
+         ylab = "Millones de pasajeros",
+         main = "") 
+```
+
+En el año 2020 se esperan `r round(sum(PasajerosEtsPre$mean[1:12]), 0)` millones de pasajeros, un `r round(100*(sum(PasajerosEtsPre$mean[1:12]) - sum(tail(Pasajeros, 12)))/sum(PasajerosEtsPre$mean[1:12]), 1)`% más que en 2019.[^2]
+
+[^2]: Realmente en 2020 el número de Pasajeros fue de 1682 millones, un 45% menos que en 2019.
+
+\
+
+### Análisis del error {.unnumbered}
+
+El residuo del modelo (@fig-AlisadoError) muestra varios valores que pueden ser considerados como atípicos y que se dan siempre en los meses de marzo y abril para los años donde la Semana Santa recayó en marzo.
+
+```{r}
+#| label: fig-AlisadoError
+#| fig-cap: "Error + Intervención. Método de Alisado exponencial"
+error <- residuals(PasajerosEts)
+sderror <- sd(error)
+
+autoplot(error,
+         xlab = "",
+         ylab = "Error",
+         main = "",
+         colour = "darkblue") +
+  geom_hline(yintercept = c(-3, -2, 2 ,3)*sderror, 
+             colour = c("red", "green", "green", "red"), lty = 2) + 
+  scale_x_continuous(breaks= seq(1996, 2020, 2))
+
+fechasMes[abs(error) > 3 * sderror]
+```
+
+\
+
+## Otras alternativas de análisis
+
+En la descriptiva se ha visto que la serie de pasajeros por día laborable tiene un comportamiento más suave (la componente estacional era más plana) y presentaba un menor número de valores atípicos que la serie original Pasajeros. Cabe esperar, por tanto, que esta serie presente un mejor ajuste con el método de Alisado exponencial y ofrezca mejores predicciones.
+
+Por otro lado, siempre vale la pena analizar la transformación logarítmica de la serie y ver si ofrece mejores resultados que la serie original. La transformación logarítmica es especialmente eficaz para series no lineales, así que para Pasajeros posiblemente no suponga ningún mejora.
+
+Las transformaciones indicadas en los dos párrafos precedentes son solo dos de las posibles. También se pude analizar la serie de pasajeros por día del mes o la transformación óptima de Box-Cox. La idea es no quedarse con lo inmediato --la serie tal cual nos la han ofrecido--, sino probar otras alternativas. Por ejemplo, la serie de Pasajeros es el agregado del número de pasajeros que viajan en transporte urbano según el tipo de transporte (autobús, metro, tranvía...). Se podría proceder a analizar cada serie por separado (pasajeros en autobús, pasajeros en metro, etc.), para luego agregar los resultados y ver si este enfoque da mejores resultados que el análisis directo de la serie agregada Pasajeros.
+
+En este epígrafe se analizarán tres de las transformaciones indicadas: la transformación logarítmica, los pasajeros por día laborable y los pasajeros por día del mes. El objetivo es ver si es posible mejorar la calidad de las predicciones obtenidas para Pasajeros. Se usará como criterio de bondad el error de las predicciones extramuestrales según el horizonte temporal, obtenido con el procedimiento *origen de predicción móvil*. Asumiremos que son necesarios 12 años para obtener una buena estimación del modelo y el horizonte temporal se fijará en 12 meses ($k = 144, h = 12$). Previamente, hay que crear la serie Pasajeros por día del mes, e identificar el mejor modelo para las series transformadas. Además, para evitar el efecto de meses atípicos sobre el cálculo de la precisión de las previsiones, usaremos como medida de calidad la mediana del error porcentual absoluto.
+
+```{r}
+PasajerosDM <- Pasajeros/monthdays(Pasajeros)
+
+ets(Pasajeros, lambda = 0)$method
+ets(PasajerosDL)$method
+ets(PasajerosDM)$method
+```
+
+\
+
+```{r}
+k <- 144                 
+h <- 12                  
+TT <- length(Pasajeros)  
+s <- TT - k - h          
+
+mapeAlisadoPas <- matrix(NA, s + 1, h)
+mapeAlisadoLogPas <- matrix(NA, s + 1, h)
+mapeAlisadoPasDL <- matrix(NA, s + 1, h)
+mapeAlisadoPasDM <- matrix(NA, s + 1, h)
+
+for (i in 0:s) {
+  train.set <- subset(Pasajeros, start = i + 1, end = i + k)
+  test.set <-  subset(Pasajeros, start = i + k + 1, end = i + k + h)
+  
+  trainDL.set <- subset(PasajerosDL, start = i + 1, end = i + k)
+  testDL.set <-  subset(PasajerosDL, start = i + k + 1, end = i + k + h)
+  
+  trainDM.set <- subset(PasajerosDM, start = i + 1, end = i + k)
+  testDM.set <-  subset(PasajerosDM, start = i + k + 1, end = i + k + h)
+  
+  fit <- ets(train.set, model = "MAA", damped = TRUE)
+  fcast <- forecast(fit, h = h)
+  mapeAlisadoPas[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
+  
+  fit <- ets(train.set, model = "AAA", damped = TRUE, lambda = 0)
+  fcast <- forecast(fit, h = h)
+  mapeAlisadoLogPas[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
+  
+  fit <- ets(trainDL.set, model = "MAA", damped = TRUE)
+  fcast <- forecast(fit, h = h)
+  mapeAlisadoPasDL[i + 1,] <- 100*abs(testDL.set - fcast$mean)/testDL.set
+  
+  fit <- ets(trainDM.set, model = "AAA", damped = TRUE)
+  fcast <- forecast(fit, h = h)
+  mapeAlisadoPasDM[i + 1,] <- 100*abs(testDM.set - fcast$mean)/testDM.set
+}
+
+errorAlisadoPas <- apply(mapeAlisadoPas, MARGIN = 2, FUN = median)
+errorAlisadoLogPas <- apply(mapeAlisadoLogPas, MARGIN = 2, FUN = median)
+errorAlisadoPasDL <- apply(mapeAlisadoPasDL, MARGIN = 2, FUN = median)
+errorAlisadoPasDM <- apply(mapeAlisadoPasDM, MARGIN = 2, FUN = median)
+
+datos <- data.frame(
+  factor = c(rep("Pasajeros", 12), 
+             rep("Pasajeros por día laborable", 12), 
+             rep("Pasajeros por día del mes", 12), 
+             rep("Pasajeros (log)", 12)),
+  x = c(1:12, 1:12, 1:12, 1:12),
+  y = c(errorAlisadoPas, errorAlisadoPasDL, errorAlisadoPasDM, errorAlisadoLogPas)
+)
+```
+
+```{r}
+#| label: fig-AlisadoErrorOPM
+#| fig-cap: "Error de predicción (MedAPE) según horizonte temporal y enfoque. Método de Alisado exponencial"
+ggplot(datos, aes(x = x, y = y,  colour= factor)) + 
+  geom_line() +
+  ggtitle("") +
+  xlab("Horizonte temporal de predicción") +
+  ylab("%") +
+  scale_x_continuous(breaks= 1:12) +
+  scale_y_continuous(breaks= seq(2, 4, .2)) +
+  labs(colour = "Métodos") + 
+  theme(legend.position=c(0.15, 0.7))
+```
+
+Antes de pasar al análisis de los resultados, indicar que en las predicciones sobre el logaritmo no se ha pedido corrección por sesgo, y que al trabajar con errores porcentuales no es necesario pasar la predicción de pasajeros por día (laborable o del mes) a predicción de pasajeros.
+
+La @fig-AlisadoErrorOPM muestra los errores de predicción según el horizonte temporal para las cuatro aproximaciones. En todos los casos el error aumenta con el horizonte temporal de predicción, de forma que las predicciones a doce meses vista tienen un error un punto porcentual superior a las predicciones a un mes vista.
+
+Por otro lado, para horizontes temporales de hasta 9 meses vista las predicciones realizadas sobre el logaritmo de la serie original Pasajeros son de las más precisas, seguidas de las predicciones realizadas con Pasajeros por día del mes. Para predicciones de 10 a 12 meses, en general las mejores predicciones se obtienen con Pasajeros. En contra de lo esperado, las predicciones a partir de la serie de pasajeros por día laborable son de las que mayor error porcentual presentan.
+
+\
+
+## Conclusión
+
+Los modelos de Alisado exponencial resultan excelentes para predecir la serie Pasajeros. El error de ajuste, del `r round(accuracy(PasajerosEts)[5], 1)`%, es un punto inferior al error obtenido con el método ingenuo con estacionalidad. Además, en las predicciones extramuestrales a 12 meses vista el error porcentual sigue manteniéndose bajo, no superando el 4%.
+
+La transformación logarítmica de la serie pasajeros y la serie Pasajeros por día del mes han dado mejores predicciones por Alisado exponencial que el análisis directo de la serie.
+
+\
+\
+
+# Modelos Arima
+
+La aplicación de la metodología Arima a la serie Pasajeros implica un notable incremento en la complejidad de los modelos y en los requerimientos estadísticos, que solo está justificada si se reduce sustancialmente el error de predicción.
+
+En los epígrafes previos hemos visto que la serie Pasajeros tiene una componente de intervención muy acusada, destacando el número de días del mes, el de días laborables, el fechado de la Semana Santa y que el día de Navidad caiga en lunes. Cabe espera, por tanto, que la incorporación de estos efectos calendario en el análisis de la serie incremente significativamente la calidad de ajuste y la capacidad predictiva. Veamos si es así.
+
+\
+
+## Transformación de la serie Pasajeros
+
+Por un lado, el análisis por Alisado exponencial ha puesto de relieve el carácter lineal de Pasajeros y la efectividad que podría tener usar la transformación logarítmica para mejorar la calidad de las predicciones.
+
+Por otro lado, tras un análisis preliminar por modelos Arima se puede ver que la transformación logarítmica mejora la identificación del modelo y facilitaba su interpretación.
+
+Así, optamos por aplicar la transformación logarítmica a Pasajeros.
+
+Las FAC del logaritmo de la serie y algunas de sus diferenciaciones (@fig-PasajerosFAC) indican que es necesaria la doble diferenciación regular y estacional para alcanzar las hipótesis de estacionariedad y ergodicidad: $\log(Pasajeros) \sim I(1)I_{12}(1)$. Los resultados ofrecidos por las funciones `ndiffs` y `nsdiffs` apoyan esta conclusión.
+
+```{r}
+#| label: fig-PasajerosFAC
+#| fig-height: 5
+#| fig-cap: "FAC para Pasajeros"
+#| fig-subcap: 
+#|   - "Log serie"
+#|   - "Dif. regular log serie"
+#|   - "Dif. estacional log serie"
+#|   - "Dif. regular y estacional log serie"
+#| layout: [[50, 50], [50, 50]]
+ggAcf(log(Pasajeros), lag = 48, ylim = c(-1, 1), 
+      xlab = "", ylab = "", main = "")
+ggAcf(diff(log(Pasajeros)), lag = 48, ylim = c(-1, 1), 
+      xlab = "", ylab = "", main = "")
+ggAcf(diff(log(Pasajeros), lag = 12), lag = 48, ylim = c(-1, 1), 
+      xlab = "", ylab = "", main = "")
+ggAcf(diff(diff(log(Pasajeros), lag=12)), lag = 48, ylim = c(-1, 1), 
+      xlab = "", ylab = "", main = "")
+```
+
+```{r}
+ndiffs(log(Pasajeros))
+nsdiffs(log(Pasajeros))
+```
+
+La @fig-PasajerosyTransformacion muestra la serie original $y_t$ y la serie transformada $\nabla \nabla_{12} \log(y_t)$. En la serie transformada destacan las compensaciones asociadas a la intervención de Semana Santa.
+
+```{r}
+#| label: fig-PasajerosyTransformacion
+#| fig-height: 6
+#| fig-cap: "Serie original de Pasajeros y su transformación"
+series <- cbind("Original" = Pasajeros,
+                "Dif reg. y est. de log" = diff(diff(log(Pasajeros), lag = 12)))
+
+autoplot(series, facets = TRUE,
+         xlab = "",
+         ylab = "",
+         main = "")
+```
+
+\
+
+## Identificación de la serie Pasajeros
+
+Vamos a identificar los valores de $p$, $q$, $P$ y $Q$ del proceso Arima. Para ello, solicitaremos con `auto.arima` y `seas` una identificación automática, en el primer caso incluyendo todos los efectos calendario ya identificados.
+
+\
+
+### Identificación automática con `auto.arima` {.unnumbered}
+
+Para *ayudar* a la función `auto.arima` en el proceso de identificación vamos a definir previamente todas las variables de intervención que en el desarrollo del análisis de la serie hemos ido identificando: días del mes, días laborables del mes, meses de diciembre con el día de Navidad en lunes y Semana Santa:
+
+-   La variable *Días laborables del mes* ya ha sido definida previamente como DiasLaborables.
+-   La variable *Días del mes* se puede definir directamente con la función `monthdays` de la librería `forecast`. En lugar de días del mes, consideraremos la variable *días no laborables del mes*, resultante de restar a los días del mes los días laborables.
+-   Los meses de diciembre en que el día de Navidad cae en lunes requiere un poco más de trabajo. La idea general es generar un rango de fechas diarias que cubra todo el periodo de análisis (variable *fechas*), identificar los lunes de Navidad (variable dicotómica *lunesNavidad*), eliminar el identificador del día del rango de fechas con la función `format` y, por último, con `tapply` sumar para cada mes-año los lunes de Navidad, que lógicamente solo tendrán lugar algunos meses de diciembre y una sola vez. En los objetos definidos con la función `as.POSIXlt` los meses van de 0 a 11 (enero a diciembre) y los días de la semana de 0 a 6 (domingo a sábado).
+-   La creación de las variables de intervención que estiman el efecto de la Semana Santa es aún más complejo. El efecto del viernes de Semana Santa ya queda recogido en la variable DiasNoLaborables. Lo que vamos a hacer ahora es crear una variable que permita estimar el efecto de las vacaciones escolares (y de muchos padres y madres) de lunes a Jueves Santo en aquellas comunidades donde así es; y otra variable para estimar el efecto de las vacaciones escolares que tienen lugar la semana posterior al Domingo de Resurrección, de lunes a viernes tras Semana Santa. Estas nuevas variables (*DiasPreSanta* y *DiasPascua*) para marzo y abril valdrán la proporción de días vacacionales que recaen en el correspondiente mes, y valdrán cero para los demás meses del año.
+
+**Días no laborables**
+
+Generamos la variables para DiasNoLaborables y se muestra su valor para los últimos 5 años.
+
+```{r}
+DiasNoLaborables <- monthdays(DiasLaborables) - DiasLaborables
+pDiasNoLaborables <- monthdays(pDiasLaborables) - pDiasLaborables
+tail(DiasNoLaborables, n = 60)
+```
+
+**Navidad cae en lunes**
+
+Generamos la variable que identifica los mes de diciembre en los que la Navidad cayó en lunes.
+
+```{r}
+fechas <- as.POSIXlt(seq(from = as.Date("1996-1-1"), 
+                         to = as.Date("2024-12-31"), 
+                         by = "day"))
+LunesNavidad <- 1*(fechas$wday == 1 & fechas$mon == 11 & fechas$mday == 25)
+fechas <- format(fechas, format = "%Y-%m")
+LunesNavidad <- tapply(LunesNavidad, fechas, sum)
+LunesNavidad <- ts(LunesNavidad, start = 1996, frequency = 12)
+pLunesNavidad <- subset(LunesNavidad, start = length(LunesNavidad) - 59)
+LunesNavidad <- subset(LunesNavidad, end = length(LunesNavidad) - 60)
+
+LunesNavidad[LunesNavidad == 1]
+```
+
+**Semana Santa**
+
+Se generan las variables *DiasPreSanta* y *DiasPascua* y se muestra su valor para los últimos 5 años.
+
+```{r}
+LunSanto <- Easter(1996:2024, shift = -6)
+MarSanto <- Easter(1996:2024, shift = -5)
+MieSanto <- Easter(1996:2024, shift = -4)
+JueSanto <- Easter(1996:2024, shift = -3)
+
+PreSanta <- c(LunSanto, MarSanto, MieSanto, JueSanto)
+biz <- fechaDiaria[isBizday(fechaDiaria, holidays = PreSanta, wday = 0:6)]
+bizdays <- format(biz, format = "%Y-%m")
+
+DiasPreSanta <- table(bizdays)
+DiasPreSanta <- ts(DiasPreSanta, start = 1996, frequency = 12)
+DiasPreSanta <- (monthdays(DiasPreSanta) - DiasPreSanta)/4
+
+pDiasPreSanta <- subset(DiasPreSanta, start = length(DiasPreSanta) - 59)
+DiasPreSanta <- subset(DiasPreSanta, end = length(DiasPreSanta) - 60)
+
+LunPascua <- Easter(1996:2024, shift = 1)
+MarPascua <- Easter(1996:2024, shift = 2)
+MiePascua <- Easter(1996:2024, shift = 3)
+JuePascua <- Easter(1996:2024, shift = 4)
+ViePascua <- Easter(1996:2024, shift = 5)
+
+Pascua <- c(LunPascua, MarPascua, MiePascua, JuePascua, ViePascua)
+biz <- fechaDiaria[isBizday(fechaDiaria, holidays = Pascua, wday = 0:6)]
+bizdays <- format(biz, format = "%Y-%m")
+
+DiasPascua <- table(bizdays)
+DiasPascua <- ts(DiasPascua, start = 1996, frequency = 12)
+DiasPascua <- (monthdays(DiasPascua) - DiasPascua)/5
+
+pDiasPascua <- subset(DiasPascua, start = length(DiasPascua) - 59)
+DiasPascua <- subset(DiasPascua, end = length(DiasPascua) - 60)
+
+tail(DiasPreSanta, n = 60)
+tail(DiasPascua, n = 60)
+```
+
+Ahora tenemos todos los elementos para pedir la identificación automática con `auto.arima`.
+
+```{r}
+auto.arima(Pasajeros, 
+           lambda = 0,
+           d = 1, 
+           D = 1,
+           xreg = cbind(DiasLaborables, DiasNoLaborables, 
+                        LunesNavidad, DiasPreSanta, DiasPascua))
+```
+
+La identificación automática muestra el proceso de las aerolíneas. Además, parece que todas las variables de intervención son significativas.
+
+\
+
+### Identificación automática con `seas` {.unnumbered}
+
+La función `seas` de `seasonal` incluye automáticamente durante la identificación las variables de intervención necesarias.
+
+```{r}
+summary(seas(Pasajeros, transform.function = "log"))
+```
+
+En este caso el proceso identificado en la parte regular es más complejo que el obtenido con `auto.arima`, ARIMA(3,1,1)(0,1,1). Además, se han incluido variables de intervención asociadas a la Semana Santa y días laborables. Conjuntamente estas variables de intervención recogen los mismos efectos considerados por nosotros.
+
+Concluimos que el modelo de partida para Pasajeros será $\log(Pasajeros) \sim ARIMA_{12}(0, 1, 1)(0, 1, 1) + AI$.
+
+\
+
+## Estimación del modelo e identificación de otras componentes de intervención
+
+Vamos a estimar el modelo identificado y a analizar la presencia de otros valores atípicos en el residuo.
+
+```{r}
+PasajerosAri <- Arima(Pasajeros, 
+                      lambda = 0,
+                      order = c(0, 1, 1),  
+                      seasonal = c(0, 1, 1),
+                      xreg = cbind(DiasLaborables, DiasNoLaborables, 
+                                   LunesNavidad, DiasPreSanta, DiasPascua))
+PasajerosAri
+```
+
+```{r}
+#| label: fig-PasajerosError1
+#| fig-cap: "Error + Intervención. Modelo Arima"
+error <- residuals(PasajerosAri)
+sderror <- sd(error)
+
+autoplot(error, series="Error",
+         colour = "black",
+         xlab = "",
+         ylab = "Error",
+         main = "") +
+  geom_hline(yintercept = c(-3, -2, 0, 2, 3)*sderror, 
+             colour = c("red", "blue", "black", "blue", "red"), 
+             lty = 2) + 
+  scale_x_continuous(breaks= seq(1996, 2020, 2))
+
+fechasMes[abs(error) > 3 * sderror]
+```
+
+En la @fig-PasajerosError1 identificamos claramente agosto de 2005 como atípico, con un error que supera las cinco desviaciones típicas.
+
+Tras incluir la correspondiente variable artificial en el modelo y estimarlo, identificamos otros valores extremos, por superar las 3 desviaciones típicas, en agosto de 2006, abril de 2002 y marzo de 2010. Procedemos a incluir las variables artificiales en el modelo y repetir el análisis. En esta ocasión ya no identificamos más valores atípicos (véase @fig-PasajerosError2).
+
+```{r}
+d0402 <- 1*(trunc(time(Pasajeros)) == 2002 & cycle(Pasajeros) == 4)
+d0805 <- 1*(trunc(time(Pasajeros)) == 2005 & cycle(Pasajeros) == 8)
+d0806 <- 1*(trunc(time(Pasajeros)) == 2006 & cycle(Pasajeros) == 8)
+d0310 <- 1*(trunc(time(Pasajeros)) == 2010 & cycle(Pasajeros) == 3)
+
+PasajerosAri <- Arima(Pasajeros,
+                      lambda = 0,
+                      order = c(0, 1, 1),  
+                      seasonal =  c(0, 1, 1),
+                      xreg = cbind(DiasLaborables, DiasNoLaborables, 
+                                   LunesNavidad, DiasPreSanta, DiasPascua,
+                                   d0402, d0805, d0806, d0310))
+PasajerosAri
+```
+
+```{r}
+#| label: fig-PasajerosError2
+#| fig-cap: "Error + Intervención. Modelo Arima"
+error <- residuals(PasajerosAri)
+sderror <- sd(error)
+
+autoplot(error, series="Error",
+         colour = "black",
+         xlab = "",
+         ylab = "Error",
+         main = "") +
+  geom_hline(yintercept = c(-3, -2, 0, 2, 3)*sderror, 
+             colour = c("red", "blue", "black", "blue", "red"), 
+             lty = 2) + 
+  scale_x_continuous(breaks= seq(1996, 2020, 2))
+
+fechasMes[abs(error) > 2.8 * sderror]
+```
+
+Antes de finalizar el proceso de identificación vamos a confirmar la significatividad de todos los parámetros estimados.
+
+```{r}
+coeftest(PasajerosAri)
+```
+
+\
+
+## Validación del modelo
+
+En el proceso de validación verificaremos si se cumplen las hipótesis básicas sobre el vector de residuos y analizaremos la calidad de ajuste y predicción del modelo estimado.
+
+\
+
+### Incorrelación, Homocedasticidad y Normalidad {.unnumbered}
+
+Veamos si el residuo es ruido blanco.
+
+```{r}
+Box.test(error, lag = 2,type = "Ljung-Box")
+Box.test(error, lag = 24,type = "Ljung-Box")
+Box.test(error^2, lag = 2, type = "Ljung-Box")
+Box.test(error^2, lag = 24, type = "Ljung-Box")
+jarque.bera.test(error) 
+```
+
+El error muestra ser incorrelado, homocedástico y seguir una distribución normal.
+
+\
+
+### Calidad del ajuste {.unnumbered}
+
+Analizando los criterios de bondad de ajuste (sobre el error de predicción intramuestral a un periodo vista) se tiene un error medio (ME) de `r round(accuracy(PasajerosAri)[1],2)` millones de pasajeros, prácticamente cero por lo que no parece que haya sesgo en las predicciones; en media nos equivocamos `r round(accuracy(PasajerosAri)[2],1)` millones de pasajeros (RMSE) y el error porcentual medio (MAPE) es `r round(accuracy(PasajerosAri)[5],1)`%, muy bajo. Para ambos indicadores de bondad de ajuste el error obtenido es la mitad que el visto con Alisado exponencial. Al contrario que para Alisado, el ajuste con modelos Arima generará predicciones por intervalo válidas.
+
+```{r,echo=FALSE}
+round(accuracy(PasajerosAri),2)
+```
+
+\
+
+### Calidad de las predicciones {.unnumbered}
+
+Se completará el proceso de validación estimado el error de predicción extramuestral según el horizonte temporal. Se considerarán 12 años para el periodo de estimación y un año para el de predicción.
+
+```{r}
+k <- 144                  
+h <- 12                   
+T <- length(Pasajeros)    
+s<-T - k - h            
+
+mapeArima <- matrix(NA, s + 1, h)
+
+X <- data.frame(cbind(DiasLaborables, DiasNoLaborables, 
+                      LunesNavidad, DiasPreSanta, DiasPascua))
+
+for (i in 0:s) {
+  train.set <- subset(Pasajeros, start = i + 1, end = i + k)
+  test.set <-  subset(Pasajeros, start = i + k + 1, end = i + k + h) 
+  
+  X.train <- as.matrix(X[(i + 1):(i + k),])
+  X.test <- as.matrix(X[(i + k + 1):(i + k + h),])
+  
+  fit <- try(Arima(train.set, 
+                   lambda = 0,
+                   order = c(0, 1, 1),
+                   seasonal = c(0, 1, 1),
+                   xreg=X.train), 
+             silent = TRUE)
+  
+  if (!is.element("try-error", class(fit))) {
+    fcast <- forecast(fit, h = h, xreg = X.test)
+    mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
+  }
+}
+
+errorArima <- apply(mapeArima, MARGIN = 2, FUN = median, na.rm = TRUE)
+round(errorArima, 2)
+```
+
+El error es creciente en el horizonte temporal de predicción. Para predicciones extramuestrales a un periodo vista vale `r round(errorArima[1], 1)`%, algo superior al error de estimación, pero realmente bajo. Incluso para predicciones a doce meses vista, el error sigue siendo reducido, `r round(errorArima[12], 1)`%. Recordemos que para Alisado exponencial el error a 12 meses vista era de 2.9%, muy similar.
+
+\
+
+## Interpretación del modelo estimado
+
+El modelo estimado y validado corresponde al modelo de las aerolíneas con intervención: $ARIMA_{12}(0,1,1)(0,1,1) + AI$. La ecuación teórica completa del modelo es:
+
+$$(1-L)(1-L^{12})\log(Pasajeros) = (1+\theta_1 L)(1 + \theta_{12} L^{12})\varepsilon_t+$$
+
+$$\gamma_1 DiasLaborables +\gamma_2 DiasNoLaborables +\gamma_3 LunesNavidad+$$
+
+$$\gamma_4 DiasPreSanta + \gamma_5 DiasPascua +$$
+
+$$\gamma_6 d0402 +\gamma_7 d0805 +\gamma_8 d0806 +\gamma_9 d0310.$$
+
+Si se desarrolla el modelo y se deja en función de la tasa de variación anual del número de pasajero, queda (la parte de intervención no cambia):
+
+$$TVAPasajeros_t = TVAPasajeros_{t-1} + \theta_1 \varepsilon_{t-1} + \theta_{12} \varepsilon_{t-12}+ \theta_1 \theta_{12} \varepsilon_{t-13}+\varepsilon_t + AI.$$
+
+Finalmente, el modelo estimado es:
+
+$$\widehat{TVAPasajeros}_t = TVAPasajeros_{t-1} -0.53 \varepsilon_{t-1} -0.37 \varepsilon_{t-12}+ 0.20 \varepsilon_{t-13} +$$
+
+$$0.034\cdot DiasLaborables +0.016\cdot DiasNoLaborables+ 0.026\cdot LunesNavidad$$
+
+$$- 0.058\cdot DiasPreSanta - 0.025\cdot DiasPascua +$$
+
+$$0.033\cdot d0402 +0.064\cdot d0805 +0.028\cdot d0806 +0.038\cdot d0310.$$ Interpretación:
+
+-   La tasa de variación anual del número de pasajeros en transporte urbano para un mes dado es la misma que la observada en el mes previo.
+-   Si hace uno, doce o trece meses se observó un número atípico de pasajeros, se debe tener en cuenta para corregir la predicción.
+-   Cada día laborable adicional en un mes supone un incremento en el número de pasajeros del 3.4% y cada día no laborable un incremento adicional del 1.6%.
+-   Si la Navidad cae en lunes y por tanto Nochebuena en domingo, ese mes de diciembre el número de pasajeros será un 2.6% superior al de un mes de diciembre donde la Navidad no cae en lunes.
+-   El mes (marzo o abril) en que caigan los días laborables (lunes a jueves) de la Semana Santa el número de pasajeros se reducirá un 5.8% respecto de lo esperado.
+-   De la misma forma, el mes (marzo o abril) en que caigan los días laborables (lunes a viernes) de la semana posterior a Domingo de Resurrección el número de pasajeros se reducirá un 2.5% respecto de lo esperado.
+-   Ademas, para cuatro meses se observó una tasa de variación anual atípicamente superior a la esperada.
+
+\
+
+## Predicción del número de pasajeros en transporte urbano
+
+Una vez dado por válido el modelo, podemos pasar a realizar predicciones para los próximos años. Para las variables de intervención sujetas a fecha de calendario ya hemos ido creando sus valores previstos, para las demás los fijaremos a cero.
+
+```{r}
+#| label: fig-PasajerosPrediccion
+#| fig-cap: "Pasajeros (1996-2019) y predicción (2020-2024). Modelo Arima"
+pPasajerosAri <- forecast(PasajerosAri, 
+                          h = 60,
+                          xreg = cbind(pDiasLaborables, pDiasNoLaborables, 
+                                       pLunesNavidad, pDiasPreSanta, pDiasPascua,
+                                       rep(0, 60), rep(0, 60), 
+                                       rep(0 ,60), rep(0, 60)), 
+                          level = 95)
+autoplot(pPasajerosAri, 
+         xlab = "",
+         ylab = "",
+         main = "") +
+  scale_x_continuous(breaks= seq(1996, 2024, 4))
+```
+
+Así, en 2020 se esperan `r round(sum(pPasajerosAri$mean[1:12]), 0)` millones de pasajeros y para 2021 un total de `r round(sum(pPasajerosAri$mean[13:24]), 0)` millones de pasajeros.
+
+\
+\
+\
+
+# Comparación entre modelos
+
+Para finalizar este análisis, vamos a comparar la calidad de ajuste y de predicción de los tres modelos estimados en este ejemplo: el método ingenuo con estacionalidad, el método de Alisado exponencial y el modelo Arima.
+
+Recordemos que el método ingenuo con estacionalidad tenía un error de ajuste (MAPE) del `r round(accuracy(PasajerosSnaive)[5], 1)`% o `r round(accuracy(PasajerosSnaive)[2], 1)` millones de pasajeros (RMSE). Mientras que para el mejor modelo de Alisado exponencial obtenido (ETS(M,Ad,A)) se tiene un error del `r round(accuracy(PasajerosEts)[5], 1)`% equivalente a `r round(accuracy(PasajerosEts)[2], 1)` millones de pasajeros. Por último, el modelo Arima presenta un error del `r round(accuracy(PasajerosAri)[5], 1)`% o `r round(accuracy(PasajerosAri)[2], 1)` millones de pasajeros.
+
+Claramente, el modelo de Alisado supone una mejora sustancial sobre el método ingenuo y el modelo Arima sobre el de Alisado, con una reducción, en este último caso, cercana al 50% en los dos indicadores de calidad contemplados.
+
+Respecto de la calidad de las predicciones extramuestrales, la @fig-PasajerosComparacion muestra los valores para el modelo de Alisado exponencial y Arima.
+
+```{r}
+#| label: fig-PasajerosComparacion
+#| fig-cap: "Error de predicción (MAPE) según horizonte temporal y enfoque"
+datos <- data.frame(
+  factor = c(rep("Alisado", 12), 
+             rep("Arima", 12)),
+  x = c(1:12, 1:12),
+  y = c(errorAlisadoPas, errorArima)
+)
+
+ggplot(datos, aes(x = x, y = y,  colour= factor)) + 
+  geom_line() +
+  ggtitle("") +
+  xlab("Horizonte temporal de predicción") +
+  ylab("%") +
+  scale_x_continuous(breaks= 1:12) +
+  scale_y_continuous(breaks= seq(1.5, 4, .5)) +
+  labs(colour = "Métodos") + 
+  theme(legend.position=c(0.1,0.8))
+```
+
+Con independencia del horizonte temporal, el error de previsión extramuestral del modelo Arima es menor que el error del modelo de Alisado exponencial, aunque la diferencia se reduce conforme aumenta el horizonte temporal de previsión. En concreto, para previsiones a un mes vista, Arima comete un error 1.2 p.p. menor que el Alisado, mientras que para predicciones a seis meses vista la diferencia es solo de 0.7 p.p. y para un horizonte de doce meses de 0.3 p.p.
+
+El método Arima nos permite obtener las predicciones más precisas y además entender un poco mejor cuales son los determinantes del número de pasajeros en transporte urbano y su efecto sobre la serie. El método de Alisado exponencial permite obtener predicciones bastante buenas con una simple línea de código. La conveniencia de uno u otro método dependerá de la importancia que se dé a la calidad de las predicciones, la comprensión de los determinantes de la serie o la complejidad de la metodología, entre otros aspectos.
+
+\
+\
+
+# Estimación del efecto de la pandemia por Covid-19
+
+La predicción de la serie Pasajeros obtenida con el modelo Arima (la más precisa de las obtenidas) nos va a permitir estimar el efecto que ha tenido la pasada pandemia sobre el uso del transporte urbano de pasajeros.
+
+Un primer análisis gráfico muestra la gran caída en el número de pasajeros ocurrida en los primeros meses de la pandemia y la lenta recuperación a partir de junio de 2020. En los dos años siguientes, 2021 y 2022, el número de pasajeros se ha ido recuperando y en 2023 se alcanzan y superan los niveles de 2019. Parece que la reducción en el uso del transporte público debida al cambio en los hábitos de trabajo y transporte (trabajo desde casa, mayor uso de los vehículos de movilidad personal) se ha compensado con un aumento de la población que usa el transporte público y, de esta forma, se ha vuelto al nivel prepandemia.
+
+```{r}
+#| label: fig-Pandemia
+#| fig-cap: "Pasajeros en transporte urbano (2019 - 2023)"
+Pasajeros <- read.csv2("./series/Pasajeros.csv",
+                       header = TRUE)
+
+Pasajeros <- ts(Pasajeros/1000, 
+                start = 1996, 
+                freq = 12)
+
+ggseasonplot(window(Pasajeros, start = 2019)) +
+  ylab("") +
+  xlab("") +
+  ggtitle("") + 
+  geom_point()
+```
+
+Según las previsiones obtenidas con el modelo Arima, en 2020 el número de pasajeros se redujo, respecto de los valores esperados en un mundo sin pandemia, en 1500 millones de pasajeros. En 2021 esta caída se había reducido y era solo de 1200 millones pasajeros, para pasar a solo 700 millones en 2022.
+
+En 2023 las previsiones siguen 200 millones de pasajeros por encima de la realidad. Esta diferencia puede deberse a la acumulación de errores en la previsión a tan largo plazo. Pero también podría deberse a que la pandemia ha frenado la tendencia creciente en el número de pasajeros observada los años previos, de forma que los datos reales se ubican por debajo de las previsiones.
+
+
+```{r}
+aggregate(Pasajeros - pPasajerosAri$mean, FUN = sum)
+```
+
+\
+\
+
+# Lista de funciones utilizadas
+
+  | Paquete  | Funciones  | Paquete  | Funciones           |
+  |:---------|:-----------|:---------|:--------------------|
+  | base     | abs        |          | ggsubseriesplot     |     
+  |          | as.Date    |          | ggseasonplot        |
+  |          | as.numeric |          | monthdays           |
+  |          | as.POSIXlt |          | ndiffs              |
+  |          | c          |          | nsdiffs             |
+  |          | cbind      |          | remainder           |
+  |          | class      |          | snaive              |
+  |          | colMeans   | ggplot2  | aes                 |
+  |          | colnames   |          | geom_hline          |
+  |          | colSums    |          | geom_line           |
+  |          | data.frame |          | geom_point          |
+  |          | diff       |          | ggplot              |
+  |          | expression |          | ggtitle             |
+  |          | is.element |          | guide_legend        |
+  |          | length     |          | guides              |
+  |          | library    |          | scale_colour_manual |
+  |          | list       |          | scale_x_continuous  |
+  |          | log        |          | scale_y_continuous  |
+  |          | matrix     |          | theme               |
+  |          | mean       |          | theme_bw            |
+  |          | names      |          | theme_set           |
+  |          | nrow       |          | xlab                |
+  |          | rbind      |          | ylab                |
+  |          | rep        | knitr    | kable               |
+  |          | round      | lmtest   | coeftest            |
+  |          | rownames   | seasonal | seas                |
+  |          | seq        | stats    | aggregate           |
+  |          | subset     |          | coef                |
+  |          | summary    |          | cycle               |
+  |          | table      |          | residuals           |
+  |          | tapply     |          | sd                  |
+  |          | trunc      |          | stl                 |
+  |          | try        |          | time                |
+  | forecast | accuracy   |          | ts                  |
+  |          | Arima      |          | vcov                |
+  |          | auto.arima | timeDate | dayOfWeek           |
+  |          | autoplot   |          | Easter              |
+  |          | autolayer  |          | format              |
+  |          | easter     |          | isBizday            |
+  |          | ets        |          | timeCalendar        |
+  |          | forecast   |          | timeSequence        |
+  |          | ggAcf      | utils    | read.csv2           |
+ 
+
+\
+\
+\
+\
+

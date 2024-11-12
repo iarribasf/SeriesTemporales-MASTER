@@ -1,0 +1,51 @@
+---
+output:
+  html_document:
+    theme: cerulean
+    highlight: monochrome 
+    self_contained: yes
+---
+
+```{r chunk_setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      eval = TRUE, 
+                      message = FALSE, 
+                      warning = FALSE, 
+                      cache = FALSE, 
+                      cache.path = "/caches/", 
+                      comment = "",
+                      collapse = TRUE,  
+                      fig.show = "hold",
+                      fig.asp = 7/9, 
+                      out.width = "75%", 
+                      fig.align = "center")
+```
+
+<br><br><br>
+
+### Series Temporales (42229 Modelización estadística). Máster de Bioestadística
+
+-------------------
+
+<br>
+
+
+Hola a tod\@s y bienvenid\@s a la página web del curso. 
+
+<br>
+
+Esta es la página web de la edición 2024-25 el curso de Series Temporales (Máster en Bioestadística) de la Universitat de València. El repositorio para crear esta web lo tenéis [aquí](https://github.com/iarribasf/SeriesTemporales-MASTER){target="_blank"} en Github.
+
+**Resumen del curso:** la idea principal es aprender a manejarse con datos con estructura temporal (en contraposición a datos de corte transversal o espacial, que veréis en _Modelos lineales_ y _Estadística espacial_). Veremos cómo describir una serie temporal, como ajustarla a un modelo, cómo hacer predicciones y, lo que es más importante, a valorar la calidad de las predicciones.
+
+Para más información de este módulo, visita la sección [Guía del curso](https://iarribasf.github.io/SeriesTemporales-MASTER/01-Guia-curso.html) de esta página web.
+
+
+<br>
+
+
+-- Iván Arribas
+
+
+<br><br><br><br>
+  

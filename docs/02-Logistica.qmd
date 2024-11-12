@@ -1,0 +1,122 @@
+---
+title: "Logística"
+number-sections: false
+toc: true
+toc-float: true
+---
+
+\
+\
+
+El grueso del material del curso lo podéis encontrar en esta página web. Sin embargo, hay *muuuucho* material adicional disponible en formato papel y *online*. A continuación, os describo brevemente dónde podéis encontrar parte de este material.
+
+\
+
+------------------------------------------------------------------------
+
+\
+
+
+### Contenidos del curso
+
+- **Página web del curso** dónde encontrarás todo el material teórico y práctico necesario para seguir el curso y realizar las prácticas de evaluación.
+
+- [**Aula Virtual**](https://aulavirtual.uv.es) donde encontrarás una copia de todo el material del curso en un único fichero comprimido. Además, Aulavirtual será el medio de comunicación *oficial* entre nosotros y dónde subiréis las prácticas de evaluación y las pruebas tipo test.
+
+\
+
+----------------------
+
+\
+
+### Materiales
+
+- **Contenidos teóricos**: los encontrarás en la sección **Diapos**. Las primeras entradas corresponden a los contenidos teóricos del curso, las siguientes a un ejemplo práctico de aplicación para cada tema. Este ejemplo no necesariamente lo veremos durante el curso, pero puede serte de ayuda para terminar de comprender los conceptos teóricos vistos y su aplicación práctica con `R`. La última entrada es un extenso ejemplo que va más allá de una simple aplicación de los conceptos visto durante el curso.
+
+  En **Píldoras** encontrarás extensiones a conceptos del curso, ninguno de los cuales veremos en clase.
+
+- [**Recursos de R**](https://iarribasf.github.io/SeriesTemporales-MASTER/05-Recursos-R.html): contiene los ficheros de datos de los ejemplos utilizados durante el curso (ficheros .csv) así como el código de R que usaremos en las clases (ficheros .R).
+
+- [**Práctica**](https://iarribasf.github.io/SeriesTemporales-MASTER/06-Practica.html): contiene el fichero de datos que cada uno de vosotros debéis usar para realizar las prácticas. Además, se indica una **descripción provisional e incompleta** del contenido de las prácticas de evaluación. **El contenido final de cada una de ellas se comentará en clase** al finalizar cada tema y las prácticas deberán ajustarse a este contenido.
+
+
+\
+
+----------------------
+
+### Más recursos
+
+La última sección de la página web **Más** es un pequeño baúl de recursos que te pueden ser útiles:
+
+- **R**: enlaces a páginas con recursos sobre R y RStudio
+- **Markdown**: enlaces a páginas con recursos sobre (R)Markdown y Quatro
+- **Otros**: enlace a [R-bloggers](https://www.r-bloggers.com), un blog sobre `R` que te puede ser de gran ayuda y a [libros online](https://bookdown.org) sobre `R`, análisis de datos, inferencia...
+
+
+\
+
+----------------------
+
+\
+
+
+### Bibliografía
+
+**El material de este curso debe mucho a**
+
+- [**Forecasting: Principles and Practice**](https://otexts.com/fpp2/): un libro *online* (realizado con bookdown) de Rob J. Hyndman y George Athanasopoulos. Durante el curso usaremos fundamentalmente la librería `forecast` de Hyndman, Athanasopoulos y otros [(aquí)](https://cran.r-project.org/web/packages/forecast/index.html).
+
+\
+
+Hay un montón de bibliografía sobre Series Temporales, tanto de libros en papel como de recursos de todo tipo *online*. Es imposible ser exhaustivos, así que aquí va simplemente una muestra.
+
+Sentíos libres de hurgar en la web en busca de tutoriales, videos, libros... que os puedan ser útiles. Si algún material que localizáis creéis que es realmente útil, por favor, compartirlo con vuestros compañeros y conmigo.
+
+\
+
+**Grandes clásicos de Series Temporales**
+
+-   Abraham, B. y Ledolter, J. (1983) Statistical methods for forecasting. Wiley
+-   Box, G.E.P. y Jenkins, G.M. (1976) Time series analysis, forecasting and control. Holden-Day
+-   Box, G.E.P., Jenkins, G.M. y Reinsel, G.C. (1994) Time series análisis. Prentice-Hall
+-   Brockwell, P.J. y Davis, R.A. (1996) Introduction to time series and forecasting. Springer-Verlag
+-   Chatfield, C. (1989) The analysis of time series. An introduction. Chapman & Hall
+-   Greene, W. (1998) Análisis econométrico. Prentice Hall
+-   Holden, K., Peel D.A. y Thompson, J. L. (1990) Economic Forecasting: an introduction. Cambridge University Preess: Cambridge
+-   Holton, J. y Keating, B. (1996) Previsión en los negocios. IRWIN
+-   Markridakis, S., Weelwright, S.C. y Hyndman, R.J. (1998) Forecasting: Methods and Applications. Willey
+-   Peña, D. (1999) Estadística: modelos y métodos 2 (Modelos lineales y Series Temporales.) Alianza Universidad Textos.
+-   Pulido, A. y López, A.M. (1999) Predicción y simulación aplicada al a economía y gestión de empresas. Pirámide.
+-   Uriel, E. (2005) Introducción al análisis de series temporales. Paraninfo.
+
+\
+
+**Bibliografía de Series Temporales con R**
+
+-   Cowpertwait, P. S. P. y Metcalfe, A. V. (2009) [Introductory Time Series with R](https://link.springer.com/book/10.1007/978-0-387-88698-5). Springer (Collection Use R!)
+-   Pfaff, B. (2008) [Analysis of Integrated and Cointegrated Time Series with R](https://www.springer.com/gp/book/9780387759661). Springer (Collection Use R!)
+-   Cryer, J. D., Chan, Kung-Sik. (2008) [Time Series Analysis. With Applications in R](https://www.springer.com/gp/book/9780387759586). Springer
+
+\
+
+**Direcciones de internet**
+
+-   [Quick-R: Time Series and Forecasting](https://www.statmethods.net/advstats/timeseries.html): un vistazo muy pero que muy rápido al análisis de series temporales con R.
+-   Tres manuales *online* de series temporales al estilo del comentado al inicio de la bibliografía se pueden encontrar [aquí](https://bookdown.org/rushad_16/TSA_Lectures_book/), [aquí](https://bookdown.org/rdpeng/timeseriesbook/) y [aquí](https://bookdown.org/singh_pratap_tejendra/intro_time_series_r/)
+-   [A First Course on Time Series Analysis with SAS](https://www.uni-wuerzburg.de/fileadmin/10040800/user_upload/time_series/the_book/2011-March-01-times.pdf): es un libro de análisis de series temporales con SAS online
+-   [Journal of Time Series Analysis](https://onlinelibrary.wiley.com/journal/14679892): revista científica sobre series temporales\
+-   [International Journal of Forecasting](https://www.journals.elsevier.com/international-journal-of-forecasting/): revista científica sobre predicción
+
+\
+
+**Software gratuito**
+
+-   [R-project](https://cran.R-project.org): creo que ya lo conocemos todos.
+-   [JDemetra+](https://ec.europa.eu/eurostat/cros/content/software-jdemetra_en): ajuste automático de series con modelos ARIMA aplicando dos métodos: TRAMO-SEATS+ y X-12ARIMA/X-13ARIMA-SEATS.
+-   [Gretl](http://gretl.sourceforge.net/): programa de modelización gratuito: regresión múltiple, modelos de elección binaria, series temporales, etc.
+
+\
+\
+\
+\
+

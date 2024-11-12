@@ -1,0 +1,281 @@
+---
+title: "Defunciones por Enfermedades Cerebrovasculares"
+subtitle: "Procesos ARIMA (sin estacionalidad)"
+author: "Iván Arribas (Depto. Análisis Económico. Universitat de València)"
+toc: true
+toc-title: Índice
+number-sections: true
+bibliography: references.bib
+crossref:
+  fig-title: Figura
+  tbl-title: Tabla
+  fig-prefix: Figura
+  tbl-prefix: Tabla
+---
+
+```{r}
+#| label: chunk_setup
+#| echo: false
+knitr::opts_chunk$set(warning = FALSE, 
+                      message = FALSE, 
+                      comment = "",
+                      fig.align = "center", 
+                      fig.show = "hold",
+                      fig.height = 4,
+                      fig.width = 8,
+                      out.width = "80%") 
+```
+
+
+```{r}
+#| label: librerias
+#| echo: false
+library(forecast)
+library(ggplot2); theme_set(theme_bw())
+library(lmtest)
+```
+
+
+\
+\
+
+# Introducción
+
+Consideremos la serie temporal correspondiente al número de defunciones causadas por enfermedades cerebrovasculares, Esta serie está disponible en el Instituto Nacional de Estadística desde enero de 1980 hasta diciembre de 2023, un total de 44 años o 528 meses.
+
+En la descriptiva vimos que la descomposición revelaba la presencia de varios valores atípicos concentrados al inicio de la serie. Por este motivo, para su análisis por modelos Arima vamos a recortar la serie, que empezará el enero de 1990, y a anualizarla (34 años). La @fig-ECBAnual muestra la serie a analizar.
+
+```{r}
+#| label: fig-ECBAnual
+#| fig-cap: "Defunciones anuales causadas por enfermedades cerebrovasculares"
+DefEnfCer <- read.csv2("./series/Enfermedades cerebrovasculares.csv", 
+                       header = TRUE)
+
+DefEnfCer <- ts(DefEnfCer[,2],
+                start = 1980, 
+                freq = 12)
+
+DefEnfCer <- window(DefEnfCer, 
+                    start = 1990)
+
+DefEnfCer <- aggregate(DefEnfCer, 
+                       FUN = sum)
+
+autoplot(DefEnfCer,
+         xlab = "",
+         ylab = "",
+         main = "") 
+```
+
+\
+\
+
+# Transformación de la serie
+
+En el análisis previo se vio que la serie anual hay que diferenciarla una vez para que sea estacionaria y ergódica. Por tanto, se opta por considerar $d=1$ o $y_t \sim I(1)$.
+
+Para series anuales la transformación logarítmica no suele ser necesaria.
+
+\
+\
+
+# Identificación
+
+Veamos ahora a identificar los valores de $p$ y $q$ a partir de la FAC y la FACP (@fig-ECBDisplay). Difícil decidirse entre un AR(1), un MA(1) o incluso un ARMA(1, 1).
+
+```{r}
+#| label: fig-ECBDisplay
+#| fig-cap: "Defunciones anuales por enfermedades cerebrovasculares, FAC y FACP de la serie transformada"
+#| fig-height: 5
+ggtsdisplay(diff(DefEnfCer))
+```
+
+¿Qué recomienda `auto.arima`? Un ARIMA(1, 1, 0) con deriva.
+
+```{r} 
+auto.arima(DefEnfCer, 
+           d = 1)
+```
+
+La estimación de este modelo muestra que los dos coeficientes son aparentemente significativos y que no hay valores extremos (@fig-ECBError).
+
+```{r}
+#| label: fig-ECBError
+#| fig-cap: "Error + Intervención"
+arima110 <- Arima(DefEnfCer, 
+                  order = c(1, 1, 0),
+                  include.constant = TRUE)
+
+error <- residuals(arima110)
+sderror <- sd(error)
+
+autoplot(error, series="Error",
+         colour = "black",
+         xlab = "",
+         ylab = "Error",
+         main = "") +
+  geom_hline(yintercept = c(-3, -2, 2, 3)*sderror, 
+             colour = c("red", "green", "green", "red"), 
+             lty = 2) + 
+  geom_point() +
+  scale_x_continuous(breaks= seq(1990, 2024, 4)) 
+```
+
+\
+\
+
+# Validación
+
+### Coeficientes son significativos {-}
+
+Los dos coeficientes estimados ($\phi_1$ y $\mu$) son significativos.
+
+```{r}
+coeftest(arima110)
+```
+
+\
+
+### Medidas de error {-}
+
+El error medio es `r round(accuracy(arima110)[2],0)` defunciones (RMSE) y el error porcentual medio es `r round(accuracy(arima110)[5],2)`% (MAPE). No hay sesgo y la predicción por intervalos será correcta.
+
+```{r}
+#| eval: false
+accuracy(arima110)
+```
+
+```{r}
+#| echo: false
+round(accuracy(arima110),2)
+```
+
+\
+
+### Incorrelación, Homocedasticidad y Normalidad {-}  
+
+Veamos ahora si el residuo es ruido blanco:
+
+```{r}
+Box.test(error, lag = 2, type = "Ljung-Box")
+Box.test(error^2, lag = 2, type = "Ljung-Box") 
+shapiro.test(error)
+```
+
+
+Las hipótesis de incorrelación y homocedasticidad se aceptan (también se aceptan para otros valores de `lag` razonables). La hipótesis de normalidad se rechaza al 5%, pero se aceptaría al 1%.
+
+\
+\
+
+# Interpretación del modelo
+
+El **modelo teórico** es $DefEnfCer \sim ARIMA(1,1,0)$ + constante:
+$$(1 - \phi_1L)(1 - L) DefEnfCer_t =  c + \varepsilon_t.$$
+
+Desarrollando queda:
+$$DefEnfCer_t = c + DefEnfCer_{t-1} +  \phi_1(DefEnfCer_{t-1} - DefEnfCer_{t-2}) + \varepsilon_t$$
+
+Finalmente. el **modelo estimado** es:
+
+$$\widehat{DefEnfCer}_t = -993.39 + DefEnfCer_{t-1} - 0.62(DefEnfCer_{t-1} - DefEnfCer_{t-2})$$
+
+Recuerda que la constante estimada $\mu$ no es la constante del modelo $c$ y que esta se obtiene como $(1 - (-0.61968)) \cdot (-613.32712) = -993.3937$.
+
+Cada año el número de defunciones por enfermedades cerebrovasculares es el mismo que el año previo menos 993 casos y menos un 62% de la última variación.
+
+\
+\
+
+# Predicción
+
+Podemos usar el modelo estimado para predecir los casos de defunciones por enfermedad cerebrovascular para los próximos 5 años (@fig-ECBPrediccion).
+
+```{r}
+parima110 <- forecast(arima110, 
+                      h = 5, 
+                      level = 95)
+parima110
+```
+
+```{r}
+#| label: fig-ECBPrediccion
+#| fig-cap: "Defunciones por enfermedades cerebrovasculares y predicción"
+autoplot(parima110, 
+     ylab = "Defunciones",
+     main = "") +
+  scale_x_continuous(breaks= seq(1990, 2028, 4)) 
+```
+
+
+\
+\
+
+# Calidad de las previsiones extramuestrales según horizonte temporal
+
+Vamos a aplicar la metodología de origen de predicción móvil a la serie. Asumimos que se precisan veinte años para hacer una buena estimación, $k=20$, y que el horizonte temporal es cinco años, $h = 5$.
+  
+```{r}  
+k <- 20                   
+h <- 5                    
+TT <- length(DefEnfCer)   
+s <- TT-k-h               
+
+mapeArima <- matrix(NA, s + 1, h)
+for (i in 0:s) {
+  train.set <- subset(DefEnfCer, start = i + 1, end = i + k)
+  test.set <-  subset(DefEnfCer, start = i + k + 1, end = i + k + h)
+  
+  fit <- Arima(train.set, 
+               order = c(1, 1, 0),
+               include.constant = TRUE)
+  
+  fcast<-forecast(fit, h = h)
+  
+  mapeArima[i + 1,] <- 100*abs(test.set - fcast$mean)/test.set
+}
+
+errorArima <- colMeans(mapeArima)
+errorArima
+```
+
+Se observa que el error de ajuste y el error de predicción extramuestral a un periodo vista son similares, 1.7%. Además, conforme aumenta el horizonte temporal de previsión el error aumenta, aunque a cinco años vista se mantiene aun bajo.
+
+\
+\
+
+# Comparación con un modelo de Alisado
+
+Si estimamos la serie anual de Defunciones por enfermedades cerebrovasculares aplicando técnicas de alisado exponencial nos encontramos con un modelo con error y pendiente aditivas ETS(A,A,N).
+
+```{r}
+summary(alisado <- ets(DefEnfCer))
+```
+
+La calidad del ajuste del modelo de Alisado es algo inferior a la del modelo Arima: MAPE de 1.9% para el primero frente a 1.7% para el segundo; RMSE de 757 para el primero frente a 751 para el segundo. Además, si se aplica la metodología de origen de predicción móvil al modelo de Alisado, este ofrece predicciones extramuestrales menos precisas que Arima. Por ejemplo, a un periodo vista el error por Alisado es del 2.7% y con Arima del 1.7% y a cinco periodos vista estos errores pasan al 4.1% y 3.8%.
+
+Finalmente, las predicciones realizadas con ambos modelos son muy similares.
+
+```{r}
+#| label: fig-ECBPrediccion2
+#| fig-cap: "Defunciones Enf. Cerebrovasculares y previsión"
+palisado <- forecast(alisado, h = 5)
+
+autoplot(DefEnfCer,
+         series = "Defunciones",
+         main="",
+         xlab="", 
+         ylab="Defunciones") +
+  autolayer(parima110$mean, series = "Previsión con Arima") +
+  autolayer(palisado$mean, series = "Previsión con Alisado") +
+  labs(colour = "Series") + 
+  theme(legend.position=c(0.8,0.8))
+```
+
+En definitiva, para esta serie, que es corta y aparentemente sencilla, la aproximación por la metodología Arima ofrece predicciones similares a las del modelo de Alisado. La precisión de las predicciones con Arima es mayor que con Alisado, pero las diferencias son mínimas (menores a 1 p.p.) para horizontes temporales superiores a 3 años.
+
+
+\
+\
+\
+\

@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Iván Arribas (Depto. Análisis Económico. Universitat de València)">
+
+<title>Series Temporales - Prediciendo series temporales interrumpidas</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Series Temporales</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./01-Guia-curso.html"> 
+<span class="menu-text">Guía del curso</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./02-Logistica.html"> 
+<span class="menu-text">Logística</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-diapos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Diapos</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-diapos">    
+        <li class="dropdown-header">Teoría</li>
+        <li>
+    <a class="dropdown-item" href="./03-01-Tema1.html">
+ <span class="dropdown-text">Tema 1: Definicion y Componentes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-02-Tema2.html">
+ <span class="dropdown-text">Tema 2: Alisado</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-03-Tema3.html">
+ <span class="dropdown-text">Tema 3: Procesos estocásticos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-04-Tema4.html">
+ <span class="dropdown-text">Tema 4: ARIMA</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-05-Tema5.html">
+ <span class="dropdown-text">Tema 5: SARIMA</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Ejemplo de aplicación</li>
+        <li>
+    <a class="dropdown-item" href="./03-06-Ejemplo1.html">
+ <span class="dropdown-text">Ejemplo Tema 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-07-Ejemplo2.html">
+ <span class="dropdown-text">Ejemplo Tema 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-08-Ejemplo3.html">
+ <span class="dropdown-text">Ejemplo Tema 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-09-Ejemplo4.html">
+ <span class="dropdown-text">Ejemplo Tema 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-10-Ejemplo5.html">
+ <span class="dropdown-text">Ejemplo Tema 5</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Otro ejemplo</li>
+        <li>
+    <a class="dropdown-item" href="./03-11-Ejemplo-Pasajeros.html">
+ <span class="dropdown-text">Ejemplo de Pasajeros</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-píldoras" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Píldoras</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-píldoras">    
+        <li>
+    <a class="dropdown-item" href="./04-01-Bootstrapping.html">
+ <span class="dropdown-text">Bootstrapping para IC</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-02-Multiples_CS.html">
+ <span class="dropdown-text">Múltiples componentes estacionales</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-03-Redes_neuronales.html">
+ <span class="dropdown-text">Predicción con Redes Neuronales</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-04-Series_acotadas.html">
+ <span class="dropdown-text">Series acotadas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-05-Valores_perdidos_Outliers.html">
+ <span class="dropdown-text">Valores perdidos y outliers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-06-Covid_Nacimientos.html">
+ <span class="dropdown-text">Efecto de la Covid-19 en Nacimientos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-07-Combinando_predicciones.html">
+ <span class="dropdown-text">Combinación de predicciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-08-Series_interrumpidas.html">
+ <span class="dropdown-text">Series interrumpidas</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./05-Recursos-R.html"> 
+<span class="menu-text">Recursos de la asignatura</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./06-Practica.html"> 
+<span class="menu-text">Practica</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-más" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Más</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-más">    
+        <li class="dropdown-header">R</li>
+        <li>
+    <a class="dropdown-item" href="https://cran.r-project.org">
+ <span class="dropdown-text">Dónde está R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://rstudio.com">
+ <span class="dropdown-text">Donde está RStudio</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Markdown</li>
+        <li>
+    <a class="dropdown-item" href="https://bookdown.org/yihui/rmarkdown/">
+ <span class="dropdown-text">Markdown</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://rmarkdown.rstudio.com/lesson-1.html">
+ <span class="dropdown-text">R Markdown</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf">
+ <span class="dropdown-text">R Markdown (pdf)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://quarto.org/docs/tools/rstudio.html">
+ <span class="dropdown-text">Quatro</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Otros</li>
+        <li>
+    <a class="dropdown-item" href="https://www.r-bloggers.com">
+ <span class="dropdown-text">Blog sobre R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://bookdown.org">
+ <span class="dropdown-text">Libros online que debes conocer</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Prediciendo series temporales interrumpidas</h1>
+<p class="subtitle lead">Previsión con Datos Temporales (GBIA)</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Iván Arribas (Depto. Análisis Económico. Universitat de València) </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><br>
+<br>
+</p>
+<section id="introducción" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introducción</h1>
+<p>Un supuesto fundamental en la predicción de series temporales a partir de datos históricos es que los patrones que se observan en el pasado no van a cambiar. La tendencia y componente estacional observada en el pasado será la misma en el futuro próximo. De esta forma, podemos usar modelos (Alisado exponencial, Arima…) para identificar los patrones pasados y proyectarlos en el futuro.</p>
+<p>Sin embargo, algunas veces las series temporales se ven fuertemente perturbadas por acontecimientos que modifican sustancialmente los patrones de comportamiento pasados. Denominaremos a estas, series temporales interrumpidas.</p>
+<p>La alteración en una serie temporal puede ser sencilla. Por ejemplo, un cambio de nivel permanente en la serie de ventas de un supermercado causado por la aparición de un competidor; o un cambio de nivel en las ventas de un producto causado por una promoción, seguido de otro cambio de nivel cuando la promoción termina.</p>
+<p>En otras ocasiones las perturbaciones pueden ser realmente complejas, cambiando de forma profunda la tendencia de la serie o su patrón estacional.</p>
+<p>La predicción de las series temporales interrumpidas es todo un reto, especialmente cuando esta interrupción tiene lugar en un pasado muy reciente.</p>
+<p>Un ejemplo de perturbación reciente lo tenemos con la Covid-19 y su efecto sobre un gran número de series temporales. La <a href="#fig-Pernoctaciones" class="quarto-xref">Figura&nbsp;1</a> muestra la serie temporal correspondiente al número de pernoctaciones que los turistas extranjeros realizan en España en alojamientos turísticos autorizados (que llamaremos Pernoctaciones en adelante). Esta serie está disponible en Eurostat desde enero de 2000 hasta diciembre de 2023, un total de 24 años y 288 observaciones.</p>
+<p>La serie muestra un comportamiento muy sencillo y claro desde 2000 hasta 2019. A partir del inicio de las medidas de confinamiento en marzo de 2020 debido a la Covid-19, el número de pernoctaciones se reduce de forma brusca a niveles sin precedentes y el marcado patrón estacional observado en el pasado desaparece. La perturbación dura hasta finales de 2021 o inicio de 2022, y parece que en los años 2022 y 2023 se recupera el comportamiento prepandemia.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Pernoctaciones <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">"./series/Pernoctaciones.csv"</span>, </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>Pernoctaciones <span class="ot">&lt;-</span> <span class="fu">ts</span>(Pernoctaciones[,<span class="dv">2</span>]<span class="sc">/</span><span class="dv">1000000</span>, </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">start =</span> <span class="dv">2000</span>, </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">freq =</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(Pernoctaciones,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">""</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">ylab =</span> <span class="st">"Noches (millones)"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span> <span class="fu">seq</span>(<span class="dv">2000</span>, <span class="dv">2024</span>, <span class="dv">2</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-Pernoctaciones" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-Pernoctaciones-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-Pernoctaciones-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-Pernoctaciones-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;1: Pernoctaciones
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Vamos a ver diferentes aproximaciones al problema de predecir series temporales interrumpidas y comparar los resultados usando la serie de Pasajeros. Para más información, el lector puede acudir a <span class="citation" data-cites="Hyndman24">Hyndman and Rostami-Tabar (<a href="#ref-Hyndman24" role="doc-biblioref">2024</a>)</span>.</p>
+<p><br>
+<br>
+</p>
+</section>
+<section id="algunas-estrategias-para-predecir-series-interrumpidas" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Algunas estrategias para predecir series interrumpidas</h1>
+<p>En este epígrafe describiremos cuatro estrategias para predecir series que han sufrido una fuerte perturbación en su pasado reciente. Sabemos que cuando en estadística o, de forma más general, en el análisis de datos existen varias formas de resolver un problema es porque ninguna de ellas es perfecta, usualmente porque el problema es demasiado complejo. Dada una serie temporal interrumpida, hay que probar diferentes aproximaciones al problema de predecir e identificar la que resulta mas prometedora o precisa en sus predicciones.</p>
+<p><br>
+</p>
+<section id="uso-de-modelos-muy-adaptativos" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="uso-de-modelos-muy-adaptativos">Uso de modelos muy adaptativos</h2>
+<p>Algunos modelos, por su naturaleza, reaccionan muy rápidamente ante cambios en la estructura de la serie, adaptándose a ellos. Uno de estos modelos es el Alisado exponencial.</p>
+<p>Cuando los parámetros de un modelo de Alisado están próximos a 1, el modelo usa preferentemente la información más reciente de la serie para ajustarse y predecir. De esta forma, ante una perturbación en la serie, estos modelos pueden ajustarse a ella con sencillez y rapidez.</p>
+<p>La ventaja de esta estrategia es que simplemente hay que usar un modelo conocido, que es muy sencillo y muy rápido computacionalmente. Además, el ajuste y predicción con estos modelos es automático. La desventaja principal de los modelos de Alisado es que tardan algunos periodos en adaptarse, así que si los cambios se producen de forma constante, el modelo estará constantemente <em>inadaptado</em>.</p>
+<p><br>
+</p>
+</section>
+<section id="uso-de-intervención" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="uso-de-intervención">Uso de intervención</h2>
+<p>Si la perturbación no es excesivamente compleja, puede incluirse en el proceso de ajuste como intervención de un modelo Arima.</p>
+<p>Esta estrategia implica que tenemos un buen entendimiento de la perturbación: punto de inicio y final, efecto sobre la serie temporal, etc.</p>
+<p>Su ventaja de nuevo es que trabajamos con modelos ya conocidos y, además, que podremos estimar la estructura de la tendencia y la estacionalidad pasadas y sus cambios con la perturbación. Ahora bien, el modelo asumirá que el comportamiento de la serie tras la perturbación es similar al observado antes de la perturbación. Si esto no es cierto, las predicciones serán del todo incorrectas. Pero incluso si el supuesto es cierto y las previsiones son acertadas, su intervalo de confianza será más estrecho de lo correcto.</p>
+<p><br>
+</p>
+</section>
+<section id="fijar-las-observaciones-durante-la-perturbacion-como-valores-perdidos" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="fijar-las-observaciones-durante-la-perturbacion-como-valores-perdidos">Fijar las observaciones durante la perturbacion como valores perdidos</h2>
+<p>Una aproximación más radical consiste en fijar como valores perdidos todas las observaciones de la serie temporal durante el periodo de la perturbación y ajustar un modelo a la serie resultante. Las predicciones que se realicen con este modelo serían las correspondientes a una realidad donde la perturbación no ha tenido lugar.</p>
+<p>Una ventaja de esta aproximación es que no se usa información durante el periodo de la perturbación, por lo que el intervalo de confianza de las predicciones será amplio durante la perturbación y tras ella, y no se irá estrechando hasta que haya suficientes datos como para estimar la distribución de las predicciones con más precisión.</p>
+<p>Entre las desventajas de este método están que solo se pueden usar modelos que permitan estimar con datos perdidos, por ejemplo modelos Arima, y que es necesario identificar en que periodo se inicia y termina la perturbación.</p>
+<p><br>
+</p>
+</section>
+<section id="trabajar-bajo-el-escenario-qué-hubiera-pasado-si" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="trabajar-bajo-el-escenario-qué-hubiera-pasado-si">Trabajar bajo el escenario qué hubiera pasado si</h2>
+<p>Esta estrategia en un poco más elaborada que las ya mencionadas dado que toma elementos de varias de ellas. La idea básica es obtener la serie temporal que correspondería a un escenario donde la perturbación no ha tenido lugar y usar esta serie para predecir.</p>
+<p>Para el primer paso, obtener una serie completa donde la perturbación no ha tenido lugar tenemos dos alternativas:</p>
+<ul>
+<li><p>Terminamos la serie justo antes de la perturbación, la ajustamos a un modelo y hacemos predicciones durante todo el periodo de la perturbación. Estas predicciones sustituirán los valores reales de la serie, las que han tenido lugar durante a la perturbación.</p></li>
+<li><p>Asignamos como valores perdidos los datos de la serie durante la perturbación y ajustamos un modelo. Luego sustituimos los valores reales de la serie durante el periodo de la perturbación por los valores estimados por el modelo durante este mismo periodo.</p></li>
+</ul>
+<p>En cualquiera de los dos casos, el resultado es una nueva serie que coincide con la original fuera de los periodos de la perturbación y durante la perturbación toma valores que hubieran podido tener lugar en un escenario donde esta no ha ocurrido.</p>
+<p>Esta nueva serie se ajusta por un modelo que, posteriormente, se usa para obtener las predicciones.</p>
+<p>Lógicamente, esta estrategia comparte las ventajas y desventajas de las estrategias que usa para su implementación.</p>
+<p><br>
+<br>
+</p>
+</section>
+</section>
+<section id="ejemplo-de-aplicación-a-la-serie-de-pernoctaciones" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Ejemplo de aplicación a la serie de Pernoctaciones</h1>
+<p>Vamos a aplicar estas cuatro estrategias a la serie de Pernoctaciones de turistas internacionales en alojamientos turísticos en España, obteniendo predicciones a doce meses vista al final de cada año desde 2019 hasta 2023.</p>
+<p>Los modelos se aplicarán sobre la transformación logarítmica de la serie para garantizar que tanto las predicciones puntuales como por intervalo son positivas y aplicaremos la corrección de sesgo para que la predicción sea la media (y no la mediana) de su distribución.</p>
+<p>En todos los casos el modelo se ha identificado de forma automática con las funciones <code>ets</code> y <code>auto.arima</code>.</p>
+<p><br>
+</p>
+<section id="uso-de-modelos-muy-adaptativos-1" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="uso-de-modelos-muy-adaptativos-1">Uso de modelos muy adaptativos</h2>
+<p>Observa que esta aproximación básicamente consiste en no hacer nada más allá de elegir un método muy adaptativo. Por este motivo compararemos los resultados obtenidos con Alisado, un modelo muy adaptativo, y con Arima, un modelo muy poco adaptativo.</p>
+<p>La <a href="#fig-sol1" class="quarto-xref">Figura&nbsp;2</a> muestra el resultado de aplicar Alisado y Arima a los datos. Las predicciones para 2020 se han realizado antes de que el efecto de la Covid-19 tenga lugar y siguen el patrón de pernoctaciones observado en el pasado. Ambos métodos ofrecen prácticamente las mismas predicciones y ambos sobrestiman la realidad.</p>
+<p>Las predicciones para 2021 se realizan después de observar 9 meses de fuerte caída de las pernoctaciones como efecto de la Covid-19 y ambos modelos se ajustan a esta caída. Sin embargo, ninguno es capaz de captar la recuperación ocurrida en las pernoctaciones en 2021, de forma que las previsiones de ese año se quedan por debajo de la realidad. Para el año 2022 ambos modelos son capaces de reconocer el incremento en la pernoctaciones ocurrida en los pasados meses, pero de nuevo no captan que las pernoctaciones seguirán creciendo y vuelven a realizar previsiones por debajo de la realidad. Si en 2021 las predicciones mejores son las obtenidas con Arima, en el año siguiente son la de Alisado.</p>
+<p>Para 2023 Alisado se ha adaptado plenamente a la casi completa recuperación ocurrida en 2022 y sus predicciones son razonablemente buenas. Por el contrario Arima realiza unas predicciones muy bajas debido a que el modelo identificado usa datos no solo de 2022 sino de años pasados. Por este mismo motivo las predicciones con Arima de 2024 vuelven a ser muy bajas. Además, sorprende lo elevadas de las predicciones de Alisado, que por lo demás repiten razonablemente bien el patrón observado en los dos años previos.</p>
+<p>En general, ninguno de los dos métodos lo hace especialmente bien, aunque con el método de Alisado se obtienen mejores predicciones una vez la perturbación ha pasado.</p>
+<div id="fig-sol1" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sol1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol1" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol1-1" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol1-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol1">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol1-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Predicciones para 2020
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol1" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol1-2" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol1-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol1-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol1">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol1-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Predicciones para 2021
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol1" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol1-3" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol1-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol1-3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol1">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol1-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Predicciones para 2022
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol1" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol1-4" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol1-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol1-4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol1">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol1-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d) Predicciones para 2023
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol1" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol1-5" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol1-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol1-5.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol1">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol1-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(e) Predicciones para 2024
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sol1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2: <strong>Modelos adaptativos</strong>. Cada panel muestra las predicciones de los doce meses de un año para la serie Pernoctaciones usando modelos de Alisado y Arima.
+</figcaption>
+</figure>
+</div>
+<p><br>
+</p>
+</section>
+<section id="uso-de-intervención-1" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="uso-de-intervención-1">Uso de intervención</h2>
+<p>Aplicaremos la estrategia de la intervención usando el modelo Arima. Con tal fin vamos a crear dos variables de intervención: un primer cambio de nivel asociado al año de la pandemia, que empieza en marzo de 2020 y termina en diciembre de 2020; y un segundo cambio de nivel para el año 2021, desde enero hasta diciembre.</p>
+<div id="fig-sol2" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sol2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol2" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol2-1" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol2-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol2">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol2-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Predicciones para 2020
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol2" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol2-2" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol2-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol2-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol2">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol2-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Predicciones para 2021
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol2" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol2-3" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol2-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol2-3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol2">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol2-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Predicciones para 2022
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol2" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol2-4" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol2-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol2-4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol2">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol2-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d) Predicciones para 2023
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol2" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol2-5" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol2-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol2-5.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol2">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol2-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(e) Predicciones para 2024
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sol2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3: <strong>Intervención</strong>. Cada panel muestra las predicciones de los doce meses de un año para la serie Pernoctaciones usando el modelo Arima.
+</figcaption>
+</figure>
+</div>
+<p>La <a href="#fig-sol2" class="quarto-xref">Figura&nbsp;3</a> muestra las predicciones y el intervalo de confianza al 90%. Las predicciones para 2020, realizadas sin conocimiento de la próxima pandemia, siguen el patrón observado en el pasado. Como hasta 2019 la serie era muy regular, el ajuste es muy bueno y el intervalo de confianza de las predicciones estrecho.</p>
+<p>Las predicciones para 2021 se realizan tras casi un año de caída en las pernoctaciones con un modelo que estima la magnitud de esta caída a partir de la variable de intervención cambio de nivel en 2020. La predicción para 2021 se corrige a la baja por la mitad de esta magnitud estimada, porque asumimos que habrá una recuperación en el turismo, pero aun así en general se subestima fuertemente la realidad. Además, se observa un intervalo de predicción mucho más ancho debido al aumento de la incertidumbre en el comportamiento de la serie. Para las predicciones del año 2022 de nuevo se aplica la mitad de la caída en las pernoctaciones estimada con la variable de intervención cambio de nivel de 2021 porque otra vez asumimos que la recuperación del turismo continua. En este caso las previsiones a veces se quedan por debajo y otras por encima de la realidad. Además, los dos años de perturbación y cambios en el patrón de la serie se reflejan en un intervalo de confianza para las predicciones aun más amplio.</p>
+<p>Durante 2022 la serie ha regresado casi a la normalidad. Además, para las predicciones de 2023 ya no se aplican ninguno de los cambios de nivel estimados. El resultado son unas predicciones mucho mejores que las obtenidas previamente aunque su amplio intervalo de confianza evidencia que todavía pesa mucho la incertidumbre observada en el pasado, con tres años consecutivos de cambios en la estructura de la serie.</p>
+<p>La predicciones de 2024 reproducen de forma imperfecta el patrón observado en la pernoctaciones los dos últimos años. Se observa que la variación estacional de las predicciones es mucho más suave que la real. La amplitud del intervalo de confianza es menor que el observado para las predicciones de 2023 debido a que la regularidad en la serie de los dos últimos años ha reducido la incertidumbre.</p>
+<p><br>
+</p>
+</section>
+<section id="fijar-las-observaciones-durante-la-perturbacion-como-valores-perdidos-1" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="fijar-las-observaciones-durante-la-perturbacion-como-valores-perdidos-1">Fijar las observaciones durante la perturbacion como valores perdidos</h2>
+<p>Asignar a valores perdidos las observaciones durante el periodo de la perturbación es una forma radical de resolver el problema, pero muy sencilla de implementar. Asumiremos que el efecto de la pandemia se inició en marzo de 2020 y terminó en febrero de 2022. Las 24 observaciones de este periodo se asignarán como <code>NA</code> y la serie resultante se ajustará a un modelo Arima, sin necesidad de incluir intervención.</p>
+<div id="fig-sol3" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sol3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol3" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol3-1" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol3-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol3">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol3-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Predicciones para 2020
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol3" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol3-2" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol3-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol3-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol3">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol3-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Predicciones para 2021
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol3" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol3-3" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol3-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol3-3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol3">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol3-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Predicciones para 2022
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol3" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol3-4" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol3-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol3-4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol3">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol3-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d) Predicciones para 2023
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol3" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol3-5" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol3-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol3-5.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol3">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol3-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(e) Predicciones para 2024
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sol3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4: <strong>Valores perdidos</strong>. Cada panel muestra las predicciones de los doce meses de un año para la serie Pernoctaciones usando el modelo Arima.
+</figcaption>
+</figure>
+</div>
+<p>La <a href="#fig-sol3" class="quarto-xref">Figura&nbsp;4</a> muestra las predicciones y el intervalo de confianza al 90%. Para los cuatro primeros años la predicción muestra lo que hubiera pasado sin la pandemia de la Covid-19, basándose en el comportamiento de las pernoctaciones hasta 2019. Para los años 2020 y 2021 las predicciones sobrestiman tremendamente la realidad. Pero para el año 2022, cuando el efecto de la pandemia casi había pasado, las predicciones se ajustan mucho más a la serie, aunque la siguen sobrestimando ligeramente. Además, cuanto más alejado es el horizonte temporal de las predicciones, mayor es la incertidumbre y, por tanto, más amplio es el intervalo de confianza.</p>
+<p>Finalmente, en 2023 las predicciones se ajustan muy bien a la realidad, y para el año 2024 las predicciones, similares a la obtenidas para el año previo, posiblemente sigan siendo muy precisas.</p>
+<p><br>
+</p>
+</section>
+<section id="trabajar-bajo-el-escenario-qué-hubiera-pasado-si-1" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="trabajar-bajo-el-escenario-qué-hubiera-pasado-si-1">Trabajar bajo el escenario qué hubiera pasado si</h2>
+<p>Para el escenario <em>qué hubiera pasado si</em> vamos a estimar un modelo Arima bajo el escenario previo (asignar a valores perdidos las observaciones durante el periodo de la perturbación), y usarlo para estimar que podría haber pasado durante la pandemia. Después, estimamos un segundo modelo Arima con toda la nueva serie y lo usamos para obtener las predicciones.</p>
+<div id="fig-sol4" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sol4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol4" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol4-1" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol4-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol4">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol4-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Predicciones para 2020
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol4" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol4-2" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol4-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol4">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Predicciones para 2021
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol4" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol4-3" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol4-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol4-3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol4">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol4-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Predicciones para 2022
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol4" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol4-4" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol4-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol4-4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol4">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol4-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d) Predicciones para 2023
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-sol4" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-sol4-5" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-sol4-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-08-Series_interrumpidas_files/figure-html/fig-sol4-5.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-sol4">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-sol4-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(e) Predicciones para 2024
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sol4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;5: <strong>Qué hubiera pasado si</strong>. Cada panel muestra las predicciones de los doce meses de un año para la serie Pernoctaciones usando el modelo Arima.
+</figcaption>
+</figure>
+</div>
+<p>Bajo este escenario las predicciones resultan similares a las obtenidas bajo el supuesto previo con asignación de valores perdidos (véase <a href="#fig-sol4" class="quarto-xref">Figura&nbsp;5</a>). Sin embargo, los intervalos de confianza son más estrechos. Al sustituir los valores perdidos por valores ajustados, el modelo estimado posteriormente trabaja con una serie muy regular sin incertidumbre y esto se refleja en la amplitud del intervalo de confianza.</p>
+<p><br>
+<br>
+<br>
+<br>
+</p>
+
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Hyndman24" class="csl-entry" role="listitem">
+Hyndman, Rob J., and Bahman Rostami-Tabar. 2024. <span>“Forecasting Interrupted Time Series.”</span> <em>Journal of the Operational Research Society</em> 0 (0): 1–14. <a href="https://doi.org/10.1080/01605682.2024.2395315">https://doi.org/10.1080/01605682.2024.2395315</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2023, Iván Arribas. If you find any bugs please report them to <a href="mailto:ivan.arribas@uv.es">ivan.arribas@uv.es</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>This page is built with <a href="https://quarto.org/">Quarto</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

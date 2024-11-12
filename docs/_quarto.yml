@@ -1,0 +1,105 @@
+project:
+  type: website
+
+website:
+  title: "Series Temporales"
+  search: false
+  page-footer: 
+    right: "This page is built with [Quarto](https://quarto.org/)"
+    left: "&copy; Copyright 2023, Iván Arribas. If you find any bugs please report them to [ivan.arribas@uv.es](mailto:ivan.arribas@uv.es)"
+
+  navbar:
+    left:
+      - text: Inicio
+        href: index.html
+      - text: About
+        href: about.html
+    right:
+     - text: "Guía del curso"
+       href: 01-Guia-curso.html  
+     - text: "Logística"
+       href: 02-Logistica.html
+     - text: "Diapos"
+       menu:
+         - text: "Teoría"
+         - text: "Tema 1: Definicion y Componentes"
+           href: 03-01-Tema1.html      
+         - text: "Tema 2: Alisado"
+           href: 03-02-Tema2.html   
+         - text: "Tema 3: Procesos estocásticos"
+           href: 03-03-Tema3.html   
+         - text: "Tema 4: ARIMA"
+           href: 03-04-Tema4.html  
+         - text: "Tema 5: SARIMA"
+           href: 03-05-Tema5.html  
+         - text: "--------------"
+         - text: "Ejemplo de aplicación"
+         - text: "Ejemplo Tema 1"
+           href: 03-06-Ejemplo1.html      
+         - text: "Ejemplo Tema 2"
+           href: 03-07-Ejemplo2.html   
+         - text: "Ejemplo Tema 3"
+           href: 03-08-Ejemplo3.html   
+         - text: "Ejemplo Tema 4"
+           href: 03-09-Ejemplo4.html  
+         - text: "Ejemplo Tema 5"
+           href: 03-10-Ejemplo5.html
+         - text: "---------------"
+         - text: "Otro ejemplo"
+         - text: "Ejemplo de Pasajeros"
+           href: 03-11-Ejemplo-Pasajeros.html
+     - text: "Píldoras"
+       menu:
+         - text: "Bootstrapping para IC"
+           href: 04-01-Bootstrapping.html      
+         - text: "Múltiples componentes estacionales"
+           href: 04-02-Multiples_CS.html
+         - text: "Predicción con Redes Neuronales"
+           href: 04-03-Redes_neuronales.html
+         - text: "Series acotadas"
+           href: 04-04-Series_acotadas.html
+         - text: "Valores perdidos y outliers"
+           href: 04-05-Valores_perdidos_Outliers.html
+         - text: "Efecto de la Covid-19 en Nacimientos"
+           href: 04-06-Covid_Nacimientos.html
+         - text: "Combinación de predicciones"
+           href: 04-07-Combinando_predicciones.html
+         - text: "Series interrumpidas"
+           href: 04-08-Series_interrumpidas.html
+     - text: "Recursos de la asignatura"
+       href: 05-Recursos-R.html
+     - text: "Practica"
+       href: 06-Practica.html 
+     - text: "Más"   
+       menu: 
+         - text: "R"
+         - text: "Dónde está R"
+           href: https://cran.r-project.org
+         - text: "Donde está RStudio"
+           href: https://rstudio.com
+         - text: "---------"
+         - text: "Markdown"
+         - text: "Markdown"
+           href: https://bookdown.org/yihui/rmarkdown/
+         - text: "R Markdown"
+           href: https://rmarkdown.rstudio.com/lesson-1.html
+         - text: "R Markdown (pdf)"
+           href: https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf
+         - text: "Quatro"
+           href: https://quarto.org/docs/tools/rstudio.html
+         - text: "---------"
+         - text: "Otros"
+         - text: "Blog sobre R"
+           href: https://www.r-bloggers.com
+         - text: "Libros online que debes conocer"
+           href: https://bookdown.org
+   
+      
+
+format:
+  html:
+    theme: ceruelan
+    highlight: pygments
+    css: styles.css
+    toc: true
+
