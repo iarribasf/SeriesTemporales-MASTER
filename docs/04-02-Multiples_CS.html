@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Iván Arribas (Depto. Análisis Económico. Universitat de València)">
+
+<title>Predicción con Datos Temporales - Múltiples componentes estacionales</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Predicción con Datos Temporales</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./01-Guia-curso.html"> 
+<span class="menu-text">Guía del curso</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./02-Logistica.html"> 
+<span class="menu-text">Logística</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-diapos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Diapos</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-diapos">    
+        <li class="dropdown-header">Teoría</li>
+        <li>
+    <a class="dropdown-item" href="./03-01-Tema1.html">
+ <span class="dropdown-text">Tema 1: Introducción</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-02-Tema2.html">
+ <span class="dropdown-text">Tema 2: Definición</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-03-Tema3.html">
+ <span class="dropdown-text">Tema 3: Métodos de predicción</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-04-Tema4.html">
+ <span class="dropdown-text">Tema 4: Series sin tendencia ni estacionalidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-05-Tema5.html">
+ <span class="dropdown-text">Tema 5: Evaluación de las predicciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-06-Tema6.html">
+ <span class="dropdown-text">Tema 6: Series sin tendencia y sin estacionalidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-07-Tema7.html">
+ <span class="dropdown-text">Tema 7: Series con tendencia y estacionalidad (Alisado)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-08-Tema8.html">
+ <span class="dropdown-text">Tema 8: Series con tendencia y estacionalidad (Arima)</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Ejemplo de aplicación</li>
+        <li>
+    <a class="dropdown-item" href="./03-10-Ejemplo1.html">
+ <span class="dropdown-text">Ejemplo: Descriptiva</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-11-Ejemplo2.html">
+ <span class="dropdown-text">Ejemplo: Métodos sencillos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-13-Ejemplo3.html">
+ <span class="dropdown-text">Ejemplo: Alisado exponencial</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-14-Ejemplo4.html">
+ <span class="dropdown-text">Ejemplo: Arima sin estacionalidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-15-Ejemplo5.html">
+ <span class="dropdown-text">Ejemplo: Arima con estacionalidad</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Otro ejemplo</li>
+        <li>
+    <a class="dropdown-item" href="./03-20-Ejemplo-Pasajeros.html">
+ <span class="dropdown-text">Ejemplo de Pasajeros</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-píldoras" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Píldoras</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-píldoras">    
+        <li>
+    <a class="dropdown-item" href="./04-01-Bootstrapping.html">
+ <span class="dropdown-text">Bootstrapping para IC</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-02-Multiples_CS.html">
+ <span class="dropdown-text">Múltiples componentes estacionales</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-03-Redes_neuronales.html">
+ <span class="dropdown-text">Predicción con Redes Neuronales</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-04-Series_acotadas.html">
+ <span class="dropdown-text">Series acotadas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-05-Valores_perdidos_Outliers.html">
+ <span class="dropdown-text">Valores perdidos y outliers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-06-Covid_Nacimientos.html">
+ <span class="dropdown-text">Efecto de la Covid-19 en Nacimientos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-07-Combinando_predicciones.html">
+ <span class="dropdown-text">Combinación de predicciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-08-Series_interrumpidas.html">
+ <span class="dropdown-text">Series interrumpidas</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./05-Recursos-R.html"> 
+<span class="menu-text">Recursos de la asignatura</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./06-Evaluacion_Continua.html"> 
+<span class="menu-text">Evaluacion Continua</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-más" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Más</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-más">    
+        <li class="dropdown-header">R</li>
+        <li>
+    <a class="dropdown-item" href="https://cran.r-project.org">
+ <span class="dropdown-text">Dónde está R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://rstudio.com">
+ <span class="dropdown-text">Donde está RStudio</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Markdown</li>
+        <li>
+    <a class="dropdown-item" href="https://bookdown.org/yihui/rmarkdown/">
+ <span class="dropdown-text">Markdown</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://rmarkdown.rstudio.com/lesson-1.html">
+ <span class="dropdown-text">R Markdown</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf">
+ <span class="dropdown-text">R Markdown (pdf)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://quarto.org/docs/tools/rstudio.html">
+ <span class="dropdown-text">Quatro</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Otros</li>
+        <li>
+    <a class="dropdown-item" href="https://www.r-bloggers.com">
+ <span class="dropdown-text">Blog sobre R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://bookdown.org">
+ <span class="dropdown-text">Libros online que debes conocer</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Múltiples componentes estacionales</h1>
+<p class="subtitle lead">Previsión con Datos Temporales (GBIA)</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Iván Arribas (Depto. Análisis Económico. Universitat de València) </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><br>
+<br>
+</p>
+<section id="antecedentes" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Antecedentes</h1>
+<p>Durante el curso hemos estudiado series con estructura estacional simple como diaria o mensual. Sin embargo, las series con fechado de alta frecuencia pueden mostrar una estructura estacional mucho más compleja. Por ejemplo, para la serie de consumo eléctrico por hora tenemos tres estacionalidades: la que hay dentro del día, la que tiene lugar en una semana, y la estacionalidad anual.</p>
+<p>Con la capacidad actual de recogida de información y almacenamiento, las series con fechado de alta frecuencia y con estacionalidad múltiple son cada vez más habituales, pero los métodos que hemos visto no son adecuados para su ajuste y predicción.</p>
+<p>No siempre es necesario considerar todas las <em>estacionalidades</em> de una serie. Por ejemplo la serie de temperaturas por hora previsiblemente no tendrá estacionalidad semanal; y para una serie con fechado horario para la que se dispone información durante 90 días se debe ignorar la estacionalidad anual.</p>
+<p>Vamos a aplicar a la serie de consumo de electricidad en España algunos de los modelos que posibilitan estimar y predecir series con múltiple estacionalidad, pero sin entrar en el detalle de los modelos matemáticos subyacentes.</p>
+</section>
+<section id="aplicación" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Aplicación</h1>
+<p>La <a href="#fig-Electricidad" class="quarto-xref">Figura&nbsp;1</a> muestra el consumo eléctrico en España en GW para las cuatro semanas de febrero de 2021. Observa que para fechar la serie con doble estacionalidad se usa la función <code>msts</code> (<em>Multi-Seasonal Time Series</em>) en lugar de <code>ts</code>.</p>
+<p>Hay una fuerte componente estacional diaria de orden <span class="math inline">\(24\)</span> con dos picos de consumo, uno hacia las dos del mediodía y otro hacia las nueve de la tarde; y dos valles, uno hacia las cinco de la madrugada (muy acusado) y otro hacia las seis de la tarde. Además, hay otra componente estacional semanal de orden <span class="math inline">\(24 \times 7 = 168\)</span>, donde el consumo es alto de lunes a viernes, algo mas reducido el sábado y aún menor el domingo.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>electricidad <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">"./series/Consumo por hora.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>electricidad <span class="ot">&lt;-</span> <span class="fu">msts</span>(electricidad[, <span class="dv">2</span>]<span class="sc">/</span><span class="dv">1000</span> , </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">seasonal.periods =</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="dv">24</span><span class="sc">*</span><span class="dv">7</span>), </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">start =</span> <span class="dv">1</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(electricidad) <span class="sc">+</span> </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"GW"</span>) <span class="sc">+</span> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Semanas"</span>) <span class="sc">+</span> </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">4</span>, <span class="at">by =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-Electricidad" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-Electricidad-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-02-Multiples_CS_files/figure-html/fig-Electricidad-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-Electricidad-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;1: Consumo eléctrico por hora en febrero de 2021
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<section id="descomposición" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="descomposición">Descomposición</h2>
+<p>Podemos descomponer la serie de forma análoga a como se hacia para series con una componente estacional usando la función <code>mstl</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>descomposicion <span class="ot">&lt;-</span> <span class="fu">mstl</span>(electricidad)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(descomposicion) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-ElectricidadDes" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ElectricidadDes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-02-Multiples_CS_files/figure-html/fig-ElectricidadDes-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ElectricidadDes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2: Descomposición de Consumo eléctrico por hora
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>En la <a href="#fig-ElectricidadDes" class="quarto-xref">Figura&nbsp;2</a> aparecen los mismos paneles que has visto en el Tema 2 –datos originales, tendencia y residuo–, más los dos paneles correspondientes a las dos componentes estacionales, de orden 24 y 168 (<em>Seasonal24</em> y <em>Seasonal168</em>).</p>
+<p>Para poder interpretar adecuadamente cada serie hay que fijarse en la escala de los ejes verticales. La tendencia apenas cambia en el periodo de análisis. Las dos componentes estacionales oscilan sobre un rango de valores mayor. Dentro de cada día el consumo de electricidad oscila aproximadamente 20 GW entre las horas pico y las valle (<em>Seasonal24</em>): en los picos se consumen unos 7.5 GW más que la media diaria, y en los valles unos 12.5 GW menos que la media diaria. Por otro lado, el rango de variación semanal en el consumo también es de aproximadamente 20 GW (<em>Seasonal168</em>): de lunes a viernes se consumen como máximo unos 5 GW más que la media semanal y los domingo unos 15 GW menos.</p>
+<p>Vamos a mostrar un detalle de la componente estacional diaria, semanal y su composición para la primera semana de la serie (véase <a href="#fig-ElectricidadCS" class="quarto-xref">Figura&nbsp;3</a>).</p>
+<div class="cell" data-layout-nrow="3" data-layout-align="center">
+<div id="fig-ElectricidadCS" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ElectricidadCS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-ElectricidadCS" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-ElectricidadCS-1" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-ElectricidadCS-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-02-Multiples_CS_files/figure-html/fig-ElectricidadCS-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-ElectricidadCS">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ElectricidadCS-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Componente estacional diaria
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-ElectricidadCS" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-ElectricidadCS-2" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-ElectricidadCS-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-02-Multiples_CS_files/figure-html/fig-ElectricidadCS-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-ElectricidadCS">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ElectricidadCS-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Componente estacional semanal
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-ElectricidadCS" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-ElectricidadCS-3" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-ElectricidadCS-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-02-Multiples_CS_files/figure-html/fig-ElectricidadCS-3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" data-ref-parent="fig-ElectricidadCS">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ElectricidadCS-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Componente estacional diaria + semanal
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ElectricidadCS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3: Componentes estacionales para Consumo eléctrico
+</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="predicción-a-partir-de-la-descomposición-y-alisado-exponencial" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="predicción-a-partir-de-la-descomposición-y-alisado-exponencial">Predicción a partir de la descomposición y Alisado exponencial</h2>
+<p>Existen varios métodos para poder estimar series con estacionalidad múltiple. Uno de los más sencillos consiste en descomponer de la serie. Después, predecir las componentes estacionales por simple repetición y predecir la componente de la tendencia usando Alisado exponencial. En último lugar, se combinan la predicción de la tendencia con las predicciones de las estacionalidades para obtener una predicción de la serie.</p>
+<p>La función <code>stlf</code> hace todas estas operaciones de forma automática. Por defecto la tendencia se predice usando Alisado exponencial (“ets”), pero con el argumento <code>method</code> se pueden especificar otros modelos alternativos, “arima”, “naive” o “rwdrift”.</p>
+<p>En la <a href="#fig-ElectricidadPre" class="quarto-xref">Figura&nbsp;4</a> se muestra el resultado de aplicar <code>stlf</code> a la serie de consumo eléctrica. La línea negra representa la serie y la línea azul su predicción para las dos semanas siguientes (dos primeras semanas de marzo de 2021). El título por defecto de la figura indica que la tendencia de la serie se ha ajustado usando la función <code>ets</code> y presenta una pendiente aditiva amortiguada y error multiplicativo.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pdatos_stfl <span class="ot">&lt;-</span> <span class="fu">stlf</span>(electricidad)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(pdatos_stfl, <span class="at">PI =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"GW"</span>) <span class="sc">+</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Semanas"</span>) <span class="sc">+</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">7</span>, <span class="at">by =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-ElectricidadPre" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ElectricidadPre-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-02-Multiples_CS_files/figure-html/fig-ElectricidadPre-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ElectricidadPre-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4: Consumo eléctrico y predicción. Descomposición + Alisado
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="predicción-a-partir-de-asilado-exponencial-y-series-de-furier" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="predicción-a-partir-de-asilado-exponencial-y-series-de-furier">Predicción a partir de Asilado Exponencial y series de Furier</h2>
+<p>Uno de los inconvenientes del método visto es que estima todos los elementos de cada componente estacional (<span class="math inline">\(24 + 168\)</span> elementos en nuestro ejemplo) como si fueran independientes, sin tener en cuenta que, por lo general, evolucionan siguiendo una suave curva. Véase en el panel (a) de la <a href="#fig-ElectricidadCS" class="quarto-xref">Figura&nbsp;3</a> la curva que sigue la estacionalidad diaria, donde la componente de una hora determinada está muy relacionada con la componente de la hora precedente y posterior.</p>
+<p>Algunos métodos alternativos de predicción usan la dependencia observada entre los elementos de una componente estacional para ajustarlos a una curva paramétrica, por ejemplo funciones trigonométricas o series de Fourier.</p>
+<p>Entre los métodos que usan funciones trigonométricas está el implementado en <span class="citation" data-cites="Livera11">Livera, Hyndman, and Snyder (<a href="#ref-Livera11" role="doc-biblioref">2011</a>)</span>. El método de estimación que emplean estos autores es complejo, requiere tiempo de computación y no siempre el ajuste obtenido es el más adecuado, así que los resultados pueden ser en ocasiones elevados.</p>
+<p>Veamos un ejemplo de la implementación de este método con la función <code>tbats</code>. La <a href="#fig-ElectricidadPre2" class="quarto-xref">Figura&nbsp;5</a> muestra la predicción para dos semanas.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>datos_tbats <span class="ot">&lt;-</span> <span class="fu">tbats</span>(electricidad)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>pdatos_tbats <span class="ot">&lt;-</span> <span class="fu">forecast</span>(datos_tbats, </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">h =</span> <span class="dv">14</span> <span class="sc">*</span> <span class="dv">24</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">level =</span> <span class="dv">95</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(pdatos_tbats, <span class="at">PI =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"GW"</span>) <span class="sc">+</span> </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Semanas"</span>) <span class="sc">+</span> </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">7</span>, <span class="at">by =</span> <span class="dv">1</span>))</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>(tiempo <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>() <span class="sc">-</span> tmp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time difference of 35.48402 secs</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-ElectricidadPre2" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ElectricidadPre2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-02-Multiples_CS_files/figure-html/fig-ElectricidadPre2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ElectricidadPre2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;5: Consumo eléctrico y predicción. Ajuste de las componentes estacionales por funciones trigonométricas
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><br>
+</p>
+<p>El título de la figura indica el modelo TBATS estimado. Su interpretación precisa la podéis encontrar en <span class="citation" data-cites="Livera11">Livera, Hyndman, and Snyder (<a href="#ref-Livera11" role="doc-biblioref">2011</a>)</span>. Observa que la estimación del modelo ha requerido de 35 segundos.</p>
+<p>Entre los métodos que involucran series de Fourier una propuesta reciente es el modelo Prophet, disponible a través del paquete <code>fable.prophet</code>. Este modelo fue introducido por Facebook (<span class="citation" data-cites="Taylor18">Taylor and Letham (<a href="#ref-Taylor18" role="doc-biblioref">2018</a>)</span>) originalmente para pronosticar datos diarios con estacionalidad semanal y anual, además de efectos calendario. Posteriormente se amplió para cubrir más tipos de datos estacionales.</p>
+<p><br>
+<br>
+<br>
+<br>
+</p>
+
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Livera11" class="csl-entry" role="listitem">
+Livera, Alysha M. De, Rob J. Hyndman, and Ralph D. Snyder. 2011. <span>“Forecasting Time Series with Complex Seasonal Patterns Using Exponential Smoothing.”</span> <em>Journal of the American Statistical Association</em> 106 (496): 1513–27. <a href="http://www.jstor.org/stable/23239555">http://www.jstor.org/stable/23239555</a>.
+</div>
+<div id="ref-Taylor18" class="csl-entry" role="listitem">
+Taylor, Sean J., and Benjamin Letham. 2018. <span>“Forecasting at Scale.”</span> <em>The American Statistician</em> 72 (1): 37–45. <a href="https://doi.org/10.1080/00031305.2017.1380080">https://doi.org/10.1080/00031305.2017.1380080</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2024, Iván Arribas. If you find any bugs please report them to <a href="mailto:ivan.arribas@uv.es">ivan.arribas@uv.es</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>This page is built with <a href="https://quarto.org/">Quarto</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
