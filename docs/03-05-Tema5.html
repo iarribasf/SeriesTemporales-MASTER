@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Iván Arribas (Depto. Análisis Económico. Universitat de València)">
+
+<title>Predicción con Datos Temporales - Evaluación de las predicciones</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Predicción con Datos Temporales</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./01-Guia-curso.html"> 
+<span class="menu-text">Guía del curso</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./02-Logistica.html"> 
+<span class="menu-text">Logística</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-diapos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Diapos</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-diapos">    
+        <li class="dropdown-header">Teoría</li>
+        <li>
+    <a class="dropdown-item" href="./03-01-Tema1.html">
+ <span class="dropdown-text">Tema 1: Introducción</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-02-Tema2.html">
+ <span class="dropdown-text">Tema 2: Definición</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-03-Tema3.html">
+ <span class="dropdown-text">Tema 3: Métodos de predicción</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-04-Tema4.html">
+ <span class="dropdown-text">Tema 4: Series sin tendencia ni estacionalidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-05-Tema5.html">
+ <span class="dropdown-text">Tema 5: Evaluación de las predicciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-06-Tema6.html">
+ <span class="dropdown-text">Tema 6: Series sin tendencia y sin estacionalidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-07-Tema7.html">
+ <span class="dropdown-text">Tema 7: Series con tendencia y estacionalidad (Alisado)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-08-Tema8.html">
+ <span class="dropdown-text">Tema 8: Series con tendencia y estacionalidad (Arima)</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Ejemplo de aplicación</li>
+        <li>
+    <a class="dropdown-item" href="./03-10-Ejemplo1.html">
+ <span class="dropdown-text">Ejemplo: Descriptiva</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-11-Ejemplo2.html">
+ <span class="dropdown-text">Ejemplo: Métodos sencillos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-13-Ejemplo3.html">
+ <span class="dropdown-text">Ejemplo: Alisado exponencial</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-14-Ejemplo4.html">
+ <span class="dropdown-text">Ejemplo: Arima sin estacionalidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-15-Ejemplo5.html">
+ <span class="dropdown-text">Ejemplo: Arima con estacionalidad</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Otro ejemplo</li>
+        <li>
+    <a class="dropdown-item" href="./03-20-Ejemplo-Pasajeros.html">
+ <span class="dropdown-text">Ejemplo de Pasajeros</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-píldoras" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Píldoras</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-píldoras">    
+        <li>
+    <a class="dropdown-item" href="./04-01-Bootstrapping.html">
+ <span class="dropdown-text">Bootstrapping para IC</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-02-Multiples_CS.html">
+ <span class="dropdown-text">Múltiples componentes estacionales</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-03-Redes_neuronales.html">
+ <span class="dropdown-text">Predicción con Redes Neuronales</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-04-Series_acotadas.html">
+ <span class="dropdown-text">Series acotadas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-05-Valores_perdidos_Outliers.html">
+ <span class="dropdown-text">Valores perdidos y outliers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-06-Covid_Nacimientos.html">
+ <span class="dropdown-text">Efecto de la Covid-19 en Nacimientos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-07-Combinando_predicciones.html">
+ <span class="dropdown-text">Combinación de predicciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-08-Series_interrumpidas.html">
+ <span class="dropdown-text">Series interrumpidas</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./05-Recursos-R.html"> 
+<span class="menu-text">Recursos de la asignatura</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./06-Evaluacion_Continua.html"> 
+<span class="menu-text">Evaluacion Continua</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-más" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Más</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-más">    
+        <li class="dropdown-header">R</li>
+        <li>
+    <a class="dropdown-item" href="https://cran.r-project.org">
+ <span class="dropdown-text">Dónde está R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://rstudio.com">
+ <span class="dropdown-text">Donde está RStudio</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Markdown</li>
+        <li>
+    <a class="dropdown-item" href="https://bookdown.org/yihui/rmarkdown/">
+ <span class="dropdown-text">Markdown</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://rmarkdown.rstudio.com/lesson-1.html">
+ <span class="dropdown-text">R Markdown</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf">
+ <span class="dropdown-text">R Markdown (pdf)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://quarto.org/docs/tools/rstudio.html">
+ <span class="dropdown-text">Quatro</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Otros</li>
+        <li>
+    <a class="dropdown-item" href="https://www.r-bloggers.com">
+ <span class="dropdown-text">Blog sobre R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://bookdown.org">
+ <span class="dropdown-text">Libros online que debes conocer</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Índice</h2>
+   
+  <ul>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">1</span> Introducción</a></li>
+  <li><a href="#validación-por-conjunto-de-datos-de-entrenamiento-y-prueba" id="toc-validación-por-conjunto-de-datos-de-entrenamiento-y-prueba" class="nav-link" data-scroll-target="#validación-por-conjunto-de-datos-de-entrenamiento-y-prueba"><span class="header-section-number">2</span> Validación por conjunto de datos de entrenamiento y prueba</a>
+  <ul class="collapse">
+  <li><a href="#ejemplo-de-aplicación-a-la-serie-consumo-alimentarios-en-el-hogar-per-cápita" id="toc-ejemplo-de-aplicación-a-la-serie-consumo-alimentarios-en-el-hogar-per-cápita" class="nav-link" data-scroll-target="#ejemplo-de-aplicación-a-la-serie-consumo-alimentarios-en-el-hogar-per-cápita"><span class="header-section-number">2.1</span> Ejemplo de aplicación a la serie consumo alimentarios en el hogar per cápita</a>
+  <ul class="collapse">
+  <li><a href="#método-ingenuo-i" id="toc-método-ingenuo-i" class="nav-link" data-scroll-target="#método-ingenuo-i">Método Ingenuo I</a></li>
+  <li><a href="#modelo-arima" id="toc-modelo-arima" class="nav-link" data-scroll-target="#modelo-arima">Modelo Arima</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#origen-de-predicción-móvil" id="toc-origen-de-predicción-móvil" class="nav-link" data-scroll-target="#origen-de-predicción-móvil"><span class="header-section-number">3</span> Origen de predicción móvil</a>
+  <ul class="collapse">
+  <li><a href="#ejemplo-de-aplicación-a-la-serie-consumo-alimentarios-en-el-hogar-per-cápita-1" id="toc-ejemplo-de-aplicación-a-la-serie-consumo-alimentarios-en-el-hogar-per-cápita-1" class="nav-link" data-scroll-target="#ejemplo-de-aplicación-a-la-serie-consumo-alimentarios-en-el-hogar-per-cápita-1"><span class="header-section-number">3.1</span> Ejemplo de aplicación a la serie consumo alimentarios en el hogar per cápita</a>
+  <ul class="collapse">
+  <li><a href="#método-ingenuo-i-1" id="toc-método-ingenuo-i-1" class="nav-link" data-scroll-target="#método-ingenuo-i-1">Método Ingenuo I</a></li>
+  <li><a href="#modelo-arima-1" id="toc-modelo-arima-1" class="nav-link" data-scroll-target="#modelo-arima-1">Modelo Arima</a></li>
+  <li><a href="#comparación-entre-modelos" id="toc-comparación-entre-modelos" class="nav-link" data-scroll-target="#comparación-entre-modelos">Comparación entre modelos</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#aplicacion-al-número-de-defunciones-diarias-en-españa" id="toc-aplicacion-al-número-de-defunciones-diarias-en-españa" class="nav-link" data-scroll-target="#aplicacion-al-número-de-defunciones-diarias-en-españa"><span class="header-section-number">4</span> Aplicacion al número de defunciones diarias en España</a>
+  <ul class="collapse">
+  <li><a href="#validación-por-conjuntos-de-entrenamiento-y-prueba" id="toc-validación-por-conjuntos-de-entrenamiento-y-prueba" class="nav-link" data-scroll-target="#validación-por-conjuntos-de-entrenamiento-y-prueba"><span class="header-section-number">4.1</span> Validación por conjuntos de entrenamiento y prueba</a></li>
+  <li><a href="#origen-de-predicción-móvil-1" id="toc-origen-de-predicción-móvil-1" class="nav-link" data-scroll-target="#origen-de-predicción-móvil-1"><span class="header-section-number">4.2</span> Origen de predicción móvil</a></li>
+  </ul></li>
+  <li><a href="#resumen-de-los-comandos-utilizados" id="toc-resumen-de-los-comandos-utilizados" class="nav-link" data-scroll-target="#resumen-de-los-comandos-utilizados"><span class="header-section-number">5</span> Resumen de los comandos utilizados</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Evaluación de las predicciones</h1>
+<p class="subtitle lead">Previsión con Datos Temporales (GBIA)</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Iván Arribas (Depto. Análisis Económico. Universitat de València) </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><br>
+<br>
+</p>
+<section id="introducción" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introducción</h1>
+<p>Las medidas que hemos usado hasta ahora para valorar la calidad de los modelos son medidas de bondad de ajuste, es decir, medidas de la calidad de <strong>previsiones intramuestrales a un periodo vista</strong>: valoran en que medida los datos se ajustan a un modelo, pero no evalúan la precisión de la previsiones más allá del periodo muestral.</p>
+<p>En este tema vamos a ver dos metodologías que podemos usar para valorar la precisión o calidad de las <strong>previsiones extramuestrales</strong>, que es realmente lo que nos interesa. Estas dos metodologías están relacionadas con los métodos de <em>Conjunto de datos de entrenamiento y prueba</em> (<em>Training set/Test set</em>) y <em>Validación cruzada</em> (<em>Cross-validation</em>), pero adaptadas a datos temporales.</p>
+<p><br>
+<br>
+</p>
+</section>
+<section id="validación-por-conjunto-de-datos-de-entrenamiento-y-prueba" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Validación por conjunto de datos de entrenamiento y prueba</h1>
+<p>Vamos a estimar la calidad de las predicciones obteniendo medidas de error para <strong>previsiones extramuestrales a varios periodos vista</strong> usando la filosofía del <em>conjunto de datos de entrenamiento y prueba</em>.</p>
+<p>Dividimos la serie temporal <span class="math inline">\(\{y_t\}_{t=1}^T\)</span> en dos subseries. Los primeros datos <span class="math inline">\(\{y_t\}_{t=1}^{T_0}\)</span>, <span class="math inline">\(T_0 &lt; T\)</span>, se usarán para estimar el modelo (conjunto de entrenamiento); y los últimos datos <span class="math inline">\(\{y_t\}_{t={T_0+1}}^{T}\)</span> para calcular la precisión de las predicciones (conjunto de prueba).</p>
+<p>Esta metodología, muy efectiva para datos de corte transversal, genera dos problemas cuando se aplica a series temporales: <em>i</em>) el error obtenido es una mezcla de errores de predicción a diferentes horizontes temporales, difícil de interpretar; <em>ii</em>) los resultados dependen tremendamente del punto de corte temporal seleccionado <span class="math inline">\(T_0\)</span>.</p>
+<section id="ejemplo-de-aplicación-a-la-serie-consumo-alimentarios-en-el-hogar-per-cápita" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="ejemplo-de-aplicación-a-la-serie-consumo-alimentarios-en-el-hogar-per-cápita"><span class="header-section-number">2.1</span> Ejemplo de aplicación a la serie consumo alimentarios en el hogar per cápita</h2>
+<p>En el tema pasado vimos como predecir con diferentes metodologías el <strong>consumo alimentario en hogar per cápita</strong> (kg per cápita) en España, serie estacionaria anual de 1990 a 2023. Vamos a evaluar la calidad de las predicciones centrándonos en el método Ingenuo I y el modelo Arima.</p>
+<section id="método-ingenuo-i" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="método-ingenuo-i">Método Ingenuo I</h3>
+<p>Vamos a reservar, por ejemplo, las últimas 7 observaciones de la serie Alimentos (años 2017 a 2023) y ajustar el modelo con las restantes observaciones (años 1990 a 2016). Después, usaremos este modelo para calcular las predicciones a 7 años vista y compararlas con los valores reales de la serie.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>alimentospc <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">"./series/Alimentacionpc.csv"</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>alimentospc <span class="ot">&lt;-</span> <span class="fu">ts</span>(alimentospc, </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">start =</span> <span class="dv">1990</span>, </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">freq =</span> <span class="dv">1</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(alimentospc, </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">""</span>, </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">"Año"</span>, </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">ylab =</span> <span class="st">""</span>, </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">700</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="03-05-Tema5_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definimos las observaciones intra- y extramuestrales</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>AlimentospcIntra <span class="ot">&lt;-</span> <span class="fu">subset</span>(alimentospc, <span class="at">end =</span> <span class="fu">length</span>(alimentospc) <span class="sc">-</span> <span class="dv">7</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>AlimentospcExtra <span class="ot">&lt;-</span> <span class="fu">subset</span>(alimentospc, <span class="at">start =</span> <span class="fu">length</span>(alimentospc) <span class="sc">-</span> <span class="dv">6</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimamos el modelo con todos los datos menos los 7 ultimos y</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># predecimos los 7 años que hemos quitado de la serie </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>AlimentospcExtraPre <span class="ot">&lt;-</span> <span class="fu">naive</span>(AlimentospcIntra,  <span class="at">h =</span> <span class="dv">7</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Vemos la calidad del ajuste. Primero la predicción y luego los datos reales</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">accuracy</span>(AlimentospcExtraPre, AlimentospcExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>                       ME     RMSE      MAE         MPE     MAPE     MASE
+Training set   0.03203846 14.33568 10.52073 -0.02070288 1.655404 1.000000
+Test set     -16.35414286 40.08671 30.05100 -3.05709480 5.091292 2.856361
+                    ACF1 Theil's U
+Training set -0.04888459        NA
+Test set      0.29319433   1.10547</code></pre>
+</div>
+</div>
+<p>Atendiendo al MAPE se tiene que el error de <strong>previsión a un periodo vista</strong> en el <strong>periodo intramuestral</strong> de <strong>1990 a 2016</strong> es del 1.7%; mientras que el error de <strong>previsión a largo plazo</strong> en el <strong>periodo extramuestral</strong> de <strong>2017 a 2023</strong> es del 5.1%. Ademas, para el periodo extramuestral el error medio (ME) es negativo y muy elevado, un indicativo de que las previsiones están segadas (sobrestiman la realidad). En resumen, la calidad del modelo se deteriora muy rápidamente en cuanto nos salimos de las condiciones óptimas.</p>
+<p>La <a href="#fig-alimentostraintest1" class="quarto-xref">Figura&nbsp;1</a> puede ayudar a entender este proceso de validación:</p>
+<ul>
+<li>La línea de puntos vertical separa el periodo muestral (1990-2016) usado para estimar el modelo, del periodo extramuestral (2017-2023) usado sólo para hacer las previsiones.</li>
+<li>La serie Alimentación aparece como una línea sólida en negro, desde 1990 hasta 2023.</li>
+<li>La previsión <em>intra</em>muestral (a un periodo vista) de la serie aparece como una línea azul.</li>
+<li>La línea en rojo es la previsión <em>extra</em>muestral a largo plazo. Observa que excepto para 2020 todas las previsiones están por encima del valor real de la serie.</li>
+<li>Al lado de cada previsión (intra y extramuestral) se ha indicado el error estimado (MAPE).</li>
+</ul>
+<p>Claramente estos resultados dependen del punto de corte seleccionado. En este caso, al dejar fuera del periodo de estimación la pandemia y la posterior caída en el consumo de alimento en el hogar, las previsiones resultan muy desacertadas.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-alimentostraintest1" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-alimentostraintest1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-05-Tema5_files/figure-html/fig-alimentostraintest1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-alimentostraintest1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;1: Precisión en la predicción de Alimentos por el método Ingenuo I
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importancia del punto de corte
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Prueba a reservar las últimas 6 observaciones de la serie Alimentación y repite el análisis.</p>
+</div>
+</div>
+</section>
+<section id="modelo-arima" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="modelo-arima">Modelo Arima</h3>
+<p>Ahora vamos a repetir el ejercicio, pero usando el modelo Arima estimado para la serie Alimentos en el tema previo, que recordemos era ARIMA(1, 0, 0) con constante e intervención. Como la intervención tiene lugar durante el periodo extramuestral, las variables ficticias valen cero durante todo el rango intramuestral y deben ser excluidas del análisis.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definimos las observaciones intra- y extramuestrales</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>AlimentospcIntra <span class="ot">&lt;-</span> <span class="fu">subset</span>(alimentospc, <span class="at">end =</span> <span class="fu">length</span>(alimentospc) <span class="sc">-</span> <span class="dv">7</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>AlimentospcExtra <span class="ot">&lt;-</span> <span class="fu">subset</span>(alimentospc, <span class="at">start =</span> <span class="fu">length</span>(alimentospc) <span class="sc">-</span> <span class="dv">6</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimamos el modelo con todos los datos menos los 7 ultimos y</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># predecimos los 7 años que hemos quitado de la serie </span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>ariAlimentospcIntra <span class="ot">&lt;-</span> <span class="fu">Arima</span>(AlimentospcIntra, </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">include.constant =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>ariAlimentospcIntraPre <span class="ot">&lt;-</span> <span class="fu">forecast</span>(ariAlimentospcIntra,  <span class="at">h =</span> <span class="dv">7</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Vemos la calidad del ajuste. Primero la predicción y luego los datos reales</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">accuracy</span>(ariAlimentospcIntraPre, AlimentospcExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>                      ME     RMSE      MAE       MPE     MAPE     MASE
+Training set   0.3696849 12.79181  9.36163  0.016599 1.476634 0.889827
+Test set     -25.2641938 45.08782 36.16203 -4.533005 6.151504 3.437217
+                   ACF1 Theil's U
+Training set 0.09289229        NA
+Test set     0.30152455  1.240974</code></pre>
+</div>
+</div>
+<p>Ahora el error de ajuste o previsión a un periodo vista intramuestral es del 1.5 %; mientras que el error de previsión extramuestral es del 6.2 %. De nuevo, las previsiones están segadas y sobrestiman la realidad (véase <a href="#fig-alimentostraintest2" class="quarto-xref">Figura&nbsp;2</a>).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-alimentostraintest2" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-alimentostraintest2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-05-Tema5_files/figure-html/fig-alimentostraintest2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-alimentostraintest2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2: Precisión en la predicción de Alimentos por el método Arima
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>En el tema previo vimos que Arima ajustaba mejor que el método Ingenuo I gracias a poder incorporar la intervención. En este ejercicio, al quedar el periodo de intervención fuera del periodo intramuestal de ajuste, ambos modelos tienen una calidad de ajuste muy similar (1.7 para Ingenuo I y 1.5 para Arima). Sin embargo, a la hora de predecir, el método más sencillo resulta algo mejor, con un error 1 p.p inferior al del método Arima.</p>
+<p>En cualquier caso, la precisión obtenida es una media de errores desde un periodo vista hasta 7 periodos vista que no permite saber como crece el error conforme se incrementa el horizonte temporal de previsión. Por ejemplo, un error medio del 5% podría ser el resultado de errores inferiores al 2% para previsiones a uno o dos periodos vista junto con errores por encima del 10% para previsiones a 6 o 7 periodos vista.</p>
+<p><br>
+<br>
+</p>
+</section>
+</section>
+</section>
+<section id="origen-de-predicción-móvil" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Origen de predicción móvil</h1>
+<p>Veamos ahora una técnica, basada en el concepto de validación cruzada que permite obtener de forma individualizada los errores de previsión extramuestral a un periodo vista, a dos periodos vista, etc.</p>
+<p>Supongamos que para estimar el modelo se necesita un mínimo de <span class="math inline">\(k\)</span> observaciones y que se desea predecir hasta un horizonte temporal <span class="math inline">\(h\)</span>.</p>
+<ul>
+<li><p>Seleccionamos las observaciones <span class="math inline">\(1,2,...,k\)</span> para estimar el modelo y predecimos las observaciones desde <span class="math inline">\(k+1\)</span> hasta <span class="math inline">\(k+h\)</span>. Tenemos, por tanto, <span class="math inline">\(h\)</span> predicciones.</p></li>
+<li><p>Calculamos el error de predicción para las predicciones desde <span class="math inline">\(k+1\)</span> hasta <span class="math inline">\(k+h\)</span>. Tenemos <span class="math inline">\(h\)</span> errores, el primero a un periodo vista, el segundo a dos periodos vista y el último a <span class="math inline">\(h\)</span> perriodos vista.</p></li>
+<li><p>Repetimos este proceso desplazando el número de observaciones seleccionadas para la estimación un periodo adelante. Es decir, ahora usamos las observaciones <span class="math inline">\(2,3,...,k+1\)</span> para estimar el modelo, predecimos las observaciones desde <span class="math inline">\(k+2\)</span> hasta <span class="math inline">\(k+1+h\)</span> y calculamos el error de predicción.</p></li>
+<li><p>Iteramos el proceso, desplazando cada vez las observaciones de la estimación un periodo adelante.</p></li>
+<li><p>En general para <span class="math inline">\(i=0,1,...,T-k-h\)</span>, donde <span class="math inline">\(T\)</span> es el número total de observaciones:</p>
+<ol type="1">
+<li>Seleccionamos las observaciones <span class="math inline">\(i+1,i+2,...,i+k\)</span> para estimar el modelo.</li>
+<li>Predecimos las observaciones desde <span class="math inline">\(i+k+1\)</span> hasta <span class="math inline">\(i+k+h\)</span>.</li>
+<li>Calculamos el error de predicción para las observaciones desde <span class="math inline">\(i+k+1\)</span> hasta <span class="math inline">\(i+k+h\)</span>.</li>
+<li>Para cada horizonte temporal de predicción se calcula la medida de error deseada.</li>
+</ol></li>
+</ul>
+<p><br>
+</p>
+<div id="fig-rollingwindows" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rollingwindows-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./imagenes/RollingWindows.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rollingwindows-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3: Descripción del proceso de origen de predicción móvil
+</figcaption>
+</figure>
+</div>
+<p>Este procedimiento se denomina <strong>origen de predicción móvil</strong>, en inglés <em>rolling forecast origin</em> o <em>rolling windows</em>.</p>
+<p>Cuando se aplica esta metodología hay que tener en cuenta que los resultados pueden depender del número <span class="math inline">\(k\)</span> de datos usados para la estimación del modelo.</p>
+<section id="ejemplo-de-aplicación-a-la-serie-consumo-alimentarios-en-el-hogar-per-cápita-1" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="ejemplo-de-aplicación-a-la-serie-consumo-alimentarios-en-el-hogar-per-cápita-1"><span class="header-section-number">3.1</span> Ejemplo de aplicación a la serie consumo alimentarios en el hogar per cápita</h2>
+<p>Vamos a aplicar la metodología previa a la serie anual de Alimentos. Asumimos que se precisan quince años para hacer una buena estimación, <span class="math inline">\(k=15\)</span>, y que el horizonte temporal es de cinco años, <span class="math inline">\(h = 5\)</span>. Volveremos a comparar los métodos Ingenuo I y Arima (sin considerar la intervención). Como medida de error de predicción vamos a considerar el MAPE.</p>
+<section id="método-ingenuo-i-1" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="método-ingenuo-i-1">Método Ingenuo I</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">15</span>                   <span class="co"># Minimo numero de datos para estimar</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="dv">5</span>                    <span class="co"># Horizonte de las prediciciones</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>TT <span class="ot">&lt;-</span> <span class="fu">length</span>(alimentospc) <span class="co"># Longitud serie</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> TT <span class="sc">-</span> k <span class="sc">-</span> h           <span class="co"># Total de estimaciones</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>mapeIng <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, s <span class="sc">+</span> <span class="dv">1</span>, h)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>s) {</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  train.set <span class="ot">&lt;-</span> <span class="fu">subset</span>(alimentospc, <span class="at">start =</span> i <span class="sc">+</span> <span class="dv">1</span>, <span class="at">end =</span> i <span class="sc">+</span> k)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  test.set <span class="ot">&lt;-</span>  <span class="fu">subset</span>(alimentospc, <span class="at">start =</span> i <span class="sc">+</span> k <span class="sc">+</span> <span class="dv">1</span>, <span class="at">end =</span> i <span class="sc">+</span> k <span class="sc">+</span> h)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  fcast <span class="ot">&lt;-</span> <span class="fu">naive</span>(train.set, <span class="at">h =</span> h)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  mapeIng[i <span class="sc">+</span> <span class="dv">1</span>,] <span class="ot">&lt;-</span> <span class="dv">100</span><span class="sc">*</span><span class="fu">abs</span>(test.set <span class="sc">-</span> fcast<span class="sc">$</span>mean)<span class="sc">/</span>test.set</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>La matriz <code>mapeIng</code> contiene los errores de previsión extramuestral, donde cada columna corresponde a un horizonte temporal de previsión diferente. Ahora vamos a calcular el error medio por columna.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mapeIngMedia <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(mapeIng)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(mapeIngMedia, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.11 2.39 2.78 3.41 4.24</code></pre>
+</div>
+</div>
+<p>Para evitar el efecto de los altos errores que se darán cuando el rango de previsión alcanza los últimos años, se puede calcular el <em>error mediano</em> en lugar del error medio. En este caso no hay una función directa en <code>R</code> y usaremos <code>apply</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mapeIngMediana <span class="ot">&lt;-</span> <span class="fu">apply</span>(mapeIng, <span class="at">MARGIN =</span> <span class="dv">2</span>, <span class="at">FUN =</span> median)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(mapeIngMediana, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.94 2.07 2.37 2.86 3.85</code></pre>
+</div>
+</div>
+<p>El error de previsión extramuestral (medio o mediano) crece gradualmente con el horizonte de previsión. Para el primer año el error de predicción se mantiene en un moderado 1%, para el segundo año de predicción el MAPE salta a más del 2% y para los restantes años sigue creciendo. Sin embargo, incluso para 5 años vista el error se mantiene razonablemente bajo. En todos los casos, el error mediano es menor que el medio al ser el primero robusto frente a años atípicos.</p>
+</section>
+<section id="modelo-arima-1" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="modelo-arima-1">Modelo Arima</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">15</span>                   <span class="co"># Minimo numero de datos para estimar</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="dv">5</span>                    <span class="co"># Horizonte de las prediciciones</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>TT <span class="ot">&lt;-</span> <span class="fu">length</span>(alimentospc) <span class="co"># Longitud serie</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> TT <span class="sc">-</span> k <span class="sc">-</span> h           <span class="co"># Total de estimaciones</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>mapeAri <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, s <span class="sc">+</span> <span class="dv">1</span>, h)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>s) {</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  train.set <span class="ot">&lt;-</span> <span class="fu">subset</span>(alimentospc, <span class="at">start =</span> i <span class="sc">+</span> <span class="dv">1</span>, <span class="at">end =</span> i <span class="sc">+</span> k)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  test.set <span class="ot">&lt;-</span>  <span class="fu">subset</span>(alimentospc, <span class="at">start =</span> i <span class="sc">+</span> k <span class="sc">+</span> <span class="dv">1</span>, <span class="at">end =</span> i <span class="sc">+</span> k <span class="sc">+</span> h)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">Arima</span>(train.set, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="at">include.constant =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  fcast<span class="ot">&lt;-</span> <span class="fu">forecast</span>(fit, <span class="at">h =</span> h)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  mapeAri[i <span class="sc">+</span> <span class="dv">1</span>,] <span class="ot">&lt;-</span> <span class="dv">100</span><span class="sc">*</span><span class="fu">abs</span>(test.set <span class="sc">-</span> fcast<span class="sc">$</span>mean)<span class="sc">/</span>test.set</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>mapeAriMedia <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(mapeAri)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(mapeAriMedia, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.31 2.44 2.63 3.48 4.29</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mapeAriMediana <span class="ot">&lt;-</span> <span class="fu">apply</span>(mapeAri, <span class="at">MARGIN =</span> <span class="dv">2</span>, <span class="at">FUN =</span> median)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(mapeAriMediana, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.39 2.54 2.76 3.20 3.03</code></pre>
+</div>
+</div>
+<p>Como en el caso previo, el error de previsión extramuestral (medio o mediano) crece gradualmente con el horizonte de previsión, desde el 1.3% para previsiones a un año vista hasta el 4% de media o 3% de mediana para previsiones a 5 años vista. En este caso la diferencia entre el error medio y mediano solo es notable para para previsiones a 5 años vista.</p>
+</section>
+<section id="comparación-entre-modelos" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="comparación-entre-modelos">Comparación entre modelos</h3>
+<p>La mejor forma de comparar la calidad en las previciones extramuestrales de diferentes métodos es gráficamente. La <a href="#fig-comparaOPM1" class="quarto-xref">Figura&nbsp;4</a> muestra el error mediano obtenido con los métodos Ingenuo I y Arima según el horizonte temporal. Se ha elegido el error mediano para evitar el efecto de la pandemia.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">y =</span> mapeIngMediana, <span class="at">colour =</span> <span class="st">"blue"</span>)) <span class="sc">+</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">y =</span> mapeAriMediana, <span class="at">colour =</span> <span class="st">"red"</span>)) <span class="sc">+</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"%"</span>) <span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_discrete</span>(<span class="at">name =</span> <span class="st">"Método"</span>, </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Ingenuo I"</span>, <span class="st">"Arima"</span>)) <span class="sc">+</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="fu">c</span>(<span class="fl">0.2</span>,<span class="fl">0.8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-comparaOPM1" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-comparaOPM1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-05-Tema5_files/figure-html/fig-comparaOPM1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-comparaOPM1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4: Comparación de errores medianos (MAPE)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>El método Ingenuo I ofrece predicciones más precisas que el método Arima y es mucho más rápido de aplicar. Solo para predicciones a 5 años vista el método Arima supera en calidad de predicciones al método Ingenuo I</p>
+<p><br>
+<br>
+</p>
+</section>
+</section>
+</section>
+<section id="aplicacion-al-número-de-defunciones-diarias-en-españa" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Aplicacion al número de defunciones diarias en España</h1>
+<p>Vamos a aplicar los dos procedimientos para la evaluación de las predicciones a la serie Defunciones, número de defunciones diarias en España desde el 1 de enero de 2022 hasta el 31 de diciembre de 2023, 730 datos. Esta serie está disponible en Ministerio de Ciencia, Innovación y Universidades.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>defunciones <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">"./series/Defunciones.csv"</span>, </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>defunciones <span class="ot">&lt;-</span> <span class="fu">ts</span>(defunciones, </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">start =</span> <span class="dv">1</span>, </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">freq =</span> <span class="dv">1</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(defunciones, </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">main =</span> <span class="st">""</span>, </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">"Día"</span>, </span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">ylab =</span> <span class="st">""</span>, </span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">500</span>, <span class="dv">2000</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="03-05-Tema5_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>En este caso, compararemos los métodos de Alisado y Arima, que ofrecían, según vimos en el tema 4 una calidad de ajuste muy similar. Recordemos que el modelo de Alisado que mejor ajustaba a la serie tenía error multiplicativo (<code>model = "MNN"</code>) y que el mejor modelo Arima era ARIMA(2, 0, 0) con constante y sin ninguna intervención.</p>
+<section id="validación-por-conjuntos-de-entrenamiento-y-prueba" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="validación-por-conjuntos-de-entrenamiento-y-prueba"><span class="header-section-number">4.1</span> Validación por conjuntos de entrenamiento y prueba</h2>
+<p>Vamos a reservar en este caso las dos últimas semanas de la serie (14 días). Usaremos los modelos ya identificados para calcular las predicciones a 14 días vista y después compararlas con los valores reales de la serie.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definimos las observaciones intra- y extramuestrales</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>DefuncionesIntra <span class="ot">&lt;-</span> <span class="fu">subset</span>(defunciones, <span class="at">end =</span> <span class="fu">length</span>(defunciones) <span class="sc">-</span> <span class="dv">14</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>DefuncionesExtra <span class="ot">&lt;-</span> <span class="fu">subset</span>(defunciones, <span class="at">start =</span> <span class="fu">length</span>(defunciones) <span class="sc">-</span> <span class="dv">13</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimamos el modelo de Alisado MNN y predecimos</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">ets</span>(DefuncionesIntra, </span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">model =</span> <span class="st">"MNN"</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>DefuncionesExtraPreAli <span class="ot">&lt;-</span> <span class="fu">forecast</span>(fit, <span class="at">h =</span> <span class="dv">14</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimamos el modelo de Arima(2, 0 ,0) y predecimos</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">Arima</span>(DefuncionesIntra, </span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span> ,<span class="dv">0</span>), </span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">include.constant =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>DefuncionesExtraPreAri <span class="ot">&lt;-</span> <span class="fu">forecast</span>(fit, <span class="at">h =</span> <span class="dv">14</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Vemos la calidad del ajuste. Primero la predicción y luego los datos reales</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="fu">accuracy</span>(DefuncionesExtraPreAli, DefuncionesExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                      ME      RMSE       MAE        MPE      MAPE      MASE
+Training set  -0.5148402  65.32886  52.24719 -0.2849683  4.353032 0.9374338
+Test set     154.9742064 180.11936 154.97421 10.3916378 10.391638 2.7805912
+                  ACF1 Theil's U
+Training set 0.2532441        NA
+Test set     0.7167275  3.347972</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">accuracy</span>(DefuncionesExtraPreAri, DefuncionesExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                      ME      RMSE       MAE        MPE      MAPE      MASE
+Training set  -0.4409052  65.95095  52.97001 -0.3297377  4.412686 0.9504029
+Test set     200.0817499 223.15146 200.08175 13.5037939 13.503794 3.5899235
+                   ACF1 Theil's U
+Training set -0.0257479        NA
+Test set      0.7260915   4.16499</code></pre>
+</div>
+</div>
+<p>Atendiendo al MAPE se tiene que el error de previsión intramuestral a un periodo vista es idéntico para ambos modelos, 4.4%. A la hora de comparar la precisión de la previsión extramuestral a largo plazo, el modelo de Alisado, con un error del 10.4%, muestra ser superior al modelo Arima, con un error del 13.5%. Es decir, aunque por calidad de ajuste ambos modelos son equivalentes, el método de Alisado predice en promedio mejor. Otra conclusión es que al pasar de ajuste a predicción, hay una pérdida de calidad muy notable. Si en lugar del MAPE usamos el RMSE o el MAE, obtenemos los mismos resultados.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ComparaDefunciones1" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ComparaDefunciones1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-05-Tema5_files/figure-html/fig-ComparaDefunciones1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ComparaDefunciones1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;5: Previsión extramuestral de Defunciones por los métodos de Alisado y Arima
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>La <a href="#fig-ComparaDefunciones1" class="quarto-xref">Figura&nbsp;5</a> muestra que ambos métodos ofrecen previsiones muy inferiores al número real de defunciones. Esto es así, porque a partir del punto de corte las temperaturas fueron menores que las observadas previamente. La entrada del invierno en el periodo extramuestral y la caída de la temperatura ha provocado un aumento de las defunciones que ningún modelo ha capturado.</p>
+</section>
+<section id="origen-de-predicción-móvil-1" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="origen-de-predicción-móvil-1"><span class="header-section-number">4.2</span> Origen de predicción móvil</h2>
+<p>Ahora aplicaremos la metodología de origen de predicción móvil a la serie de Defunciones. En este caso se asumirá que se precisan veinte semanas para hacer una buena estimación, <span class="math inline">\(k = 140\)</span>, y que el horizonte temporal es de 2 semanas, <span class="math inline">\(h = 14\)</span>. La siguiente rutina permite obtener el RMSE para previsiones con un horizonte temporal desde uno a 14 días. Como esta serie no presenta intervención, podemos calcular el error medio.</p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Código para cálculo del error deseado
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Para Alimentos hemos visto el código necesario para calcular el MAPE por origen de predicción móvil. Las dos líneas clave del código son:</p>
+<p><br>
+</p>
+<p><code>mapeAri[i + 1,] &lt;- 100*abs(test.set - fcast$mean)/test.set</code></p>
+<p><code>mapeAriMedia &lt;- colMeans(mapeAri)</code></p>
+<p><br>
+</p>
+<p>La primera línea obtiene el error porcentual absoluto de cada observación y la segunda calcula la media de estos errores.</p>
+<p><br>
+</p>
+<p>Para calcular el RMSE es necesario adaptar estás dos líneas de código adecuadamente. Ahora la primera línea debe calcular el error cuadrático de cada observación y la segunda la raíz de la media de estos errores:</p>
+<p><br>
+</p>
+<p><code>rmseAri[i + 1,] &lt;- (test.set - fcast$mean)^2</code></p>
+<p><code>rmseAri &lt;- sqrt(colMeans(rmseAri))</code></p>
+<p><br>
+</p>
+<p>En general, según el error que desees obtener, deberás modificar estas dos líneas de código como corresponda.</p>
+<p><br>
+</p>
+<p>Además, si hay valores atípicos, puede ser conveniente calcular el error mediano en lugar del error medio.</p>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">140</span>                  <span class="co"># Minimo numero de datos para estimar</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="dv">14</span>                   <span class="co"># Horizonte de las prediciciones</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>TT <span class="ot">&lt;-</span> <span class="fu">length</span>(defunciones) <span class="co"># Longitud serie</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> TT <span class="sc">-</span> k <span class="sc">-</span> h           <span class="co"># Total de estimaciones</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>rmseAli <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, s <span class="sc">+</span> <span class="dv">1</span>, h)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>rmseAri <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, s <span class="sc">+</span> <span class="dv">1</span>, h)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>s) {</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  train.set <span class="ot">&lt;-</span> <span class="fu">subset</span>(defunciones, <span class="at">start =</span> i <span class="sc">+</span> <span class="dv">1</span>, <span class="at">end =</span> i <span class="sc">+</span> k)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  test.set <span class="ot">&lt;-</span>  <span class="fu">subset</span>(defunciones, <span class="at">start =</span> i <span class="sc">+</span> k <span class="sc">+</span> <span class="dv">1</span>, <span class="at">end =</span> i <span class="sc">+</span> k <span class="sc">+</span> h)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">ets</span>(train.set, <span class="at">model =</span> <span class="st">"MNN"</span>)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  fcast <span class="ot">&lt;-</span> <span class="fu">forecast</span>(fit, <span class="at">h =</span> h)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  rmseAli[i <span class="sc">+</span> <span class="dv">1</span>,] <span class="ot">&lt;-</span> (test.set <span class="sc">-</span> fcast<span class="sc">$</span>mean)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">Arima</span>(train.set, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="at">include.constant =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  fcast <span class="ot">&lt;-</span> <span class="fu">forecast</span>(fit, <span class="at">h =</span> h)</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  rmseAri[i <span class="sc">+</span> <span class="dv">1</span>,] <span class="ot">&lt;-</span> (test.set <span class="sc">-</span> fcast<span class="sc">$</span>mean)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>rmseAli <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">colMeans</span>(rmseAli))</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(rmseAli, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 66.24 74.30 77.54 77.99 77.11 75.50 77.49 84.35 89.58 92.31 92.39 92.64
+[13] 92.73 96.39</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>rmseAri <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">colMeans</span>(rmseAri))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(rmseAri, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  68.74  85.92  94.38  99.48 103.24 104.41 107.21 113.62 119.23 123.97
+[11] 127.13 130.39 132.11 134.48</code></pre>
+</div>
+</div>
+<p>El error de previsión extramuestral crece día a día, desde algo menos de las 70 defunciones para previsiones a un día vista, hasta casi 100 defunciones a 14 días vista con el modelo de Alisado y las 134 defunciones para el método Arima. La <a href="#fig-comparaOPM2" class="quarto-xref">Figura&nbsp;6</a> muestra gráficamente la precisión en la previsiones.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">14</span>, <span class="at">y =</span> rmseAli, <span class="at">colour =</span> <span class="st">"blue"</span>)) <span class="sc">+</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">14</span>, <span class="at">y =</span> rmseAri, <span class="at">colour =</span> <span class="st">"red"</span>)) <span class="sc">+</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Defunciones"</span>) <span class="sc">+</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_discrete</span>(<span class="at">name =</span> <span class="st">"Método"</span>, </span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Alisado"</span>, <span class="st">"Arima"</span>)) <span class="sc">+</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="fu">c</span>(<span class="fl">0.2</span>,<span class="fl">0.8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-comparaOPM2" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-comparaOPM2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-05-Tema5_files/figure-html/fig-comparaOPM2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-comparaOPM2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;6: Comparación de errores medios (RMSE)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>El método Alisado ofrece las predicciones más precisas con independencia del horizonte temporal. Además, cuanto mayor es el horizonte temporal más se incrementa la diferencia en la calidad de las predicciones de ambos métodos.</p>
+<p><br>
+<br>
+</p>
+</section>
+</section>
+<section id="resumen-de-los-comandos-utilizados" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Resumen de los comandos utilizados</h1>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 58%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Función</th>
+<th style="text-align: left;">Paquete</th>
+<th style="text-align: left;">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>apply</code></td>
+<td style="text-align: left;">base</td>
+<td style="text-align: left;">Calcula el valor de una función aplicada a cada fila o columna de una matriz o base de datos</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>colMeans</code></td>
+<td style="text-align: left;">base</td>
+<td style="text-align: left;">Calcula el valor medio por columna de una matriz o base de datos</td>
+</tr>
+</tbody>
+</table>
+<p><br>
+<br>
+<br>
+<br>
+</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2024, Iván Arribas. If you find any bugs please report them to <a href="mailto:ivan.arribas@uv.es">ivan.arribas@uv.es</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>This page is built with <a href="https://quarto.org/">Quarto</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

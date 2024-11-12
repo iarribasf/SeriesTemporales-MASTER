@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Predicción con Datos Temporales - Logística</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Predicción con Datos Temporales</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./01-Guia-curso.html"> 
+<span class="menu-text">Guía del curso</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./02-Logistica.html" aria-current="page"> 
+<span class="menu-text">Logística</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-diapos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Diapos</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-diapos">    
+        <li class="dropdown-header">Teoría</li>
+        <li>
+    <a class="dropdown-item" href="./03-01-Tema1.html">
+ <span class="dropdown-text">Tema 1: Introducción</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-02-Tema2.html">
+ <span class="dropdown-text">Tema 2: Definición</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-03-Tema3.html">
+ <span class="dropdown-text">Tema 3: Métodos de predicción</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-04-Tema4.html">
+ <span class="dropdown-text">Tema 4: Series sin tendencia ni estacionalidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-05-Tema5.html">
+ <span class="dropdown-text">Tema 5: Evaluación de las predicciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-06-Tema6.html">
+ <span class="dropdown-text">Tema 6: Series sin tendencia y sin estacionalidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-07-Tema7.html">
+ <span class="dropdown-text">Tema 7: Series con tendencia y estacionalidad (Alisado)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-08-Tema8.html">
+ <span class="dropdown-text">Tema 8: Series con tendencia y estacionalidad (Arima)</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Ejemplo de aplicación</li>
+        <li>
+    <a class="dropdown-item" href="./03-10-Ejemplo1.html">
+ <span class="dropdown-text">Ejemplo: Descriptiva</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-11-Ejemplo2.html">
+ <span class="dropdown-text">Ejemplo: Métodos sencillos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-13-Ejemplo3.html">
+ <span class="dropdown-text">Ejemplo: Alisado exponencial</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-14-Ejemplo4.html">
+ <span class="dropdown-text">Ejemplo: Arima sin estacionalidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-15-Ejemplo5.html">
+ <span class="dropdown-text">Ejemplo: Arima con estacionalidad</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Otro ejemplo</li>
+        <li>
+    <a class="dropdown-item" href="./03-20-Ejemplo-Pasajeros.html">
+ <span class="dropdown-text">Ejemplo de Pasajeros</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-píldoras" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Píldoras</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-píldoras">    
+        <li>
+    <a class="dropdown-item" href="./04-01-Bootstrapping.html">
+ <span class="dropdown-text">Bootstrapping para IC</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-02-Multiples_CS.html">
+ <span class="dropdown-text">Múltiples componentes estacionales</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-03-Redes_neuronales.html">
+ <span class="dropdown-text">Predicción con Redes Neuronales</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-04-Series_acotadas.html">
+ <span class="dropdown-text">Series acotadas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-05-Valores_perdidos_Outliers.html">
+ <span class="dropdown-text">Valores perdidos y outliers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-06-Covid_Nacimientos.html">
+ <span class="dropdown-text">Efecto de la Covid-19 en Nacimientos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-07-Combinando_predicciones.html">
+ <span class="dropdown-text">Combinación de predicciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-08-Series_interrumpidas.html">
+ <span class="dropdown-text">Series interrumpidas</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./05-Recursos-R.html"> 
+<span class="menu-text">Recursos de la asignatura</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./06-Evaluacion_Continua.html"> 
+<span class="menu-text">Evaluacion Continua</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-más" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Más</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-más">    
+        <li class="dropdown-header">R</li>
+        <li>
+    <a class="dropdown-item" href="https://cran.r-project.org">
+ <span class="dropdown-text">Dónde está R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://rstudio.com">
+ <span class="dropdown-text">Donde está RStudio</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Markdown</li>
+        <li>
+    <a class="dropdown-item" href="https://bookdown.org/yihui/rmarkdown/">
+ <span class="dropdown-text">Markdown</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://rmarkdown.rstudio.com/lesson-1.html">
+ <span class="dropdown-text">R Markdown</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf">
+ <span class="dropdown-text">R Markdown (pdf)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://quarto.org/docs/tools/rstudio.html">
+ <span class="dropdown-text">Quatro</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Otros</li>
+        <li>
+    <a class="dropdown-item" href="https://www.r-bloggers.com">
+ <span class="dropdown-text">Blog sobre R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://bookdown.org">
+ <span class="dropdown-text">Libros online que debes conocer</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#contenidos-del-curso" id="toc-contenidos-del-curso" class="nav-link active" data-scroll-target="#contenidos-del-curso">Contenidos del curso</a></li>
+  <li><a href="#materiales" id="toc-materiales" class="nav-link" data-scroll-target="#materiales">Materiales</a></li>
+  <li><a href="#más-recursos" id="toc-más-recursos" class="nav-link" data-scroll-target="#más-recursos">Más recursos</a></li>
+  <li><a href="#bibliografía" id="toc-bibliografía" class="nav-link" data-scroll-target="#bibliografía">Bibliografía</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Logística</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><br>
+<br>
+</p>
+<p>El grueso del material del curso lo podéis encontrar en esta página web. Sin embargo, hay <em>muuuucho</em> material adicional disponible en formato papel y <em>online</em>. A continuación os describo brevemente dónde podéis encontrar parte de este material.</p>
+<p><br>
+</p>
+<hr>
+<p><br>
+</p>
+<section id="contenidos-del-curso" class="level3">
+<h3 class="anchored" data-anchor-id="contenidos-del-curso">Contenidos del curso</h3>
+<ul>
+<li><p><strong>Página web del curso</strong> dónde encontrarás todo el material teórico y práctico necesario para seguir el curso y realizar las prácticas de evaluación.</p></li>
+<li><p><a href="https://aulavirtual.uv.es"><strong>Aula Virtual</strong></a> donde encontrarás una copia de todo el material del curso en un único fichero comprimido. Además, Aulavirtual será el medio de comunicación <em>oficial</em> entre nosotros y dónde subiréis las respuestas a las pruebas tipo test y las prácticas de evaluación.</p></li>
+</ul>
+<p><br>
+</p>
+<hr>
+<p><br>
+</p>
+</section>
+<section id="materiales" class="level3">
+<h3 class="anchored" data-anchor-id="materiales">Materiales</h3>
+<ul>
+<li><p><strong>Contenidos teóricos</strong>: los encontrarás en la sección <strong>Diapos</strong>. Las primeras entradas corresponden a los contenidos teóricos del curso y las restantes a un ejemplo práctico de aplicación para cada tema. Este ejemplo no necesariamente lo veremos durante el curso, pero puede serte de ayuda para terminar de comprender los conceptos teóricos vistos y su aplicación práctica con <code>R</code>.</p>
+<p>En <strong>Píldoras</strong> encontrarás extensiones a conceptos del curso, algunos de los cuales iremos vendo en clase de teoría.</p></li>
+<li><p><a href="https://iarribasf.github.io/PrediccionSeriesTemporales-GBIA/05-Recursos-R.html"><strong>Recursos de la asignatura</strong></a>: contiene los ficheros de datos de los ejemplos utilizados durante el curso (ficheros .csv) así como el código de R que usaremos en las clases (ficheros .R).</p></li>
+</ul>
+<p><br>
+</p>
+<hr>
+</section>
+<section id="más-recursos" class="level3">
+<h3 class="anchored" data-anchor-id="más-recursos">Más recursos</h3>
+<p>La última sección de la página web <strong>Más</strong> es un pequeño baúl de recursos que te pueden ser útiles:</p>
+<ul>
+<li><strong>R</strong>: enlaces a páginas con recursos sobre R y RStudio</li>
+<li><strong>Markdown</strong>: enlaces a páginas con recursos sobre (R)Markdown y Quatro</li>
+<li><strong>Otros</strong>: enlace a <a href="https://www.r-bloggers.com">R-bloggers</a>, un blog sobre <code>R</code> que te puede ser de gran ayuda y a <a href="https://bookdown.org">libros online</a> sobre <code>R</code>, análisis de datos, inferencia…</li>
+</ul>
+<p><br>
+</p>
+<hr>
+<p><br>
+</p>
+</section>
+<section id="bibliografía" class="level3">
+<h3 class="anchored" data-anchor-id="bibliografía">Bibliografía</h3>
+<p><strong>El material de este curso debe mucho a</strong></p>
+<ul>
+<li><a href="https://otexts.com/fpp2/"><strong>Forecasting: Principles and Practice</strong></a>: un libro <em>online</em> (realizado con bookdown) de Rob J. Hyndman y George Athanasopoulos. Durante el curso usaremos fundamentalmente la librería <code>forecast</code> de Hyndman, Athanasopoulos y otros <a href="https://cran.r-project.org/web/packages/forecast/index.html">(aquí)</a>.</li>
+</ul>
+<p><br>
+</p>
+<p>Hay un montón de bibliografía sobre Predicción con Datos Temporales, tanto en formato libro como <em>online</em>. Es imposible ser exhaustivos, así que aquí va una muestra.</p>
+<p>Sentíos libres de hurgar en la web en busca de tutoriales, videos, libros… que os puedan ser útiles. Si algún material que localizáis creéis que es realmente útil, por favor, compartirlo con vuestros compañeros y conmigo.</p>
+<p><br>
+</p>
+<p><strong>Grandes clásicos de Series Temporales</strong></p>
+<ul>
+<li>Abraham, B. y Ledolter, J. (1983) Statistical methods for forecasting. Wiley</li>
+<li>Box, G.E.P. y Jenkins, G.M. (1976) Time series analysis, forecasting and control. Holden-Day</li>
+<li>Box, G.E.P., Jenkins, G.M. y Reinsel, G.C. (1994) Time series análisis. Prentice-Hall</li>
+<li>Brockwell, P.J. y Davis, R.A. (1996) Introduction to time series and forecasting. Springer-Verlag</li>
+<li>Chatfield, C. (1989) The analysis of time series. An introduction. Chapman &amp; Hall</li>
+<li>Greene, W. (1998) Análisis econométrico. Prentice Hall</li>
+<li>Holden, K., Peel D.A. y Thompson, J. L. (1990) Economic Forecasting: an introduction. Cambridge University Preess: Cambridge</li>
+<li>Holton, J. y Keating, B. (1996) Previsión en los negocios. IRWIN</li>
+<li>Markridakis, S., Weelwright, S.C. y Hyndman, R.J. (1998) Forecasting: Methods and Applications. Willey</li>
+<li>Peña, D. (1999) Estadística: modelos y métodos 2 (Modelos lineales y Series Temporales.) Alianza Universidad Textos.</li>
+<li>Pulido, A. y López, A.M. (1999) Predicción y simulación aplicada al a economía y gestión de empresas. Pirámide.</li>
+<li>Uriel, E. (2005) Introducción al análisis de series temporales. Paraninfo.</li>
+</ul>
+<p><br>
+</p>
+<p><strong>Bibliografía de Series Temporales con R</strong></p>
+<ul>
+<li>Cowpertwait, P. S. P. y Metcalfe, A. V. (2009) <a href="https://link.springer.com/book/10.1007/978-0-387-88698-5">Introductory Time Series with R</a>. Springer (Collection Use R!)</li>
+<li>Pfaff, B. (2008) <a href="https://www.springer.com/gp/book/9780387759661">Analysis of Integrated and Cointegrated Time Series with R</a>. Springer (Collection Use R!)</li>
+<li>Cryer, J. D., Chan, Kung-Sik. (2008) <a href="https://www.springer.com/gp/book/9780387759586">Time Series Analysis. With Applications in R</a>. Springer</li>
+</ul>
+<p><br>
+</p>
+<p><strong>Direcciones de internet</strong></p>
+<ul>
+<li><a href="https://www.statmethods.net/advstats/timeseries.html">Quick-R: Time Series and Forecasting</a>: un vistazo muy pero que muy rápido al análisis de series temporales con R.</li>
+<li>Tres manuales <em>online</em> de series temporales al estilo del comentado al inicio de la bibliografía se pueden encontrar <a href="https://bookdown.org/rushad_16/TSA_Lectures_book/">aquí</a>, <a href="https://bookdown.org/rdpeng/timeseriesbook/">aquí</a> y <a href="https://bookdown.org/singh_pratap_tejendra/intro_time_series_r/">aquí</a></li>
+<li><a href="https://www.uni-wuerzburg.de/fileadmin/10040800/user_upload/time_series/the_book/2011-March-01-times.pdf">A First Course on Time Series Analysis with SAS</a>: es un libro de análisis de series temporales con SAS online</li>
+<li><a href="https://onlinelibrary.wiley.com/journal/14679892">Journal of Time Series Analysis</a>: revista científica sobre series temporales<br>
+</li>
+<li><a href="https://www.journals.elsevier.com/international-journal-of-forecasting/">International Journal of Forecasting</a>: revista científica sobre predicción</li>
+</ul>
+<p><br>
+</p>
+<p><strong>Software gratuito</strong></p>
+<ul>
+<li><a href="https://cran.R-project.org">R-project</a>: creo que ya lo conocemos todos.</li>
+<li><a href="https://ec.europa.eu/eurostat/cros/content/software-jdemetra_en">JDemetra+</a>: ajuste automático de series con modelos ARIMA aplicando dos métodos: TRAMO-SEATS+ y X-12ARIMA/X-13ARIMA-SEATS.</li>
+<li><a href="http://gretl.sourceforge.net/">Gretl</a>: programa de modelización gratuito: regresión múltiple, modelos de elección binaria, series temporales, etc.</li>
+</ul>
+<p><br>
+<br>
+<br>
+<br>
+</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2024, Iván Arribas. If you find any bugs please report them to <a href="mailto:ivan.arribas@uv.es">ivan.arribas@uv.es</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>This page is built with <a href="https://quarto.org/">Quarto</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
